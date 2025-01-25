@@ -1,13 +1,13 @@
 import Question from "./question"
-import TestResult from "./testResult"
+import QuestResult from "./questResult"
 
-export default interface Test {
+export default interface Quest {
     id: number
-    title: string
+    name: string
     department: string
     group: string
     tags: string[]
     difficult: number
-    results: TestResult[]
+    results: QuestResult[]
     questions: Question[]
 }
