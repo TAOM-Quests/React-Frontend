@@ -1,14 +1,14 @@
 export interface ProfileGetDto {
-    id: number
+  id: number
 }
 
 export interface ProfileUpdateDto {
-    name?: string
-    surname?: string
-    email?: string
+  name?: string
+  surname?: string
+  email?: string
 }
 
 export interface UserEnterDto {
-    email: string,
-    password: string
+  email: string
+  password: string
 }

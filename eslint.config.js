@@ -17,7 +17,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      '@stylistic': stylistic
+      '@stylistic': stylistic,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -26,26 +26,17 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      'arrow-body-style': ["warn", "as-needed"],
-      'curly': ["warn", "all"],
-      'dot-notation': "warn",
-      'eqeqeq': "error",
-      'func-names': ["error", "always"],
+      'arrow-body-style': ['warn', 'as-needed'],
+      curly: ['warn', 'all'],
+      'dot-notation': 'warn',
+      eqeqeq: 'error',
+      'func-names': ['error', 'always'],
 
       //@stylistic
-      '@stylistic/comma-dangle': ["error", {
-        "arrays": "never",
-        "objects": "always",
-        "imports": "never",
-        "exports": "never",
-        "functions": "never",
-        "importAttributes": "never",
-        "dynamicImports": "never"
-      }],
-      '@stylistic/array-bracket-spacing': ["error", "never"],
-      '@stylistic/arrow-spacing': "warn",
-      '@stylistic/block-spacing': "warn",
-      '@stylistic/computed-property-spacing': ["error", "never"]
+      '@stylistic/array-bracket-spacing': ['error', 'never'],
+      '@stylistic/arrow-spacing': 'warn',
+      '@stylistic/block-spacing': 'warn',
+      '@stylistic/computed-property-spacing': ['error', 'never'],
     },
   },
 )

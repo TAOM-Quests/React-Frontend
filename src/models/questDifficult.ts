@@ -1,4 +1,4 @@
 export interface QuestDifficult {
-    id: number
-    name: string
+  id: number
+  name: string
 }
