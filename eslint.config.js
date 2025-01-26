@@ -5,8 +5,6 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import stylistic from '@stylistic/eslint-plugin'
 
-console.log(stylistic);
-
 export default tseslint.config(
   { ignores: ['dist'] },
   {
@@ -35,7 +33,15 @@ export default tseslint.config(
       'func-names': ["error", "always"],
 
       //@stylistic
-      '@stylistic/comma-dangle': ["error", "never"],
+      '@stylistic/comma-dangle': ["error", {
+        "arrays": "never",
+        "objects": "always",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never",
+        "importAttributes": "never",
+        "dynamicImports": "never"
+      }],
       '@stylistic/array-bracket-spacing': ["error", "never"],
       '@stylistic/arrow-spacing': "warn",
       '@stylistic/block-spacing': "warn",

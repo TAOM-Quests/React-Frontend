@@ -7,9 +7,9 @@ export const api = <TResult, TParameters>(path: string, parameters?: TParameters
         ? fetch(path, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(parameters)
+            body: JSON.stringify(parameters),
         }) as Promise<TResult>
         : fetch(path) as Promise<TResult>
 }
