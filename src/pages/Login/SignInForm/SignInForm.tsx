@@ -3,27 +3,30 @@ import Input, { InputProps } from "../../../components/Input/Input"
 import SubmitButton from "../../../components/SubmitButton/SubmitButton"
 import InputPassword from "../../../components/InputPassword/InputPassword"
 import { users } from "../../../services/api/userModule/users/users"
+import ErrorMessage from "../../../components/ErrorMessage/ErrorMessage"
 
 export default function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const tryCreateUser = async (event: React.FormEvent) => {
     event.preventDefault()
 
     if (password !== repeatPassword) {
-      alert('Пароли не совпадают')
+      setErrorMessage('Пароли не совпадают');
       return
     }
 
     try {
       const createdUser = await users.create({email, password})
-      console.log(createdUser)
-      
     } catch (e) {
-      alert(e)
-      console.log(e)
+      if (e instanceof Error) {
+        setErrorMessage(e.message);
+      } else {
+        setErrorMessage(e as string);
+      }
     }
   }
 
@@ -32,6 +35,7 @@ export default function SignInForm() {
       <Input {...getEmailProps(email, (e => setEmail(e.target.value)))}/>
       <InputPassword {...getPasswordProps(password, (e => setPassword(e.target.value)))}/>
       <InputPassword {...getRepeatPasswordProps(repeatPassword, (e => setRepeatPassword(e.target.value)))}/>
+      <ErrorMessage text={errorMessage}/>
       <SubmitButton text="Зарегистрироваться"/>
     </form>
   )
