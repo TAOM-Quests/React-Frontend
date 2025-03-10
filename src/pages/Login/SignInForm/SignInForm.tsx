@@ -4,8 +4,11 @@ import SubmitButton from "../../../components/SubmitButton/SubmitButton"
 import InputPassword from "../../../components/InputPassword/InputPassword"
 import { users } from "../../../services/api/userModule/users/users"
 import ErrorMessage from "../../../components/ErrorMessage/ErrorMessage"
+import { useNavigate } from "react-router"
 
 export default function SignInForm() {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
@@ -21,6 +24,8 @@ export default function SignInForm() {
 
     try {
       const createdUser = await users.create({email, password})
+      localStorage.setItem('token', createdUser.token)
+      navigate('/')
     } catch (e) {
       if (e instanceof Error) {
         setErrorMessage(e.message);
