@@ -36,7 +36,7 @@ export default function LogInForm() {
       <Input {...getEmailProps(email, (e => setEmail(e.target.value)))}/>
       <InputPassword {...getPasswordProps(password, (e => setPassword(e.target.value)))}/>
       <ErrorMessage text={errorMessage}/>
-      <SubmitButton text="Зарегистрироваться"/>
+      <SubmitButton text="Войти"/>
     </form>
   )
 }
