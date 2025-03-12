@@ -40,7 +40,10 @@ export default function SignInForm() {
       <Input {...getEmailProps(email, (e => setEmail(e.target.value)))}/>
       <InputPassword {...getPasswordProps(password, (e => setPassword(e.target.value)))}/>
       <InputPassword {...getRepeatPasswordProps(repeatPassword, (e => setRepeatPassword(e.target.value)))}/>
-      <ErrorMessage text={errorMessage}/>
+      {errorMessage.length
+        ? <ErrorMessage text={errorMessage}/>
+        : <></>
+      }
       <SubmitButton text="Зарегистрироваться"/>
     </form>
   )
