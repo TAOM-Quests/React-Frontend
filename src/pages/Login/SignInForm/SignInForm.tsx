@@ -5,9 +5,12 @@ import InputPassword from "../../../components/InputPassword/InputPassword"
 import { users } from "../../../services/api/userModule/users/users"
 import ErrorMessage from "../../../components/ErrorMessage/ErrorMessage"
 import { useNavigate } from "react-router"
+import { useAppDispatch } from "../../../hooks/redux/reduxHooks"
+import { setUser } from "../../../redux/auth/authSlice"
 
 export default function SignInForm() {
   const navigate = useNavigate()
+    const dispatch = useAppDispatch()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,6 +28,7 @@ export default function SignInForm() {
     try {
       const createdUser = await users.create({email, password})
       localStorage.setItem('token', createdUser.token)
+            dispatch(setUser(createdUser))
       navigate('/')
     } catch (e) {
       if (e instanceof Error) {

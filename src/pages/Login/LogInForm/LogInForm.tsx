@@ -5,9 +5,12 @@ import { users } from "../../../services/api/userModule/users/users"
 import InputPassword from "../../../components/InputPassword/InputPassword"
 import ErrorMessage from "../../../components/ErrorMessage/ErrorMessage"
 import { useNavigate } from "react-router"
+import { useAppDispatch } from "../../../hooks/redux/reduxHooks"
+import { setUser } from "../../../redux/auth/authSlice"
 
 export default function LogInForm() {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,9 +20,9 @@ export default function LogInForm() {
     event.preventDefault()
 
     try {
-      console.log(email, password);
       const foundUser = await users.auth({email, password})
       localStorage.setItem('token', foundUser.token)
+      dispatch(setUser(foundUser))
       navigate('/')
     } catch (e) {
       if (e instanceof Error) {

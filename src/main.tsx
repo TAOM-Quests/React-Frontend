@@ -7,11 +7,11 @@ import { store } from './redux/store.ts'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-    <Routes>
-      <Provider store={store}>
+    <Provider store={store}>
+      <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} />
-      </Provider>
-    </Routes>
+      </Routes>
+    </Provider>
   </BrowserRouter>,
 )
