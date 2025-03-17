@@ -3,11 +3,11 @@ import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import LoginPage from './pages/Login/Login.tsx'
 import { Provider } from 'react-redux'
-import { store } from './redux/store.ts'
+import { setupStore } from './redux/store.ts'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-    <Provider store={store}>
+    <Provider store={setupStore()}>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} />
