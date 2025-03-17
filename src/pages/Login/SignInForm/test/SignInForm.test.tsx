@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render, RenderResult } from 'vitest-browser-react';
 import SignInForm from '../SignInForm';
-import { Locator, page, userEvent } from '@vitest/browser/context';
+import { userEvent } from '@vitest/browser/context';
 import '@vitest/browser/matchers';
+import { renderWithProviders } from '../../../../redux/test/utils';
 
 const mockedUseNavigate = vi.fn()
 vi.mock('react-router', async () => {
@@ -24,7 +24,7 @@ describe('SignInForm', () => {
   describe('Repeat password logic', () => {
 
     beforeEach(() => {
-      render(<SignInForm />)
+      renderWithProviders(<SignInForm />)
       passwordInput = document.querySelector('.password-input')!
       repeatPasswordInput = document.querySelector('.repeat-password-input')!
       signInButton = document.querySelector('button')!
