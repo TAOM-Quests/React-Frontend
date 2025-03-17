@@ -10,10 +10,6 @@ const initialState: AuthState = {
   value: null
 }
 
-const ADMIN_ROLES = [
-  'Администратор'
-]
-
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -21,10 +17,9 @@ export const authSlice = createSlice({
     setUser: (state, action: PayloadAction<UserAuth>) => {
       state.value = action.payload
     },
-    setRole: (state, action: PayloadAction<string>) => {
+    setRole: (state, action: PayloadAction<Pick<UserAuth, 'role' | 'isAdmin'>>) => {
       if (state.value) {
-        state.value.role = action.payload
-        state.value.isAdmin = ADMIN_ROLES.includes(action.payload)
+        state.value = {...state.value, ...action.payload}
       }
     },
   }
