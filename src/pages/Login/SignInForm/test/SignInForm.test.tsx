@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import SignInForm from '../SignInForm';
 import { userEvent } from '@vitest/browser/context';
 import '@vitest/browser/matchers';
-import { renderWithProviders } from '../../../../redux/test/utils';
+import { renderWithProviders } from '../../../../mocks/redux/utils';
 
 const mockedUseNavigate = vi.fn()
 vi.mock('react-router', async () => {

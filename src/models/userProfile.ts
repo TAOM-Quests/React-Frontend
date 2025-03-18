@@ -2,9 +2,13 @@ import { QuestMinimize } from './questMinimize'
 
 export interface UserProfile {
   id: number
-  name: string
-  surname: string
   email: string
+  firstName: string
+  lastName: string
+  patronymic: string
+  birthDate: Date
+  sex: string
+  phone: string
   department: string
   role: string
   completedQuests: QuestMinimize[]
