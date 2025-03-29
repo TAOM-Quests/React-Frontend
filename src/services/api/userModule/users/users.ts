@@ -5,7 +5,9 @@ import { ProfileGetDto, ProfileUpdateDto, UserEnterDto } from './usersDto'
 
 export const users = {
   auth: (params: UserEnterDto): Promise<UserAuth> =>
-    userModule<UserAuth, UserEnterDto>('user/auth', params),
+    typeof params === 'string'
+      ? userModule<UserAuth, UserEnterDto>(`user/auth?token=${params}`)
+      : userModule<UserAuth, UserEnterDto>('user/auth', params),
 
   create: (params: UserEnterDto): Promise<UserAuth> =>
     userModule<UserAuth, UserEnterDto>('users', params),

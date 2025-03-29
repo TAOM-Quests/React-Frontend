@@ -8,7 +8,9 @@ export interface ProfileUpdateDto {
   email?: string
 }
 
-export interface UserEnterDto {
+export type UserEnterDto = UserEnter | string
+
+interface UserEnter {
   email: string
   password: string
 }
