@@ -17,7 +17,7 @@ export const authSlice = createSlice({
     setUser: (state, action: PayloadAction<UserAuth>) => {
       state.value = action.payload
     },
-    setRole: (state, action: PayloadAction<Pick<UserAuth, 'role' | 'isAdmin'>>) => {
+    setRole: (state, action: PayloadAction<Pick<UserAuth, 'roleId' | 'isAdmin'>>) => {
       if (state.value) {
         state.value = {...state.value, ...action.payload}
       }

@@ -9,7 +9,11 @@ export interface UserProfile {
   birthDate: Date
   sex: string
   phone: string
-  department: string
-  role: string
   completedQuests: QuestMinimize[]
+}
+
+export interface UserProfileEmployee extends UserProfile {
+  role: string
+  department: string
+  position: string
 }
