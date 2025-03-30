@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw"
-import { UserProfile } from "../../../models/userProfile"
+import { UserProfile, UserProfileEmployee } from "../../../models/userProfile"
 
 export const usersHandlers: HttpHandler[] = [
   http.get('/api/v1/userModule/users/1/profile', () => {
@@ -12,13 +12,11 @@ export const usersHandlers: HttpHandler[] = [
       birthDate: new Date("07.08.2003"),
       sex: "Женский",
       phone: "8-927-999-99-99",
-      department: "ПИ",
-      role: "Пользователь",
       completedQuests: []
     })
   }),
   http.get('/api/v1/userModule/users/2/profile', () => {
-    return HttpResponse.json<UserProfile>({
+    return HttpResponse.json<UserProfileEmployee>({
       id: 2,
       email: "roman.nichi.o@gmail.com",
       firstName: "Роман",
@@ -29,11 +27,12 @@ export const usersHandlers: HttpHandler[] = [
       phone: "8-927-777-77-77",
       department: "Дизайн",
       role: "Администратор",
-      completedQuests: []
+      completedQuests: [],
+      position: "Призедент Академии"
     })
   }),
   http.get('/api/v1/userModule/users/3/profile', () => {
-    return HttpResponse.json<UserProfile>({
+    return HttpResponse.json<UserProfileEmployee>({
       id: 3,
       email: "marika.nichi@gmail.com",
       firstName: "Роман",
@@ -44,7 +43,8 @@ export const usersHandlers: HttpHandler[] = [
       phone: "8-927-777-77-77",
       department: "Менеджемент",
       role: "Преподаватель",
-      completedQuests: []
+      completedQuests: [],
+      position: "Преподаватель кафедры ПИ"
     })
   })
 ]
