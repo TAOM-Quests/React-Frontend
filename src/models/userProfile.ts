@@ -13,7 +13,6 @@ export interface UserProfile {
 }
 
 export interface UserProfileEmployee extends UserProfile {
-  role: string
-  department: string
   position: string
+  department: string
 }

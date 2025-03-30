@@ -1,5 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TabButton from "../../components/TabButton/TabButton";
+import { users } from "../../services/api/userModule/users/users";
+import { selectAuth } from "../../redux/auth/authSlice";
+import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import { UserProfile } from "../../models/userProfile";
+import PersonTab from "./PersonTab/PersonTab";
+import { useNavigate } from "react-router";
 
 const TABS = [
   'Персональные данные',
@@ -8,13 +14,43 @@ const TABS = [
 ]
 
 export default function Profile() {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0)
+
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
+
+  let profile: UserProfile
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        if (!user) {
+          throw Error('User not found')
+        }
+
+        profile = await users.getProfile({ id: user.id })
+      }
+      catch (e) {
+        console.log(e)
+        navigate('/login')
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
+
+  const getActiveTab = () => {
+    if (tabIndex === 0) return <PersonTab {...profile}/>
+  };
 
   return (
     <div>
       {TABS.map((tab, index) => (
         <TabButton text={tab} isActive={tabIndex === index} onClick={() => setTabIndex(index)}/>
       ))}
+
+      {getActiveTab()}
     </div>
   )
 }

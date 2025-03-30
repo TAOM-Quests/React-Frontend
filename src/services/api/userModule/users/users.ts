@@ -13,8 +13,8 @@ export const users = {
     userModule<UserAuth, UserEnterDto>('users', params),
 
   getProfile: (params: ProfileGetDto): Promise<UserProfile> =>
-    userModule<UserProfile, ProfileGetDto>(`users/${params.id}/profile`),
+    userModule<UserProfile, ProfileGetDto>(`user/${params.id}/profile`),
 
   updateProfile: (params: ProfileUpdateDto): Promise<UserProfile> =>
-    userModule<UserProfile, ProfileUpdateDto>(`users/profile`, params),
+    userModule<UserProfile, ProfileUpdateDto>(`user/profile`, params),
 }
