@@ -4,7 +4,15 @@ import { UserProfile } from "../../../../models/userProfile";
 import { ProfileField } from "../interface/profileField";
 import { users } from "../../../../services/api/userModule/users/users";
 
-export default function PersonInfo(profile: UserProfile) {
+export interface PersonInfoProps {
+  profile: UserProfile
+  updateProfile: (profile: UserProfile) => void
+}
+
+export default function PersonInfo({
+    profile,
+    updateProfile,
+ }: PersonInfoProps) {
   const [lastName, setLastName] = useState(profile.lastName);
   const [firstName, setFirstName] = useState(profile.firstName);
   const [patronymic, setPatronymic] = useState(profile.patronymic);
@@ -39,18 +47,16 @@ export default function PersonInfo(profile: UserProfile) {
         firstName,
         lastName,
         patronymic,
-        birthDate: birthDate.toISOString(),
+        // birthDate: birthDate.toISOString(),
         sex,
         phone
       })
 
-      setLastName(updatedFields.lastName)
-      setFirstName(updatedFields.firstName)
-      setPatronymic(updatedFields.patronymic)
-      setSex(updatedFields.sex)
-      setBirthDate(new Date(updatedFields.birthDate))
-      setPhone(updatedFields.phone)
-      setEmail(updatedFields.email)
+      updateProfile({
+        ...profile,
+        ...updatedFields,
+        birthDate: new Date(updatedFields.birthDate)
+      })
     }
 
     setChangingMode(!changingMode);

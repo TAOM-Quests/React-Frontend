@@ -40,7 +40,7 @@ export default function Profile() {
 
 
   const getActiveTab = () => {
-    if (tabIndex === 0) return <PersonTab {...profile!}/>
+    if (tabIndex === 0) return <PersonTab profile={profile!} updatePerson={setProfile}/>
   };
 
   return (
