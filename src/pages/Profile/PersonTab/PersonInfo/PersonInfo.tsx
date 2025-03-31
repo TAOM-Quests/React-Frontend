@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "../../../../components/Input/Input";
 import { UserProfile } from "../../../../models/userProfile";
 import { ProfileField } from "../interface/profileField";
+import { users } from "../../../../services/api/userModule/users/users";
 
 export default function PersonInfo(profile: UserProfile) {
   const [lastName, setLastName] = useState(profile.lastName);
@@ -19,12 +20,39 @@ export default function PersonInfo(profile: UserProfile) {
     {name: 'Имя', value: firstName, onChange: (e) => setFirstName(e.target.value)},
     {name: 'Отчество', value: patronymic, onChange: (e) => setPatronymic(e.target.value)},
     {name: 'Пол', value: sex, onChange: (e) => setSex(e.target.value)},
-    {name: 'Дата рождения', value: birthDate?.toDateString(), onChange: (e) => setBirthDate(new Date(e.target.value))},
+    // {
+    //   name: 'Дата рождения',
+    //   value: birthDate
+    //     ? new Date(birthDate).toDateString()
+    //     : '',
+    //     onChange: (e) => setBirthDate(new Date(e.target.value))
+    // },
     {name: 'Телефон', value: phone, onChange: (e) => setPhone(e.target.value)},
     {name: 'Email', value: email, onChange: (e) => setEmail(e.target.value)}
   ]
 
-  const toggleChangingMode = () => {
+  const toggleChangingMode = async () => {
+    if (changingMode) {
+      const updatedFields = await users.updateProfile({
+        id: profile.id,
+        email,
+        firstName,
+        lastName,
+        patronymic,
+        birthDate: birthDate.toISOString(),
+        sex,
+        phone
+      })
+
+      setLastName(updatedFields.lastName)
+      setFirstName(updatedFields.firstName)
+      setPatronymic(updatedFields.patronymic)
+      setSex(updatedFields.sex)
+      setBirthDate(new Date(updatedFields.birthDate))
+      setPhone(updatedFields.phone)
+      setEmail(updatedFields.email)
+    }
+
     setChangingMode(!changingMode);
   }
   

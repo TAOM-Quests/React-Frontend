@@ -14,12 +14,11 @@ const TABS = [
 ]
 
 export default function Profile() {
+  const [profile, setProfile]: [UserProfile | null, any] = useState(null)
   const [tabIndex, setTabIndex] = useState(0)
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
-
-  let profile: UserProfile
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -28,7 +27,7 @@ export default function Profile() {
           throw Error('User not found')
         }
 
-        profile = await users.getProfile({ id: user.id })
+        setProfile(await users.getProfile({ id: user.id }))
       }
       catch (e) {
         console.log(e)
@@ -41,7 +40,7 @@ export default function Profile() {
 
 
   const getActiveTab = () => {
-    if (tabIndex === 0) return <PersonTab {...profile}/>
+    if (tabIndex === 0) return <PersonTab {...profile!}/>
   };
 
   return (
@@ -49,8 +48,8 @@ export default function Profile() {
       {TABS.map((tab, index) => (
         <TabButton text={tab} isActive={tabIndex === index} onClick={() => setTabIndex(index)}/>
       ))}
-
-      {getActiveTab()}
+      {profile &&
+        getActiveTab()}
     </div>
   )
 }

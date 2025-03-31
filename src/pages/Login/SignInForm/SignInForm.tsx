@@ -10,7 +10,7 @@ import { setUser } from "../../../redux/auth/authSlice"
 
 export default function SignInForm() {
   const navigate = useNavigate()
-    const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

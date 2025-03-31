@@ -6,19 +6,6 @@ import { Provider } from 'react-redux'
 import { setupStore } from './redux/store.ts'
 import Profile from './pages/Profile/Profile.tsx'
 
-async function enableMocking() {
-  if (import.meta.env.MODE !== 'TESTING') {
-    return
-  }
-
-  const { worker } = await import('./mocks/msw.ts')
-
-  // `worker.start()` returns a Promise that resolves
-  // once the Service Worker is up and ready to intercept requests.
-  return worker.start()
-}
-
-await enableMocking()
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <Provider store={setupStore()}>
