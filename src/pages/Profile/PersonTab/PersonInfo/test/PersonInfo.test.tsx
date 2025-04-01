@@ -4,6 +4,7 @@ import PersonInfo from "../PersonInfo";
 import { typePersonFields, updatedProfile, user, userProfile } from "./personInfoFixture";
 import { userEvent } from "@vitest/browser/context";
 import { users } from "../../../../../services/api/userModule/users/users";
+import { UserProfile } from "../../../../../models/userProfile";
 
 const FIELDS_ORDER: (keyof typeof typePersonFields)[] = [
   'lastName',
@@ -20,16 +21,32 @@ describe('PersonInfo', () => {
   let profileFields: NodeListOf<HTMLInputElement>
 
   beforeEach(() => {
-    renderWithProviders(<PersonInfo {...userProfile}/>, {
+    const store = {
       preloadedState: {
         auth: {
           value: user
         }
       }
-    })
+    }
+    const setElements = () => {
+      changeInputsButton = document.querySelector('.change-inputs')!
+      profileFields = document.querySelectorAll('.person-field')!
+    }
 
-    changeInputsButton = document.querySelector('.change-inputs')!
-    profileFields = document.querySelectorAll('.person-field')!
+    const { unmount } = renderWithProviders(
+      <PersonInfo
+        profile={userProfile}
+        updateProfile={(updatedProfile: UserProfile) => {
+          console.log('RERENDER', updatedProfile)
+          renderWithProviders(<PersonInfo profile={updatedProfile} updateProfile={() => {}}/>, store)
+          unmount()
+          setElements()
+        }}
+      />,
+      store
+    )
+
+    setElements()
   })
 
   test('On start profileFields should be disabled', () => {
@@ -59,8 +76,8 @@ describe('PersonInfo', () => {
   })
 
   test('On saving person data, personFields values should be changed', async () => {
-    const spyUpdateProfile = vi.spyOn(users, 'updateProfile')
-    spyUpdateProfile.mockImplementationOnce(async () => updatedProfile)
+    vi.spyOn(users, 'updateProfile')
+      .mockImplementationOnce(async () => updatedProfile)
 
     await userEvent.click(changeInputsButton)
     FIELDS_ORDER.forEach(async (field, index) => {
