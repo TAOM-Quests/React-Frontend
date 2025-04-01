@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import TabButton from "../../components/TabButton/TabButton";
 import { users } from "../../services/api/userModule/users/users";
-import { selectAuth } from "../../redux/auth/authSlice";
-import { useAppSelector } from "../../hooks/redux/reduxHooks";
+import { selectAuth, setUser } from "../../redux/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux/reduxHooks";
 import { UserProfile } from "../../models/userProfile";
 import PersonTab from "./PersonTab/PersonTab";
 import { useNavigate } from "react-router";
@@ -18,6 +18,7 @@ export default function Profile() {
   const [tabIndex, setTabIndex] = useState(0)
 
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const user = useAppSelector(selectAuth)
 
   useEffect(() => {
@@ -38,9 +39,16 @@ export default function Profile() {
     fetchProfile()
   }, [])
 
+  const updateProfile = (updatedProfile: UserProfile) => {
+    dispatch(setUser({
+      ...user!,
+      email: updatedProfile.email
+    }))
+    setProfile(updatedProfile)
+  }
 
   const getActiveTab = () => {
-    if (tabIndex === 0) return <PersonTab profile={profile!} updatePerson={setProfile}/>
+    if (tabIndex === 0) return <PersonTab profile={profile!} updatePerson={updateProfile}/>
   };
 
   return (
