@@ -1,19 +1,54 @@
+import classNames from "classnames";
 import "./Button.scss"
-export interface IButton {
-  //
+import { ButtonHTMLAttributes } from "react";
+import { Icon } from "../Icon/Icon";
+
+export type Color = 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger';
+export type Size = 'large' | 'small';
+export type ButtonIconShape = 'square' | 'circle';
+
+export interface ButtonProps
+extends ButtonHTMLAttributes<HTMLButtonElement>{
+  text?: string;
+  iconBefore?: string;
+  iconAfter?: string;
+  color?: Color;
+  size?: Size;
+  shape?: ButtonIconShape;
 }
 
-const Button: React.FC<IButton> = (props) => {
+export const Button = ({
+  text,
+  className = '',
+  type = 'button',
+  iconBefore,
+  iconAfter,
+  color = 'primary',
+  size = 'small',
+  shape = 'square',
+  ...props
+}: ButtonProps) => {
   // const {} = props
+  const isIconOnly = !text && (iconBefore || iconAfter);
 
   return (
     <>
-      <button>123</button>
-      <h1 className="heading1">HGHGJHJffffffggh</h1>
-      <h2 className="heading2">HGGJHG4554 vhghghg</h2>
+      <button
+        className={classNames(
+          'button', 
+          `button--${color}`, 
+          `button--${size}`, 
+          className, 
+          isIconOnly && `button--${shape}`, 
+          isIconOnly && 'button--icon-only')
+        }
+        {...props}
+      >
+        {iconBefore && <Icon className="button__icon button__icon--before" icon={iconBefore} />}
+        {text && text}
+        {iconAfter && <Icon className="button__icon button__icon--after" icon={iconAfter} />}
+      </button>
     </>
   )
   
 }
-
-export default Button

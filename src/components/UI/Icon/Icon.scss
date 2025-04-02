@@ -1,0 +1,45 @@
+.icon {
+  display: inline-block;
+  // Sizes
+  &--extra_large {
+    width: 36px;
+    height: 36px;
+  }
+
+  &--large {
+    width: 30px;
+    height: 30px;
+  }
+
+  &--small {
+    width: 20px;
+    height: 20px;
+  }
+
+  &--extra_small {
+    width: 16px;
+    height: 16px;
+  }
+
+  // Colors
+  &--color-default {
+    color: var(--text_c_primary);
+  }
+
+  &--color-sky-blue {
+    color: var(--text_c_accent);
+  }
+
+  &--color-soft-blue {
+    color: #BAD9FA;
+  }
+
+  &--color-neutral {
+    color: var(--text_c_subdued);
+  }
+
+  &--color-white {
+    color: var(--text_c_secondary);
+  }
+}
+
