@@ -38,7 +38,7 @@ export default function UiKit() {
         {/* Установка цвета иконки на небесно-голубой */}
         <Icon 
           icon={ICON_IMAGE} 
-          colorIcon="sky-blue" 
+          colorIcon="accent" 
         />
 
         {/* Установка цвета иконки на мягкий синий */}
@@ -56,7 +56,7 @@ export default function UiKit() {
         {/* Установка цвета иконки на белый */}
         <Icon 
           icon={ICON_IMAGE} 
-          colorIcon="white" 
+          colorIcon="secondary" 
         />
         
         {/* Установка размера иконки через fontSize в пикселях */}
@@ -88,7 +88,7 @@ export default function UiKit() {
 
 
 
-      <div>
+      <div className='ui-buttons'>
         {/* Обычная кнопка */}
         <Button 
           text="Создать" 
@@ -100,7 +100,7 @@ export default function UiKit() {
         {/* Кнопка только с иконкой */}
         <Button
           iconBefore={ICON_IMAGE}
-          color="danger"
+          color="secondary"
           shape="circle"
           size="small"
         />
@@ -108,14 +108,20 @@ export default function UiKit() {
         {/* Кнопка с иконкой после текста */}
         <Button
           text="Отправить"
-          color="success"
+          color="accent"
           iconAfter={ICON_IMAGE}
         />
 
-        {/* Заблокированная кнопка */}
+        
         <Button
           text="Недоступно"
-          color="secondary"
+          color="subdued"
+        />
+
+         {/* Заблокированная кнопка */}
+         <Button
+          text="Недоступно"
+          color="subdued"
           disabled
         />
       </div>

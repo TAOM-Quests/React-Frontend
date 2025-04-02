@@ -3,7 +3,7 @@ import "./Button.scss"
 import { ButtonHTMLAttributes } from "react";
 import { Icon } from "../Icon/Icon";
 
-export type Color = 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger';
+export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
 export type Size = 'large' | 'small';
 export type ButtonIconShape = 'square' | 'circle';
 
@@ -19,7 +19,7 @@ extends ButtonHTMLAttributes<HTMLButtonElement>{
 
 export const Button = ({
   text,
-  className = '',
+  className,
   type = 'button',
   iconBefore,
   iconAfter,
@@ -35,6 +35,7 @@ export const Button = ({
     <>
       <button
         className={classNames(
+          'body-m-b',
           'button', 
           `button--${color}`, 
           `button--${size}`, 
@@ -44,9 +45,19 @@ export const Button = ({
         }
         {...props}
       >
-        {iconBefore && <Icon className="button__icon button__icon--before" icon={iconBefore} />}
+        {iconBefore && 
+          <Icon 
+            className="button__icon button__icon--before"
+            icon={iconBefore} 
+            colorIcon={color}
+          />}
         {text && text}
-        {iconAfter && <Icon className="button__icon button__icon--after" icon={iconAfter} />}
+        {iconAfter &&
+          <Icon 
+            className="button__icon button__icon--after" 
+            icon={iconAfter} 
+            colorIcon={color}
+          />}
       </button>
     </>
   )

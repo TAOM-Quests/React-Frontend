@@ -22,11 +22,20 @@
   }
 
   // Colors
-  &--color-default {
+
+  &--color-primary {
+    color: var(--text_c_secondary);
+  }
+
+  &--color-secondary {
     color: var(--text_c_primary);
   }
 
-  &--color-sky-blue {
+  &--color-accent {
+    color: var(--text_c_secondary);
+  }
+
+  &--color-subdued {
     color: var(--text_c_accent);
   }
 
@@ -36,10 +45,6 @@
 
   &--color-neutral {
     color: var(--text_c_subdued);
-  }
-
-  &--color-white {
-    color: var(--text_c_secondary);
   }
 }
 

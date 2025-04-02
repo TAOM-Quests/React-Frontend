@@ -3,7 +3,8 @@ import classNames from "classnames";
 import "./Icon.scss";
 
 export type Size = 'extra_large' | 'large' | 'small'| 'extra_small';
-export type Color = 'default' | 'sky-blue' | 'soft-blue'| 'neutral' | 'white';
+
+export type Color = 'primary' | 'secondary' | 'accent' | 'subdued' | 'soft-blue' |'neutral';
 
 interface IconProps
 extends SVGAttributes<SVGElement>{
@@ -18,7 +19,7 @@ export const Icon = ({
   size = 'small',
   fontSize,
   viewBox = '0 0 20 20',
-  colorIcon = 'default',
+  colorIcon = 'secondary',
   className,
   ...props
 }: IconProps) => {
