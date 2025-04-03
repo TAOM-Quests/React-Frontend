@@ -1,4 +1,4 @@
-import { ICON_IMAGE } from '../../assets/icons/constants'
+import { ICON_IMAGE, IconType } from '../../assets/icons/constants'
 import { Button } from '../../components/UI/Button/Button';
 import { Icon } from '../../components/UI/Icon/Icon';
 import "./UI-kit.scss";
@@ -94,12 +94,12 @@ export default function UiKit() {
           text="Создать" 
           color="primary" 
           size="large" 
-          iconBefore={ICON_IMAGE}
+          iconBefore={IconType.IMAGE}
         />
 
         {/* Кнопка только с иконкой */}
         <Button
-          iconBefore={ICON_IMAGE}
+          iconBefore={IconType.IMAGE}
           color="secondary"
           isButtonCircle={true}
           size="small"
@@ -109,7 +109,7 @@ export default function UiKit() {
         <Button
           text="Отправить"
           color="accent"
-          iconAfter={ICON_IMAGE}
+          iconAfter={IconType.IMAGE}
         />
 
         

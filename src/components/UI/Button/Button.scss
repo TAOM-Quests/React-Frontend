@@ -13,6 +13,10 @@
   &--primary { 
     background-color: var(--bg_c_primary); 
     color: var(--text_c_secondary); 
+
+    &:disabled:hover, &:disabled:active {
+      background-color: var(--bg_c_primary); 
+    }
   }
   &--primary:hover { 
     background-color: var(--bg_c_primary_hover);  
@@ -25,6 +29,10 @@
     background-color: var(--bg_c_secondary); 
     color: var(--text_c_primary); 
     border: var(--border_primary) var(--border_c_primary);
+
+    &:disabled:hover, &:disabled:active {
+      background-color: var(--bg_c_secondary); 
+    }
   }
   &--secondary:hover {
     background-color: var(--bg_c_secondary_hover); 
@@ -36,6 +44,10 @@
   &--accent { 
     background-color: var(--bg_c_accent); 
     color: var(--text_c_secondary);  
+
+    &:disabled:hover, &:disabled:active {
+      background-color: var(--bg_c_accent); 
+    }
   }
   &--accent:hover {
     background-color: var(--bg_c_accent_hover); 
@@ -47,6 +59,10 @@
   &--subdued { 
     background: var(--bg_c_subdued); 
     color: var(--text_c_accent); 
+
+    &:disabled:hover, &:disabled:active {
+      background-color: var(--bg_c_subdued); 
+    }
   }
   &--subdued:hover {
     background-color: var(--bg_c_subdued_hover); 
@@ -91,14 +107,6 @@
   
   &:disabled {
     opacity: var(--disabled_opacity);
-    cursor: not-allowed;
-  }
-  &:disabled:hover {
-    background-color: inherit;
-    cursor: not-allowed;
-  }
-  &:disabled:active {
-    background-color: inherit;
     cursor: not-allowed;
   }
 }

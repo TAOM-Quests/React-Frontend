@@ -1,7 +1,8 @@
 import classNames from "classnames";
-import "./Button.scss"
 import { ButtonHTMLAttributes } from "react";
 import { Icon } from "../Icon/Icon";
+import { IconType, getIcon } from "../../../assets/icons/constants";
+import "./Button.scss"
 
 export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
 export type Size = 'large' | 'small';
@@ -21,9 +22,11 @@ extends ButtonHTMLAttributes<HTMLButtonElement>{
   /** Форма кнопки с иконкой круглая? */
   isButtonCircle?: boolean;
   /** Иконка перед текстом в виде HTML */
-  iconBefore?: string;
+  iconBefore?: IconType;
   /** Иконка после текста в виде HTML */
-  iconAfter?: string;
+  iconAfter?: IconType;
+  /** Отключить кнопку */
+  disabled?: boolean
   /** Обработчик щелчков */
   onClick?: () => void;
 }
@@ -31,8 +34,6 @@ extends ButtonHTMLAttributes<HTMLButtonElement>{
 /** Основной компонент пользовательского интерфейса для взаимодействия с пользователем */
 export const Button = ({
   text,
-  className,
-  type = 'button',
   iconBefore,
   iconAfter,
   color = 'primary',
@@ -42,19 +43,18 @@ export const Button = ({
   isIconOnly = false,
   ...props
 }: ButtonProps) => {
+
   const isIconOnlyMode = isIconOnly || (!text && (iconBefore || iconAfter));
 
   const iconToDisplay = isIconOnlyMode ? iconBefore : iconBefore || iconAfter;
 
   return (
-    <>
       <button
         className={classNames(
           'body-m-b',
           'button', 
           `button--${color}`, 
-          `button--${size}`, 
-          className, 
+          `button--${size}`,  
           isIconOnlyMode && isButtonCircle && `button--circle`, 
           isIconOnlyMode && 'button--icon-only')
         }
@@ -64,7 +64,7 @@ export const Button = ({
         {isIconOnlyMode && iconToDisplay && (
           <Icon 
             className="button__icon button__icon--only"
-            icon={iconToDisplay} 
+            icon={getIcon(iconToDisplay)} 
             colorIcon={color}
           />
         )}
@@ -73,20 +73,18 @@ export const Button = ({
             {iconBefore && 
               <Icon 
                 className="button__icon button__icon--before"
-                icon={iconBefore} 
+                icon={getIcon(iconBefore)} 
                 colorIcon={color}
               />}
             {text && text}
             {iconAfter &&
               <Icon 
                 className="button__icon button__icon--after" 
-                icon={iconAfter} 
+                icon={getIcon(iconAfter)} 
                 colorIcon={color}
               />}
           </>
         )}
       </button>
-    </>
   )
-  
 }
