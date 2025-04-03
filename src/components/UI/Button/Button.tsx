@@ -5,18 +5,30 @@ import { Icon } from "../Icon/Icon";
 
 export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
 export type Size = 'large' | 'small';
-export type ButtonIconShape = 'square' | 'circle';
 
 export interface ButtonProps
 extends ButtonHTMLAttributes<HTMLButtonElement>{
+  /** Текст кнопки */
   text?: string;
-  iconBefore?: string;
-  iconAfter?: string;
+  /** Какого цвета кнопка */
   color?: Color;
+  /** Какой цвет фона использовать */
+  backgroundColor?: string;
+  /** Какого размера должна быть кнопка? */
   size?: Size;
-  shape?: ButtonIconShape;
+  /** Отображать только иконку */
+  isIconOnly?: boolean;
+  /** Форма кнопки с иконкой круглая? */
+  isButtonCircle?: boolean;
+  /** Иконка перед текстом в виде HTML */
+  iconBefore?: string;
+  /** Иконка после текста в виде HTML */
+  iconAfter?: string;
+  /** Обработчик щелчков */
+  onClick?: () => void;
 }
 
+/** Основной компонент пользовательского интерфейса для взаимодействия с пользователем */
 export const Button = ({
   text,
   className,
@@ -24,12 +36,15 @@ export const Button = ({
   iconBefore,
   iconAfter,
   color = 'primary',
-  size = 'small',
-  shape = 'square',
+  backgroundColor,
+  size = 'large',
+  isButtonCircle = false,
+  isIconOnly = false,
   ...props
 }: ButtonProps) => {
-  // const {} = props
-  const isIconOnly = !text && (iconBefore || iconAfter);
+  const isIconOnlyMode = isIconOnly || (!text && (iconBefore || iconAfter));
+
+  const iconToDisplay = isIconOnlyMode ? iconBefore : iconBefore || iconAfter;
 
   return (
     <>
@@ -40,24 +55,36 @@ export const Button = ({
           `button--${color}`, 
           `button--${size}`, 
           className, 
-          isIconOnly && `button--${shape}`, 
-          isIconOnly && 'button--icon-only')
+          isIconOnlyMode && isButtonCircle && `button--circle`, 
+          isIconOnlyMode && 'button--icon-only')
         }
+        style={{ backgroundColor }}
         {...props}
       >
-        {iconBefore && 
+        {isIconOnlyMode && iconToDisplay && (
           <Icon 
-            className="button__icon button__icon--before"
-            icon={iconBefore} 
+            className="button__icon button__icon--only"
+            icon={iconToDisplay} 
             colorIcon={color}
-          />}
-        {text && text}
-        {iconAfter &&
-          <Icon 
-            className="button__icon button__icon--after" 
-            icon={iconAfter} 
-            colorIcon={color}
-          />}
+          />
+        )}
+        {!isIconOnlyMode && (
+          <>
+            {iconBefore && 
+              <Icon 
+                className="button__icon button__icon--before"
+                icon={iconBefore} 
+                colorIcon={color}
+              />}
+            {text && text}
+            {iconAfter &&
+              <Icon 
+                className="button__icon button__icon--after" 
+                icon={iconAfter} 
+                colorIcon={color}
+              />}
+          </>
+        )}
       </button>
     </>
   )

@@ -101,7 +101,7 @@ export default function UiKit() {
         <Button
           iconBefore={ICON_IMAGE}
           color="secondary"
-          shape="circle"
+          isButtonCircle={true}
           size="small"
         />
 
