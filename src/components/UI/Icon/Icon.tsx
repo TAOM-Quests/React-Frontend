@@ -34,12 +34,11 @@ export const Icon = ({
   return (
     <svg 
       className={classNames(
-                'icon',
-                `icon--${size}`,
-                `icon--color-${colorIcon}`,
-                className
-                )
-              }
+        'icon',
+        `icon--${size}`,
+        `icon--color-${colorIcon}`,
+        className
+      )}
       style={{ color }}
       viewBox={viewBox} 
       width={fontSize} 

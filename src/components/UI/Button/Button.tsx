@@ -41,6 +41,7 @@ export const Button = ({
   size = 'large',
   isButtonCircle = false,
   isIconOnly = false,
+  className,
   ...props
 }: ButtonProps) => {
 
@@ -56,8 +57,9 @@ export const Button = ({
         `button--${color}`, 
         `button--${size}`,  
         isIconOnlyMode && isButtonCircle && `button--circle`, 
-        isIconOnlyMode && 'button--icon-only')
-      }
+        isIconOnlyMode && 'button--icon-only',
+        className
+      )}
       style={{ backgroundColor }}
       {...props}
     >
