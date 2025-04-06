@@ -3,13 +3,12 @@ export interface SubmitButtonProps {
   action?: () => void
 }
 
-export default function SubmitButton({
-  text,
-  action
-}: SubmitButtonProps) {
+export default function SubmitButton({ text, action }: SubmitButtonProps) {
   return (
     <div>
-      <button type="submit" onClick={action}>{text}</button>
+      <button type="submit" onClick={action}>
+        {text}
+      </button>
     </div>
   )
 }

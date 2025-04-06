@@ -1,13 +1,13 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserAuth } from "../../models/userAuth";
-import { RootState } from "../store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { UserAuth } from '../../models/userAuth'
+import { RootState } from '../store'
 
 interface AuthState {
   value: UserAuth | null
 }
 
 const initialState: AuthState = {
-  value: null
+  value: null,
 }
 
 export const authSlice = createSlice({
@@ -17,14 +17,17 @@ export const authSlice = createSlice({
     setUser: (state, action: PayloadAction<UserAuth>) => {
       state.value = action.payload
     },
-    setRole: (state, action: PayloadAction<Pick<UserAuth, 'role' | 'isAdmin'>>) => {
+    setRole: (
+      state,
+      action: PayloadAction<Pick<UserAuth, 'role' | 'isAdmin'>>,
+    ) => {
       if (state.value) {
-        state.value = {...state.value, ...action.payload}
+        state.value = { ...state.value, ...action.payload }
       }
     },
-  }
+  },
 })
 
-export const {setUser, setRole} = authSlice.actions
+export const { setUser, setRole } = authSlice.actions
 export const selectAuth = (state: RootState) => state.auth.value
 export default authSlice.reducer

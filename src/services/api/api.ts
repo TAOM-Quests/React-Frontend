@@ -1,4 +1,4 @@
-import { Response, ResponseError } from "./common/interface/Response"
+import { Response, ResponseError } from './common/interface/Response'
 
 const DEV_SERVER_URL = 'http://localhost:3000/'
 const BASE_API_URL = 'api/v1/'
@@ -9,7 +9,7 @@ export const api = async <TResult, TParameters>(
 ): Promise<TResult | string> => {
   path = `${DEV_SERVER_URL}${BASE_API_URL}${path}`
 
-  const response = await fetchData<TParameters>(path, parameters) as Response
+  const response = (await fetchData<TParameters>(path, parameters)) as Response
 
   console.log(response)
 
@@ -24,20 +24,16 @@ export const api = async <TResult, TParameters>(
   return responseData
 }
 
-function fetchData<TParameters>(
-  path: string,
-  parameters?: TParameters
-) {
+function fetchData<TParameters>(path: string, parameters?: TParameters) {
   const request = parameters
-  ? fetch(path, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(parameters),
-    })
-  : fetch(path)
+    ? fetch(path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(parameters),
+      })
+    : fetch(path)
 
-  return request
-    .then((response) => response.json())
+  return request.then(response => response.json())
 }

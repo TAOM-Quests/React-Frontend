@@ -41,12 +41,15 @@ export default tseslint.config(
       '@stylistic/block-spacing': 'warn',
       '@stylistic/computed-property-spacing': ['error', 'never'],
 
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        vars: 'all',
-        args: 'after-used',
-        ignoreRestSiblings: false,
-        allowImplicitTypes: true, // Add this line
-      }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: false,
+          allowImplicitTypes: true, // Add this line
+        },
+      ],
     },
   },
 )
