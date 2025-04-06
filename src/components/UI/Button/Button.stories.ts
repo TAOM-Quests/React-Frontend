@@ -20,13 +20,9 @@ const meta: Meta<typeof Button> = {
       control: 'text',
       description: 'Текст кнопки',
     },
-    typeButton: {
-      control: 'inline-radio',
+    colorType: {
+      control: 'object',
       description: 'Тип кнопки',
-    },
-    backgroundColor: {
-      control: 'color',
-      description: 'Цвет фона кнопки',
     },
     size: {
       control: 'inline-radio',
@@ -66,28 +62,28 @@ type Story = StoryObj<typeof Button>
 export const Primary: Story = {
   args: {
     text: 'Primary Button',
-    typeButton: 'primary',
+    colorType: 'primary',
   },
 }
 
 export const Secondary: Story = {
   args: {
     text: 'Secondary Button',
-    typeButton: 'secondary',
+    colorType: 'secondary',
   },
 }
 
 export const Accent: Story = {
   args: {
     text: 'Accent Button',
-    typeButton: 'accent',
+    colorType: 'accent',
   },
 }
 
 export const Subdued: Story = {
   args: {
     text: 'Subdued Button',
-    typeButton: 'subdued',
+    colorType: 'subdued',
   },
 }
 
@@ -98,10 +94,20 @@ export const Disabled: Story = {
   },
 }
 
+export const CustomColor: Story = {
+  args: {
+    text: 'Custom Color Button',
+    colorType: {
+      color: '#0000FF',
+      backgroundColor: '#FFFF00',
+    },
+  },
+}
+
 export const Large: Story = {
   args: {
     text: 'Large Button',
-    typeButton: 'primary',
+    colorType: 'primary',
     size: 'large',
   },
 }
@@ -109,7 +115,7 @@ export const Large: Story = {
 export const Small: Story = {
   args: {
     text: 'Small Button',
-    typeButton: 'primary',
+    colorType: 'primary',
     size: 'small',
   },
 }

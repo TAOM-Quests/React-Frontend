@@ -9,8 +9,7 @@ export type Size = 'large' | 'small'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string
-  typeButton?: TypeButton
-  backgroundColor?: string
+  colorType?: TypeButton | { color: string; backgroundColor: string }
   size?: Size
   isIconOnly?: boolean
   isButtonCircle?: boolean
@@ -22,8 +21,7 @@ export const Button = ({
   text,
   iconBefore,
   iconAfter,
-  typeButton = 'primary',
-  backgroundColor,
+  colorType = 'primary',
   size = 'large',
   isButtonCircle = false,
   isIconOnly = false,
@@ -38,20 +36,27 @@ export const Button = ({
       className={classNames(
         'body-m-b',
         'button',
-        `button--${typeButton}`,
+        typeof colorType === 'string' ? `button--${colorType}` : '',
         `button--${size}`,
         isIconOnlyMode && isButtonCircle && `button--circle`,
         isIconOnlyMode && 'button--icon-only',
         className,
       )}
-      style={{ backgroundColor }}
+      style={
+        typeof colorType !== 'string'
+          ? {
+              backgroundColor: colorType.backgroundColor,
+              color: colorType.color,
+            }
+          : {}
+      }
       {...props}
     >
       {isIconOnlyMode && iconToDisplay && (
         <Icon
           className="button__icon button__icon--only"
           icon={iconToDisplay}
-          typeIcon={typeButton}
+          typeIcon={typeof colorType === 'string' ? colorType : 'secondary'}
         />
       )}
       {!isIconOnlyMode && (
@@ -60,7 +65,7 @@ export const Button = ({
             <Icon
               className="button__icon button__icon--before"
               icon={iconBefore}
-              typeIcon={typeButton}
+              typeIcon={typeof colorType === 'string' ? colorType : 'secondary'}
             />
           )}
           {text && text}
@@ -68,7 +73,7 @@ export const Button = ({
             <Icon
               className="button__icon button__icon--after"
               icon={iconAfter}
-              typeIcon={typeButton}
+              typeIcon={typeof colorType === 'string' ? colorType : 'secondary'}
             />
           )}
         </>
