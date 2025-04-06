@@ -1,7 +1,8 @@
 export interface InputProps
-extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
-} 
+  className?: string
+}
 
 export default function Input(props: InputProps) {
   let inputClassName = `tq-input`
@@ -13,7 +14,7 @@ export default function Input(props: InputProps) {
   return (
     <div>
       <label>{props.label}</label>
-      <input 
+      <input
         className={inputClassName}
         type={props.type}
         value={props.value}

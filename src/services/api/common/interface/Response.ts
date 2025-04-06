@@ -1,9 +1,8 @@
 export interface Response {
-  statusCode: number,
+  statusCode: number
   statusText: string
 }
 
-export interface ResponseError
-extends Response {
+export interface ResponseError extends Response {
   message: string
 }

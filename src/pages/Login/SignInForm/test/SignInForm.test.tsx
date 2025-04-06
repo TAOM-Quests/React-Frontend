@@ -1,14 +1,13 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import SignInForm from '../SignInForm';
-import { userEvent } from '@vitest/browser/context';
-import '@vitest/browser/matchers';
-import { renderWithProviders } from '../../../../mocks/redux/utils';
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import SignInForm from '../SignInForm'
+import { userEvent } from '@vitest/browser/context'
+import '@vitest/browser/matchers'
+import { renderWithProviders } from '../../../../mocks/redux/utils'
 
 const mockedUseNavigate = vi.fn()
 vi.mock('react-router', async () => {
-  const mod = await vi.importActual<typeof import('react-router')>(
-    'react-router'
-  )
+  const mod =
+    await vi.importActual<typeof import('react-router')>('react-router')
   return {
     ...mod,
     useNavigate: () => mockedUseNavigate,
@@ -20,9 +19,8 @@ describe('SignInForm', () => {
   let repeatPasswordInput: Element
   let signInButton: Element
   let errorMessage: Element | null
-  
-  describe('Repeat password logic', () => {
 
+  describe('Repeat password logic', () => {
     beforeEach(() => {
       renderWithProviders(<SignInForm />)
       passwordInput = document.querySelector('.password-input')!
@@ -37,7 +35,7 @@ describe('SignInForm', () => {
       await userEvent.type(repeatPasswordInput, password)
       await userEvent.click(signInButton)
       errorMessage = document.querySelector('p')
-      
+
       expect(errorMessage).toBeNull()
     })
 
@@ -49,8 +47,8 @@ describe('SignInForm', () => {
       await userEvent.type(repeatPasswordInput, differentPassword)
       await userEvent.click(signInButton)
       errorMessage = document.querySelector('p')
-      
-      expect(errorMessage?.textContent).toEqual("Пароли не совпадают")
+
+      expect(errorMessage?.textContent).toEqual('Пароли не совпадают')
     })
   })
 })

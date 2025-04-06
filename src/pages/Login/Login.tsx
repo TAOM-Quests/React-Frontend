@@ -1,21 +1,15 @@
-import { useState } from "react";
-import LogInForm from "./LogInForm/LogInForm";
-import SignInForm from "./SignInForm/SignInForm";
+import { useState } from 'react'
+import LogInForm from './LogInForm/LogInForm'
+import SignInForm from './SignInForm/SignInForm'
 
 export default function Login() {
-  const [isLogInForm, setIsLogInForm] = useState(true);
+  const [isLogInForm, setIsLogInForm] = useState(true)
 
   return (
     <>
-      {isLogInForm
-        ? <LogInForm />
-        : <SignInForm />
-      }
+      {isLogInForm ? <LogInForm /> : <SignInForm />}
       <button onClick={() => setIsLogInForm(!isLogInForm)}>
-        {isLogInForm
-          ? 'Зарегистрироваться'
-          : 'Войти'
-        }
+        {isLogInForm ? 'Зарегистрироваться' : 'Войти'}
       </button>
     </>
   )
