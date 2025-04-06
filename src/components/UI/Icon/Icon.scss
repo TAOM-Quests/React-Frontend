@@ -1,28 +1,7 @@
 .icon {
   display: inline-block;
-  // Sizes
-  &--extra_large {
-    width: 36px;
-    height: 36px;
-  }
-
-  &--large {
-    width: 30px;
-    height: 30px;
-  }
-
-  &--small {
-    width: 20px;
-    height: 20px;
-  }
-
-  &--extra_small {
-    width: 16px;
-    height: 16px;
-  }
-
+  
   // Colors
-
   &--color-primary {
     color: var(--text_c_secondary);
   }

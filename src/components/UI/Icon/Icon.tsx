@@ -1,48 +1,44 @@
 import { SVGAttributes } from 'react';
 import classNames from "classnames";
-import { getIcon, ICON_MAP } from "../../../assets/icons/constants";
+import { getIcon, ICON_MAP } from "../../../assets/icons";
 import "./Icon.scss";
 
-export type Size = 'extra_large' | 'large' | 'small'| 'extra_small';
+export type Size = '36px' | '30px' | '20px'| '16px';
 
-export type Color = 'primary' | 'secondary' | 'accent' | 'subdued' | 'soft-blue' |'neutral';
+export type typeIcon = 'primary' | 'secondary' | 'accent' | 'subdued' | 'soft-blue' |'neutral';
 
 interface IconProps
 extends SVGAttributes<SVGElement>{
-  /** Выбор иконки */
   icon: keyof typeof ICON_MAP,
-  /** Заготовленные размеры иконки */
   size?: Size,
-  /** Заготовленные цвета иконки */
-  colorIcon?: Color,
-   /** Цвет иконки */
-  color?: string,
-  /** Размер иконки */
+  typeIcon?: typeIcon,
   fontSize?: string | number
 }
 
 export const Icon = ({
   icon,
-  size = 'small',
+  size = '20px',
   fontSize,
   viewBox = '0 0 20 20',
-  colorIcon = 'secondary',
+  typeIcon = 'secondary',
   color,
   className,
   ...props
 }: IconProps) => {
+  const iconSize = fontSize ? fontSize : size;
+
   return (
     <svg 
       className={classNames(
         'icon',
         `icon--${size}`,
-        `icon--color-${colorIcon}`,
+        `icon--color-${typeIcon}`,
         className
       )}
       style={{ color }}
       viewBox={viewBox} 
-      width={fontSize} 
-      height={fontSize}
+      width={iconSize} 
+      height={iconSize}
       dangerouslySetInnerHTML={{__html: getIcon(icon)}}
       {...props}
     />

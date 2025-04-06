@@ -1,42 +1,29 @@
 import classNames from "classnames";
 import { ButtonHTMLAttributes } from "react";
 import { Icon } from "../Icon/Icon";
-import { ICON_MAP } from "../../../assets/icons/constants";
+import { ICON_MAP } from "../../../assets/icons";
 import "./Button.scss"
 
-export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
+export type TypeButton = 'primary' | 'secondary' | 'accent' | 'subdued';
 export type Size = 'large' | 'small';
 
 export interface ButtonProps
 extends ButtonHTMLAttributes<HTMLButtonElement>{
-  /** Текст кнопки */
-  text?: string;
-  /** Цвет кнопки */
-  color?: Color;
-  /** Цвет фона кнопки */
-  backgroundColor?: string;
-  /** Размер кнопки */
-  size?: Size;
-  /** Отображать только иконку */
-  isIconOnly?: boolean;
-  /** Круглая форма кнопки с иконкой */
-  isButtonCircle?: boolean;
-  /** Иконка перед текстом */
-  iconBefore?: keyof typeof ICON_MAP;
-  /** Иконка после текста */
-  iconAfter?: keyof typeof ICON_MAP;
-  /** Отключить кнопку */
-  disabled?: boolean
-  /** Обработчик щелчков */
-  onClick?: () => void;
+  text?: string
+  typeButton?: TypeButton
+  backgroundColor?: string
+  size?: Size
+  isIconOnly?: boolean
+  isButtonCircle?: boolean
+  iconBefore?: keyof typeof ICON_MAP
+  iconAfter?: keyof typeof ICON_MAP
 }
 
-/** Основной компонент пользовательского интерфейса для взаимодействия с пользователем */
 export const Button = ({
   text,
   iconBefore,
   iconAfter,
-  color = 'primary',
+  typeButton = 'primary',
   backgroundColor,
   size = 'large',
   isButtonCircle = false,
@@ -44,17 +31,15 @@ export const Button = ({
   className,
   ...props
 }: ButtonProps) => {
-
-  const isIconOnlyMode = isIconOnly || (!text && (iconBefore || iconAfter));
-
-  const iconToDisplay = isIconOnlyMode ? iconBefore : iconBefore || iconAfter;
+  const isIconOnlyMode = isIconOnly || (!text && (iconBefore || iconAfter))
+  const iconToDisplay = isIconOnlyMode ? iconBefore : iconBefore || iconAfter
 
   return (
     <button
       className={classNames(
         'body-m-b',
         'button', 
-        `button--${color}`, 
+        `button--${typeButton}`, 
         `button--${size}`,  
         isIconOnlyMode && isButtonCircle && `button--circle`, 
         isIconOnlyMode && 'button--icon-only',
@@ -67,7 +52,7 @@ export const Button = ({
         <Icon 
           className="button__icon button__icon--only"
           icon={iconToDisplay} 
-          colorIcon={color}
+          typeIcon={typeButton}
         />
       )}
       {!isIconOnlyMode && (
@@ -76,14 +61,14 @@ export const Button = ({
             <Icon 
               className="button__icon button__icon--before"
               icon={iconBefore} 
-              colorIcon={color}
+              typeIcon={typeButton}
             />}
           {text && text}
           {iconAfter &&
             <Icon 
               className="button__icon button__icon--after" 
               icon={iconAfter} 
-              colorIcon={color}
+              typeIcon={typeButton}
             />}
         </>
       )}
