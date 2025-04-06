@@ -22,7 +22,7 @@ const meta: Meta<typeof Button> = {
     },
     colorType: {
       control: 'object',
-      description: 'Тип кнопки',
+      description: 'Цвета кнопки',
     },
     size: {
       control: 'inline-radio',
