@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ICON_MAP } from '../../../assets/icons';
-import { Icon } from "./Icon";
-import "./Icon.scss"
+import type { Meta, StoryObj } from '@storybook/react'
+import { ICON_MAP } from '../../../assets/icons'
+import { Icon } from './Icon'
+import './Icon.scss'
 
 const meta: Meta<typeof Icon> = {
   title: 'Ui-Kit/Icon',
@@ -39,50 +39,50 @@ const meta: Meta<typeof Icon> = {
     viewBox: {
       control: 'text',
       description: 'Размер иконки',
-    }
+    },
   },
   tags: ['autodocs'],
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Icon>;
+type Story = StoryObj<typeof Icon>
 
 export const Default: Story = {
   args: {
-    icon: "CHECK",
+    icon: 'CHECK',
     size: '20px',
     typeIcon: 'secondary',
   },
-};
+}
 
 export const ExtraLarge: Story = {
   args: {
     icon: 'CHECK',
     size: '36px',
   },
-};
+}
 
 export const Large: Story = {
   args: {
     icon: 'CHECK',
     size: '30px',
   },
-};
+}
 
 export const Small: Story = {
   args: {
     icon: 'CHECK',
     size: '20px',
   },
-};
+}
 
 export const ExtraSmall: Story = {
   args: {
     icon: 'CHECK',
     size: '16px',
   },
-};
+}
 
 export const CustomColor: Story = {
   args: {
@@ -90,4 +90,4 @@ export const CustomColor: Story = {
     size: '36px',
     color: 'blue',
   },
-};
+}

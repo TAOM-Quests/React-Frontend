@@ -1,14 +1,13 @@
-import classNames from "classnames";
-import { ButtonHTMLAttributes } from "react";
-import { Icon } from "../Icon/Icon";
-import { ICON_MAP } from "../../../assets/icons";
-import "./Button.scss"
+import classNames from 'classnames'
+import { ButtonHTMLAttributes } from 'react'
+import { Icon } from '../Icon/Icon'
+import { ICON_MAP } from '../../../assets/icons'
+import './Button.scss'
 
-export type TypeButton = 'primary' | 'secondary' | 'accent' | 'subdued';
-export type Size = 'large' | 'small';
+export type TypeButton = 'primary' | 'secondary' | 'accent' | 'subdued'
+export type Size = 'large' | 'small'
 
-export interface ButtonProps
-extends ButtonHTMLAttributes<HTMLButtonElement>{
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string
   typeButton?: TypeButton
   backgroundColor?: string
@@ -38,38 +37,40 @@ export const Button = ({
     <button
       className={classNames(
         'body-m-b',
-        'button', 
-        `button--${typeButton}`, 
-        `button--${size}`,  
-        isIconOnlyMode && isButtonCircle && `button--circle`, 
+        'button',
+        `button--${typeButton}`,
+        `button--${size}`,
+        isIconOnlyMode && isButtonCircle && `button--circle`,
         isIconOnlyMode && 'button--icon-only',
-        className
+        className,
       )}
       style={{ backgroundColor }}
       {...props}
     >
       {isIconOnlyMode && iconToDisplay && (
-        <Icon 
+        <Icon
           className="button__icon button__icon--only"
-          icon={iconToDisplay} 
+          icon={iconToDisplay}
           typeIcon={typeButton}
         />
       )}
       {!isIconOnlyMode && (
         <>
-          {iconBefore && 
-            <Icon 
+          {iconBefore && (
+            <Icon
               className="button__icon button__icon--before"
-              icon={iconBefore} 
+              icon={iconBefore}
               typeIcon={typeButton}
-            />}
+            />
+          )}
           {text && text}
-          {iconAfter &&
-            <Icon 
-              className="button__icon button__icon--after" 
-              icon={iconAfter} 
+          {iconAfter && (
+            <Icon
+              className="button__icon button__icon--after"
+              icon={iconAfter}
               typeIcon={typeButton}
-            />}
+            />
+          )}
         </>
       )}
     </button>

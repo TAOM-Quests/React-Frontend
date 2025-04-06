@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ICON_MAP } from '../../../assets/icons';
-import { Button } from "./Button";
-import "./Button.scss"
+import type { Meta, StoryObj } from '@storybook/react'
+import { ICON_MAP } from '../../../assets/icons'
+import { Button } from './Button'
+import './Button.scss'
 
 const meta: Meta<typeof Button> = {
   title: 'Ui-Kit/Button',
@@ -10,7 +10,8 @@ const meta: Meta<typeof Button> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Основной компонент пользовательского интерфейса для взаимодействия с пользователем ',
+        component:
+          'Основной компонент пользовательского интерфейса для взаимодействия с пользователем ',
       },
     },
   },
@@ -46,20 +47,20 @@ const meta: Meta<typeof Button> = {
     iconBefore: {
       control: 'select',
       options: Object.keys(ICON_MAP),
-      description: 'Иконка перед текстом'
+      description: 'Иконка перед текстом',
     },
     iconAfter: {
       control: 'select',
       options: Object.keys(ICON_MAP),
-      description: 'Иконка после текста'
+      description: 'Иконка после текста',
     },
   },
   tags: ['autodocs'],
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Button>;
+type Story = StoryObj<typeof Button>
 
 /** История для кнопки по умолчанию. */
 export const Primary: Story = {
@@ -67,35 +68,35 @@ export const Primary: Story = {
     text: 'Primary Button',
     typeButton: 'primary',
   },
-};
+}
 
 export const Secondary: Story = {
   args: {
     text: 'Secondary Button',
     typeButton: 'secondary',
   },
-};
+}
 
 export const Accent: Story = {
   args: {
     text: 'Accent Button',
     typeButton: 'accent',
   },
-};
+}
 
 export const Subdued: Story = {
   args: {
     text: 'Subdued Button',
     typeButton: 'subdued',
   },
-};
+}
 
 export const Disabled: Story = {
   args: {
     text: 'Disabled Button',
     disabled: true,
   },
-};
+}
 
 export const Large: Story = {
   args: {
@@ -103,7 +104,7 @@ export const Large: Story = {
     typeButton: 'primary',
     size: 'large',
   },
-};
+}
 
 export const Small: Story = {
   args: {
@@ -111,40 +112,40 @@ export const Small: Story = {
     typeButton: 'primary',
     size: 'small',
   },
-};
+}
 
 export const Circle: Story = {
   args: {
-    iconBefore: "ADD_IMAGE",
+    iconBefore: 'ADD_IMAGE',
     isButtonCircle: true,
   },
-};
+}
 
 export const IconOnly: Story = {
   args: {
-    iconBefore: "ADD_IMAGE",
+    iconBefore: 'ADD_IMAGE',
     isIconOnly: true,
   },
-};
+}
 
 export const WithIconBefore: Story = {
   args: {
     text: 'Button with icon before',
-    iconBefore: "ADD_IMAGE",
+    iconBefore: 'ADD_IMAGE',
   },
-};
+}
 
 export const WithIconAfter: Story = {
   args: {
     text: 'Button with icon after',
-    iconAfter: "ADD_IMAGE",
+    iconAfter: 'ADD_IMAGE',
   },
-};
+}
 
 export const IconBeforeAndAfter: Story = {
   args: {
     text: 'Button icon before and after',
-    iconAfter: "ADD_IMAGE",
-    iconBefore: "ADD_IMAGE",
+    iconAfter: 'ADD_IMAGE',
+    iconBefore: 'ADD_IMAGE',
   },
-};
+}

@@ -1,6 +1,6 @@
 .icon {
   display: inline-block;
-  
+
   // Colors
   &--color-primary {
     color: var(--text_c_secondary);
@@ -19,11 +19,10 @@
   }
 
   &--color-soft-blue {
-    color: #BAD9FA;
+    color: #bad9fa;
   }
 
   &--color-neutral {
     color: var(--text_c_subdued);
   }
 }
-
