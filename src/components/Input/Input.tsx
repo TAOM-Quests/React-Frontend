@@ -4,7 +4,7 @@ export interface InputProps {
   type?: string
   label?: string
   className?: string
-} 
+}
 
 export default function Input({
   value,
@@ -18,7 +18,7 @@ export default function Input({
   return (
     <div>
       <label>{label}</label>
-      <input 
+      <input
         className={inputClassName}
         type={type}
         value={value}
