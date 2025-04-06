@@ -94,12 +94,12 @@ export default function UiKit() {
           text="Создать" 
           color="primary" 
           size="large" 
-          iconBefore={IconType.IMAGE}
+          iconBefore={IconType.ADD}
         />
 
         {/* Кнопка только с иконкой */}
         <Button
-          iconBefore={IconType.IMAGE}
+          iconBefore={IconType.ADD}
           color="secondary"
           isButtonCircle={true}
           size="small"
@@ -109,7 +109,7 @@ export default function UiKit() {
         <Button
           text="Отправить"
           color="accent"
-          iconAfter={IconType.IMAGE}
+          iconAfter={IconType.ARROW_SMALL_LEFT}
         />
 
         

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { ButtonHTMLAttributes } from "react";
 import { Icon } from "../Icon/Icon";
-import { IconType, getIcon } from "../../../assets/icons/constants";
+import { getIcon, ICON_MAP } from "../../../assets/icons/constants";
 import "./Button.scss"
 
 export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
@@ -21,10 +21,10 @@ extends ButtonHTMLAttributes<HTMLButtonElement>{
   isIconOnly?: boolean;
   /** Форма кнопки с иконкой круглая? */
   isButtonCircle?: boolean;
-  /** Иконка перед текстом в виде HTML */
-  iconBefore?: IconType;
-  /** Иконка после текста в виде HTML */
-  iconAfter?: IconType;
+  /** Иконка перед текстом */
+  iconBefore?: keyof typeof ICON_MAP;
+  /** Иконка после текста */
+  iconAfter?: keyof typeof ICON_MAP;
   /** Отключить кнопку */
   disabled?: boolean
   /** Обработчик щелчков */
@@ -49,42 +49,42 @@ export const Button = ({
   const iconToDisplay = isIconOnlyMode ? iconBefore : iconBefore || iconAfter;
 
   return (
-      <button
-        className={classNames(
-          'body-m-b',
-          'button', 
-          `button--${color}`, 
-          `button--${size}`,  
-          isIconOnlyMode && isButtonCircle && `button--circle`, 
-          isIconOnlyMode && 'button--icon-only')
-        }
-        style={{ backgroundColor }}
-        {...props}
-      >
-        {isIconOnlyMode && iconToDisplay && (
-          <Icon 
-            className="button__icon button__icon--only"
-            icon={getIcon(iconToDisplay)} 
-            colorIcon={color}
-          />
-        )}
-        {!isIconOnlyMode && (
-          <>
-            {iconBefore && 
-              <Icon 
-                className="button__icon button__icon--before"
-                icon={getIcon(iconBefore)} 
-                colorIcon={color}
-              />}
-            {text && text}
-            {iconAfter &&
-              <Icon 
-                className="button__icon button__icon--after" 
-                icon={getIcon(iconAfter)} 
-                colorIcon={color}
-              />}
-          </>
-        )}
-      </button>
+    <button
+      className={classNames(
+        'body-m-b',
+        'button', 
+        `button--${color}`, 
+        `button--${size}`,  
+        isIconOnlyMode && isButtonCircle && `button--circle`, 
+        isIconOnlyMode && 'button--icon-only')
+      }
+      style={{ backgroundColor }}
+      {...props}
+    >
+      {isIconOnlyMode && iconToDisplay && (
+        <Icon 
+          className="button__icon button__icon--only"
+          icon={getIcon(iconToDisplay)} 
+          colorIcon={color}
+        />
+      )}
+      {!isIconOnlyMode && (
+        <>
+          {iconBefore && 
+            <Icon 
+              className="button__icon button__icon--before"
+              icon={getIcon(iconBefore)} 
+              colorIcon={color}
+            />}
+          {text && text}
+          {iconAfter &&
+            <Icon 
+              className="button__icon button__icon--after" 
+              icon={getIcon(iconAfter)} 
+              colorIcon={color}
+            />}
+        </>
+      )}
+    </button>
   )
 }
