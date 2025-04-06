@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { ButtonHTMLAttributes } from "react";
 import { Icon } from "../Icon/Icon";
-import { getIcon, ICON_MAP } from "../../../assets/icons/constants";
+import { ICON_MAP } from "../../../assets/icons/constants";
 import "./Button.scss"
 
 export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
@@ -11,15 +11,15 @@ export interface ButtonProps
 extends ButtonHTMLAttributes<HTMLButtonElement>{
   /** Текст кнопки */
   text?: string;
-  /** Какого цвета кнопка */
+  /** Цвет кнопки */
   color?: Color;
-  /** Какой цвет фона использовать */
+  /** Цвет фона кнопки */
   backgroundColor?: string;
-  /** Какого размера должна быть кнопка? */
+  /** Размер кнопки */
   size?: Size;
   /** Отображать только иконку */
   isIconOnly?: boolean;
-  /** Форма кнопки с иконкой круглая? */
+  /** Круглая форма кнопки с иконкой */
   isButtonCircle?: boolean;
   /** Иконка перед текстом */
   iconBefore?: keyof typeof ICON_MAP;
@@ -64,7 +64,7 @@ export const Button = ({
       {isIconOnlyMode && iconToDisplay && (
         <Icon 
           className="button__icon button__icon--only"
-          icon={getIcon(iconToDisplay)} 
+          icon={iconToDisplay} 
           colorIcon={color}
         />
       )}
@@ -73,14 +73,14 @@ export const Button = ({
           {iconBefore && 
             <Icon 
               className="button__icon button__icon--before"
-              icon={getIcon(iconBefore)} 
+              icon={iconBefore} 
               colorIcon={color}
             />}
           {text && text}
           {iconAfter &&
             <Icon 
               className="button__icon button__icon--after" 
-              icon={getIcon(iconAfter)} 
+              icon={iconAfter} 
               colorIcon={color}
             />}
         </>

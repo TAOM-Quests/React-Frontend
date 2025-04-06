@@ -1,5 +1,6 @@
 import { SVGAttributes } from 'react';
 import classNames from "classnames";
+import { getIcon, ICON_MAP } from "../../../assets/icons/constants";
 import "./Icon.scss";
 
 export type Size = 'extra_large' | 'large' | 'small'| 'extra_small';
@@ -8,9 +9,15 @@ export type Color = 'primary' | 'secondary' | 'accent' | 'subdued' | 'soft-blue'
 
 interface IconProps
 extends SVGAttributes<SVGElement>{
-  icon: string,
+  /** Выбор иконки */
+  icon: keyof typeof ICON_MAP,
+  /** Заготовленные размеры иконки */
   size?: Size,
+  /** Заготовленные цвета иконки */
   colorIcon?: Color,
+   /** Цвет иконки */
+  color?: string,
+  /** Размер иконки */
   fontSize?: string | number
 }
 
@@ -20,7 +27,7 @@ export const Icon = ({
   fontSize,
   viewBox = '0 0 20 20',
   colorIcon = 'secondary',
-  className,
+  color,
   ...props
 }: IconProps) => {
   return (
@@ -29,13 +36,13 @@ export const Icon = ({
                 'icon',
                 `icon--${size}`,
                 `icon--color-${colorIcon}`,
-                className 
                 )
               }
+      style={{ color }}
       viewBox={viewBox} 
       width={fontSize} 
       height={fontSize}
-      dangerouslySetInnerHTML={{__html: icon}}
+      dangerouslySetInnerHTML={{__html: getIcon(icon)}}
       {...props}
     />
   );
