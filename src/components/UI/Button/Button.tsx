@@ -3,6 +3,7 @@ import { ButtonHTMLAttributes } from "react";
 import { Icon } from "../Icon/Icon";
 import { ICON_MAP } from "../../../assets/icons/constants";
 import "./Button.scss"
+// import "../Icon/Icon.scss";
 
 export type Color = 'primary' | 'secondary' | 'accent' | 'subdued';
 export type Size = 'large' | 'small';

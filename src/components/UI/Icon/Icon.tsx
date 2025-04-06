@@ -28,6 +28,7 @@ export const Icon = ({
   viewBox = '0 0 20 20',
   colorIcon = 'secondary',
   color,
+  className,
   ...props
 }: IconProps) => {
   return (
@@ -36,6 +37,7 @@ export const Icon = ({
                 'icon',
                 `icon--${size}`,
                 `icon--color-${colorIcon}`,
+                className
                 )
               }
       style={{ color }}
