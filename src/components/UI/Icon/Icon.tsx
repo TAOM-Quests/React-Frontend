@@ -3,44 +3,47 @@ import classNames from 'classnames'
 import { getIcon, ICON_MAP } from '../../../assets/icons'
 import './Icon.scss'
 
-export type Size = '36px' | '30px' | '20px' | '16px'
-
-export type typeIcon =
-  | 'primary'
-  | 'secondary'
-  | 'accent'
-  | 'subdued'
-  | 'soft-blue'
-  | 'neutral'
+const SIZE_ICONS = ['36px', '30px', '20px', '16px']
+const COLOR_ICONS = [
+  'primary',
+  'secondary',
+  'accent',
+  'subdued',
+  'soft-blue',
+  'neutral',
+]
+type sizeIcon = (typeof SIZE_ICONS)[number] | string | number
+type colorIcon = (typeof COLOR_ICONS)[number] | string
 
 interface IconProps extends SVGAttributes<SVGElement> {
   icon: keyof typeof ICON_MAP
-  size?: Size
-  typeIcon?: typeIcon
-  fontSize?: string | number
+  size?: sizeIcon
+  colorIcon?: colorIcon
 }
 
 export const Icon = ({
   icon,
   size = '20px',
-  fontSize,
   viewBox = '0 0 20 20',
-  typeIcon = 'secondary',
-  color,
+  colorIcon = 'secondary',
   className,
   ...props
 }: IconProps) => {
-  const iconSize = fontSize ? fontSize : size
+  const iconSize = SIZE_ICONS.includes(size.toString()) ? size : size
+  const iconClass = COLOR_ICONS.includes(colorIcon)
+    ? `icon--color-${colorIcon}`
+    : ''
+  const iconStyle = !COLOR_ICONS.includes(colorIcon) ? { color: colorIcon } : {}
 
   return (
     <svg
       className={classNames(
         'icon',
-        `icon--${size}`,
-        `icon--color-${typeIcon}`,
+        `icon--${size.toString()}`,
+        iconClass,
         className,
       )}
-      style={{ color }}
+      style={iconStyle}
       viewBox={viewBox}
       width={iconSize}
       height={iconSize}

@@ -21,20 +21,32 @@ const meta: Meta<typeof Icon> = {
       description: 'Выбор иконки',
     },
     size: {
-      control: 'inline-radio',
-      description: 'Размер иконки',
-    },
-    typeIcon: {
-      control: 'inline-radio',
-      description: 'Цвет иконки',
-    },
-    color: {
-      control: 'color',
-      description: 'Цвет иконки',
-    },
-    fontSize: {
       control: 'text',
-      description: 'Размер иконки',
+      description: `
+**Размер иконки**  
+Стандартные варианты:  
+- **36px**
+- **30px**
+- **20px**
+- **16px** 
+
+Или используйте **кастомный размер**
+`,
+    },
+    colorIcon: {
+      control: 'text',
+      description: `
+**Цвет иконки**  
+Стандартные варианты:  
+- **primary**  
+- **secondary**  
+- **accent**  
+- **subdued**  
+- **soft-blue**  
+- **neutral**  
+
+Или используйте **кастомный цвет**, например, введите значение в формате **#RRGGBB**.
+`,
     },
     viewBox: {
       control: 'text',
@@ -52,7 +64,7 @@ export const Default: Story = {
   args: {
     icon: 'CHECK',
     size: '20px',
-    typeIcon: 'secondary',
+    colorIcon: 'secondary',
   },
 }
 
@@ -88,6 +100,13 @@ export const CustomColor: Story = {
   args: {
     icon: 'CHECK',
     size: '36px',
-    color: 'blue',
+    colorIcon: 'blue',
+  },
+}
+
+export const CustomSize: Story = {
+  args: {
+    icon: 'CHECK',
+    size: '5rem',
   },
 }

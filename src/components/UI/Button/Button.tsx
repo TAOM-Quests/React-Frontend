@@ -56,7 +56,7 @@ export const Button = ({
         <Icon
           className="button__icon button__icon--only"
           icon={iconToDisplay}
-          typeIcon={typeof colorType === 'string' ? colorType : 'secondary'}
+          colorIcon={typeof colorType === 'string' ? colorType : 'secondary'}
         />
       )}
       {!isIconOnlyMode && (
@@ -65,7 +65,9 @@ export const Button = ({
             <Icon
               className="button__icon button__icon--before"
               icon={iconBefore}
-              typeIcon={typeof colorType === 'string' ? colorType : 'secondary'}
+              colorIcon={
+                typeof colorType === 'string' ? colorType : 'secondary'
+              }
             />
           )}
           {text && text}
@@ -73,7 +75,9 @@ export const Button = ({
             <Icon
               className="button__icon button__icon--after"
               icon={iconAfter}
-              typeIcon={typeof colorType === 'string' ? colorType : 'secondary'}
+              colorIcon={
+                typeof colorType === 'string' ? colorType : 'secondary'
+              }
             />
           )}
         </>

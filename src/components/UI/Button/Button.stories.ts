@@ -22,7 +22,23 @@ const meta: Meta<typeof Button> = {
     },
     colorType: {
       control: 'object',
-      description: 'Цвета кнопки',
+      description: `
+  **Цвета кнопки**  
+
+  **Варианты:**  
+  - \`primary\`  
+  - \`secondary\`  
+  - \`accent\`  
+  - \`subdued\`  
+
+  **Или кастомный объект:**  
+  \`\`\`
+  {
+    "color": "#HEXCODE",
+    "backgroundColor": "#HEXCODE"
+  }
+  \`\`\`
+  `,
     },
     size: {
       control: 'inline-radio',
