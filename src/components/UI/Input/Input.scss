@@ -1,0 +1,88 @@
+.inputWrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 6px;
+
+  .label {
+    color: var(--text_c_subdued);
+  }
+
+  .inputContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    box-sizing: border-box;
+    background-color: var(--bg_c_secondary);
+    border: var(--border_primary) var(--border_c_secondary);
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 100%;
+    height: 44px;
+
+    &:hover {
+      background-color: var(--bg_c_secondary_hover);
+    }
+
+    &:active,
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      border-color: var(--border_c_accent);
+    }
+
+    &--invalid,
+    &--invalid:active,
+    &--invalid:focus,
+    &--invalid:focus-within,
+    &--invalid:focus-visible {
+      border-color: var(--border_c_error);
+    }
+
+    &--disabled {
+      opacity: var(--disabled_opacity);
+      cursor: not-allowed;
+    }
+
+    &--disabled:hover,
+    &--disabled:active,
+    &--disabled:focus,
+    &--disabled:focus-within,
+    &--disabled:focus-visible {
+      background-color: var(--bg_c_secondary);
+      border-color: var(--border_c_secondary);
+    }
+
+    .input {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-direction: row;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      color: var(--text_c_primary);
+
+      &:disabled {
+        opacity: var(--disabled_opacity);
+        cursor: not-allowed;
+      }
+
+      &::placeholder {
+        color: var(--text_c_subdued);
+      }
+    }
+  }
+  .helperText {
+    color: var(--text_c_subdued);
+  }
+
+  .errorText {
+    color: var(--text_c_error);
+  }
+}
