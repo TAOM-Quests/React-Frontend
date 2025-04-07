@@ -63,6 +63,7 @@ const meta: Meta<typeof Input> = {
       description: 'Текст заполнения',
     },
   },
+  tags: ['autodocs'],
 }
 
 export default meta
