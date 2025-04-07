@@ -10,8 +10,7 @@ const meta: Meta<typeof Button> = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'Основной компонент пользовательского интерфейса для взаимодействия с пользователем ',
+        component: 'Компонент кнопки',
       },
     },
   },

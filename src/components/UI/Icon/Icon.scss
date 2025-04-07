@@ -1,6 +1,6 @@
 .icon {
   display: inline-block;
-
+  min-width: fit-content;
   // Colors
   &--color-primary {
     color: var(--text_c_secondary);
