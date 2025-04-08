@@ -1,4 +1,4 @@
-.user-info {
+.option-avatar {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -8,11 +8,13 @@
     flex-direction: column;
   }
 
-  &__name {
+  &__text {
     color: var(--text-c-primary);
+    margin: 0;
   }
 
-  &__position {
+  &__description {
     color: var(--text_c_subdued);
+    margin: 0;
   }
 }
