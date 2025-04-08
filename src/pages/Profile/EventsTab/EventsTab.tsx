@@ -57,12 +57,15 @@ export default function EventsTab({ user }: EventsTabProps) {
       {userEvents && userEvents.length
         ? userEvents.map(event => {
             const eventData: EventMinimizeProps = {
+              id: event.id,
               name: event.name,
               type: event.type,
               status: event.status.name,
               address: event.address,
               onlineMeeting: event.onlineMeeting,
             }
+
+            if (user.roleId) eventData.isEmployeeView = true
 
             return <EventMinimizeComponent key={event.id} {...eventData} />
           })
