@@ -4,5 +4,6 @@ export interface UserAuth {
   token: string
   roleId?: number
   isAdmin?: boolean
+  isEmployee?: boolean
   departmentId?: number
 }
