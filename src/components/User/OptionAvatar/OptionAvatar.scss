@@ -1,0 +1,20 @@
+.option-avatar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__text {
+    color: var(--text-c-primary);
+    margin: 0;
+  }
+
+  &__description {
+    color: var(--text_c_subdued);
+    margin: 0;
+  }
+}

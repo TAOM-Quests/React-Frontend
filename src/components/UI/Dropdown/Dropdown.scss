@@ -1,0 +1,16 @@
+.dropdown-menu li.item-selected {
+  background-color: #ccc;
+}
+
+.selected-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.selected-item {
+  background-color: #ccc;
+  padding: 5px;
+  border-radius: 5px;
+}
