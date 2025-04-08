@@ -1,11 +1,12 @@
 import { EventStatus } from './eventStatus'
+import { EventType } from './eventType'
 
 export interface EventMinimize {
-  date: Date
   id: number
-  name: string
-  type: string
-  address: string
   status: EventStatus
-  onlineMeeting: string
+  date?: Date
+  name?: string
+  address?: string
+  type?: EventType
+  onlineMeeting?: string
 }

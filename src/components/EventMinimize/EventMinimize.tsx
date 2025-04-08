@@ -25,12 +25,12 @@ export default function EventMinimize({
 
   return (
     <div onClick={() => navigate(`/events/${id}`)}>
-      {name}
-      {/* {date && date.toDateString()} */}
-      {isEmployeeView && status}
-      {address}
-      {onlineMeeting}
-      {type}
+      <p>{name}</p>
+      <p>{/* {date && date.toDateString()} */}</p>
+      <p>{isEmployeeView && status}</p>
+      <p>{address}</p>
+      <p>{onlineMeeting}</p>
+      <p>{type}</p>
     </div>
   )
 }

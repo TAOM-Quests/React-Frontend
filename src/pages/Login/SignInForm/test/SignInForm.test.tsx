@@ -4,13 +4,12 @@ import { userEvent } from '@vitest/browser/context'
 import '@vitest/browser/matchers'
 import { renderWithProviders } from '../../../../mocks/redux/utils'
 
-const mockedUseNavigate = vi.fn()
 vi.mock('react-router', async () => {
   const mod =
     await vi.importActual<typeof import('react-router')>('react-router')
   return {
     ...mod,
-    useNavigate: () => mockedUseNavigate,
+    useNavigate: () => vi.fn(),
   }
 })
 
