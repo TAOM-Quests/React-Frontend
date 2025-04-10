@@ -1,28 +1,25 @@
-export interface InputProps {
-  value: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  type?: string
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
   className?: string
 }
 
-export default function Input({
-  value,
-  onChange,
-  type,
-  label,
-  className,
-}: InputProps) {
-  const inputClassName = `tq-input ${className}`
+export default function Input(props: InputProps) {
+  let inputClassName = `tq-input`
+
+  if (props.className) {
+    inputClassName += ` ${props.className}`
+  }
 
   return (
     <div>
-      <label>{label}</label>
+      <label>{props.label}</label>
       <input
         className={inputClassName}
-        type={type}
-        value={value}
-        onChange={onChange}
+        type={props.type}
+        value={props.value}
+        onChange={props.onChange}
+        {...props}
       />
     </div>
   )

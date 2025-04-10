@@ -11,8 +11,6 @@ export const api = async <TResult, TParameters>(
 
   const response = (await fetchData<TParameters>(path, parameters)) as Response
 
-  console.log(response)
-
   if (response.statusCode >= 400) {
     const responseError = response as ResponseError
 
