@@ -53,11 +53,20 @@ describe('EventCreate', () => {
   })
 
   test('On click save button, should be request to create event', async () => {
-    const spyCreateEvent = vi.spyOn(events, 'createEvent')
+    const spyCreateEvent = vi.spyOn(events, 'create')
 
     await userEvent.click(saveButton)
 
     expect(spyCreateEvent).toBeCalledTimes(1)
+  })
+
+  test('On creating event, description should save as html', async () => {
+    const spyCreateEvent = vi.spyOn(events, 'create')
+
+    await userEvent.type(descriptionInput, 'test')
+    await userEvent.click(saveButton)
+
+    expect(spyCreateEvent).toBeCalledWith({ description: '<div>test</div>' })
   })
 
   test('On creating event, selected additional info should be add to description', async () => {

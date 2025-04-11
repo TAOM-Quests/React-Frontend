@@ -13,4 +13,7 @@ export const events = {
 
   getOne: (params: EventGetDto): Promise<EventMinimize> =>
     eventModule<EventMinimize, EventGetDto>(`events/${params.id}`),
+
+  create: (params: Event): Promise<Event> =>
+    eventModule<Event, Event>('events', params),
 }
