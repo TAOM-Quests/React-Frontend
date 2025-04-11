@@ -1,16 +1,34 @@
-.dropdown-menu li.item-selected {
-  background-color: #ccc;
-}
+.dropdown-with-input {
+  position: relative;
 
-.selected-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+  .selected-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
 
-.selected-item {
-  background-color: #ccc;
-  padding: 5px;
-  border-radius: 5px;
+  .selected-item {
+    background-color: #ccc;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 1;
+
+    li {
+      list-style: none;
+      padding: 5px;
+      cursor: pointer;
+
+      &.item-selected {
+        background-color: #ccc;
+      }
+    }
+  }
 }

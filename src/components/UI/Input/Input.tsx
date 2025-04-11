@@ -2,6 +2,8 @@ import classNames from 'classnames'
 import { ICON_MAP } from '../../../assets/icons'
 import './Input.scss'
 import { Icon } from '../Icon/Icon'
+import { ReactNode, useEffect, useRef, useState } from 'react'
+import React from 'react'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -12,6 +14,9 @@ export interface InputProps
   iconAfter?: keyof typeof ICON_MAP
   invalid?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  inputValue?: string | number | ReactNode
+  onClearSelection?: () => void
+  onOpenDropdown?: () => void
 }
 
 export default function Input({
@@ -21,16 +26,40 @@ export default function Input({
   iconBefore,
   iconAfter,
   invalid,
-  value,
+  inputValue,
   onChange,
   type,
   disabled,
   placeholder,
+  onClearSelection,
+  onOpenDropdown,
   className,
   ...props
 }: InputProps) {
   const showHelperText = helperText && !invalid
   const showErrorText = invalid && errorText
+  const [isInputVisible, setIsInputVisible] = useState(true) // Изначально показываем input
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const isReactNode =
+      typeof inputValue !== 'string' && typeof inputValue !== 'number'
+    setIsInputVisible(!isReactNode)
+  }, [inputValue])
+
+  const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation() // Останавливаем всплытие события
+    setIsInputVisible(true) // Показываем input при клике на div
+    onOpenDropdown?.() // Открываем Dropdown
+    onClearSelection?.() // Очищаем выбор в Dropdown
+    setTimeout(() => {
+      inputRef.current?.focus() // Фокусируемся на input после его отображения
+    }, 0)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(e)
+  }
 
   return (
     <div className="inputWrapper">
@@ -43,7 +72,23 @@ export default function Input({
         )}
       >
         {iconBefore && <Icon icon={iconBefore} colorIcon="secondary" />}
+        <div
+          className={classNames(
+            'body-m-r',
+            'input',
+            invalid && 'input--invalid',
+            className,
+          )}
+          style={{
+            display: isInputVisible ? 'none' : 'block',
+            cursor: 'pointer',
+          }}
+          onClick={handleDivClick}
+        >
+          {inputValue}
+        </div>
         <input
+          ref={inputRef}
           className={classNames(
             'body-m-r',
             'input',
@@ -51,10 +96,23 @@ export default function Input({
             className,
           )}
           type={type}
-          value={value}
-          onChange={onChange}
+          value={
+            typeof inputValue === 'string' || typeof inputValue === 'number'
+              ? inputValue
+              : ''
+          }
+          onChange={handleChange}
           disabled={disabled}
           placeholder={placeholder}
+          style={{ display: isInputVisible ? 'block' : 'none' }}
+          onBlur={() => {
+            if (
+              typeof inputValue !== 'string' &&
+              typeof inputValue !== 'number'
+            ) {
+              setIsInputVisible(false)
+            }
+          }}
           {...props}
         />
         {iconAfter && <Icon icon={iconAfter} colorIcon="secondary" />}

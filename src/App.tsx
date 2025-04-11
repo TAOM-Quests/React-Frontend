@@ -3,12 +3,19 @@ import './assets/styles/style.scss'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
 import React from 'react'
-
+import { Checkbox } from './components/UI/Checkbox/Checkbox'
+import { Option } from './components/UI/Option/Option'
+import { Tag } from './components/UI/Tag/Tag'
+import { Button } from './components/UI/Button/Button'
+import Input from './components/UI/Input/Input'
 const items: DropdownItemType[] = [
   {
     id: '1',
     text: 'Элемент 1',
-    iconBefore: 'CHECK',
+    avatar: {
+      src: image,
+      description: 'Описание аватарки',
+    },
   },
   {
     id: '2',
@@ -21,6 +28,26 @@ const items: DropdownItemType[] = [
   {
     id: '3',
     text: 'Элемент 3',
+    avatar: {
+      src: image,
+      description: 'Описание аватарки',
+    },
+  },
+]
+
+const items2: DropdownItemType[] = [
+  {
+    id: '1',
+    text: 'Элемент 1',
+    iconBefore: 'CHECK',
+  },
+  {
+    id: '2',
+    text: 'Элемент 2',
+  },
+  {
+    id: '3',
+    text: 'Элемент 3',
     iconAfter: 'CHECK',
   },
 ]
@@ -28,32 +55,49 @@ const items: DropdownItemType[] = [
 function App() {
   const [count, setCount] = useState(0)
 
-  const [selected, setSelected] = React.useState('1')
+  const handleSelectChange = (selected: string | string[] | null) => {
+    console.log('Выбрано:', selected)
+  }
 
-  const handleSelect = (selected: string | string[]) => {
-    if (Array.isArray(selected)) {
-      throw new Error('Cannot select multiple items')
-    }
-    setSelected(selected)
+  const handleValueChange = (value: string) => {
+    console.log('Значение в Input:', value)
   }
 
   return (
     <>
       <div>
         <Dropdown
-          items={items}
-          selected={selected}
-          onChange={handleSelect}
-          id={''}
+          items={items2}
+          selected={null}
+          onChange={handleSelectChange}
+          id="my-dropdown"
+          onValueChange={handleValueChange}
         />
         <Dropdown
           items={items}
+          selected={null}
+          onChange={handleSelectChange}
+          id="my-dropdown13"
+          onValueChange={handleValueChange}
+        />
+        <Dropdown
+          items={items}
+          selected={null}
           multiple={true}
-          selected={[]}
-          onChange={handleSelect}
-          id={'1'}
+          onChange={handleSelectChange}
+          id="my-dropdown1"
+          onValueChange={handleValueChange}
+        />
+        <Dropdown
+          items={items2}
+          selected={null}
+          multiple={true}
+          onChange={handleSelectChange}
+          id="my-dropdown4"
+          onValueChange={handleValueChange}
         />
       </div>
+
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>

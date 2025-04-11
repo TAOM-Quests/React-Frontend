@@ -1,0 +1,101 @@
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: var(--disabled_opacity);
+  }
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-custom {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--bg_c_secondary);
+  border: var(--border_checkbox) var(--border_c_primary);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  svg {
+    display: none;
+  }
+
+  .checkbox-input:checked + & {
+    background-color: var(--bg_c_accent);
+    border: 0;
+
+    svg {
+      display: block;
+    }
+  }
+
+  .checkbox-input:checked + &:hover {
+    background-color: var(--bg_c_accent_hover);
+    border: 0;
+  }
+
+  .checkbox-input:checked + &:active,
+  .checkbox-input:checked + &:focus,
+  .checkbox-input:checked + &:focus-visible,
+  .checkbox-input:checked + &:focus-within {
+    background-color: var(--bg_c_accent_active);
+    border: 0;
+  }
+
+  &:hover {
+    background-color: var(--bg_c_secondary_hover);
+  }
+
+  &:active,
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    background-color: var(--bg_c_secondary_active);
+  }
+
+  .checkbox-input:disabled + &,
+  .checkbox-input:disabled + &:hover,
+  .checkbox-input:disabled + &:focus,
+  .checkbox-input:disabled + &:focus-visible,
+  .checkbox-input:disabled + &:focus-within,
+  .checkbox-input:disabled + &:active {
+    cursor: not-allowed;
+    background-color: var(--bg_c_secondary);
+  }
+
+  .checkbox-input:checked:disabled + &,
+  .checkbox-input:checked:disabled + &:hover,
+  .checkbox-input:checked:disabled + &:focus,
+  .checkbox-input:checked:disabled + &:focus-visible,
+  .checkbox-input:checked:disabled + &:focus-within,
+  .checkbox-input:checked:disabled + &:active {
+    cursor: not-allowed;
+    background-color: var(--bg_c_accent);
+    border: 0;
+  }
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 6px;
+  color: var(--text_c_primary);
+}

@@ -1,4 +1,4 @@
-import { SVGAttributes } from 'react'
+import { MouseEventHandler, SVGAttributes } from 'react'
 import classNames from 'classnames'
 import { getIcon, ICON_MAP } from '../../../assets/icons'
 import './Icon.scss'
@@ -26,6 +26,7 @@ export const Icon = ({
   size = '20px',
   viewBox = '0 0 20 20',
   colorIcon = 'secondary',
+  onClick,
   className,
   ...props
 }: IconProps) => {
@@ -43,6 +44,7 @@ export const Icon = ({
         iconClass,
         className,
       )}
+      onClick={onClick}
       style={iconStyle}
       viewBox={viewBox}
       width={iconSize}

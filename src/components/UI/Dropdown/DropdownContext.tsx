@@ -5,27 +5,21 @@ interface DropdownContextProps {
 }
 
 interface DropdownContextValue {
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean, id: string | null) => void
   currentDropdownId: string | null
   setCurrentDropdownId: (id: string | null) => void
 }
 
 const DropdownContext = createContext<DropdownContextValue>({
-  isOpen: false,
-  setIsOpen: () => {},
   currentDropdownId: null,
   setCurrentDropdownId: () => {},
 })
 
 const DropdownProvider: React.FC<DropdownContextProps> = ({ children }) => {
-  const [isOpen, setIsOpenState] = useState(false)
   const [currentDropdownId, setCurrentDropdownIdState] = useState<
     string | null
   >(null)
 
-  const handleSetIsOpen = (isOpen: boolean, id: string | null) => {
-    setIsOpenState(isOpen)
+  const handleSetCurrentDropdownId = (id: string | null) => {
     setCurrentDropdownIdState(id)
   }
 
@@ -43,7 +37,7 @@ const DropdownProvider: React.FC<DropdownContextProps> = ({ children }) => {
       })
 
       if (!isInsideDropdown) {
-        handleSetIsOpen(false, null)
+        handleSetCurrentDropdownId(null)
       }
     }
 
@@ -57,8 +51,6 @@ const DropdownProvider: React.FC<DropdownContextProps> = ({ children }) => {
   return (
     <DropdownContext.Provider
       value={{
-        isOpen,
-        setIsOpen: handleSetIsOpen,
         currentDropdownId,
         setCurrentDropdownId: setCurrentDropdownIdState,
       }}

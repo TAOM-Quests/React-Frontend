@@ -1,0 +1,25 @@
+.option-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  gap: 6px;
+  list-style: none;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-height: 32px;
+  &:hover {
+    background-color: var(--bg_c_secondary_hover);
+  }
+
+  &.item-selected {
+    background-color: var(--bg_c_secondary_active);
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--text_c_primary);
+  }
+}
