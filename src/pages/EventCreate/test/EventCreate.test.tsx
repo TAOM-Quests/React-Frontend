@@ -4,6 +4,16 @@ import EventCreate from '../EventCreate'
 import { userEvent } from '@vitest/browser/context'
 import { events } from '../../../services/api/eventModule/events/events'
 
+const mockNavigate = vi.fn()
+vi.mock('react-router', async () => {
+  const mod =
+    await vi.importActual<typeof import('react-router')>('react-router')
+  return {
+    ...mod,
+    useNavigate: () => mockNavigate,
+  }
+})
+
 describe('EventCreate', () => {
   let descriptionInput: Element
   let addScheduleItemButton: Element
@@ -21,6 +31,10 @@ describe('EventCreate', () => {
       'button .additional-info',
     )
     saveButton = document.querySelector('button .save')!
+  })
+
+  test('Should navigate to home page, when user is not Employee', () => {
+    expect(mockNavigate).toBeCalledTimes(1)
   })
 
   test('On add schedule item, should creating three inputs', async () => {
