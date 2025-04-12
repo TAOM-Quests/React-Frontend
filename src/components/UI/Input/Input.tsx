@@ -16,7 +16,6 @@ export interface InputProps
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   inputValue?: string | number | ReactNode
   onClearSelection?: () => void
-  onOpenDropdown?: () => void
 }
 
 export default function Input({
@@ -29,10 +28,11 @@ export default function Input({
   inputValue,
   onChange,
   type,
+  onBlur,
+  onFocus,
   disabled,
   placeholder,
   onClearSelection,
-  onOpenDropdown,
   className,
   ...props
 }: InputProps) {
@@ -50,7 +50,6 @@ export default function Input({
   const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation() // Останавливаем всплытие события
     setIsInputVisible(true) // Показываем input при клике на div
-    onOpenDropdown?.() // Открываем Dropdown
     onClearSelection?.() // Очищаем выбор в Dropdown
     setTimeout(() => {
       inputRef.current?.focus() // Фокусируемся на input после его отображения
@@ -105,13 +104,15 @@ export default function Input({
           disabled={disabled}
           placeholder={placeholder}
           style={{ display: isInputVisible ? 'block' : 'none' }}
-          onBlur={() => {
+          onFocus={onFocus}
+          onBlur={e => {
             if (
               typeof inputValue !== 'string' &&
               typeof inputValue !== 'number'
             ) {
               setIsInputVisible(false)
             }
+            onBlur?.(e)
           }}
           {...props}
         />

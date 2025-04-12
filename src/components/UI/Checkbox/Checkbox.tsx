@@ -10,6 +10,7 @@ export interface CheckboxProps {
   selected: boolean
   onSelect: (id: string) => void
   disabled?: boolean
+  className?: string
 }
 
 // Компонент Checkbox
@@ -19,6 +20,7 @@ export const Checkbox = ({
   selected,
   onSelect,
   disabled = false,
+  className,
 }: CheckboxProps) => {
   // Обработчик изменения состояния чекбокса
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,9 +30,13 @@ export const Checkbox = ({
 
   return (
     <label
-      className={classNames('checkbox-wrapper', {
-        'checkbox-wrapper--disabled': disabled,
-      })}
+      className={classNames(
+        'checkbox-wrapper',
+        {
+          'checkbox-wrapper--disabled': disabled,
+        },
+        className,
+      )}
     >
       <input
         type="checkbox"

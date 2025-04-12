@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Icon } from '../Icon/Icon'
 import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
 import { Option } from '../Option/Option'
@@ -26,112 +26,93 @@ export type DropdownProps = {
   id: string
   items: DropdownItemType[]
   multiple?: boolean
-  selected?: string | string[] | null
   onChange: (selected: string | string[] | null) => void
-  onValueChange?: (value: string) => void // Функция обновления значения
 }
 
 export const Dropdown = ({
+  id,
   items,
   multiple = false,
-  selected = null,
   onChange,
-  id,
-  onValueChange,
 }: DropdownProps) => {
-  const { currentDropdownId, setCurrentDropdownId } =
-    useContext(DropdownContext)
-  const [currentSelected, setCurrentSelected] = useState<
-    string | string[] | null
-  >(selected) //для хранения выбранных элементов
-  const [searchValue, setSearchValue] = useState('') // Состояние для поиска
+  const [isOpen, setIsOpen] = useState(false)
+  const [inputFocus, setInputFocus] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [selected, setSelected] = useState<string | string[] | null>(null)
+
   const [selectedItem, setSelectedItem] = useState<DropdownItemType | null>(
     null,
   ) // для хранения выбранного элемента при одиночном выборе
 
-  const handleSelect = (id: string, selected: boolean) => {
-    if (multiple) {
-      let newSelected = Array.isArray(currentSelected)
-        ? [...currentSelected]
-        : []
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
-      if (selected && !newSelected.includes(id)) {
-        newSelected.push(id)
-      } else if (!selected) {
-        newSelected = newSelected.filter(key => key !== id)
-      }
-
-      setCurrentSelected(newSelected)
-      onChange(newSelected)
-      if (onValueChange) {
-        const selectedText = items.find(item => item.id === id)?.text
-        onValueChange(selectedText || '')
-      }
-    } else {
-      setCurrentSelected(selected ? id : null)
-      onChange(selected ? id : null)
-      const selectedItem = items.find(item => item.id === id)
-      setSelectedItem(selectedItem ?? null)
-      setSearchValue(selectedItem?.text || '')
-      onValueChange?.(selectedItem?.text || '')
-      setCurrentDropdownId(null)
+  const handleFocus = () => {
+    setInputFocus(true)
+    setIsOpen(true)
+    if (!multiple) {
+      setSelected(null)
     }
   }
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBlur = () => {
+    if (!multiple) {
+      setTimeout(() => {
+        if (!document.activeElement?.classList.contains('dropdown-item')) {
+          setInputFocus(false)
+          setIsOpen(false)
+        }
+      }, 200) // Задержка для обработки клика на элементе списка
+    }
+  }
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
 
-  // Фильтрация элементов по поисковому запросу
+  const handleSelect = (itemId: string) => {
+    if (multiple) {
+      if (Array.isArray(selected)) {
+        const isSelected = selected.includes(itemId)
+        if (isSelected) {
+          setSelected(selected.filter(id => id !== itemId))
+        } else {
+          setSelected([...selected, itemId])
+        }
+      } else {
+        setSelected([itemId])
+      }
+    } else {
+      setSelected(itemId)
+      if (!multiple) {
+        const selectedItem = items.find(item => item.id === itemId)
+        setSelectedItem(selectedItem ?? null)
+        setSearchValue(selectedItem?.text || '')
+      }
+    }
+    onChange(selected)
+  }
+
   const filteredItems = items.filter(item =>
     item.text.toLowerCase().includes(searchValue.toLowerCase()),
   )
 
-  // Выбрать все элементы
-  const handleSelectAll = () => {
-    if (multiple) {
-      const selectAll = items.map(item => item.id)
-      setCurrentSelected(selectAll)
-      onChange(selectAll)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false)
+        setInputFocus(false)
+      }
     }
-  }
 
-  // Убрать выделение со всех элементов
-  const handleDeselectAll = () => {
-    if (multiple) {
-      setCurrentSelected([])
-      onChange([])
-    }
-  }
+    document.addEventListener('click', handleClickOutside)
 
-  // Обработка выбора всех элементов через Checkbox
-  const handleCheckboxSelectAll = () => {
-    if (
-      Array.isArray(currentSelected) &&
-      currentSelected.length === items.length
-    ) {
-      handleDeselectAll()
-    } else {
-      handleSelectAll()
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
     }
-  }
-  const handleOpenDropdown = () => {
-    if (currentDropdownId === id) {
-      setCurrentDropdownId(null)
-    } else {
-      setCurrentDropdownId(id)
-    }
-  }
-  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    e.stopPropagation()
-    handleClearSelection()
-  }
-
-  const handleClearSelection = () => {
-    setSelectedItem(null)
-    setSearchValue('')
-    handleOpenDropdown()
-  }
+  }, [])
 
   const renderInputValue = () => {
     if (selectedItem?.avatar) {
@@ -158,22 +139,59 @@ export const Dropdown = ({
     }
   }
 
+  // Обработка выбора всех элементов через Checkbox
+  const handleCheckboxSelectAll = () => {
+    if (Array.isArray(selected) && selected.length === items.length) {
+      handleDeselectAll()
+    } else {
+      handleSelectAll()
+    }
+  }
+
+  // Выбрать все элементы
+  const handleSelectAll = () => {
+    if (multiple) {
+      const selectAll = items.map(item => item.id)
+      setSelected(selectAll)
+      onChange(selectAll)
+    }
+  }
+
+  // Убрать выделение со всех элементов
+  const handleDeselectAll = () => {
+    if (multiple) {
+      setSelected([])
+      onChange([])
+    }
+  }
+
+  const handleClearSelection = () => {
+    setSelectedItem(null)
+    setSearchValue('')
+  }
+
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.stopPropagation()
+    // handleClearSelection()
+    setSelectedItem(null)
+  }
+
   return (
-    <div id={id} className="dropdown">
-      {multiple && Array.isArray(currentSelected) && (
+    <div ref={dropdownRef} className="dropdown-container">
+      {multiple && Array.isArray(selected) && (
         <div className="selected-items">
-          {currentSelected.map(id => {
-            const item = items.find(i => i.id === id)
+          {selected.map(itemId => {
+            const item = items.find(item => item.id === itemId)
             return (
-              <span key={id} className="selected-item">
+              <span key={itemId} className="selected-item">
                 <Tag
-                  key={id}
+                  // key={itemId}
                   text={item?.text || ''}
                   avatarSrc={item?.avatar?.src}
                   description={item?.avatar?.description}
                   iconBefore={item?.iconBefore}
                   iconAfter={item?.iconAfter}
-                  onRemove={() => handleSelect(id, false)}
+                  onRemove={() => handleSelect(itemId)}
                 />
               </span>
             )
@@ -181,24 +199,26 @@ export const Dropdown = ({
         </div>
       )}
       <Input
+        type="search"
         placeholder="Поиск..."
         iconAfter="SEARCH"
         inputValue={renderInputValue()}
-        onChange={handleSearchChange}
+        onChange={handleSearch}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onClick={handleInputClick}
-        // onFocus={handleInputClick}
         onClearSelection={handleClearSelection}
-        onOpenDropdown={handleOpenDropdown}
       />
-      {currentDropdownId === id && (
+
+      {isOpen && (
         <div className="dropdown-menu">
           {multiple && (
             <Checkbox
               id="selectAll"
+              className="dropdown-checkbox"
               label="Выбрать все"
               selected={
-                Array.isArray(currentSelected) &&
-                currentSelected.length === items.length
+                Array.isArray(selected) && selected.length === items.length
               }
               onSelect={handleCheckboxSelectAll}
             />
@@ -214,9 +234,8 @@ export const Dropdown = ({
               multiple={multiple}
               selected={
                 multiple
-                  ? Array.isArray(currentSelected) &&
-                    currentSelected.includes(item.id)
-                  : currentSelected === item.id
+                  ? Array.isArray(selected) && selected.includes(item.id)
+                  : selected === item.id
               }
               onSelect={handleSelect}
             />

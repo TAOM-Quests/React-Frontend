@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './assets/styles/style.scss'
+// import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
 import React from 'react'
@@ -10,7 +11,7 @@ import { Button } from './components/UI/Button/Button'
 import Input from './components/UI/Input/Input'
 const items: DropdownItemType[] = [
   {
-    id: '1',
+    id: '124333445346356756576',
     text: 'Элемент 1',
     avatar: {
       src: image,
@@ -18,7 +19,7 @@ const items: DropdownItemType[] = [
     },
   },
   {
-    id: '2',
+    id: '4778546745675345726387',
     text: 'Элемент 2',
     avatar: {
       src: image,
@@ -26,7 +27,7 @@ const items: DropdownItemType[] = [
     },
   },
   {
-    id: '3',
+    id: 'fduidfihehjerihfekj',
     text: 'Элемент 3',
     avatar: {
       src: image,
@@ -37,16 +38,16 @@ const items: DropdownItemType[] = [
 
 const items2: DropdownItemType[] = [
   {
-    id: '1',
+    id: 'jefj0w3u09ru',
     text: 'Элемент 1',
     iconBefore: 'CHECK',
   },
   {
-    id: '2',
+    id: 'y598ty8r3r',
     text: 'Элемент 2',
   },
   {
-    id: '3',
+    id: 'bcbcjs',
     text: 'Элемент 3',
     iconAfter: 'CHECK',
   },
@@ -68,33 +69,33 @@ function App() {
       <div>
         <Dropdown
           items={items2}
-          selected={null}
+          // selected={null}
           onChange={handleSelectChange}
           id="my-dropdown"
-          onValueChange={handleValueChange}
+          // onValueChange={handleValueChange}
         />
         <Dropdown
           items={items}
-          selected={null}
+          // selected={null}
           onChange={handleSelectChange}
           id="my-dropdown13"
-          onValueChange={handleValueChange}
+          // onValueChange={handleValueChange}
         />
         <Dropdown
           items={items}
-          selected={null}
+          // selected={null}
           multiple={true}
           onChange={handleSelectChange}
           id="my-dropdown1"
-          onValueChange={handleValueChange}
+          // onValueChange={handleValueChange}
         />
         <Dropdown
           items={items2}
-          selected={null}
+          // selected={null}
           multiple={true}
           onChange={handleSelectChange}
           id="my-dropdown4"
-          onValueChange={handleValueChange}
+          // onValueChange={handleValueChange}
         />
       </div>
 
