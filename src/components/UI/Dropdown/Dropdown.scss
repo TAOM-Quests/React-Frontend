@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
 
   .selected-items {
     display: flex;
@@ -30,6 +29,7 @@
     z-index: 1;
     top: 100%;
     left: 0;
+    margin-top: 4px;
 
     .dropdown-checkbox {
       padding: 6px 8px;
