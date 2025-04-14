@@ -50,7 +50,15 @@ export const Checkbox = ({
       {label && typeof label === 'string' ? (
         <p className="body_m_r text_ellipsis checkbox_label_string">{label}</p>
       ) : (
-        <label className="body_m_r text_ellipsis checkbox_label" htmlFor={id}>
+        <label
+          className={classNames(
+            'body_m_r',
+            'text_ellipsis ',
+            'checkbox_label',
+            { text_disabled: disabled },
+          )}
+          htmlFor={id}
+        >
           {label}
         </label>
       )}

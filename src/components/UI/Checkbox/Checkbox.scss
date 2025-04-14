@@ -101,6 +101,10 @@
   width: var(--width_text_ellipsis);
 }
 
+.text_disabled {
+  cursor: not-allowed;
+}
+
 .checkbox_label {
   display: flex;
   align-items: center;

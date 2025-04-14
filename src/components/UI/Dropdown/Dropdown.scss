@@ -70,15 +70,5 @@
     .dropdown-checkbox {
       padding: 6px 8px;
     }
-
-    li {
-      list-style: none;
-      padding: 6px 8px;
-      cursor: pointer;
-
-      &.item-selected {
-        background-color: #ccc;
-      }
-    }
   }
 }

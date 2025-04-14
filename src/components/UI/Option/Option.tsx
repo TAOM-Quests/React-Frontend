@@ -17,6 +17,7 @@ export type OptionType = {
   multiple?: boolean
   selected?: boolean
   onSelect: (id: string, selected: boolean) => void
+  className?: string
 }
 
 export const Option = ({
@@ -28,6 +29,7 @@ export const Option = ({
   multiple = false,
   selected = false,
   onSelect,
+  className,
 }: OptionType) => {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
@@ -52,7 +54,7 @@ export const Option = ({
       return (
         <>
           {iconBefore && <Icon icon={iconBefore} />}
-          <p className="text_ellipsis body_m_r option-item__text">{text}</p>
+          <p className="text_ellipsis body_m_r option_item__text">{text}</p>
           {iconAfter && <Icon icon={iconAfter} />}
         </>
       )
@@ -62,7 +64,11 @@ export const Option = ({
   return (
     <li
       key={id}
-      className={classNames('option-item', { 'item-selected': selected })}
+      className={classNames(
+        'option_item',
+        { item_selected: selected },
+        className,
+      )}
       onClick={handleOptionClick}
     >
       {multiple ? (

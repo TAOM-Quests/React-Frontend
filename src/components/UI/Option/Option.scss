@@ -1,4 +1,4 @@
-.option-item {
+.option_item {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -15,7 +15,7 @@
     background-color: var(--bg_c_secondary_hover);
   }
 
-  &.item-selected {
+  &.item_selected {
     background-color: var(--bg_c_secondary_active);
   }
 
