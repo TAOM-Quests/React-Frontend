@@ -51,7 +51,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const showHelperText = helperText && !invalid
     const showErrorText = invalid && errorText
-    const [isInputVisible, setIsInputVisible] = useState(true) // Изначально показываем input
+    const [isInputVisible, setIsInputVisible] = useState(true)
 
     const internalInputRef = useRef<HTMLInputElement>(null)
     const combinedRef = inputRef || ref
@@ -62,7 +62,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       )
     }, [inputValue])
 
-    // UseImperativeHandle для передачи фокуса
     useImperativeHandle(
       combinedRef,
       () =>
