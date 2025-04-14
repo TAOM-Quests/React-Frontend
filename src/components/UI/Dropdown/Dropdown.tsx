@@ -36,7 +36,6 @@ export const Dropdown = ({
   onChange,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [inputFocus, setInputFocus] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [selected, setSelected] = useState<string | string[] | null>(null)
 
@@ -45,9 +44,9 @@ export const Dropdown = ({
   ) // для хранения выбранного элемента при одиночном выборе
 
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFocus = () => {
-    setInputFocus(true)
     setIsOpen(true)
     if (!multiple) {
       setSelected(null)
@@ -55,14 +54,19 @@ export const Dropdown = ({
   }
 
   const handleBlur = () => {
-    if (!multiple) {
-      setTimeout(() => {
-        if (!document.activeElement?.classList.contains('dropdown-item')) {
-          setInputFocus(false)
-          setIsOpen(false)
-        }
-      }, 200) // Задержка для обработки клика на элементе списка
-    }
+    setTimeout(() => {
+      // Проверяем, находится ли фокус внутри другого Dropdown
+      const activeDropdown =
+        document.activeElement?.closest('[data-dropdown-id]')
+      const currentDropdown = dropdownRef.current
+
+      if (
+        !currentDropdown?.contains(document.activeElement) && // Фокус вне текущего Dropdown
+        activeDropdown?.getAttribute('data-dropdown-id') !== id // И это другой Dropdown
+      ) {
+        setIsOpen(false)
+      }
+    }, 200)
   }
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +94,11 @@ export const Dropdown = ({
       }
     }
     onChange(selected)
+    if (multiple) {
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
+    }
   }
 
   const filteredItems = items.filter(item =>
@@ -103,7 +112,6 @@ export const Dropdown = ({
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
-        setInputFocus(false)
       }
     }
 
@@ -154,6 +162,9 @@ export const Dropdown = ({
       const selectAll = items.map(item => item.id)
       setSelected(selectAll)
       onChange(selectAll)
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
     }
   }
 
@@ -162,6 +173,9 @@ export const Dropdown = ({
     if (multiple) {
       setSelected([])
       onChange([])
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
     }
   }
 
@@ -172,12 +186,12 @@ export const Dropdown = ({
 
   const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
     e.stopPropagation()
-    // handleClearSelection()
     setSelectedItem(null)
+    inputRef.current?.focus()
   }
 
   return (
-    <div ref={dropdownRef} className="dropdown-container">
+    <div ref={dropdownRef} data-dropdown-id={id} className="dropdown-container">
       {multiple && Array.isArray(selected) && (
         <div className="selected-items">
           {selected.map(itemId => {
@@ -185,7 +199,6 @@ export const Dropdown = ({
             return (
               <span key={itemId} className="selected-item">
                 <Tag
-                  // key={itemId}
                   text={item?.text || ''}
                   avatarSrc={item?.avatar?.src}
                   description={item?.avatar?.description}
@@ -199,6 +212,7 @@ export const Dropdown = ({
         </div>
       )}
       <Input
+        ref={inputRef}
         type="search"
         placeholder="Поиск..."
         iconAfter="SEARCH"

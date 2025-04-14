@@ -64,7 +64,8 @@
     box-shadow: var(--drop_shadow);
     padding: 4px;
     z-index: 1;
-    // top: 44px;
+    top: 100%;
+    left: 0;
 
     .dropdown-checkbox {
       padding: 6px 8px;
