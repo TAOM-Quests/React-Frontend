@@ -9,6 +9,9 @@ export default defineWorkspace([
   {
     extends: 'vite.config.ts',
     test: {
+      env: {
+        file: './src/env/.env.testing',
+      },
       browser: {
         enabled: true,
         provider: 'playwright',

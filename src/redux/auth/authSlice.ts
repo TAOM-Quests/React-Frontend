@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserAuth } from '../../models/userAuth'
 import { RootState } from '../store'
+import { getUserByToken } from './funcs'
 
 interface AuthState {
   value: UserAuth | null
 }
 
 const initialState: AuthState = {
-  value: null,
+  value: await getUserByToken(),
 }
 
 export const authSlice = createSlice({
@@ -19,7 +20,9 @@ export const authSlice = createSlice({
     },
     setRole: (
       state,
-      action: PayloadAction<Pick<UserAuth, 'role' | 'isAdmin'>>,
+      action: PayloadAction<
+        Pick<UserAuth, 'roleId' | 'isAdmin' | 'isEmployee'>
+      >,
     ) => {
       if (state.value) {
         state.value = { ...state.value, ...action.payload }
