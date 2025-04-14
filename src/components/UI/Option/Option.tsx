@@ -32,9 +32,7 @@ export const Option = ({
   // Обработчик клика на опцию
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
-    if (!multiple) {
-      onSelect(id, !selected)
-    }
+    onSelect(id, !selected)
   }
 
   // Обработчик клика на чекбокс
