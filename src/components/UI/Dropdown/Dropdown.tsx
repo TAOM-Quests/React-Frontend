@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { Icon } from '../Icon/Icon'
 import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
 import { Option } from '../Option/Option'
@@ -38,11 +38,9 @@ export const Dropdown = ({
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [selected, setSelected] = useState<string | string[] | null>(null)
-
   const [selectedItem, setSelectedItem] = useState<DropdownItemType | null>(
     null,
   ) // для хранения выбранного элемента при одиночном выборе
-
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -53,16 +51,18 @@ export const Dropdown = ({
     }
   }
 
+  const focusInput = () => {
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 0)
+  }
+
   const handleBlur = () => {
     setTimeout(() => {
-      // Проверяем, находится ли фокус внутри другого Dropdown
-      const activeDropdown =
-        document.activeElement?.closest('[data-dropdown-id]')
-      const currentDropdown = dropdownRef.current
-
       if (
-        !currentDropdown?.contains(document.activeElement) && // Фокус вне текущего Dropdown
-        activeDropdown?.getAttribute('data-dropdown-id') !== id // И это другой Dropdown
+        dropdownRef.current &&
+        !dropdownRef.current.contains(document.activeElement) &&
+        !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
       ) {
         setIsOpen(false)
       }
@@ -73,33 +73,32 @@ export const Dropdown = ({
     setSearchValue(e.target.value)
   }
 
-  const handleSelect = (itemId: string) => {
-    if (multiple) {
-      if (Array.isArray(selected)) {
-        const isSelected = selected.includes(itemId)
-        if (isSelected) {
-          setSelected(selected.filter(id => id !== itemId))
-        } else {
-          setSelected([...selected, itemId])
-        }
+  const handleSelect = useCallback(
+    (itemId: string) => {
+      if (multiple) {
+        setSelected(prevSelected => {
+          if (Array.isArray(prevSelected)) {
+            return prevSelected.includes(itemId)
+              ? prevSelected.filter(id => id !== itemId)
+              : [...prevSelected, itemId]
+          }
+          return [itemId]
+        })
+        focusInput()
       } else {
-        setSelected([itemId])
-      }
-    } else {
-      setSelected(itemId)
-      if (!multiple) {
         const selectedItem = items.find(item => item.id === itemId)
+        setSelected(itemId)
         setSelectedItem(selectedItem ?? null)
         setSearchValue(selectedItem?.text || '')
+        setIsOpen(false)
       }
-    }
+    },
+    [items, multiple, setIsOpen],
+  )
+
+  useEffect(() => {
     onChange(selected)
-    if (multiple) {
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 0)
-    }
-  }
+  }, [selected, onChange])
 
   const filteredItems = items.filter(item =>
     item.text.toLowerCase().includes(searchValue.toLowerCase()),
@@ -115,24 +114,22 @@ export const Dropdown = ({
       }
     }
 
-    document.addEventListener('click', handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener('click', handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }, [dropdownRef, setIsOpen])
 
   const renderInputValue = () => {
     if (selectedItem?.avatar) {
       return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <OptionAvatar
-            size="extraSmall"
-            avatarSrc={selectedItem.avatar.src}
-            description={selectedItem.avatar.description}
-            text={selectedItem.text}
-          />
-        </div>
+        <OptionAvatar
+          size="extraSmall"
+          avatarSrc={selectedItem.avatar.src}
+          description={selectedItem.avatar.description}
+          text={selectedItem.text}
+        />
       )
     } else if (selectedItem?.iconBefore || selectedItem?.iconAfter) {
       return (
@@ -148,46 +145,35 @@ export const Dropdown = ({
   }
 
   // Обработка выбора всех элементов через Checkbox
-  const handleCheckboxSelectAll = () => {
+  const handleCheckboxSelectAll = useCallback(() => {
     if (Array.isArray(selected) && selected.length === items.length) {
       handleDeselectAll()
     } else {
       handleSelectAll()
     }
-  }
-
+  }, [items, selected])
   // Выбрать все элементы
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     if (multiple) {
       const selectAll = items.map(item => item.id)
       setSelected(selectAll)
       onChange(selectAll)
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 0)
+      focusInput()
     }
-  }
+  }, [items, multiple, onChange])
 
   // Убрать выделение со всех элементов
-  const handleDeselectAll = () => {
+  const handleDeselectAll = useCallback(() => {
     if (multiple) {
       setSelected([])
       onChange([])
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 0)
+      focusInput()
     }
-  }
+  }, [multiple, onChange])
 
   const handleClearSelection = () => {
     setSelectedItem(null)
     setSearchValue('')
-  }
-
-  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    e.stopPropagation()
-    setSelectedItem(null)
-    inputRef.current?.focus()
   }
 
   return (
@@ -220,7 +206,6 @@ export const Dropdown = ({
         onChange={handleSearch}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onClick={handleInputClick}
         onClearSelection={handleClearSelection}
       />
 
