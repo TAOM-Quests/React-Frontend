@@ -54,16 +54,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [isInputVisible, setIsInputVisible] = useState(true) // Изначально показываем input
 
     const internalInputRef = useRef<HTMLInputElement>(null)
-    // const inputReference = inputRef || ref || internalInputRef
-
-    // const inputReference = inputRef || ref
-
     const combinedRef = inputRef || ref
 
     useEffect(() => {
-      const isReactNode =
-        typeof inputValue !== 'string' && typeof inputValue !== 'number'
-      setIsInputVisible(!isReactNode)
+      setIsInputVisible(
+        typeof inputValue === 'string' || typeof inputValue === 'number',
+      )
     }, [inputValue])
 
     // UseImperativeHandle для передачи фокуса
@@ -71,13 +67,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       combinedRef,
       () =>
         ({
-          ...internalInputRef.current,
-          focus: () => {
-            internalInputRef.current?.focus()
-          },
-          blur: () => {
-            internalInputRef.current?.blur()
-          },
+          focus: () => internalInputRef.current?.focus(),
+          blur: () => internalInputRef.current?.blur(),
         }) as HTMLInputElement,
     )
 
