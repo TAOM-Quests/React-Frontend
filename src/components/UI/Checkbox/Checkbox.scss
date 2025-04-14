@@ -1,4 +1,4 @@
-.checkbox-wrapper {
+.checkbox_wrapper {
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -14,14 +14,14 @@
   }
 }
 
-.checkbox-input {
+.checkbox_input {
   position: absolute;
   opacity: 0;
   height: 0;
   width: 0;
 }
 
-.checkbox-custom {
+.checkbox_custom {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -38,7 +38,7 @@
     display: none;
   }
 
-  .checkbox-input:checked + & {
+  .checkbox_input:checked + & {
     background-color: var(--bg_c_accent);
     border: 0;
 
@@ -47,15 +47,15 @@
     }
   }
 
-  .checkbox-input:checked + &:hover {
-    background-color: var(--bg_c_accent_hover);
+  .checkbox_input:checked + &:hover {
+    background_color: var(--bg_c_accent_hover);
     border: 0;
   }
 
-  .checkbox-input:checked + &:active,
-  .checkbox-input:checked + &:focus,
-  .checkbox-input:checked + &:focus-visible,
-  .checkbox-input:checked + &:focus-within {
+  .checkbox_input:checked + &:active,
+  .checkbox_input:checked + &:focus,
+  .checkbox_input:checked + &:focus-visible,
+  .checkbox_input:checked + &:focus-within {
     background-color: var(--bg_c_accent_active);
     border: 0;
   }
@@ -71,22 +71,22 @@
     background-color: var(--bg_c_secondary_active);
   }
 
-  .checkbox-input:disabled + &,
-  .checkbox-input:disabled + &:hover,
-  .checkbox-input:disabled + &:focus,
-  .checkbox-input:disabled + &:focus-visible,
-  .checkbox-input:disabled + &:focus-within,
-  .checkbox-input:disabled + &:active {
+  .checkbox_input:disabled + &,
+  .checkbox_input:disabled + &:hover,
+  .checkbox_input:disabled + &:focus,
+  .checkbox_input:disabled + &:focus-visible,
+  .checkbox_input:disabled + &:focus-within,
+  .checkbox_input:disabled + &:active {
     cursor: not-allowed;
     background-color: var(--bg_c_secondary);
   }
 
-  .checkbox-input:checked:disabled + &,
-  .checkbox-input:checked:disabled + &:hover,
-  .checkbox-input:checked:disabled + &:focus,
-  .checkbox-input:checked:disabled + &:focus-visible,
-  .checkbox-input:checked:disabled + &:focus-within,
-  .checkbox-input:checked:disabled + &:active {
+  .checkbox_input:checked:disabled + &,
+  .checkbox_input:checked:disabled + &:hover,
+  .checkbox_input:checked:disabled + &:focus,
+  .checkbox_input:checked:disabled + &:focus-visible,
+  .checkbox_input:checked:disabled + &:focus-within,
+  .checkbox_input:checked:disabled + &:active {
     cursor: not-allowed;
     background-color: var(--bg_c_accent);
     border: 0;

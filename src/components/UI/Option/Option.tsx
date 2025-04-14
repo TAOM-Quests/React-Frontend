@@ -29,13 +29,11 @@ export const Option = ({
   selected = false,
   onSelect,
 }: OptionType) => {
-  // Обработчик клика на опцию
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
     onSelect(id, !selected)
   }
 
-  // Обработчик клика на чекбокс
   const handleCheckboxSelect = (id: string) => {
     onSelect(id, !selected)
   }

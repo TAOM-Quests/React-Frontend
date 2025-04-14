@@ -28,9 +28,9 @@ export const Checkbox = ({
   return (
     <label
       className={classNames(
-        'checkbox-wrapper',
+        'checkbox_wrapper',
         {
-          'checkbox-wrapper--disabled': disabled,
+          'checkbox_wrapper--disabled': disabled,
         },
         className,
       )}
@@ -38,12 +38,12 @@ export const Checkbox = ({
       <input
         id={id}
         type="checkbox"
-        className="checkbox-input"
+        className="checkbox_input"
         checked={selected}
         disabled={disabled}
         onChange={handleChange}
       />
-      <span className="checkbox-custom">
+      <span className="checkbox_custom">
         {selected && <Icon icon={'CHECK'} size="16px" colorIcon="primary" />}
       </span>
 
