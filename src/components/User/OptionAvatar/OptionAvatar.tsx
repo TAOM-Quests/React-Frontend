@@ -22,7 +22,9 @@ export const OptionAvatar = ({
 }: OptionAvatarProps) => {
   return (
     <div className={classNames('option-avatar', className)}>
-      {avatarSrc && <Avatar src={avatarSrc} size={size} alt={text} />}
+      {avatarSrc && (
+        <Avatar isRound={true} src={avatarSrc} size={size} alt={text} />
+      )}
       <div className="option-avatar__info">
         <p className="text_ellipsis body_m_r option-avatar__text">{text}</p>
         {description && (

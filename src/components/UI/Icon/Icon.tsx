@@ -31,9 +31,7 @@ export const Icon = ({
   ...props
 }: IconProps) => {
   const iconSize = SIZE_ICONS.includes(size.toString()) ? size : size
-  const iconClass = COLOR_ICONS.includes(colorIcon)
-    ? `icon--color-${colorIcon}`
-    : ''
+  const iconClass = COLOR_ICONS.includes(colorIcon) ? `icon-${colorIcon}` : ''
   const iconStyle = !COLOR_ICONS.includes(colorIcon) ? { color: colorIcon } : {}
 
   return (

@@ -2,27 +2,27 @@
   display: inline-block;
   min-width: fit-content;
   // Colors
-  &--color-primary {
+  &--primary {
     color: var(--text_c_secondary);
   }
 
-  &--color-secondary {
+  &--secondary {
     color: var(--text_c_primary);
   }
 
-  &--color-accent {
+  &--accent {
     color: var(--text_c_secondary);
   }
 
-  &--color-subdued {
+  &--subdued {
     color: var(--text_c_accent);
   }
 
-  &--color-soft-blue {
+  &--soft-blue {
     color: #bad9fa;
   }
 
-  &--color-neutral {
+  &--neutral {
     color: var(--text_c_subdued);
   }
 }

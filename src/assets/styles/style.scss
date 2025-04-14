@@ -120,6 +120,10 @@
   box-sizing: border-box;
 }
 
+p {
+  margin: 0;
+}
+
 .heading_1 {
   font-weight: var(--bold);
   font-size: 50px;

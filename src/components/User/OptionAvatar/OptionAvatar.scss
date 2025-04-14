@@ -5,6 +5,7 @@
   width: 100%;
 
   &__info {
+    display: grid;
     width: var(--width_text_ellipsis);
   }
 
