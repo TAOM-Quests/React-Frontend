@@ -111,6 +111,8 @@
 
   //Box-shadow
   --drop_shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+
+  --width_text_ellipsis: calc(100% - 35px);
 }
 
 * {
@@ -118,110 +120,117 @@
   box-sizing: border-box;
 }
 
-.heading-1 {
+.heading_1 {
   font-weight: var(--bold);
   font-size: 50px;
   line-height: 56px;
 }
 
-.heading-2 {
+.heading_2 {
   font-weight: var(--bold);
   font-size: 44px;
   line-height: 48px;
 }
 
-.heading-3 {
+.heading_3 {
   font-weight: var(--bold);
   font-size: 36px;
   line-height: 40px;
 }
 
-.heading-4 {
+.heading_4 {
   font-weight: var(--bold);
   font-size: 28px;
   line-height: 32px;
 }
 
-.heading-5 {
+.heading_5 {
   font-weight: var(--bold);
   font-size: 24px;
   line-height: 28px;
 }
 
-.heading-6 {
+.heading_6 {
   font-weight: var(--bold);
   font-size: 20px;
   line-height: var(--lh_xl_l);
 }
 
-.body-xl-sb {
+.body_xl_sb {
   font-weight: var(--semi_bold);
   font-size: var(--fs_xl);
   line-height: var(--lh_xl_l);
 }
 
-.body-xl-m {
+.body_xl_m {
   font-weight: var(--medium);
   font-size: var(--fs_xl);
   line-height: var(--lh_xl_l);
 }
 
-.body-l-sb {
+.body_l_sb {
   font-weight: var(--semi_bold);
   font-size: var(--fs_l);
   line-height: var(--lh_xl_l);
 }
 
-.body-l-m {
+.body_l_m {
   font-weight: var(--medium);
   font-size: var(--fs_l);
   line-height: var(--lh_xl_l);
 }
 
-.body-m-b {
+.body_m_b {
   font-weight: var(--bold);
   font-size: var(--fs_m);
   line-height: var(--lh_m);
 }
 
-.body-m-sb {
+.body_m_sb {
   font-weight: var(--semi_bold);
   font-size: var(--fs_m);
   line-height: var(--lh_m);
 }
 
-.body-m-m {
+.body_m_m {
   font-weight: var(--medium);
   font-size: var(--fs_m);
   line-height: var(--lh_m);
 }
 
-.body-m-r {
+.body_m_r {
   font-weight: var(--regular);
   font-size: var(--fs_m);
   line-height: var(--lh_m);
 }
 
-.body-s-sb {
+.body_s_sb {
   font-weight: var(--semi_bold);
   font-size: var(--fs_s);
   line-height: var(--lh_s_xs);
 }
 
-.body-s-m {
+.body_s_m {
   font-weight: var(--medium);
   font-size: var(--fs_s);
   line-height: var(--lh_s_xs);
 }
 
-.body-xs-sb {
+.body_xs_sb {
   font-weight: var(--semi_bold);
   font-size: var(--fs_xs);
   line-height: var(--lh_s_xs);
 }
 
-.body-xs-r {
+.body_xs_r {
   font-weight: var(--regular);
   font-size: var(--fs_xs);
   line-height: var(--lh_s_xs);
+}
+
+.text_ellipsis,
+.text_ellipsis p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

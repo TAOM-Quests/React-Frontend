@@ -87,7 +87,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className="inputWrapper">
-        {label && <label className="label body-s-sb">{label}</label>}
+        {label && <label className="label body_s_sb">{label}</label>}
         <div
           className={classNames(
             'inputContainer',
@@ -98,7 +98,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {iconBefore && <Icon icon={iconBefore} colorIcon="secondary" />}
           <div
             className={classNames(
-              'body-m-r',
+              'body_m_r',
               'input',
               invalid && 'input--invalid',
               className,
@@ -114,7 +114,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={internalInputRef}
             className={classNames(
-              'body-m-r',
+              'body_m_r',
               'input',
               invalid && 'input--invalid',
               className,
@@ -147,9 +147,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {iconAfter && <Icon icon={iconAfter} colorIcon="secondary" />}
         </div>
         {showHelperText && (
-          <div className="body-s-m helperText">{helperText}</div>
+          <div className="body_s_m helperText">{helperText}</div>
         )}
-        {showErrorText && <div className="body-s-m errorText">{errorText}</div>}
+        {showErrorText && <div className="body_s_m errorText">{errorText}</div>}
       </div>
     )
   },

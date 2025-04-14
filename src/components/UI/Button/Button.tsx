@@ -34,7 +34,7 @@ export const Button = ({
   return (
     <button
       className={classNames(
-        'body-m-b',
+        'body_m_b',
         'button',
         typeof colorType === 'string' ? `button--${colorType}` : '',
         `button--${size}`,

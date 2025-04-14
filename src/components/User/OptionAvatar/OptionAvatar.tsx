@@ -23,10 +23,12 @@ export const OptionAvatar = ({
   return (
     <div className={classNames('option-avatar', className)}>
       {avatarSrc && <Avatar src={avatarSrc} size={size} alt={text} />}
-      <div className="option-avatar__text">
-        <p className="body-m-r option-avatar__text">{text}</p>
+      <div className="option-avatar__info">
+        <p className="text_ellipsis body_m_r option-avatar__text">{text}</p>
         {description && (
-          <p className="body-xs-r option-avatar__description">{description}</p>
+          <p className="text_ellipsis body_xs_r option-avatar__description">
+            {description}
+          </p>
         )}
       </div>
     </div>

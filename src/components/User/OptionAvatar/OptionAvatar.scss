@@ -2,14 +2,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
 
-  &__text {
-    display: flex;
-    flex-direction: column;
+  &__info {
+    width: var(--width_text_ellipsis);
   }
 
   &__text {
-    color: var(--text-c-primary);
+    color: var(--text_c_primary);
     margin: 0;
   }
 

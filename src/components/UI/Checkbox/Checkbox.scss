@@ -3,6 +3,7 @@
   align-items: center;
   flex-direction: row;
   gap: 10px;
+  width: inherit;
   position: relative;
   cursor: pointer;
   user-select: none;
@@ -92,10 +93,17 @@
   }
 }
 
-.checkbox-label {
+.checkbox_label,
+.checkbox_label_string {
+  margin: 0;
+  color: var(--text_c_primary);
+  cursor: pointer;
+  width: var(--width_text_ellipsis);
+}
+
+.checkbox_label {
   display: flex;
   align-items: center;
   flex-direction: row;
   gap: 6px;
-  color: var(--text_c_primary);
 }

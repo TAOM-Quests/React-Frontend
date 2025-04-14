@@ -54,7 +54,7 @@ export const Option = ({
       return (
         <>
           {iconBefore && <Icon icon={iconBefore} />}
-          <p className="body-m-r option-item__text">{text}</p>
+          <p className="text_ellipsis body_m_r option-item__text">{text}</p>
           {iconAfter && <Icon icon={iconAfter} />}
         </>
       )
