@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import Input, { InputProps } from '../../../components/Input/Input'
+// import Input, { InputProps } from '../../../components/Input/Input'
 import SubmitButton from '../../../components/SubmitButton/SubmitButton'
 import { users } from '../../../services/api/userModule/users/users'
-import InputPassword from '../../../components/InputPassword/InputPassword'
+// import InputPassword from '../../../components/InputPassword/InputPassword'
 import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage'
 import { useNavigate } from 'react-router'
 import { useAppDispatch } from '../../../hooks/redux/reduxHooks'
 import { setUser } from '../../../redux/auth/authSlice'
+import Input, { InputProps } from '../../../components/UI/Input/Input'
 
 export default function LogInForm() {
   const navigate = useNavigate()
@@ -36,7 +37,7 @@ export default function LogInForm() {
   return (
     <form onSubmit={tryAuthUser}>
       <Input {...getEmailProps(email, e => setEmail(e.target.value))} />
-      <InputPassword
+      <Input
         {...getPasswordProps(password, e => setPassword(e.target.value))}
       />
       <ErrorMessage text={errorMessage} />
@@ -46,11 +47,11 @@ export default function LogInForm() {
 }
 
 function getEmailProps(
-  value: string,
+  inputValue: string,
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 ): InputProps {
   return {
-    value,
+    inputValue,
     onChange,
     label: 'Email',
     className: 'email-input',
@@ -58,11 +59,11 @@ function getEmailProps(
 }
 
 function getPasswordProps(
-  value: string,
+  inputValue: string,
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 ): InputProps {
   return {
-    value,
+    inputValue,
     onChange,
     label: 'Пароль',
     className: 'password-input',
