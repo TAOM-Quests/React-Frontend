@@ -15,9 +15,10 @@ import { Tag } from '../Tag/Tag'
 import React from 'react'
 import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
+import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
 
 export interface DropdownItemType {
-  id: string
+  id: number
   text: string
   iconBefore?: keyof typeof ICON_MAP
   iconAfter?: keyof typeof ICON_MAP
@@ -27,12 +28,9 @@ export interface DropdownItemType {
   }
 }
 
-const generateRandomId = () =>
-  `dropdown-${Math.random().toString(36).substr(2, 9)}`
-
 export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   items: DropdownItemType[]
-  onChangeDropdown: (selected: string | string[] | null) => void
+  onChangeDropdown: (selected: number | number[] | null) => void
   id?: string
   isMultiple?: boolean
 }
@@ -40,7 +38,7 @@ export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Dropdown = ({
   items,
   onChangeDropdown,
-  id = generateRandomId(),
+  id = generateRandomElementId('dropdown'),
   isMultiple = false,
   ...props
 }: DropdownProps) => {
@@ -50,8 +48,8 @@ export const Dropdown = ({
   const [singleSelectedItem, setSingleSelectedItem] =
     useState<DropdownItemType | null>(null) // для хранения выбранного элемента при одиночном выборе
 
-  const [singleSelectedId, setSingleSelectedId] = useState<string | null>(null)
-  const [multipleSelectedIds, setMultipleSelectedIds] = useState<string[]>([])
+  const [singleSelectedId, setSingleSelectedId] = useState<number | null>(null)
+  const [multipleSelectedIds, setMultipleSelectedIds] = useState<number[]>([])
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -85,7 +83,7 @@ export const Dropdown = ({
     setSearchValue(e.target.value)
   }
 
-  const toggleMultipleSelection = (itemId: string) => {
+  const toggleMultipleSelection = (itemId: number) => {
     setMultipleSelectedIds(prevSelected => {
       if (prevSelected.includes(itemId)) {
         return prevSelected.filter(id => id !== itemId)
@@ -96,7 +94,7 @@ export const Dropdown = ({
   }
 
   const handleSelect = useCallback(
-    (itemId: string) => {
+    (itemId: number) => {
       if (isMultiple) {
         toggleMultipleSelection(itemId)
         focusInput()

@@ -1,30 +1,29 @@
-import React, { ReactNode } from 'react'
+import React, {
+  HtmlHTMLAttributes,
+  InputHTMLAttributes,
+  ReactNode,
+} from 'react'
 import classNames from 'classnames'
 import { Icon } from '../Icon/Icon'
 import './Checkbox.scss'
+import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
 
-export interface CheckboxProps {
-  id: string
-  label?: string | ReactNode
+export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   selected: boolean
-  onSelect: (id: string) => void
+  id?: string
+  label?: string | ReactNode
   disabled?: boolean
   className?: string
 }
 
 export const Checkbox = ({
-  id,
+  id = generateRandomElementId('checkbox'),
   label,
   selected,
-  onSelect,
+  onChange,
   disabled = false,
   className,
 }: CheckboxProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation()
-    onSelect(id)
-  }
-
   return (
     <label
       className={classNames(
@@ -41,7 +40,7 @@ export const Checkbox = ({
         className="checkbox_input"
         checked={selected}
         disabled={disabled}
-        onChange={handleChange}
+        onChange={onChange}
       />
       <span className="checkbox_custom">
         {selected && <Icon icon={'CHECK'} size="16px" colorIcon="primary" />}

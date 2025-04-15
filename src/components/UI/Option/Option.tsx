@@ -6,7 +6,7 @@ import { Checkbox } from '../Checkbox/Checkbox'
 import './Option.scss'
 
 export type OptionType = {
-  id: string
+  id: number
   text: string
   iconBefore?: keyof typeof ICON_MAP
   iconAfter?: keyof typeof ICON_MAP
@@ -16,7 +16,7 @@ export type OptionType = {
   }
   multiple?: boolean
   selected?: boolean
-  onSelect: (id: string, selected: boolean) => void
+  onSelect: (id: number, selected: boolean) => void
   className?: string
 }
 
@@ -33,10 +33,6 @@ export const Option = ({
 }: OptionType) => {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
-    onSelect(id, !selected)
-  }
-
-  const handleCheckboxSelect = (id: string) => {
     onSelect(id, !selected)
   }
 
@@ -73,10 +69,9 @@ export const Option = ({
     >
       {multiple ? (
         <Checkbox
-          id={id}
           label={renderContent()}
           selected={selected}
-          onSelect={handleCheckboxSelect}
+          onChange={() => onSelect(id, !selected)}
         />
       ) : (
         renderContent()
