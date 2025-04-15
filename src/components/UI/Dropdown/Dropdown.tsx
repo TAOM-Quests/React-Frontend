@@ -97,7 +97,7 @@ export const Dropdown = ({
 
   useEffect(() => {
     onChange(selected)
-  }, [selected, onChange])
+  }, [selected])
 
   const filteredItems = items.filter(item =>
     item.text.toLowerCase().includes(searchValue.toLowerCase()),
@@ -156,19 +156,17 @@ export const Dropdown = ({
     if (multiple) {
       const selectAll = items.map(item => item.id)
       setSelected(selectAll)
-      onChange(selectAll)
       focusInput()
     }
-  }, [items, multiple, onChange])
+  }, [items, multiple])
 
   // Убрать выделение со всех элементов
   const handleDeselectAll = useCallback(() => {
     if (multiple) {
       setSelected([])
-      onChange([])
       focusInput()
     }
-  }, [multiple, onChange])
+  }, [multiple])
 
   const handleClearSelection = () => {
     setSelectedItem(null)

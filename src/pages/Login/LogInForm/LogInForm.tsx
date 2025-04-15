@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-// import Input, { InputProps } from '../../../components/Input/Input'
-import SubmitButton from '../../../components/SubmitButton/SubmitButton'
 import { users } from '../../../services/api/userModule/users/users'
-// import InputPassword from '../../../components/InputPassword/InputPassword'
-import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage'
 import { useNavigate } from 'react-router'
 import { useAppDispatch } from '../../../hooks/redux/reduxHooks'
 import { setUser } from '../../../redux/auth/authSlice'
-import Input, { InputProps } from '../../../components/UI/Input/Input'
+import Input from '../../../components/UI/Input/Input'
+import { Button } from '../../../components/UI/Button/Button'
+import './LogInForm.scss'
 
 export default function LogInForm() {
   const navigate = useNavigate()
@@ -15,10 +13,15 @@ export default function LogInForm() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorsMessage, setErrorsMessage] = useState<{
+    email?: string
+    password?: string
+  }>({})
+  const [showPassword, setShowPassword] = useState(false)
 
   const tryAuthUser = async (event: React.FormEvent) => {
     event.preventDefault()
+    setErrorsMessage({})
 
     try {
       const foundUser = await users.auth({ email, password })
@@ -27,45 +30,50 @@ export default function LogInForm() {
       navigate('/')
     } catch (e) {
       if (e instanceof Error) {
-        setErrorMessage(e.message)
+        const message = e.message.toLowerCase()
+        if (message.includes('email')) {
+          setErrorsMessage({ email: e.message })
+        } else if (message.includes('password')) {
+          setErrorsMessage({ password: e.message })
+        } else {
+          setErrorsMessage({ email: e.message, password: e.message })
+        }
       } else {
-        setErrorMessage(e as string)
+        setErrorsMessage({ email: String(e), password: String(e) })
       }
     }
   }
 
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev)
+  }
+
   return (
-    <form onSubmit={tryAuthUser}>
-      <Input {...getEmailProps(email, e => setEmail(e.target.value))} />
+    <form className="login_form" onSubmit={tryAuthUser}>
+      <h4 className="heading_4 login_form__heading">
+        Войдите в личный кабинет
+      </h4>
       <Input
-        {...getPasswordProps(password, e => setPassword(e.target.value))}
+        type="email"
+        label="Почта"
+        placeholder="Введите почту"
+        className="email-input"
+        inputValue={email}
+        onChange={e => setEmail(e.target.value)}
+        errorText={errorsMessage.email}
       />
-      <ErrorMessage text={errorMessage} />
-      <SubmitButton text="Войти" />
+      <Input
+        type={showPassword ? 'text' : 'password'}
+        label="Пароль"
+        placeholder="Введите пароль"
+        className="password-input"
+        iconAfter={showPassword ? 'EYE_CLOSED' : 'EYE'}
+        onClickIconAfter={toggleShowPassword}
+        inputValue={password}
+        onChange={e => setPassword(e.target.value)}
+        errorText={errorsMessage.password}
+      />
+      <Button type="submit" text="Войти" />
     </form>
   )
-}
-
-function getEmailProps(
-  inputValue: string,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-): InputProps {
-  return {
-    inputValue,
-    onChange,
-    label: 'Email',
-    className: 'email-input',
-  }
-}
-
-function getPasswordProps(
-  inputValue: string,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-): InputProps {
-  return {
-    inputValue,
-    onChange,
-    label: 'Пароль',
-    className: 'password-input',
-  }
 }

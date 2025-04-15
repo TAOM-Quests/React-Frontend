@@ -19,7 +19,8 @@ export interface InputProps
   errorText?: string
   iconBefore?: keyof typeof ICON_MAP
   iconAfter?: keyof typeof ICON_MAP
-  invalid?: boolean
+  onClickIconAfter?: () => void
+  // invalid?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   inputValue?: string | number | ReactNode
   onClearSelection?: () => void
@@ -35,7 +36,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errorText,
       iconBefore,
       iconAfter,
-      invalid,
+      onClickIconAfter,
+      // invalid,
       inputValue,
       onChange,
       type,
@@ -49,8 +51,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const showHelperText = helperText && !invalid
-    const showErrorText = invalid && errorText
+    const showHelperText = helperText && !errorText
+    // const showErrorText = invalid && errorText
     const [isInputVisible, setIsInputVisible] = useState(true)
 
     const internalInputRef = useRef<HTMLInputElement>(null)
@@ -90,7 +92,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div
           className={classNames(
             'inputContainer',
-            invalid && 'inputContainer--invalid',
+            errorText && 'inputContainer--invalid',
             disabled && 'inputContainer--disabled',
           )}
         >
@@ -99,7 +101,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={classNames(
               'body_m_r',
               'input',
-              invalid && 'input--invalid',
+              errorText && 'input--invalid',
               className,
             )}
             style={{
@@ -115,7 +117,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={classNames(
               'body_m_r',
               'input',
-              invalid && 'input--invalid',
+              errorText && 'input--invalid',
               className,
             )}
             type={type}
@@ -143,12 +145,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             {...props}
           />
-          {iconAfter && <Icon icon={iconAfter} colorIcon="secondary" />}
+          {iconAfter && (
+            <Icon
+              icon={iconAfter}
+              onClick={onClickIconAfter}
+              colorIcon="secondary"
+            />
+          )}
         </div>
         {showHelperText && (
           <div className="body_s_m helperText">{helperText}</div>
         )}
-        {showErrorText && <div className="body_s_m errorText">{errorText}</div>}
+        {errorText && <div className="body_s_m errorText">{errorText}</div>}
       </div>
     )
   },
