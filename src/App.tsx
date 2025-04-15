@@ -3,12 +3,6 @@ import './assets/styles/style.scss'
 // import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
-import React from 'react'
-import { Checkbox } from './components/UI/Checkbox/Checkbox'
-import { Option } from './components/UI/Option/Option'
-import { Tag } from './components/UI/Tag/Tag'
-import { Button } from './components/UI/Button/Button'
-import Input from './components/UI/Input/Input'
 const items: DropdownItemType[] = [
   {
     id: '124333445346356756576',
@@ -28,7 +22,7 @@ const items: DropdownItemType[] = [
     },
   },
   {
-    id: 'fduidfihehjerihfekj',
+    id: '12354',
     text: 'Элемент 3',
     avatar: {
       src: image,
@@ -39,7 +33,7 @@ const items: DropdownItemType[] = [
 
 const items2: DropdownItemType[] = [
   {
-    id: 'jefj0w3u09ru',
+    id: '9856',
     text: 'Элемент 1',
     iconBefore: 'CHECK',
   },
@@ -48,7 +42,7 @@ const items2: DropdownItemType[] = [
     text: 'Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2',
   },
   {
-    id: 'bcbcjs',
+    id: '523648',
     text: 'Элемент 3',
     iconAfter: 'CHECK',
   },
@@ -61,41 +55,38 @@ function App() {
     console.log('Выбрано:', selected)
   }
 
-  const handleValueChange = (value: string) => {
-    console.log('Значение в Input:', value)
-  }
-
   return (
     <>
       <div>
         <Dropdown
           items={items2}
           // selected={null}
-          onChange={handleSelectChange}
-          id="my-dropdown"
+          onChangeDropdown={handleSelectChange}
+          // id="my-dropdown"
           // onValueChange={handleValueChange}
         />
         <Dropdown
           items={items}
           // selected={null}
-          onChange={handleSelectChange}
-          id="my-dropdown13"
+          placeholder="xyq"
+          onChangeDropdown={handleSelectChange}
+          // id="my-dropdown13"
           // onValueChange={handleValueChange}
         />
         <Dropdown
           items={items}
           // selected={null}
-          multiple={true}
-          onChange={handleSelectChange}
-          id="my-dropdown1"
+          isMultiple={true}
+          onChangeDropdown={handleSelectChange}
+          // id="my-dropdown1"
           // onValueChange={handleValueChange}
         />
         <Dropdown
           items={items2}
           // selected={null}
-          multiple={true}
-          onChange={handleSelectChange}
-          id="my-dropdown4"
+          isMultiple={true}
+          onChangeDropdown={handleSelectChange}
+          // id="my-dropdown4"
           // onValueChange={handleValueChange}
         />
       </div>

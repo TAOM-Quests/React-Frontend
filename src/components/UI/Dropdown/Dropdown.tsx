@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  InputHTMLAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Icon } from '../Icon/Icon'
 import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
 import { Option } from '../Option/Option'
@@ -10,7 +16,7 @@ import React from 'react'
 import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
 
-export type DropdownItemType = {
+export interface DropdownItemType {
   id: string
   text: string
   iconBefore?: keyof typeof ICON_MAP
@@ -21,32 +27,39 @@ export type DropdownItemType = {
   }
 }
 
-export type DropdownProps = {
-  id: string
+const generateRandomId = () =>
+  `dropdown-${Math.random().toString(36).substr(2, 9)}`
+
+export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   items: DropdownItemType[]
-  multiple?: boolean
-  onChange: (selected: string | string[] | null) => void
+  onChangeDropdown: (selected: string | string[] | null) => void
+  id?: string
+  isMultiple?: boolean
 }
 
 export const Dropdown = ({
-  id,
   items,
-  multiple = false,
-  onChange,
+  onChangeDropdown,
+  id = generateRandomId(),
+  isMultiple = false,
+  ...props
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [selected, setSelected] = useState<string | string[] | null>(null)
-  const [selectedItem, setSelectedItem] = useState<DropdownItemType | null>(
-    null,
-  ) // для хранения выбранного элемента при одиночном выборе
+
+  const [singleSelectedItem, setSingleSelectedItem] =
+    useState<DropdownItemType | null>(null) // для хранения выбранного элемента при одиночном выборе
+
+  const [singleSelectedId, setSingleSelectedId] = useState<string | null>(null)
+  const [multipleSelectedIds, setMultipleSelectedIds] = useState<string[]>([])
+
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleFocus = () => {
     setIsOpen(true)
-    if (!multiple) {
-      setSelected(null)
+    if (!isMultiple) {
+      setSingleSelectedId(null)
     }
   }
 
@@ -72,32 +85,41 @@ export const Dropdown = ({
     setSearchValue(e.target.value)
   }
 
+  const toggleMultipleSelection = (itemId: string) => {
+    setMultipleSelectedIds(prevSelected => {
+      if (prevSelected.includes(itemId)) {
+        return prevSelected.filter(id => id !== itemId)
+      } else {
+        return [...prevSelected, itemId]
+      }
+    })
+  }
+
   const handleSelect = useCallback(
     (itemId: string) => {
-      if (multiple) {
-        setSelected(prevSelected => {
-          if (Array.isArray(prevSelected)) {
-            return prevSelected.includes(itemId)
-              ? prevSelected.filter(id => id !== itemId)
-              : [...prevSelected, itemId]
-          }
-          return [itemId]
-        })
+      if (isMultiple) {
+        toggleMultipleSelection(itemId)
         focusInput()
       } else {
         const selectedItem = items.find(item => item.id === itemId)
-        setSelected(itemId)
-        setSelectedItem(selectedItem ?? null)
+        setSingleSelectedId(itemId)
+        setSingleSelectedItem(selectedItem ?? null)
         setSearchValue(selectedItem?.text || '')
         setIsOpen(false)
       }
     },
-    [items, multiple, setIsOpen],
+    [items, isMultiple, setIsOpen],
   )
 
   useEffect(() => {
-    onChange(selected)
-  }, [selected, onChange])
+    if (isMultiple) {
+      onChangeDropdown(
+        multipleSelectedIds.length > 0 ? multipleSelectedIds : null,
+      )
+    } else {
+      onChangeDropdown(singleSelectedId)
+    }
+  }, [singleSelectedId, multipleSelectedIds, isMultiple])
 
   const filteredItems = items.filter(item =>
     item.text.toLowerCase().includes(searchValue.toLowerCase()),
@@ -121,21 +143,28 @@ export const Dropdown = ({
   }, [dropdownRef, setIsOpen])
 
   const renderInputValue = () => {
-    if (selectedItem?.avatar) {
+    if (singleSelectedItem?.avatar) {
       return (
         <OptionAvatar
           size="extraSmall"
-          avatarSrc={selectedItem.avatar.src}
-          description={selectedItem.avatar.description}
-          text={selectedItem.text}
+          avatarSrc={singleSelectedItem.avatar.src}
+          description={singleSelectedItem.avatar.description}
+          text={singleSelectedItem.text}
         />
       )
-    } else if (selectedItem?.iconBefore || selectedItem?.iconAfter) {
+    } else if (
+      singleSelectedItem?.iconBefore ||
+      singleSelectedItem?.iconAfter
+    ) {
       return (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {selectedItem.iconBefore && <Icon icon={selectedItem.iconBefore} />}
-          <span style={{ marginLeft: '8px' }}>{selectedItem.text}</span>
-          {selectedItem.iconAfter && <Icon icon={selectedItem.iconAfter} />}
+          {singleSelectedItem.iconBefore && (
+            <Icon icon={singleSelectedItem.iconBefore} />
+          )}
+          <span style={{ marginLeft: '8px' }}>{singleSelectedItem.text}</span>
+          {singleSelectedItem.iconAfter && (
+            <Icon icon={singleSelectedItem.iconAfter} />
+          )}
         </div>
       )
     } else {
@@ -145,41 +174,35 @@ export const Dropdown = ({
 
   // Обработка выбора всех элементов через Checkbox
   const handleCheckboxSelectAll = useCallback(() => {
-    if (Array.isArray(selected) && selected.length === items.length) {
+    if (multipleSelectedIds.length === items.length) {
       handleDeselectAll()
     } else {
       handleSelectAll()
     }
-  }, [items, selected])
+  }, [items, multipleSelectedIds])
   // Выбрать все элементы
   const handleSelectAll = useCallback(() => {
-    if (multiple) {
-      const selectAll = items.map(item => item.id)
-      setSelected(selectAll)
-      onChange(selectAll)
-      focusInput()
-    }
-  }, [items, multiple, onChange])
+    const selectAll = items.map(item => item.id)
+    setMultipleSelectedIds(selectAll)
+    focusInput()
+  }, [items, isMultiple])
 
   // Убрать выделение со всех элементов
   const handleDeselectAll = useCallback(() => {
-    if (multiple) {
-      setSelected([])
-      onChange([])
-      focusInput()
-    }
-  }, [multiple, onChange])
+    setMultipleSelectedIds([])
+    focusInput()
+  }, [isMultiple])
 
   const handleClearSelection = () => {
-    setSelectedItem(null)
+    setSingleSelectedItem(null)
     setSearchValue('')
   }
 
   return (
     <div ref={dropdownRef} data-dropdown-id={id} className="dropdown-container">
-      {multiple && Array.isArray(selected) && (
+      {isMultiple && (
         <div className="selected-items">
-          {selected.map(itemId => {
+          {multipleSelectedIds.map(itemId => {
             const item = items.find(item => item.id === itemId)
             return (
               <span key={itemId} className="selected-item">
@@ -198,26 +221,24 @@ export const Dropdown = ({
       )}
       <Input
         ref={inputRef}
-        type="search"
-        placeholder="Поиск..."
+        type="text"
         iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
         inputValue={renderInputValue()}
         onChange={handleSearch}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onClearSelection={handleClearSelection}
+        {...props}
       />
 
       {isOpen && (
         <div className="dropdown-menu">
-          {multiple && (
+          {isMultiple && (
             <Checkbox
               id="selectAll"
               className="dropdown-checkbox"
               label="Выбрать все"
-              selected={
-                Array.isArray(selected) && selected.length === items.length
-              }
+              selected={multipleSelectedIds.length === items.length}
               onSelect={handleCheckboxSelectAll}
             />
           )}
@@ -229,11 +250,11 @@ export const Dropdown = ({
               iconBefore={item.iconBefore}
               iconAfter={item.iconAfter}
               avatar={item.avatar}
-              multiple={multiple}
+              multiple={isMultiple}
               selected={
-                multiple
-                  ? Array.isArray(selected) && selected.includes(item.id)
-                  : selected === item.id
+                isMultiple
+                  ? multipleSelectedIds.includes(item.id)
+                  : singleSelectedId === item.id
               }
               onSelect={handleSelect}
             />

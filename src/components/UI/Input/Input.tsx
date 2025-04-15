@@ -103,13 +103,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className,
             )}
             style={{
-              display: isInputVisible ? 'none' : 'block',
+              display: isInputVisible ? 'none' : 'flex',
               cursor: 'pointer',
             }}
             onClick={handleDivClick}
           >
             {inputValue}
           </div>
+
           <input
             ref={internalInputRef}
             className={classNames(
@@ -127,7 +128,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onChange={handleChange}
             disabled={disabled}
             placeholder={placeholder}
-            style={{ display: isInputVisible ? 'block' : 'none' }}
+            style={{ display: isInputVisible ? 'flex' : 'none' }}
             onFocus={e => {
               setIsInputVisible(true)
               onFocus?.(e)
@@ -143,6 +144,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             {...props}
           />
+          {inputValue &&
+            (typeof inputValue === 'string' ||
+              typeof inputValue === 'number') && (
+              <Icon
+                icon="CROSS"
+                onClick={() => {
+                  onClearSelection?.()
+                  internalInputRef.current?.focus()
+                }}
+                colorIcon="secondary"
+              />
+            )}
+
           {iconAfter && <Icon icon={iconAfter} colorIcon="secondary" />}
         </div>
         {showHelperText && (

@@ -24,7 +24,6 @@ interface IconProps extends SVGAttributes<SVGElement> {
 export const Icon = ({
   icon,
   size = '20px',
-  viewBox = '0 0 20 20',
   colorIcon = 'secondary',
   onClick,
   className,
@@ -44,7 +43,7 @@ export const Icon = ({
       )}
       onClick={onClick}
       style={iconStyle}
-      viewBox={viewBox}
+      viewBox={'0 0 20 20'}
       width={iconSize}
       height={iconSize}
       dangerouslySetInnerHTML={{ __html: getIcon(icon) }}
