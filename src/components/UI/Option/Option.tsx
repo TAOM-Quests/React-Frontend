@@ -8,16 +8,16 @@ import './Option.scss'
 export type OptionType = {
   id: number
   text: string
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
+  onSelect: (id: number, selected: boolean) => void
   avatar?: {
     src: string
     description?: string
   }
-  multiple?: boolean
-  selected?: boolean
-  onSelect: (id: number, selected: boolean) => void
   className?: string
+  iconAfter?: keyof typeof ICON_MAP
+  isMultiple?: boolean
+  isSelected?: boolean
+  iconBefore?: keyof typeof ICON_MAP
 }
 
 export const Option = ({
@@ -26,14 +26,14 @@ export const Option = ({
   iconBefore,
   iconAfter,
   avatar,
-  multiple = false,
-  selected = false,
+  isMultiple = false,
+  isSelected = false,
   onSelect,
   className,
 }: OptionType) => {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
-    onSelect(id, !selected)
+    onSelect(id, !isSelected)
   }
 
   const renderContent = () => {
@@ -62,16 +62,16 @@ export const Option = ({
       key={id}
       className={classNames(
         'option_item',
-        { item_selected: selected },
+        { item_selected: isSelected },
         className,
       )}
       onClick={handleOptionClick}
     >
-      {multiple ? (
+      {isMultiple ? (
         <Checkbox
           label={renderContent()}
-          selected={selected}
-          onChange={() => onSelect(id, !selected)}
+          isSelected={isSelected}
+          onChange={() => onSelect(id, !isSelected)}
         />
       ) : (
         renderContent()

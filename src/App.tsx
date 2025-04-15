@@ -5,7 +5,7 @@ import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
 const items: DropdownItemType[] = [
   {
-    id: '124333445346356756576',
+    id: 124333445346356756576,
     text: 'Элемент 1',
     avatar: {
       src: image,
@@ -13,7 +13,7 @@ const items: DropdownItemType[] = [
     },
   },
   {
-    id: '4778546745675345726387',
+    id: 4778546745675345726387,
     text: 'Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2',
     avatar: {
       src: image,
@@ -22,7 +22,7 @@ const items: DropdownItemType[] = [
     },
   },
   {
-    id: '12354',
+    id: 12354,
     text: 'Элемент 3',
     avatar: {
       src: image,
@@ -33,16 +33,16 @@ const items: DropdownItemType[] = [
 
 const items2: DropdownItemType[] = [
   {
-    id: '9856',
+    id: 9856,
     text: 'Элемент 1',
     iconBefore: 'CHECK',
   },
   {
-    id: 'y598ty8r3r',
+    id: 5,
     text: 'Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2Элемент 2',
   },
   {
-    id: '523648',
+    id: 3648,
     text: 'Элемент 3',
     iconAfter: 'CHECK',
   },
@@ -51,7 +51,7 @@ const items2: DropdownItemType[] = [
 function App() {
   const [count, setCount] = useState(0)
 
-  const handleSelectChange = (selected: string | string[] | null) => {
+  const handleSelectChange = (selected: number | number[] | null) => {
     console.log('Выбрано:', selected)
   }
 
@@ -68,7 +68,7 @@ function App() {
         <Dropdown
           items={items}
           // selected={null}
-          placeholder="xyq"
+          placeholder="Search"
           onChangeDropdown={handleSelectChange}
           // id="my-dropdown13"
           // onValueChange={handleValueChange}

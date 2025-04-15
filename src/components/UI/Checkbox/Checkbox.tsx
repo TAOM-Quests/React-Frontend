@@ -1,27 +1,23 @@
-import React, {
-  HtmlHTMLAttributes,
-  InputHTMLAttributes,
-  ReactNode,
-} from 'react'
+import { InputHTMLAttributes, ReactNode } from 'react'
 import classNames from 'classnames'
 import { Icon } from '../Icon/Icon'
 import './Checkbox.scss'
 import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
 
 export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
-  selected: boolean
+  isSelected: boolean
   id?: string
   label?: string | ReactNode
-  disabled?: boolean
+  isDisabled?: boolean
   className?: string
 }
 
 export const Checkbox = ({
   id = generateRandomElementId('checkbox'),
   label,
-  selected,
+  isSelected,
   onChange,
-  disabled = false,
+  isDisabled = false,
   className,
 }: CheckboxProps) => {
   return (
@@ -29,7 +25,7 @@ export const Checkbox = ({
       className={classNames(
         'checkbox_wrapper',
         {
-          'checkbox_wrapper--disabled': disabled,
+          'checkbox_wrapper--disabled': isDisabled,
         },
         className,
       )}
@@ -38,12 +34,12 @@ export const Checkbox = ({
         id={id}
         type="checkbox"
         className="checkbox_input"
-        checked={selected}
-        disabled={disabled}
+        checked={isSelected}
+        disabled={isDisabled}
         onChange={onChange}
       />
       <span className="checkbox_custom">
-        {selected && <Icon icon={'CHECK'} size="16px" colorIcon="primary" />}
+        {isSelected && <Icon icon={'CHECK'} size="16px" colorIcon="primary" />}
       </span>
 
       {label && typeof label === 'string' ? (
@@ -54,7 +50,7 @@ export const Checkbox = ({
             'body_m_r',
             'text_ellipsis ',
             'checkbox_label',
-            { text_disabled: disabled },
+            { text_disabled: isDisabled },
           )}
           htmlFor={id}
         >

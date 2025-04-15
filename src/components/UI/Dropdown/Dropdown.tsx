@@ -8,14 +8,13 @@ import {
 import { Icon } from '../Icon/Icon'
 import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
 import { Option } from '../Option/Option'
-import classNames from 'classnames'
 import { ICON_MAP } from '../../../assets/icons'
-import './Dropdown.scss'
 import { Tag } from '../Tag/Tag'
 import React from 'react'
 import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
 import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
+import './Dropdown.scss'
 
 export interface DropdownItemType {
   id: number
@@ -46,7 +45,7 @@ export const Dropdown = ({
   const [searchValue, setSearchValue] = useState('')
 
   const [singleSelectedItem, setSingleSelectedItem] =
-    useState<DropdownItemType | null>(null) // для хранения выбранного элемента при одиночном выборе
+    useState<DropdownItemType | null>(null)
 
   const [singleSelectedId, setSingleSelectedId] = useState<number | null>(null)
   const [multipleSelectedIds, setMultipleSelectedIds] = useState<number[]>([])
@@ -221,7 +220,7 @@ export const Dropdown = ({
         ref={inputRef}
         type="text"
         iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
-        inputValue={renderInputValue()}
+        valueInput={renderInputValue()}
         onChange={handleSearch}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -236,7 +235,7 @@ export const Dropdown = ({
               id="selectAll"
               className="dropdown-checkbox"
               label="Выбрать все"
-              selected={multipleSelectedIds.length === items.length}
+              isSelected={multipleSelectedIds.length === items.length}
               onSelect={handleCheckboxSelectAll}
             />
           )}
@@ -248,8 +247,8 @@ export const Dropdown = ({
               iconBefore={item.iconBefore}
               iconAfter={item.iconAfter}
               avatar={item.avatar}
-              multiple={isMultiple}
-              selected={
+              isMultiple={isMultiple}
+              isSelected={
                 isMultiple
                   ? multipleSelectedIds.includes(item.id)
                   : singleSelectedId === item.id

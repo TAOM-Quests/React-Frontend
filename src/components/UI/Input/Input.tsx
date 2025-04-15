@@ -14,16 +14,15 @@ import React from 'react'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  helperText?: string
-  errorText?: string
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
-  invalid?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  inputValue?: string | number | ReactNode
-  onClearSelection?: () => void
+  label?: string
   inputRef?: ForwardedRef<HTMLInputElement>
+  iconAfter?: keyof typeof ICON_MAP
+  errorText?: string
+  helperText?: string
+  iconBefore?: keyof typeof ICON_MAP
+  valueInput?: string | number | ReactNode
+  onClearSelection?: () => void
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -35,8 +34,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errorText,
       iconBefore,
       iconAfter,
-      invalid,
-      inputValue,
+      valueInput,
       onChange,
       type,
       onBlur,
@@ -49,8 +47,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    const showHelperText = helperText && !invalid
-    const showErrorText = invalid && errorText
+    const showHelperText = helperText && !errorText
     const [isInputVisible, setIsInputVisible] = useState(true)
 
     const internalInputRef = useRef<HTMLInputElement>(null)
@@ -58,9 +55,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     useEffect(() => {
       setIsInputVisible(
-        typeof inputValue === 'string' || typeof inputValue === 'number',
+        typeof valueInput === 'string' || typeof valueInput === 'number',
       )
-    }, [inputValue])
+    }, [valueInput])
 
     useImperativeHandle(
       combinedRef,
@@ -90,7 +87,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <div
           className={classNames(
             'inputContainer',
-            invalid && 'inputContainer--invalid',
+            errorText && 'inputContainer--invalid',
             disabled && 'inputContainer--disabled',
           )}
         >
@@ -99,7 +96,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={classNames(
               'body_m_r',
               'input',
-              invalid && 'input--invalid',
+              errorText && 'input--invalid',
               className,
             )}
             style={{
@@ -108,7 +105,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             onClick={handleDivClick}
           >
-            {inputValue}
+            {valueInput}
           </div>
 
           <input
@@ -116,13 +113,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className={classNames(
               'body_m_r',
               'input',
-              invalid && 'input--invalid',
+              errorText && 'input--invalid',
               className,
             )}
             type={type}
             value={
-              typeof inputValue === 'string' || typeof inputValue === 'number'
-                ? inputValue
+              typeof valueInput === 'string' || typeof valueInput === 'number'
+                ? valueInput
                 : ''
             }
             onChange={handleChange}
@@ -135,8 +132,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             onBlur={e => {
               if (
-                typeof inputValue !== 'string' &&
-                typeof inputValue !== 'number'
+                typeof valueInput !== 'string' &&
+                typeof valueInput !== 'number'
               ) {
                 setIsInputVisible(false)
               }
@@ -144,9 +141,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             {...props}
           />
-          {inputValue &&
-            (typeof inputValue === 'string' ||
-              typeof inputValue === 'number') && (
+          {valueInput &&
+            (typeof valueInput === 'string' ||
+              typeof valueInput === 'number') && (
               <Icon
                 icon="CROSS"
                 onClick={() => {
@@ -162,7 +159,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {showHelperText && (
           <div className="body_s_m helperText">{helperText}</div>
         )}
-        {showErrorText && <div className="body_s_m errorText">{errorText}</div>}
+        {errorText && <div className="body_s_m errorText">{errorText}</div>}
       </div>
     )
   },
