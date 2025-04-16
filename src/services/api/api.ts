@@ -1,7 +1,7 @@
 import { Response, ResponseError } from './common/interface/Response'
 
-const DEV_SERVER_URL = 'http://localhost:3000/'
-const BASE_API_URL = 'api/v1/'
+export const DEV_SERVER_URL = 'http://localhost:3000/'
+export const BASE_API_URL = 'api/v1/'
 
 export const api = async <TResult, TParameters>(
   path: string,

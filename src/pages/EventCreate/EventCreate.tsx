@@ -11,15 +11,16 @@ import Input from '../../components/UI/Input/Input'
 import { Dropdown } from '../../components/UI/Dropdown/Dropdown'
 import { users } from '../../services/api/userModule/users/users'
 import { ScheduleItem } from '../../models/event'
-import { Icon } from '../../components/UI/Icon/Icon'
 import { EventCreateSchedule } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
+import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
   const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
   // const [date, setDate] = useState<Date | null>(null)
   const [type, setType] = useState<EventType | null>(null)
@@ -169,6 +170,7 @@ export const EventCreate = () => {
     <>
       {!isLoading ? (
         <>
+          <EventCreateImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
           {renderStateButtons()}
           <TextEditor
             value={description ?? ''}
