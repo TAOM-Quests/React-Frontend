@@ -13,10 +13,10 @@ export const EventCreateImage = ({
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const image = await serverFiles.uploadFile(file)
-      const imageUrl = serverFiles.getFileUrl(image.name)
+      const uploadedImage = await serverFiles.uploadFile(file)
+      const image = await serverFiles.getFile(uploadedImage.name)
 
-      setImageUrl(imageUrl)
+      setImageUrl(image.url)
     }
   }
 

@@ -14,6 +14,8 @@ import { ScheduleItem } from '../../models/event'
 import { EventCreateSchedule } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateImage } from './EventCreateImage/EventCreateImage'
+import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
+import { ServerFile } from '../../models/serverFile'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -36,6 +38,7 @@ export const EventCreate = () => {
   const [identifier, setIdentifier] = useState<string | null>(null)
   const [accessCode, setAccessCode] = useState<string | null>(null)
   const [schedule, setSchedule] = useState<ScheduleItem[]>([])
+  const [files, setFiles] = useState<ServerFile[]>([])
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -179,6 +182,7 @@ export const EventCreate = () => {
           {renderManagementData()}
           {renderPlaces()}
           <EventCreateSchedule schedule={schedule} setSchedule={setSchedule} />
+          <EventCreateFiles files={files} setFiles={setFiles} />
         </>
       ) : (
         <div>Loading</div>
