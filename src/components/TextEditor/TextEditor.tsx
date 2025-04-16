@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent, EditorEvents } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { MenuBar } from './MenuBar/MenuBar'
 import Underline from '@tiptap/extension-underline'
@@ -11,12 +11,17 @@ const extensions = [
   Link,
   TextAlign.configure({ types: ['heading', 'paragraph'] }),
 ]
-const content = '<p>Hello World!</p>'
 
-export const TextEditor = () => {
+export interface TextEditorProps {
+  value: string
+  onChange: (props: EditorEvents['update']) => void
+}
+
+export const TextEditor = ({ value, onChange }: TextEditorProps) => {
   const editor = useEditor({
     extensions,
-    content,
+    content: value,
+    onUpdate: onChange,
   })
 
   return (

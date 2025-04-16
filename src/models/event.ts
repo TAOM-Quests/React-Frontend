@@ -35,6 +35,7 @@ export interface PlaceOffline extends Place {
 }
 
 export interface ScheduleItem {
-  timeStart: Date
+  name: string
   timeEnd: Date
+  timeStart: Date
 }

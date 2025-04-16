@@ -1,3 +1,4 @@
+import { Employee } from '../../../../models/user'
 import { UserAuth } from '../../../../models/userAuth'
 import { UserProfile, UserProfileUpdated } from '../../../../models/userProfile'
 import { userModule } from '../userModule'
@@ -16,8 +17,14 @@ export const users = {
     userModule<UserProfile, ProfileGetDto>(`users/${params.id}/profile`),
 
   updateProfile: (params: ProfileUpdateDto): Promise<UserProfileUpdated> => {
-    const {id: _, ...updateProfile} = params
+    const { id: _, ...updateProfile } = params
 
-    return userModule<UserProfileUpdated, Omit<ProfileUpdateDto, 'id'>>(`users/${params.id}/profile`, updateProfile)
+    return userModule<UserProfileUpdated, Omit<ProfileUpdateDto, 'id'>>(
+      `users/${params.id}/profile`,
+      updateProfile,
+    )
   },
+
+  getEmployees: (): Promise<Employee[]> =>
+    userModule<Employee[], null>('users?isEmployee=true'),
 }
