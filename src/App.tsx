@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './assets/styles/style.scss'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
+import { Badge } from './components/UI/Badge/Badge'
 const items: DropdownItemType[] = [
   {
     id: 124333445346356756576,
@@ -56,6 +57,16 @@ function App() {
 
   return (
     <>
+      <div style={{ width: 100 }}>
+        <Badge text="Primary" type="primary" />
+        <Badge text="Accent" type="accent" />
+        <Badge text="Info" type="info" />
+        <Badge text="Caution" type="caution" />
+        <Badge text="Critical" type="critical" />
+        <Badge text="Success" type="success" />
+        <Badge text="Neutral" type="neutral" />
+      </div>
+
       <div>
         <Dropdown
           items={items2}
