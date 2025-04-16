@@ -3,6 +3,7 @@ import './assets/styles/style.scss'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
 import { Badge } from './components/UI/Badge/Badge'
+import { DateInput } from './components/UI/DateInput/DateInput'
 const items: DropdownItemType[] = [
   {
     id: 124333445346356756576,
@@ -55,8 +56,21 @@ function App() {
     console.log('Выбрано:', selected)
   }
 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const handleDateSelect = (date: Date | null) => {
+    setSelectedDate(date)
+  }
+
   return (
     <>
+      <div>
+        <h1>Calendar Example</h1>
+        <DateInput onDateSelect={handleDateSelect} />
+        {selectedDate && (
+          <p>Selected Date: {selectedDate.toLocaleDateString()}</p>
+        )}
+      </div>
       <div style={{ width: 100 }}>
         <Badge text="Primary" type="primary" />
         <Badge text="Accent" type="accent" />

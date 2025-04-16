@@ -4,6 +4,7 @@ import './Input.scss'
 import { Icon } from '../Icon/Icon'
 import {
   ForwardedRef,
+  InputHTMLAttributes,
   ReactNode,
   useEffect,
   useImperativeHandle,
@@ -12,8 +13,7 @@ import {
 } from 'react'
 import React from 'react'
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
   inputRef?: ForwardedRef<HTMLInputElement>

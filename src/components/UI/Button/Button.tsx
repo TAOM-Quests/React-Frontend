@@ -13,8 +13,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   colorType?: TypeButton | { color: string; backgroundColor: string }
   iconAfter?: keyof typeof ICON_MAP
   iconBefore?: keyof typeof ICON_MAP
-  isIconOnly?: boolean
   isButtonCircle?: boolean
+  isIconOnly?: boolean
 }
 
 export const Button = ({
