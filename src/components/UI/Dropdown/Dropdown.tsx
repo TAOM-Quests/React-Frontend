@@ -19,12 +19,12 @@ import './Dropdown.scss'
 export interface DropdownItemType {
   id: number
   text: string
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
   avatar?: {
     src: string
     description?: string
   }
+  iconAfter?: keyof typeof ICON_MAP
+  iconBefore?: keyof typeof ICON_MAP
 }
 
 export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -93,10 +93,12 @@ export const Dropdown = ({
   }
 
   const handleSelect = useCallback(
-    (itemId: number) => {
+    (itemId: number, isRemoveAction = false) => {
       if (isMultiple) {
         toggleMultipleSelection(itemId)
-        focusInput()
+        if (!isRemoveAction) {
+          focusInput()
+        }
       } else {
         const selectedItem = items.find(item => item.id === itemId)
         setSingleSelectedId(itemId)
@@ -209,7 +211,7 @@ export const Dropdown = ({
                   description={item?.avatar?.description}
                   iconBefore={item?.iconBefore}
                   iconAfter={item?.iconAfter}
-                  onRemove={() => handleSelect(itemId)}
+                  onRemove={() => handleSelect(itemId, true)}
                 />
               </span>
             )
@@ -236,7 +238,7 @@ export const Dropdown = ({
               className="dropdown-checkbox"
               label="Выбрать все"
               isSelected={multipleSelectedIds.length === items.length}
-              onSelect={handleCheckboxSelectAll}
+              onChange={handleCheckboxSelectAll}
             />
           )}
           {filteredItems.map(item => (

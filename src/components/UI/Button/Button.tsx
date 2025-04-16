@@ -9,12 +9,12 @@ export type Size = 'large' | 'small'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string
-  colorType?: TypeButton | { color: string; backgroundColor: string }
   size?: Size
+  colorType?: TypeButton | { color: string; backgroundColor: string }
+  iconAfter?: keyof typeof ICON_MAP
+  iconBefore?: keyof typeof ICON_MAP
   isIconOnly?: boolean
   isButtonCircle?: boolean
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
 }
 
 export const Button = ({

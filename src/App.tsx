@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './assets/styles/style.scss'
-// import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
 const items: DropdownItemType[] = [

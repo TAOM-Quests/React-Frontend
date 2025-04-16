@@ -8,8 +8,8 @@ export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   isSelected: boolean
   id?: string
   label?: string | ReactNode
-  isDisabled?: boolean
   className?: string
+  isDisabled?: boolean
 }
 
 export const Checkbox = ({
@@ -22,6 +22,7 @@ export const Checkbox = ({
 }: CheckboxProps) => {
   return (
     <label
+      htmlFor={id}
       className={classNames(
         'checkbox_wrapper',
         {
@@ -45,17 +46,16 @@ export const Checkbox = ({
       {label && typeof label === 'string' ? (
         <p className="body_m_r text_ellipsis checkbox_label_string">{label}</p>
       ) : (
-        <label
+        <span
           className={classNames(
             'body_m_r',
             'text_ellipsis ',
             'checkbox_label',
             { text_disabled: isDisabled },
           )}
-          htmlFor={id}
         >
           {label}
-        </label>
+        </span>
       )}
     </label>
   )

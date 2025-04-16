@@ -33,6 +33,13 @@ export const Option = ({
 }: OptionType) => {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
+    if (!isMultiple) {
+      onSelect(id, !isSelected)
+    }
+  }
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation()
     onSelect(id, !isSelected)
   }
 
@@ -71,7 +78,7 @@ export const Option = ({
         <Checkbox
           label={renderContent()}
           isSelected={isSelected}
-          onChange={() => onSelect(id, !isSelected)}
+          onChange={handleCheckboxChange}
         />
       ) : (
         renderContent()

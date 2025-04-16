@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { getIcon, ICON_MAP } from '../../../assets/icons'
 import './Icon.scss'
 
-const SIZE_ICONS = ['36px', '30px', '20px', '16px']
+const SIZE_ICONS = ['extraLarge', 'large', 'small', 'extraSmall']
 const COLOR_ICONS = [
   'primary',
   'secondary',
@@ -23,29 +23,27 @@ interface IconProps extends SVGAttributes<SVGElement> {
 
 export const Icon = ({
   icon,
-  size = '20px',
+  size = 'small',
   colorIcon = 'secondary',
   onClick,
   className,
   ...props
 }: IconProps) => {
-  const iconSize = SIZE_ICONS.includes(size.toString()) ? size : size
-  const iconClass = COLOR_ICONS.includes(colorIcon) ? `icon--${colorIcon}` : ''
-  const iconStyle = !COLOR_ICONS.includes(colorIcon) ? { color: colorIcon } : {}
+  const sizeClass = SIZE_ICONS.includes(size.toString()) ? `icon--${size}` : ''
+  const sizeStyle = !SIZE_ICONS.includes(size.toString())
+    ? { width: size, height: size }
+    : {}
+  const colorClass = COLOR_ICONS.includes(colorIcon) ? `icon--${colorIcon}` : ''
+  const colorStyle = !COLOR_ICONS.includes(colorIcon)
+    ? { color: colorIcon }
+    : {}
 
   return (
     <svg
-      className={classNames(
-        'icon',
-        `icon--${size.toString()}`,
-        iconClass,
-        className,
-      )}
+      className={classNames('icon', sizeClass, colorClass, className)}
       onClick={onClick}
-      style={iconStyle}
+      style={{ ...sizeStyle, ...colorStyle }}
       viewBox={'0 0 20 20'}
-      width={iconSize}
-      height={iconSize}
       dangerouslySetInnerHTML={{ __html: getIcon(icon) }}
       {...props}
     />

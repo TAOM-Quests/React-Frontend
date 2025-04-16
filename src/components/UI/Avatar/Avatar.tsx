@@ -9,8 +9,8 @@ export type Size = 'extraLarge' | 'large' | 'small' | 'extraSmall'
 
 export interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
   size?: Size
-  isRound?: boolean
   icon?: keyof typeof ICON_MAP
+  isRound?: boolean
   onClick?: MouseEventHandler<HTMLDivElement>
 }
 
@@ -18,8 +18,8 @@ export const Avatar = ({
   src = image,
   alt = 'Avatar',
   size = 'small',
-  isRound = true,
   icon,
+  isRound = true,
   onClick,
   className,
   ...props
