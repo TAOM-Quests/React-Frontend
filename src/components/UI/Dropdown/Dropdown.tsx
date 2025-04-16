@@ -30,7 +30,6 @@ export interface DropdownItemType {
 export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   items: DropdownItemType[]
   onChangeDropdown: (selected: number | number[] | null) => void
-  id?: string
   isMultiple?: boolean
 }
 
