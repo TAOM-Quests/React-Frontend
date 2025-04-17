@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { EventType } from '../../models/eventType'
 import { Employee } from '../../models/user'
 import { Button } from '../../components/UI/Button/Button'
@@ -24,28 +24,29 @@ export const EventCreate = () => {
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
   const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
   const [image, setImage] = useState<ServerFile | null>(null)
-  const [name, setName] = useState<string | null>(null)
+  const [name, setName] = useState<string>('')
   // const [date, setDate] = useState<Date | null>(null)
   const [type, setType] = useState<EventType | null>(null)
   const [executors, setExecutors] = useState<Employee[]>([])
   const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
-  const [description, setDescription] = useState<string | null>(null)
-  const [address, setAddress] = useState<string | null>(null)
+  const [description, setDescription] = useState<string>('')
+  const [address, setAddress] = useState<string>('')
   const [floor, setFloor] = useState<number | null>(null)
-  const [officeNumber, setOfficeNumber] = useState<string | null>(null)
-  const [platform, setPlatform] = useState<string | null>(null)
-  const [connectionLink, setConnectionLink] = useState<string | null>(null)
-  const [recordLink, setRecordLink] = useState<string | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(null)
-  const [accessCode, setAccessCode] = useState<string | null>(null)
+  const [officeNumber, setOfficeNumber] = useState<string>('')
+  const [platform, setPlatform] = useState<string>('')
+  const [connectionLink, setConnectionLink] = useState<string>('')
+  const [recordLink, setRecordLink] = useState<string>('')
+  const [identifier, setIdentifier] = useState<string>('')
+  const [accessCode, setAccessCode] = useState<string>('')
   const [schedule, setSchedule] = useState<ScheduleItem[]>([])
   const [files, setFiles] = useState<ServerFile[]>([])
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
+  const eventId = useParams().id
 
   useEffect(() => {
-    const fetchEventData = async () => {
+    const fetchCreateEventData = async () => {
       try {
         setEventTypes(await events.getTypes())
         setEventStatuses(await events.getStatuses())
@@ -56,7 +57,52 @@ export const EventCreate = () => {
       }
     }
 
-    fetchEventData()
+    const fetchEventData = async (id: number) => {
+      try {
+        const event = await events.getOne({ id })
+
+        if (event.name) setName(event.name)
+        //if (event.) setDate(event.date)
+        if (event.type) setType(event.type)
+        if (event.executors) setExecutors(event.executors)
+        if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
+        if (event.description) setDescription(event.description)
+
+        const offlinePlace: PlaceOffline = event.places.find(
+          place => !place.isOnline,
+        ) as PlaceOffline
+        const onlinePlace: PlaceOnline = event.places.find(
+          place => place.isOnline,
+        ) as PlaceOnline
+
+        if (offlinePlace) {
+          if (offlinePlace.floor) setFloor(offlinePlace.floor)
+          if (offlinePlace.address) setAddress(offlinePlace.address)
+          if (offlinePlace.officeNumber)
+            setOfficeNumber(offlinePlace.officeNumber)
+        }
+
+        if (onlinePlace) {
+          if (onlinePlace.platform) setPlatform(onlinePlace.platform)
+          if (onlinePlace.connectionLink)
+            setConnectionLink(onlinePlace.connectionLink)
+          if (onlinePlace.recordLink) setRecordLink(onlinePlace.recordLink)
+          if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
+          if (onlinePlace.accessCode) setAccessCode(onlinePlace.accessCode)
+        }
+
+        if (event.status) setSchedule(event.schedule)
+        if (event.files) setFiles(event.files)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    fetchCreateEventData()
+
+    if (eventId) {
+      fetchEventData(+eventId)
+    }
   }, [])
 
   useEffect(() => {
@@ -86,7 +132,7 @@ export const EventCreate = () => {
       const event = await events.create(eventCreate)
 
       if (!window.location.pathname.includes(`${event.id}`)) {
-        navigate(`/event/${event.id}`)
+        navigate(`/event/${event.id}/edit`)
       }
     } catch (e) {
       console.log(e)

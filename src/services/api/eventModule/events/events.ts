@@ -14,8 +14,8 @@ export const events = {
           .join('&'),
     ),
 
-  getOne: (params: EventGetDto): Promise<EventMinimize> =>
-    eventModule<EventMinimize, EventGetDto>(`events/${params.id}`),
+  getOne: (params: EventGetDto): Promise<Event> =>
+    eventModule<Event, EventGetDto>(`events/${params.id}`),
 
   create: (params: EventCreateDto): Promise<Event> =>
     eventModule<Event, EventCreateDto>('events', params),

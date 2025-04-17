@@ -1,5 +1,6 @@
 import { EventStatus } from './eventStatus'
 import { EventType } from './eventType'
+import { ServerFile } from './serverFile'
 import { Employee } from './user'
 
 export interface Event {
@@ -14,6 +15,7 @@ export interface Event {
   schedule: ScheduleItem[]
   type: EventType
   status: EventStatus
+  files: ServerFile[]
 }
 
 interface Place {

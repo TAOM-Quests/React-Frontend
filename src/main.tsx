@@ -16,6 +16,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="event/create" element={<EventCreate />} />
+        <Route path="event/:id/edit" element={<EventCreate />} />
       </Routes>
     </Provider>
   </BrowserRouter>,
