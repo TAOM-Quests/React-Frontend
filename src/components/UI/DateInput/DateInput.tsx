@@ -13,16 +13,23 @@ import Input from '../Input/Input'
 
 export interface DateInputProps extends InputHTMLAttributes<HTMLInputElement> {
   onDateSelect: (date: Date | null) => void
+  isRequired?: boolean
 }
 
-export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
+export const DateInput = ({
+  onDateSelect,
+  isRequired = false,
+  ...props
+}: DateInputProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [valueDate, setValueDate] = useState<Date | null>(null)
   const [valueInput, setValueInput] = useState('')
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [dateError, setDateError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
+  const iconRef = useRef<SVGSVGElement>(null)
 
   const monthNames = [
     'Янв',
@@ -110,12 +117,35 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
     if (isOpen) {
       setIsOpen(false)
     }
+    setDateError(null)
+  }
+
+  const validateDate = (dateString: string): boolean => {
+    if (!isRequired && !dateString) {
+      setDateError(null)
+      onDateSelect(null)
+      return true
+    }
+
+    const parsedDate = parseDate(dateString)
+    if (parsedDate) {
+      setDateError(null)
+      onDateSelect(parsedDate)
+      return true
+    } else {
+      setDateError('Некорректная дата')
+      onDateSelect(null)
+      return false
+    }
   }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && valueInput.length === 10) {
-      e.preventDefault() // Предотвратить отправку формы
-      toggleCalendar()
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      const isValid = validateDate(valueInput)
+      if (valueInput.length === 10 && isValid) {
+        toggleCalendar()
+      }
     }
   }
 
@@ -137,6 +167,7 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
     )
     setValueDate(newDate)
     setIsOpen(false)
+    setDateError(null)
   }
 
   const handleMonthClick = (monthIndex: number) => {
@@ -195,8 +226,11 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
+        isOpen && // Проверяем, что календарь открыт
         calendarRef.current &&
-        !calendarRef.current.contains(event.target as Node)
+        !calendarRef.current.contains(event.target as Node) &&
+        iconRef.current &&
+        !iconRef.current.contains(event.target as Node) // Проверяем, что клик был не по иконке
       ) {
         setIsOpen(false)
       }
@@ -207,7 +241,7 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [calendarRef, setIsOpen])
+  }, [calendarRef, setIsOpen, isOpen])
 
   const renderDays = () => {
     const daysInMonth = getDaysInMonth(currentDate)
@@ -302,6 +336,14 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
     ))
   }
 
+  const handleFocus = () => {
+    setDateError(null)
+  }
+
+  const handleBlur = () => {
+    validateDate(valueInput)
+  }
+
   let calendarContent: JSX.Element = <></>
 
   if (isOpen) {
@@ -370,6 +412,10 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
         maxLength={10}
         iconAfter="CALENDAR"
         onClickIconAfter={toggleCalendar}
+        onBlur={handleBlur}
+        iconRefAfter={iconRef}
+        onFocus={handleFocus}
+        errorText={dateError ? dateError : null}
         {...props}
       />
       {calendarContent}

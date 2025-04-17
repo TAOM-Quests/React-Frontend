@@ -1,4 +1,4 @@
-import { MouseEventHandler, SVGAttributes } from 'react'
+import { MouseEventHandler, Ref, SVGAttributes } from 'react'
 import classNames from 'classnames'
 import { getIcon, ICON_MAP } from '../../../assets/icons'
 import './Icon.scss'
@@ -18,6 +18,7 @@ type colorIcon = (typeof COLOR_ICONS)[number] | string
 interface IconProps extends SVGAttributes<SVGElement> {
   icon: keyof typeof ICON_MAP
   size?: sizeIcon
+  iconRef?: Ref<SVGSVGElement>
   colorIcon?: colorIcon
 }
 
@@ -26,6 +27,7 @@ export const Icon = ({
   size = 'small',
   colorIcon = 'secondary',
   onClick,
+  iconRef,
   className,
   ...props
 }: IconProps) => {
@@ -40,6 +42,7 @@ export const Icon = ({
 
   return (
     <svg
+      ref={iconRef}
       className={classNames('icon', sizeClass, colorClass, className)}
       onClick={onClick}
       style={{ ...sizeStyle, ...colorStyle }}

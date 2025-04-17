@@ -17,9 +17,10 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
   inputRef?: ForwardedRef<HTMLInputElement>
+  iconRefAfter?: ForwardedRef<SVGSVGElement>
   iconAfter?: keyof typeof ICON_MAP
-  errorText?: string
-  helperText?: string
+  errorText?: string | null
+  helperText?: string | null
   iconBefore?: keyof typeof ICON_MAP
   valueInput?: string | number | ReactNode
   onClickIconAfter?: () => void
@@ -38,6 +39,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       valueInput,
       onChange,
       type,
+      iconRefAfter,
       onBlur,
       onFocus,
       disabled,
@@ -148,7 +150,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             {...props}
           />
-          {valueInput &&
+          {onClearSelection &&
+            valueInput &&
             (typeof valueInput === 'string' ||
               typeof valueInput === 'number') && (
               <Icon
@@ -163,6 +166,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
           {iconAfter && (
             <Icon
+              iconRef={iconRefAfter}
               icon={iconAfter}
               onClick={onClickIconAfter}
               colorIcon="secondary"

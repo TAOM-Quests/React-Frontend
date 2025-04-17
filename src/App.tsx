@@ -4,6 +4,8 @@ import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
 import { Badge } from './components/UI/Badge/Badge'
 import { DateInput } from './components/UI/DateInput/DateInput'
+import { TimeInput } from './components/UI/TimeInput/TimeInput'
+
 const items: DropdownItemType[] = [
   {
     id: 124333445346356756576,
@@ -62,9 +64,15 @@ function App() {
     setSelectedDate(date)
   }
 
+  const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const handleTimeSelect = (time: string | null) => {
+    setSelectedTime(time)
+  }
   return (
     <>
       <div>
+        <TimeInput onTimeSelect={handleTimeSelect} />
+        {selectedTime && <p>Выбранное время: {selectedTime}</p>}
         <h1>Calendar Example</h1>
         <DateInput onDateSelect={handleDateSelect} />
         <DateInput onDateSelect={handleDateSelect} />
