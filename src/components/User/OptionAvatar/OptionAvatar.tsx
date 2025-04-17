@@ -6,11 +6,11 @@ import './OptionAvatar.scss'
 export type Size = 'small' | 'extraSmall'
 
 export interface OptionAvatarProps {
-  avatarSrc?: string
   text: string
-  description?: string
   size?: Size
+  avatarSrc?: string
   className?: string
+  description?: string
 }
 
 export const OptionAvatar = ({

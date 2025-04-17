@@ -1,9 +1,9 @@
-import { MouseEventHandler, SVGAttributes } from 'react'
+import { MouseEventHandler, Ref, SVGAttributes } from 'react'
 import classNames from 'classnames'
 import { getIcon, ICON_MAP } from '../../../assets/icons'
 import './Icon.scss'
 
-const SIZE_ICONS = ['36px', '30px', '20px', '16px']
+const SIZE_ICONS = ['extraLarge', 'large', 'small', 'extraSmall']
 const COLOR_ICONS = [
   'primary',
   'secondary',
@@ -18,35 +18,41 @@ type colorIcon = (typeof COLOR_ICONS)[number] | string
 interface IconProps extends SVGAttributes<SVGElement> {
   icon: keyof typeof ICON_MAP
   size?: sizeIcon
+  iconRef?: Ref<SVGSVGElement>
   colorIcon?: colorIcon
 }
 
 export const Icon = ({
   icon,
-  size = '20px',
-  viewBox = '0 0 20 20',
+  size = 'small',
   colorIcon = 'secondary',
   onClick,
+  iconRef,
   className,
   ...props
 }: IconProps) => {
-  const iconSize = SIZE_ICONS.includes(size.toString()) ? size : size
-  const iconClass = COLOR_ICONS.includes(colorIcon) ? `icon--${colorIcon}` : ''
-  const iconStyle = !COLOR_ICONS.includes(colorIcon) ? { color: colorIcon } : {}
+  const sizeClass = SIZE_ICONS.includes(size.toString()) ? `icon--${size}` : ''
+  const sizeStyle = !SIZE_ICONS.includes(size.toString())
+    ? { width: size, height: size }
+    : {}
+  const colorClass = COLOR_ICONS.includes(colorIcon) ? `icon--${colorIcon}` : ''
+  const colorStyle = !COLOR_ICONS.includes(colorIcon)
+    ? { color: colorIcon }
+    : {}
 
   return (
     <svg
+      ref={iconRef}
       className={classNames(
         'icon',
-        `icon--${size.toString()}`,
-        iconClass,
+        sizeClass,
+        colorClass,
+        `${onClick && 'icon--click'}`,
         className,
       )}
       onClick={onClick}
-      style={iconStyle}
-      viewBox={viewBox}
-      width={iconSize}
-      height={iconSize}
+      style={{ ...sizeStyle, ...colorStyle }}
+      viewBox={'0 0 20 20'}
       dangerouslySetInnerHTML={{ __html: getIcon(icon) }}
       {...props}
     />

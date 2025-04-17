@@ -124,6 +124,35 @@ p {
   margin: 0;
 }
 
+body {
+  /* WebKit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--bg_c_primary);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Remove arrows */
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg_c_primary) transparent;
+}
+
 .heading_1 {
   font-weight: var(--bold);
   font-size: 50px;

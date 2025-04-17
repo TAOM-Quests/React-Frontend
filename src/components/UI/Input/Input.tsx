@@ -4,6 +4,7 @@ import './Input.scss'
 import { Icon } from '../Icon/Icon'
 import {
   ForwardedRef,
+  InputHTMLAttributes,
   ReactNode,
   useEffect,
   useImperativeHandle,
@@ -12,19 +13,18 @@ import {
 } from 'react'
 import React from 'react'
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  helperText?: string
-  errorText?: string
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
-  onClickIconAfter?: () => void
-  // invalid?: boolean
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  inputValue?: string | number | ReactNode
-  onClearSelection?: () => void
+  label?: string
   inputRef?: ForwardedRef<HTMLInputElement>
+  iconRefAfter?: ForwardedRef<SVGSVGElement>
+  iconAfter?: keyof typeof ICON_MAP
+  errorText?: string | null
+  helperText?: string | null
+  iconBefore?: keyof typeof ICON_MAP
+  valueInput?: string | number | ReactNode
+  onClickIconAfter?: () => void
+  onClearSelection?: () => void
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -36,15 +36,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errorText,
       iconBefore,
       iconAfter,
-      onClickIconAfter,
-      // invalid,
-      inputValue,
+      valueInput,
       onChange,
       type,
+      iconRefAfter,
       onBlur,
       onFocus,
       disabled,
       placeholder,
+      onClickIconAfter,
       onClearSelection,
       className,
       ...props
@@ -52,7 +52,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const showHelperText = helperText && !errorText
-    // const showErrorText = invalid && errorText
     const [isInputVisible, setIsInputVisible] = useState(true)
 
     const internalInputRef = useRef<HTMLInputElement>(null)
@@ -60,9 +59,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     useEffect(() => {
       setIsInputVisible(
-        typeof inputValue === 'string' || typeof inputValue === 'number',
+        valueInput === null ||
+          valueInput === undefined ||
+          typeof valueInput === 'string' ||
+          typeof valueInput === 'number',
       )
-    }, [inputValue])
+    }, [valueInput])
 
     useImperativeHandle(
       combinedRef,
@@ -105,13 +107,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className,
             )}
             style={{
-              display: isInputVisible ? 'none' : 'block',
+              display: isInputVisible ? 'none' : 'flex',
               cursor: 'pointer',
             }}
             onClick={handleDivClick}
           >
-            {inputValue}
+            {valueInput}
           </div>
+
           <input
             ref={internalInputRef}
             className={classNames(
@@ -122,22 +125,24 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             type={type}
             value={
-              typeof inputValue === 'string' || typeof inputValue === 'number'
-                ? inputValue
+              typeof valueInput === 'string' || typeof valueInput === 'number'
+                ? valueInput
                 : ''
             }
             onChange={handleChange}
             disabled={disabled}
             placeholder={placeholder}
-            style={{ display: isInputVisible ? 'block' : 'none' }}
+            style={{ display: isInputVisible ? 'flex' : 'none' }}
             onFocus={e => {
               setIsInputVisible(true)
               onFocus?.(e)
             }}
             onBlur={e => {
               if (
-                typeof inputValue !== 'string' &&
-                typeof inputValue !== 'number'
+                valueInput !== null &&
+                valueInput !== undefined &&
+                typeof valueInput !== 'string' &&
+                typeof valueInput !== 'number'
               ) {
                 setIsInputVisible(false)
               }
@@ -145,8 +150,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             {...props}
           />
+          {onClearSelection &&
+            valueInput &&
+            (typeof valueInput === 'string' ||
+              typeof valueInput === 'number') && (
+              <Icon
+                icon="CROSS"
+                onClick={() => {
+                  onClearSelection?.()
+                  internalInputRef.current?.focus()
+                }}
+                colorIcon="secondary"
+              />
+            )}
           {iconAfter && (
             <Icon
+              iconRef={iconRefAfter}
               icon={iconAfter}
               onClick={onClickIconAfter}
               colorIcon="secondary"
