@@ -188,15 +188,15 @@ export const EventCreate = () => {
       <Input
         label="Название мероприятия"
         onChange={e => setName(e.target.value)}
-        inputValue={name}
+        valueInput={name}
       />
       <Dropdown
         id="event-type-dropdown"
         items={eventTypes.map(type => ({
-          id: `${type.id}`,
+          id: type.id,
           text: type.name,
         }))}
-        onChange={selected =>
+        onChangeDropdown={selected =>
           setType(
             selected
               ? (eventTypes.find(type => type.id === +selected) ?? null)
@@ -208,22 +208,20 @@ export const EventCreate = () => {
         id="event-status-dropdown"
         multiple
         items={eventExecutors.map(executor => ({
-          id: `${executor.id}`,
+          id: executor.id,
           text: executor.name,
           avatar: {
             src: executor.avatar?.url ?? '',
             description: executor.position,
           },
         }))}
-        onChange={selected =>
+        onChangeDropdown={selected =>
           setExecutors(prevExecutors =>
-            selected
-              ? prevExecutors.concat(
-                  eventExecutors.filter(executor =>
-                    selected.includes(`${executor.id}`),
-                  ),
-                )
-              : prevExecutors,
+            eventExecutors.filter(executor =>
+              typeof selected !== 'number'
+                ? selected?.includes(executor.id)
+                : [],
+            ),
           )
         }
       />
@@ -234,42 +232,42 @@ export const EventCreate = () => {
     <div className="places">
       <Input
         label="Адрес"
-        inputValue={address}
+        valueInput={address}
         onChange={e => setAddress(e.target.value)}
       />
       <Input
         label="Этаж"
-        inputValue={floor}
+        valueInput={floor}
         onChange={e => setFloor(+e.target.value)}
       />
       <Input
         label="Аудитория"
-        inputValue={officeNumber}
+        valueInput={officeNumber}
         onChange={e => setOfficeNumber(e.target.value)}
       />
       <Input
         label="Площадка"
-        inputValue={platform}
+        valueInput={platform}
         onChange={e => setPlatform(e.target.value)}
       />
       <Input
         label="Ссылка для подключения"
-        inputValue={connectionLink}
+        valueInput={connectionLink}
         onChange={e => setConnectionLink(e.target.value)}
       />
       <Input
         label="Ссылка на запись и презентацию"
-        inputValue={recordLink}
+        valueInput={recordLink}
         onChange={e => setRecordLink(e.target.value)}
       />
       <Input
         label="Идентификатор"
-        inputValue={identifier}
+        valueInput={identifier}
         onChange={e => setIdentifier(e.target.value)}
       />
       <Input
         label="Код доступа"
-        inputValue={accessCode}
+        valueInput={accessCode}
         onChange={e => setAccessCode(e.target.value)}
       />
     </div>
