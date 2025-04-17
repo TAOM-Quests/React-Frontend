@@ -22,7 +22,7 @@ export const EventCreate = () => {
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
   const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string | null>(null)
   // const [date, setDate] = useState<Date | null>(null)
   const [type, setType] = useState<EventType | null>(null)
@@ -173,7 +173,7 @@ export const EventCreate = () => {
     <>
       {!isLoading ? (
         <>
-          <EventCreateImage imageUrl={imageUrl} setImageUrl={setImageUrl} />
+          <EventCreateImage image={image} setImage={setImage} />
           {renderStateButtons()}
           <TextEditor
             value={description ?? ''}
