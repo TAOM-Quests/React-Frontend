@@ -5,6 +5,7 @@ import image from './assets/images/mem.png'
 import { Badge } from './components/UI/Badge/Badge'
 import { DateInput } from './components/UI/DateInput/DateInput'
 import { TimeInput } from './components/UI/TimeInput/TimeInput'
+import { Modal } from './components/UI/Modal/Modal'
 
 const items: DropdownItemType[] = [
   {
@@ -68,8 +69,72 @@ function App() {
   const handleTimeSelect = (time: string | null) => {
     setSelectedTime(time)
   }
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
   return (
     <>
+      <div>
+        <button onClick={openModal}>Open Modal</button>
+        <Modal isOpen={isModalOpen} onClose={closeModal} title="My Modal Title">
+          <p>
+            This is the modal content. This is the modal content.This is the
+            modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content. This is the modal
+            content. This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content. This is the modal content. This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content. This is
+            the modal content. This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.This is the modal content.This is
+            the modal content.This is the modal content.This is the modal
+            content.This is the modal content.
+          </p>
+        </Modal>
+      </div>
       <div>
         <TimeInput onTimeSelect={handleTimeSelect} />
         {selectedTime && <p>Выбранное время: {selectedTime}</p>}

@@ -124,40 +124,75 @@ p {
   margin: 0;
 }
 
+body {
+  /* WebKit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--bg_c_primary);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Remove arrows */
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg_c_primary) transparent;
+}
+
 .heading_1 {
   font-weight: var(--bold);
   font-size: 50px;
   line-height: 56px;
+  margin: 0;
 }
 
 .heading_2 {
   font-weight: var(--bold);
   font-size: 44px;
   line-height: 48px;
+  margin: 0;
 }
 
 .heading_3 {
   font-weight: var(--bold);
   font-size: 36px;
   line-height: 40px;
+  margin: 0;
 }
 
 .heading_4 {
   font-weight: var(--bold);
   font-size: 28px;
   line-height: 32px;
+  margin: 0;
 }
 
 .heading_5 {
   font-weight: var(--bold);
   font-size: 24px;
   line-height: 28px;
+  margin: 0;
 }
 
 .heading_6 {
   font-weight: var(--bold);
   font-size: 20px;
   line-height: var(--lh_xl_l);
+  margin: 0;
 }
 
 .body_xl_sb {

@@ -43,7 +43,13 @@ export const Icon = ({
   return (
     <svg
       ref={iconRef}
-      className={classNames('icon', sizeClass, colorClass, className)}
+      className={classNames(
+        'icon',
+        sizeClass,
+        colorClass,
+        `${onClick && 'icon--click'}`,
+        className,
+      )}
       onClick={onClick}
       style={{ ...sizeStyle, ...colorStyle }}
       viewBox={'0 0 20 20'}
