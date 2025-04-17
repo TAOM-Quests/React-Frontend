@@ -3,12 +3,11 @@ import { BASE_API_URL, DEV_SERVER_URL } from '../../api'
 import { COMMON_MODULE_API_URL, commonModule } from '../commonModule'
 
 const BASE_FILE_URL = `${DEV_SERVER_URL}${BASE_API_URL}${COMMON_MODULE_API_URL}file?fileName=`
-type FileStatsFromServer = Omit<ServerFile, 'url'>
 
 export const serverFiles = {
   getFile: async (fileName: string): Promise<ServerFile> => {
     const fileUrl = `${BASE_FILE_URL}${fileName}`
-    const fileStats = await commonModule<FileStatsFromServer>(
+    const fileStats = await commonModule<ServerFile>(
       `file/stats?fileName=${fileName}`,
     )
 
@@ -23,7 +22,7 @@ export const serverFiles = {
 
     formData.append('file', file)
 
-    const fileStats = await commonModule<FileStatsFromServer>(`file`, null, {
+    const fileStats = await commonModule<ServerFile>(`file`, null, {
       method: 'POST',
       body: formData,
     })

@@ -105,7 +105,7 @@ export const EventCreate = () => {
           id: `${executor.id}`,
           text: executor.name,
           avatar: {
-            src: '../../../assets/images/mem.png',
+            src: executor.avatar?.url ?? '',
             description: executor.position,
           },
         }))}
