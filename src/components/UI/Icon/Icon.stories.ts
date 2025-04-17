@@ -48,10 +48,6 @@ const meta: Meta<typeof Icon> = {
 Или используйте **кастомный цвет**, например, введите значение в формате **#RRGGBB**.
 `,
     },
-    viewBox: {
-      control: 'text',
-      description: 'Размер иконки',
-    },
   },
   tags: ['autodocs'],
 }

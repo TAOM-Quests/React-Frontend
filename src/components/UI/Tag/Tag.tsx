@@ -9,13 +9,13 @@ export type Size = 'large' | 'small'
 
 interface TagProps {
   text: string
-  avatarSrc?: string
-  description?: string
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
   type?: Type
   size?: Size
   onRemove?: () => void
+  avatarSrc?: string
+  iconAfter?: keyof typeof ICON_MAP
+  iconBefore?: keyof typeof ICON_MAP
+  description?: string
 }
 
 export const Tag = ({

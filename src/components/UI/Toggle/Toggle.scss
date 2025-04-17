@@ -1,0 +1,93 @@
+.toggle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 48px;
+  height: 24px;
+  border-radius: 12px;
+}
+
+.toggle_input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+
+  &:hover + .toggle_slider {
+    background-color: var(--bg_c_secondary_hover);
+  }
+  &:hover + .toggle_slider:before {
+    background-color: var(--bg_c_secondary);
+  }
+
+  &:active + .toggle_slider {
+    background-color: var(--bg_c_secondary_active);
+  }
+  &:active + .toggle_slider:before {
+    background-color: var(--bg_c_secondary);
+  }
+
+  &:checked + .toggle_slider {
+    background-color: var(--bg_c_accent);
+    border-color: var(--border_c_accent);
+  }
+
+  &:checked:hover + .toggle_slider {
+    background-color: var(--bg_c_accent_hover);
+  }
+
+  &:checked:active + .toggle_slider {
+    background-color: var(--bg_c_accent_active);
+  }
+
+  &:checked + .toggle_slider:before {
+    background-color: var(--bg_c_secondary);
+    transform: translateX(22px);
+  }
+  &:checked:disabled:hover + .toggle_slider,
+  &:checked:disabled:active + .toggle_slider {
+    background-color: var(--bg_c_accent);
+  }
+
+  &:checked:disabled + .toggle_slider:before {
+    background-color: var(--bg_c_secondary);
+  }
+
+  &:disabled + .toggle_slider {
+    opacity: var(--disabled_opacity);
+    cursor: not-allowed;
+  }
+
+  &:disabled:hover + .toggle_slider,
+  &:disabled:active + .toggle_slider {
+    background-color: var(--bg_c_secondary);
+  }
+
+  &:disabled + .toggle_slider:before {
+    background-color: var(--bg_c_gray_secondary);
+  }
+}
+
+.toggle_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg_c_secondary);
+  border: var(--border_primary) var(--border_c_primary);
+  transition: 0.4s;
+  border-radius: 12px;
+
+  &:before {
+    position: absolute;
+    content: '';
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--bg_c_gray_secondary);
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+}

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Dropdown } from './Dropdown'
 import type { Meta, StoryObj } from '@storybook/react'
 import image from '../../../assets/images/mem.png'
@@ -23,15 +22,15 @@ type Story = StoryObj<typeof Dropdown>
 
 const items = [
   {
-    id: '1',
+    id: 1,
     text: 'Option 1',
   },
   {
-    id: '2',
+    id: 2,
     text: 'Option 2',
   },
   {
-    id: '3',
+    id: 3,
     text: 'Option 3',
     avatar: {
       src: image,
@@ -63,12 +62,12 @@ export const WithIcons: Story = {
     id: 'with-icons',
     items: [
       {
-        id: '1',
+        id: 1,
         text: 'Option 1',
         iconBefore: 'CHECK',
       },
       {
-        id: '2',
+        id: 2,
         text: 'Option 2',
         iconAfter: 'CHECK',
       },
@@ -82,7 +81,7 @@ export const WithAvatars: Story = {
     id: 'with-avatars',
     items: [
       {
-        id: '1',
+        id: 1,
         text: 'Option 1',
         avatar: {
           src: image,
@@ -90,7 +89,7 @@ export const WithAvatars: Story = {
         },
       },
       {
-        id: '2',
+        id: 2,
         text: 'Option 2',
         avatar: {
           src: image,

@@ -6,18 +6,18 @@ import { Checkbox } from '../Checkbox/Checkbox'
 import './Option.scss'
 
 export type OptionType = {
-  id: string
   text: string
-  iconBefore?: keyof typeof ICON_MAP
-  iconAfter?: keyof typeof ICON_MAP
+  onSelect: (id: number, selected: boolean) => void
+  id?: number
   avatar?: {
     src: string
     description?: string
   }
-  multiple?: boolean
-  selected?: boolean
-  onSelect: (id: string, selected: boolean) => void
   className?: string
+  iconAfter?: keyof typeof ICON_MAP
+  isMultiple?: boolean
+  isSelected?: boolean
+  iconBefore?: keyof typeof ICON_MAP
 }
 
 export const Option = ({
@@ -26,18 +26,21 @@ export const Option = ({
   iconBefore,
   iconAfter,
   avatar,
-  multiple = false,
-  selected = false,
+  isMultiple = false,
+  isSelected = false,
   onSelect,
   className,
 }: OptionType) => {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
-    onSelect(id, !selected)
+    if (!isMultiple) {
+      onSelect(id ?? 0, !isSelected)
+    }
   }
 
-  const handleCheckboxSelect = (id: string) => {
-    onSelect(id, !selected)
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation()
+    onSelect(id ?? 0, !isSelected)
   }
 
   const renderContent = () => {
@@ -66,17 +69,16 @@ export const Option = ({
       key={id}
       className={classNames(
         'option_item',
-        { item_selected: selected },
+        { item_selected: isSelected },
         className,
       )}
       onClick={handleOptionClick}
     >
-      {multiple ? (
+      {isMultiple ? (
         <Checkbox
-          id={id}
           label={renderContent()}
-          selected={selected}
-          onSelect={handleCheckboxSelect}
+          isSelected={isSelected}
+          onChange={handleCheckboxChange}
         />
       ) : (
         renderContent()

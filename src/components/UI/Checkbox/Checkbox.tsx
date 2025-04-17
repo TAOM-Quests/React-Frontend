@@ -1,36 +1,32 @@
-import React, { ReactNode } from 'react'
+import { InputHTMLAttributes, ReactNode } from 'react'
 import classNames from 'classnames'
 import { Icon } from '../Icon/Icon'
 import './Checkbox.scss'
+import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
 
-export interface CheckboxProps {
-  id: string
+export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
+  isSelected: boolean
+  id?: string
   label?: string | ReactNode
-  selected: boolean
-  onSelect: (id: string) => void
-  disabled?: boolean
   className?: string
+  isDisabled?: boolean
 }
 
 export const Checkbox = ({
-  id,
+  id = generateRandomElementId('checkbox'),
   label,
-  selected,
-  onSelect,
-  disabled = false,
+  isSelected,
+  onChange,
+  isDisabled = false,
   className,
 }: CheckboxProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation()
-    onSelect(id)
-  }
-
   return (
     <label
+      htmlFor={id}
       className={classNames(
         'checkbox_wrapper',
         {
-          'checkbox_wrapper--disabled': disabled,
+          'checkbox_wrapper--disabled': isDisabled,
         },
         className,
       )}
@@ -39,28 +35,27 @@ export const Checkbox = ({
         id={id}
         type="checkbox"
         className="checkbox_input"
-        checked={selected}
-        disabled={disabled}
-        onChange={handleChange}
+        checked={isSelected}
+        disabled={isDisabled}
+        onChange={onChange}
       />
       <span className="checkbox_custom">
-        {selected && <Icon icon={'CHECK'} size="16px" colorIcon="primary" />}
+        {isSelected && <Icon icon={'CHECK'} size="16px" colorIcon="primary" />}
       </span>
 
       {label && typeof label === 'string' ? (
         <p className="body_m_r text_ellipsis checkbox_label_string">{label}</p>
       ) : (
-        <label
+        <span
           className={classNames(
             'body_m_r',
             'text_ellipsis ',
             'checkbox_label',
-            { text_disabled: disabled },
+            { text_disabled: isDisabled },
           )}
-          htmlFor={id}
         >
           {label}
-        </label>
+        </span>
       )}
     </label>
   )

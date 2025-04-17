@@ -25,4 +25,29 @@
   &--neutral {
     color: var(--text_c_subdued);
   }
+
+  // Sizes
+  &--extraLarge {
+    width: 36px;
+    height: 36px;
+  }
+
+  &--large {
+    width: 30px;
+    height: 30px;
+  }
+
+  &--small {
+    width: 20px;
+    height: 20px;
+  }
+
+  &--extraSmall {
+    width: 16px;
+    height: 16px;
+  }
+
+  &--click {
+    cursor: pointer;
+  }
 }
