@@ -199,7 +199,7 @@ export const Dropdown = ({
   return (
     <div ref={dropdownRef} data-dropdown-id={id} className="dropdown-container">
       {isMultiple && (
-        <div className="selected-items">
+        <div className={multipleSelectedIds.length > 0 ? 'selected-items' : ''}>
           {multipleSelectedIds.map(itemId => {
             const item = items.find(item => item.id === itemId)
             return (
@@ -221,6 +221,7 @@ export const Dropdown = ({
         ref={inputRef}
         type="text"
         iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
+        onClickIconAfter={() => setIsOpen(!isOpen)}
         valueInput={renderInputValue()}
         onChange={handleSearch}
         onFocus={handleFocus}

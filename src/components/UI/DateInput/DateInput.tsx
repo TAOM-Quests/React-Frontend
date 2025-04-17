@@ -192,6 +192,23 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
     return day === 0 ? 6 : day - 1 // Сдвигаем дни недели, чтобы понедельник был первым днем (0)
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [calendarRef, setIsOpen])
+
   const renderDays = () => {
     const daysInMonth = getDaysInMonth(currentDate)
     const firstDayOfMonth = getFirstDayOfMonth(currentDate)
@@ -351,24 +368,10 @@ export const DateInput = ({ onDateSelect, ...props }: DateInputProps) => {
         ref={inputRef}
         placeholder="ДД.ММ.ГГГГ"
         maxLength={10}
-        className="calendar-input"
         iconAfter="CALENDAR"
+        onClickIconAfter={toggleCalendar}
         {...props}
       />
-      {/* <input
-        type="text"
-        value={valueInput}
-        onChange={handleInputChange}
-        onKeyDown={handleInputKeyDown}
-        ref={inputRef}
-        placeholder="ДД.ММ.ГГГГ"
-        maxLength={10}
-        className="calendar-input"
-      /> */}
-      <button onClick={toggleCalendar} className="calendar-icon">
-        {/* Replace with your calendar icon */}
-        Календарь
-      </button>
       {calendarContent}
     </div>
   )

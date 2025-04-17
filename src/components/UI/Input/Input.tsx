@@ -22,6 +22,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   helperText?: string
   iconBefore?: keyof typeof ICON_MAP
   valueInput?: string | number | ReactNode
+  onClickIconAfter?: () => void
   onClearSelection?: () => void
 }
 
@@ -41,6 +42,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       onFocus,
       disabled,
       placeholder,
+      onClickIconAfter,
       onClearSelection,
       className,
       ...props
@@ -55,7 +57,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     useEffect(() => {
       setIsInputVisible(
-        typeof valueInput === 'string' || typeof valueInput === 'number',
+        valueInput === null ||
+          valueInput === undefined ||
+          typeof valueInput === 'string' ||
+          typeof valueInput === 'number',
       )
     }, [valueInput])
 
@@ -132,6 +137,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             onBlur={e => {
               if (
+                valueInput !== null &&
+                valueInput !== undefined &&
                 typeof valueInput !== 'string' &&
                 typeof valueInput !== 'number'
               ) {
@@ -154,7 +161,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               />
             )}
 
-          {iconAfter && <Icon icon={iconAfter} colorIcon="secondary" />}
+          {iconAfter && (
+            <Icon
+              icon={iconAfter}
+              onClick={onClickIconAfter}
+              colorIcon="secondary"
+            />
+          )}
         </div>
         {showHelperText && (
           <div className="body_s_m helperText">{helperText}</div>

@@ -67,6 +67,8 @@ function App() {
       <div>
         <h1>Calendar Example</h1>
         <DateInput onDateSelect={handleDateSelect} />
+        <DateInput onDateSelect={handleDateSelect} />
+        <DateInput onDateSelect={handleDateSelect} />
         {selectedDate && (
           <p>Selected Date: {selectedDate.toLocaleDateString()}</p>
         )}
