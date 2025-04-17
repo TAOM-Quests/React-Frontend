@@ -1,8 +1,8 @@
-import { useState } from "react";
-import Input from "../../../../components/Input/Input";
-import { UserProfile } from "../../../../models/userProfile";
-import { ProfileField } from "../interface/profileField";
-import { users } from "../../../../services/api/userModule/users/users";
+import { useState } from 'react'
+import { Input } from '../../../../components/UI/Input/Input'
+import { UserProfile } from '../../../../models/userProfile'
+import { ProfileField } from '../interface/profileField'
+import { users } from '../../../../services/api/userModule/users/users'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -10,24 +10,36 @@ export interface PersonInfoProps {
 }
 
 export default function PersonInfo({
-    profile,
-    updateProfile,
- }: PersonInfoProps) {
-  const [lastName, setLastName] = useState(profile.lastName);
-  const [firstName, setFirstName] = useState(profile.firstName);
-  const [patronymic, setPatronymic] = useState(profile.patronymic);
-  const [sex, setSex] = useState(profile.sex);
-  const [birthDate, setBirthDate] = useState(profile.birthDate);
-  const [phone, setPhone] = useState(profile.phone);
-  const [email, setEmail] = useState(profile.email);
+  profile,
+  updateProfile,
+}: PersonInfoProps) {
+  const [lastName, setLastName] = useState(profile.lastName)
+  const [firstName, setFirstName] = useState(profile.firstName)
+  const [patronymic, setPatronymic] = useState(profile.patronymic)
+  const [sex, setSex] = useState(profile.sex)
+  const [birthDate, setBirthDate] = useState(profile.birthDate)
+  const [phone, setPhone] = useState(profile.phone)
+  const [email, setEmail] = useState(profile.email)
 
-  const [changingMode, setChangingMode] = useState(false);
+  const [changingMode, setChangingMode] = useState(false)
 
   const personFields: ProfileField[] = [
-    {name: 'Фамилия', value: lastName, onChange: (e) => setLastName(e.target.value)},
-    {name: 'Имя', value: firstName, onChange: (e) => setFirstName(e.target.value)},
-    {name: 'Отчество', value: patronymic, onChange: (e) => setPatronymic(e.target.value)},
-    {name: 'Пол', value: sex, onChange: (e) => setSex(e.target.value)},
+    {
+      name: 'Фамилия',
+      value: lastName,
+      onChange: e => setLastName(e.target.value),
+    },
+    {
+      name: 'Имя',
+      value: firstName,
+      onChange: e => setFirstName(e.target.value),
+    },
+    {
+      name: 'Отчество',
+      value: patronymic,
+      onChange: e => setPatronymic(e.target.value),
+    },
+    { name: 'Пол', value: sex, onChange: e => setSex(e.target.value) },
     // {
     //   name: 'Дата рождения',
     //   value: birthDate
@@ -35,8 +47,8 @@ export default function PersonInfo({
     //     : '',
     //     onChange: (e) => setBirthDate(new Date(e.target.value))
     // },
-    {name: 'Телефон', value: phone, onChange: (e) => setPhone(e.target.value)},
-    {name: 'Email', value: email, onChange: (e) => setEmail(e.target.value)}
+    { name: 'Телефон', value: phone, onChange: e => setPhone(e.target.value) },
+    { name: 'Email', value: email, onChange: e => setEmail(e.target.value) },
   ]
 
   const toggleChangingMode = async () => {
@@ -49,37 +61,38 @@ export default function PersonInfo({
         patronymic,
         // birthDate: birthDate.toISOString(),
         sex,
-        phone
+        phone,
       })
 
       updateProfile({
         ...profile,
         ...updatedFields,
-        birthDate: new Date(updatedFields.birthDate)
+        birthDate: new Date(updatedFields.birthDate),
       })
     }
 
-    setChangingMode(!changingMode);
+    setChangingMode(!changingMode)
   }
-  
+
   return (
     <div>
-      <h1>{lastName} {firstName} {patronymic}</h1>
-      <button
-        className="change-inputs"
-        onClick={toggleChangingMode}>{changingMode ? 'Сохранить' : 'Изменить'}
+      <h1>
+        {lastName} {firstName} {patronymic}
+      </h1>
+      <button className="change-inputs" onClick={toggleChangingMode}>
+        {changingMode ? 'Сохранить' : 'Изменить'}
       </button>
 
-      <div className='person-info'>
-        {personFields.map(field => 
+      <div className="person-info">
+        {personFields.map(field => (
           <Input
             className="person-field"
             label={field.name}
             value={field.value}
             disabled={!changingMode}
-            onChange={field.onChange}
+            onChange={e => field.onChange?.(e)}
           />
-        )}
+        ))}
       </div>
     </div>
   )

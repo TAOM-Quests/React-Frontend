@@ -14,15 +14,15 @@ import {
 import React from 'react'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
   inputRef?: ForwardedRef<HTMLInputElement>
-  iconRefAfter?: ForwardedRef<SVGSVGElement>
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   iconAfter?: keyof typeof ICON_MAP
   errorText?: string | null
   helperText?: string | null
   iconBefore?: keyof typeof ICON_MAP
   valueInput?: string | number | ReactNode
+  iconRefAfter?: ForwardedRef<SVGSVGElement>
   onClickIconAfter?: () => void
   onClearSelection?: () => void
 }
@@ -163,7 +163,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 colorIcon="secondary"
               />
             )}
-
           {iconAfter && (
             <Icon
               iconRef={iconRefAfter}
