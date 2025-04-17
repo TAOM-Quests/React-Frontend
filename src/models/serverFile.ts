@@ -1,5 +1,5 @@
 export interface ServerFile {
-  id: string
+  id: number
   url: string
   name: string
   size: number

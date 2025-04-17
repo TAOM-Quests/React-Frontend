@@ -10,12 +10,13 @@ import { events } from '../../services/api/eventModule/events/events'
 import Input from '../../components/UI/Input/Input'
 import { Dropdown } from '../../components/UI/Dropdown/Dropdown'
 import { users } from '../../services/api/userModule/users/users'
-import { ScheduleItem } from '../../models/event'
+import { PlaceOffline, PlaceOnline, ScheduleItem } from '../../models/event'
 import { EventCreateSchedule } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
+import { EventCreateDto } from '../../services/api/eventModule/events/eventsDto'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -63,6 +64,65 @@ export const EventCreate = () => {
       navigate('/')
     }
   }, [user])
+
+  const saveEvent = async () => {
+    try {
+      const eventCreate: EventCreateDto = {
+        departmentId: user!.departmentId!,
+      }
+
+      if (name) eventCreate.name = name
+      if (type) eventCreate.typeId = type.id
+      if (description) eventCreate.description = description
+      if (seatsNumber) eventCreate.seatsNumber = seatsNumber
+      if (getPlaces().length) eventCreate.places = getPlaces()
+      if (schedule.length) eventCreate.schedule = schedule
+      if (executors.length) {
+        eventCreate.executorsIds = executors.map(executor => executor.id)
+      }
+      if (image) eventCreate.imageId = image.id
+      if (files.length) eventCreate.filesIds = files.map(file => file.id)
+
+      const event = await events.create(eventCreate)
+
+      if (!window.location.pathname.includes(`${event.id}`)) {
+        navigate(`/event/${event.id}`)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const getPlaces = (): (PlaceOnline | PlaceOffline)[] => {
+    const places: (PlaceOnline | PlaceOffline)[] = []
+
+    if (address || floor || officeNumber) {
+      const offlinePlace: PlaceOffline = {
+        isOnline: false,
+      }
+
+      if (address) offlinePlace.address = address
+      if (floor) offlinePlace.floor = floor
+      if (officeNumber) offlinePlace.officeNumber = officeNumber
+
+      places.push(offlinePlace)
+    }
+
+    if (connectionLink || recordLink || identifier || accessCode) {
+      const onlinePlace: PlaceOnline = {
+        isOnline: true,
+      }
+
+      if (connectionLink) onlinePlace.connectionLink = connectionLink
+      if (recordLink) onlinePlace.recordLink = recordLink
+      if (identifier) onlinePlace.identifier = identifier
+      if (accessCode) onlinePlace.accessCode = accessCode
+
+      places.push(onlinePlace)
+    }
+
+    return places
+  }
 
   const renderStateButtons = () => (
     <div>
@@ -183,6 +243,7 @@ export const EventCreate = () => {
           {renderPlaces()}
           <EventCreateSchedule schedule={schedule} setSchedule={setSchedule} />
           <EventCreateFiles files={files} setFiles={setFiles} />
+          <Button text="Сохранить" onClick={saveEvent} />
         </>
       ) : (
         <div>Loading</div>

@@ -21,17 +21,17 @@ interface Place {
 }
 
 export interface PlaceOnline extends Place {
-  platform: string
-  connectionLink: string
-  identifier: string
-  accessCode: string
+  platform?: string
+  identifier?: string
+  accessCode?: string
+  connectionLink?: string
   recordLink?: string
 }
 
 export interface PlaceOffline extends Place {
-  address: string
-  officeNumber: string
-  floor: number
+  floor?: number
+  address?: string
+  officeNumber?: string
 }
 
 export interface ScheduleItem {
