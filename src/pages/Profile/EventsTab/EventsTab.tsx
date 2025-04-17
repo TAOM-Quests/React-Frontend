@@ -5,7 +5,7 @@ import EventMinimizeComponent, {
   EventMinimizeProps,
 } from '../../../components/EventMinimize/EventMinimize'
 import { EventMinimize } from '../../../models/eventMinimize'
-import Input from '../../../components/Input/Input'
+import Input from '../../../components/UI/Input/Input'
 
 interface EventsFilter {
   name?: string

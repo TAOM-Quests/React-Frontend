@@ -76,7 +76,7 @@ export default function SignInForm() {
         label="Почта"
         placeholder="Введите почту"
         className="email-input"
-        inputValue={email}
+        valueInput={email}
         onChange={e => setEmail(e.target.value)}
         errorText={errorsMessage.email}
       />
@@ -87,7 +87,7 @@ export default function SignInForm() {
         className="password-input"
         iconAfter={showPassword ? 'EYE_CLOSED' : 'EYE'}
         onClickIconAfter={toggleShowPassword}
-        inputValue={password}
+        valueInput={password}
         onChange={e => setPassword(e.target.value)}
         errorText={errorsMessage.password}
       />
@@ -99,7 +99,7 @@ export default function SignInForm() {
         className="repeatPassword-input"
         iconAfter={showPassword ? 'EYE_CLOSED' : 'EYE'}
         onClickIconAfter={toggleShowPassword}
-        inputValue={repeatPassword}
+        valueInput={repeatPassword}
         onChange={e => setRepeatPassword(e.target.value)}
         errorText={errorsMessage.repeatPassword}
       />
