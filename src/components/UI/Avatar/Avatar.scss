@@ -1,0 +1,70 @@
+// Avatar.scss
+.avatar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: fit-content;
+  min-height: fit-content;
+
+  &--round {
+    border-radius: 50% !important;
+  }
+
+  &--extraSmall {
+    width: 30px;
+    height: 30px;
+  }
+
+  &--small {
+    width: 44px;
+    height: 44px;
+  }
+
+  &--large {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    transition: all 0.2s;
+
+    &:hover {
+      width: 74px;
+      height: 74px;
+      border: var(--border_avatar) var(--border_c_accent);
+    }
+  }
+
+  &--extraLarge {
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &--with-icon {
+    img {
+      filter: brightness(0.7);
+    }
+  }
+
+  &--clickable {
+    cursor: pointer;
+  }
+}

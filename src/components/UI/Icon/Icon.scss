@@ -1,0 +1,53 @@
+.icon {
+  display: inline-block;
+  min-width: fit-content;
+  // Colors
+  &--primary {
+    color: var(--text_c_secondary);
+  }
+
+  &--secondary {
+    color: var(--text_c_primary);
+  }
+
+  &--accent {
+    color: var(--text_c_secondary);
+  }
+
+  &--subdued {
+    color: var(--text_c_accent);
+  }
+
+  &--soft-blue {
+    color: #bad9fa;
+  }
+
+  &--neutral {
+    color: var(--text_c_subdued);
+  }
+
+  // Sizes
+  &--extraLarge {
+    width: 36px;
+    height: 36px;
+  }
+
+  &--large {
+    width: 30px;
+    height: 30px;
+  }
+
+  &--small {
+    width: 20px;
+    height: 20px;
+  }
+
+  &--extraSmall {
+    width: 16px;
+    height: 16px;
+  }
+
+  &--click {
+    cursor: pointer;
+  }
+}

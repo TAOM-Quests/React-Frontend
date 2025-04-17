@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  //Font-family
+  --font_family: 'Montserrat', sans-serif;
+
+  //Font-weight
+  --bold: 700;
+  --semi_bold: 600;
+  --medium: 500;
+  --regular: 400;
+
+  //Font-size
+  --fs_xl: 19px;
+  --fs_l: 17px;
+  --fs_m: 15px;
+  --fs_s: 13px;
+  --fs_xs: 11px;
+
+  //Line-height
+  --lh_xl_l: 25px;
+  --lh_m: 20px;
+  --lh_s_xs: 16px;
+
+  //Text-color
+  --text_color_primary: 24, 24, 27;
+  --text_c_primary: rgb(var(--text_color_primary));
+  --text_c_primary_60: rgba(var(--text_color_primary), 0.6);
+
+  --text_c_secondary: #fff;
+
+  --text_color_accent: 0, 154, 193;
+  --text_c_accent: rgb(var(--text_color_accent));
+  --text_c_accent_60: rgba(var(--text_color_accent), 0.6);
+
+  --text_color_subdued: 116, 116, 118;
+  --text_c_subdued: rgb(var(--text_color_subdued));
+  --text_c_subdued_hover: rgba(var(--text_color_subdued), 0.8);
+  --text_c_subdued_60: rgba(var(--text_color_subdued), 0.6);
+
+  --text_c_error: #ef4444;
+
+  //Background-color
+  --bg_color_primary: 2, 26, 51;
+  --bg_c_primary: rgb(var(--bg_color_primary));
+  --bg_c_primary_hover: rgba(var(--bg_color_primary), 0.88);
+  --bg_c_primary_active: rgba(var(--bg_color_primary), 0.72);
+
+  --bg_c_secondary: #fff;
+  --bg_c_secondary_hover: #f6f6f6;
+  --bg_c_secondary_active: #e6e6e6;
+
+  --bg_color_accent: 0, 154, 193;
+  --bg_c_accent: rgb(var(--bg_color_accent));
+  --bg_c_accent_hover: rgba(var(--bg_color_accent), 0.85);
+  --bg_c_accent_active: rgba(var(--bg_color_accent), 0.72);
+
+  --bg_c_subdued: #fff;
+  --bg_c_subdued_hover: #ebfbff;
+  --bg_c_subdued_active: #b4f0ff;
+
+  --bg_c_gray_primary: #f6f6f6;
+  --bg_c_gray_primary_hover: #e6e6e6;
+  --bg_c_gray_secondary: #e6e6e6;
+  --bg_c_gray_secondary_hover: #d1d1d1;
+
+  --bg_c_calendar_primary: rgba(var(--bg_color_accent), 0.1);
+  --bg_c_calendar_primary_hover: rgba(var(--bg_color_accent), 0.25);
+
+  --bg_color_white: 255, 255, 255;
+  --bg_c_white_calendar: rgb(var(--bg_color_white));
+  --bg_c_calendar_secondary: rgba(var(--bg_color_white), 0.2);
+  --bg_c_calendar_secondary: rgba(var(--bg_color_white), 0.4);
+
+  //Badges-background-color
+  --bg_badge_primary: #18181b;
+  --bg_badge_accent: #009ac1;
+  --bg_badge_info: #e3f2fd;
+  --bg_badge_caution: #fdecce;
+  --bg_badge_critical: #fae3e3;
+  --bg_badge_success: #e2fbe9;
+  --bg_badge_neutral: #e9e9ea;
+
+  //Tag-background-color
+  --bg_tag_info: rgba(var(--bg_color_white), 0.2);
+
+  //Border-color
+  --border_c_primary: #e6e6e6;
+  --border_c_secondary: #d1d1d1;
+  --border_c_accent: #009ac1;
+  --border_c_error: #ef4444;
+
+  //Border
+  --border_primary: 1px solid;
+  --border_checkbox: 2px solid;
+  --border_secondary: 2px dashed;
+  --border_avatar: 3px solid;
+
+  //Border-bottom-color
+  --border_bottom_c_primary: #fff;
+  --border_bottom_c_secondary: #021a33;
+
+  --border_bottom_color: 116, 116, 118;
+  --border_bottom_c_hover: rgba(var(--border_bottom_color), 0.8);
+
+  //Border-bottom
+  --border_bottom: 3px solid;
+
+  //Opacity
+  --disabled_opacity: 0.5;
+
+  //Box-shadow
+  --drop_shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+
+  --width_text_ellipsis: calc(100% - 35px);
+}
+
+* {
+  font-family: var(--font_family);
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
+
+body {
+  /* WebKit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--bg_c_primary);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  /* Remove arrows */
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg_c_primary) transparent;
+}
+
+.heading_1 {
+  font-weight: var(--bold);
+  font-size: 50px;
+  line-height: 56px;
+  margin: 0;
+}
+
+.heading_2 {
+  font-weight: var(--bold);
+  font-size: 44px;
+  line-height: 48px;
+  margin: 0;
+}
+
+.heading_3 {
+  font-weight: var(--bold);
+  font-size: 36px;
+  line-height: 40px;
+  margin: 0;
+}
+
+.heading_4 {
+  font-weight: var(--bold);
+  font-size: 28px;
+  line-height: 32px;
+  margin: 0;
+}
+
+.heading_5 {
+  font-weight: var(--bold);
+  font-size: 24px;
+  line-height: 28px;
+  margin: 0;
+}
+
+.heading_6 {
+  font-weight: var(--bold);
+  font-size: 20px;
+  line-height: var(--lh_xl_l);
+  margin: 0;
+}
+
+.body_xl_sb {
+  font-weight: var(--semi_bold);
+  font-size: var(--fs_xl);
+  line-height: var(--lh_xl_l);
+}
+
+.body_xl_m {
+  font-weight: var(--medium);
+  font-size: var(--fs_xl);
+  line-height: var(--lh_xl_l);
+}
+
+.body_l_sb {
+  font-weight: var(--semi_bold);
+  font-size: var(--fs_l);
+  line-height: var(--lh_xl_l);
+}
+
+.body_l_m {
+  font-weight: var(--medium);
+  font-size: var(--fs_l);
+  line-height: var(--lh_xl_l);
+}
+
+.body_m_b {
+  font-weight: var(--bold);
+  font-size: var(--fs_m);
+  line-height: var(--lh_m);
+}
+
+.body_m_sb {
+  font-weight: var(--semi_bold);
+  font-size: var(--fs_m);
+  line-height: var(--lh_m);
+}
+
+.body_m_m {
+  font-weight: var(--medium);
+  font-size: var(--fs_m);
+  line-height: var(--lh_m);
+}
+
+.body_m_r {
+  font-weight: var(--regular);
+  font-size: var(--fs_m);
+  line-height: var(--lh_m);
+}
+
+.body_s_sb {
+  font-weight: var(--semi_bold);
+  font-size: var(--fs_s);
+  line-height: var(--lh_s_xs);
+}
+
+.body_s_m {
+  font-weight: var(--medium);
+  font-size: var(--fs_s);
+  line-height: var(--lh_s_xs);
+}
+
+.body_xs_sb {
+  font-weight: var(--semi_bold);
+  font-size: var(--fs_xs);
+  line-height: var(--lh_s_xs);
+}
+
+.body_xs_r {
+  font-weight: var(--regular);
+  font-size: var(--fs_xs);
+  line-height: var(--lh_s_xs);
+}
+
+.text_ellipsis,
+.text_ellipsis p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
