@@ -7,6 +7,8 @@ import { DateInput } from './components/UI/DateInput/DateInput'
 import { TimeInput } from './components/UI/TimeInput/TimeInput'
 import { Modal } from './components/UI/Modal/Modal'
 
+import { Toggle } from './components/UI/Toggle/Toggle'
+
 const items: DropdownItemType[] = [
   {
     id: 124333445346356756576,
@@ -79,8 +81,33 @@ function App() {
   const closeModal = () => {
     setIsModalOpen(false)
   }
+
+  const [isToggled, setIsToggled] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsToggled(event.target.checked)
+  }
   return (
     <>
+      <h1>Toggle Example</h1>
+
+      <Toggle
+        checked={isToggled}
+        onChange={handleToggleChange}
+        disabled={isDisabled}
+      />
+
+      <p>Toggle is: {isToggled ? 'ON' : 'OFF'}</p>
+
+      <label>
+        Disable Toggle:
+        <input
+          type="checkbox"
+          checked={isDisabled}
+          onChange={e => setIsDisabled(e.target.checked)}
+        />
+      </label>
       <div>
         <button onClick={openModal}>Open Modal</button>
         <Modal isOpen={isModalOpen} onClose={closeModal} title="My Modal Title">
