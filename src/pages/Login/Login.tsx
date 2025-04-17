@@ -2,7 +2,7 @@ import { useState } from 'react'
 import LogInForm from './LogInForm/LogInForm'
 import SignInForm from './SignInForm/SignInForm'
 
-export default function LoginPage() {
+export default function Login() {
   const [isLogInForm, setIsLogInForm] = useState(true)
 
   return (

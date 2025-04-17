@@ -3,12 +3,19 @@ export interface ProfileGetDto {
 }
 
 export interface ProfileUpdateDto {
-  name?: string
-  surname?: string
+  id: number
   email?: string
+  firstName?: string
+  lastName?: string
+  patronymic?: string
+  birthDate?: string
+  sex?: string
+  phone?: string
 }
 
-export interface UserEnterDto {
+export type UserEnterDto = UserEnter | string
+
+interface UserEnter {
   email: string
   password: string
 }

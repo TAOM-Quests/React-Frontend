@@ -114,6 +114,9 @@ importers:
       globals:
         specifier: ^15.9.0
         version: 15.11.0
+      msw:
+        specifier: ^2.7.3
+        version: 2.7.3(typescript@5.6.3)
       playwright:
         specifier: ^1.51.0
         version: 1.51.0
