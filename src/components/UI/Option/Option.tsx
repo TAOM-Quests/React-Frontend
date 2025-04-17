@@ -6,9 +6,9 @@ import { Checkbox } from '../Checkbox/Checkbox'
 import './Option.scss'
 
 export type OptionType = {
-  id: number
   text: string
   onSelect: (id: number, selected: boolean) => void
+  id?: number
   avatar?: {
     src: string
     description?: string
@@ -34,13 +34,13 @@ export const Option = ({
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
     if (!isMultiple) {
-      onSelect(id, !isSelected)
+      onSelect(id ?? 0, !isSelected)
     }
   }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
-    onSelect(id, !isSelected)
+    onSelect(id ?? 0, !isSelected)
   }
 
   const renderContent = () => {

@@ -8,6 +8,7 @@ import { TimeInput } from './components/UI/TimeInput/TimeInput'
 import { Modal } from './components/UI/Modal/Modal'
 
 import { Toggle } from './components/UI/Toggle/Toggle'
+import { Switcher } from './components/UI/Switcher/Switcher'
 
 const items: DropdownItemType[] = [
   {
@@ -88,8 +89,31 @@ function App() {
   const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsToggled(event.target.checked)
   }
+
+  const [activeOption, setActiveOption] = useState('Персональные данные')
+
+  const options = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
+
+  const handleOptionChange = (option: string) => {
+    /*************  ✨ Windsurf Command ⭐  *************/
+    /**
+     * Обработчик изменения выбранной опции
+     * @param {string} option - выбранная опция
+     */
+    /*******  7aefc9c4-9c8f-41a9-b013-94e7217e48c4  *******/
+    setActiveOption(option)
+  }
   return (
     <>
+      <div>
+        <Switcher
+          options={options}
+          activeOption={activeOption}
+          onChange={handleOptionChange}
+        />
+        <p>Выбрано: {activeOption}</p>
+      </div>
+
       <h1>Toggle Example</h1>
 
       <Toggle
