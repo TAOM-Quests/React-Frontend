@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
-import SubmitButton from '../../../components/SubmitButton/SubmitButton'
-import InputPassword from '../../../components/InputPassword/InputPassword'
 import { users } from '../../../services/api/userModule/users/users'
-import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage'
 import { useNavigate } from 'react-router'
 import { useAppDispatch } from '../../../hooks/redux/reduxHooks'
 import { setUser } from '../../../redux/auth/authSlice'

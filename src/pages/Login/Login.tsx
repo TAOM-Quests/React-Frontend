@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import LogInForm from './LogInForm/LogInForm'
 import SignInForm from './SignInForm/SignInForm'
-import { Button } from '../../components/UI/Button/Button'
 import Logo from '../../assets/images/logo.svg'
 import TaomLogin from '../../assets/images/taomLogin.svg'
 import './Login.scss'
