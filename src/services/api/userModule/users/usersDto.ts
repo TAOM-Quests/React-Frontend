@@ -8,7 +8,7 @@ export interface ProfileUpdateDto {
   firstName?: string
   lastName?: string
   patronymic?: string
-  birthDate?: string
+  birthDate?: string | null
   sex?: string
   phone?: string
 }

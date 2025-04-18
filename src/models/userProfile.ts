@@ -6,7 +6,7 @@ export interface UserProfile {
   firstName: string
   lastName: string
   patronymic: string
-  birthDate: Date
+  birthDate: Date | null
   sex: string
   phone: string
   completedQuests: QuestMinimize[]
@@ -22,7 +22,7 @@ export interface UserProfileUpdated {
   firstName: string
   lastName: string
   patronymic: string
-  birthDate: string
+  birthDate: string | null
   sex: string
   phone: string
 }

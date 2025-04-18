@@ -3,6 +3,12 @@ import { Input } from '../../../../components/UI/Input/Input'
 import { UserProfile } from '../../../../models/userProfile'
 import { ProfileField } from '../interface/profileField'
 import { users } from '../../../../services/api/userModule/users/users'
+import { Icon } from '../../../../components/UI/Icon/Icon'
+import { Button } from '../../../../components/UI/Button/Button'
+import './PersonInfo.scss'
+import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
+import { Avatar } from '../../../../components/UI/Avatar/Avatar'
+import { DateInput } from '../../../../components/UI/DateInput/DateInput'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -18,12 +24,19 @@ export default function PersonInfo({
   const [patronymic, setPatronymic] = useState(profile.patronymic)
   const [sex, setSex] = useState(profile.sex)
   const [birthDate, setBirthDate] = useState(profile.birthDate)
+  // const [birthDate, setBirthDate] = useState<Date | null>(
+  //   profile.birthDate ? new Date(profile.birthDate) : null,
+  // )
   const [phone, setPhone] = useState(profile.phone)
   const [email, setEmail] = useState(profile.email)
 
+  const handleDateSelect = (date: Date | null) => {
+    setBirthDate(date)
+  }
+
   const [changingMode, setChangingMode] = useState(false)
 
-  const personFields: ProfileField[] = [
+  const personFieldsNames: ProfileField[] = [
     {
       name: 'Фамилия',
       value: lastName,
@@ -39,14 +52,13 @@ export default function PersonInfo({
       value: patronymic,
       onChange: e => setPatronymic(e.target.value),
     },
+  ]
+
+  const personFieldsInfo: ProfileField[] = [
     { name: 'Пол', value: sex, onChange: e => setSex(e.target.value) },
-    // {
-    //   name: 'Дата рождения',
-    //   value: birthDate
-    //     ? new Date(birthDate).toDateString()
-    //     : '',
-    //     onChange: (e) => setBirthDate(new Date(e.target.value))
-    // },
+  ]
+
+  const personFieldsContacts: ProfileField[] = [
     { name: 'Телефон', value: phone, onChange: e => setPhone(e.target.value) },
     { name: 'Email', value: email, onChange: e => setEmail(e.target.value) },
   ]
@@ -59,7 +71,7 @@ export default function PersonInfo({
         firstName,
         lastName,
         patronymic,
-        // birthDate: birthDate.toISOString(),
+        birthDate: birthDate?.toISOString(),
         sex,
         phone,
       })
@@ -67,7 +79,9 @@ export default function PersonInfo({
       updateProfile({
         ...profile,
         ...updatedFields,
-        birthDate: new Date(updatedFields.birthDate),
+        birthDate: updatedFields.birthDate
+          ? new Date(updatedFields.birthDate)
+          : null,
       })
     }
 
@@ -75,25 +89,61 @@ export default function PersonInfo({
   }
 
   return (
-    <div>
-      <h1>
+    <div className="personInfo">
+      {/* <h1>
         {lastName} {firstName} {patronymic}
-      </h1>
-      <button className="change-inputs" onClick={toggleChangingMode}>
-        {changingMode ? 'Сохранить' : 'Изменить'}
-      </button>
-
-      <div className="person-info">
-        {personFields.map(field => (
-          <Input
-            className="person-field"
-            label={field.name}
-            value={field.value}
-            disabled={!changingMode}
-            onChange={e => field.onChange?.(e)}
-          />
-        ))}
+      </h1> */}
+      <div className="personInfo--header">
+        <Icon icon="MENU_DOTS" />
+        <Button
+          text={changingMode ? 'Сохранить' : 'Изменить профиль'}
+          colorType={changingMode ? 'primary' : 'secondary'}
+          onClick={toggleChangingMode}
+          iconBefore={!changingMode ? 'EDIT' : undefined}
+        />
       </div>
+      <ContainerBox>
+        <div className="personInfo--info">
+          <Avatar size="extraLarge" isRound={false} />
+
+          <div className="personInfo--personFields">
+            <div className="personInfo--personFieldsNames">
+              {personFieldsNames.map(field => (
+                <Input
+                  className="personInfo--field"
+                  label={field.name}
+                  value={field.value}
+                  disabled={!changingMode}
+                  onChange={e => field.onChange?.(e)}
+                />
+              ))}
+            </div>
+            <div className="personInfo--personFieldsInfo">
+              {personFieldsInfo.map(field => (
+                <Input
+                  className="personInfo--field"
+                  label={field.name}
+                  value={field.value}
+                  disabled={!changingMode}
+                  onChange={e => field.onChange?.(e)}
+                />
+              ))}
+              <DateInput
+                label="Дата рождения"
+                value={birthDate ? new Date(birthDate).toDateString() : ''}
+                onDateSelect={handleDateSelect}
+              />
+
+              {/* //   name: 'Дата рождения',
+    //   value: birthDate
+    //     ? new Date(birthDate).toDateString()
+    //     : '',
+    //     onChange: (e) => setBirthDate(new Date(e.target.value))
+    // */}
+            </div>
+          </div>
+        </div>
+      </ContainerBox>
     </div>
   )
 }

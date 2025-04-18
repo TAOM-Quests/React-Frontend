@@ -8,7 +8,7 @@ import PersonTab from './PersonTab/PersonTab'
 import { useNavigate } from 'react-router'
 import EventsTab from './EventsTab/EventsTab'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
-
+import './Profile.scss'
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
 export default function Profile() {
@@ -56,12 +56,15 @@ export default function Profile() {
   }
 
   return (
-    <div>
-      <Switcher
-        options={TABS}
-        onChange={option => setTabIndex(TABS.indexOf(option))}
-        activeOption={TABS[tabIndex]}
-      />
+    <div className="profile">
+      <div className="profile--header">
+        <h5 className="heading_5 profile--title">Личный кабинет</h5>
+        <Switcher
+          options={TABS}
+          onChange={option => setTabIndex(TABS.indexOf(option))}
+          activeOption={TABS[tabIndex]}
+        />
+      </div>
 
       {profile && getActiveTab()}
     </div>
