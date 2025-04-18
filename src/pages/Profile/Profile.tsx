@@ -7,6 +7,7 @@ import { UserProfile } from '../../models/userProfile'
 import PersonTab from './PersonTab/PersonTab'
 import { useNavigate } from 'react-router'
 import EventsTab from './EventsTab/EventsTab'
+import { Switcher } from '../../components/UI/Switcher/Switcher'
 
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
@@ -56,14 +57,12 @@ export default function Profile() {
 
   return (
     <div>
-      {TABS.map((tab, index) => (
-        <TabButton
-          text={tab}
-          key={index}
-          isActive={tabIndex === index}
-          onClick={() => setTabIndex(index)}
-        />
-      ))}
+      <Switcher
+        options={TABS}
+        onChange={option => setTabIndex(TABS.indexOf(option))}
+        activeOption={TABS[tabIndex]}
+      />
+
       {profile && getActiveTab()}
     </div>
   )
