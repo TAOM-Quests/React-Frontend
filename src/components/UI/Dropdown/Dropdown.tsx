@@ -222,7 +222,7 @@ export const Dropdown = ({
         type="text"
         iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
         onClickIconAfter={() => setIsOpen(!isOpen)}
-        valueInput={renderInputValue()}
+        value={renderInputValue()}
         onChange={handleSearch}
         onFocus={handleFocus}
         onBlur={handleBlur}

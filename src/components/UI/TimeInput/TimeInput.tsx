@@ -70,7 +70,7 @@ export const TimeInput = ({
     <div className="time-input-container">
       <Input
         type="text"
-        valueInput={valueInput}
+        value={valueInput}
         onKeyDown={handleInputKeyDown}
         onChange={handleInputChange}
         placeholder="ЧЧ:ММ"

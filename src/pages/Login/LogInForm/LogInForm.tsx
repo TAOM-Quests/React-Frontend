@@ -58,7 +58,7 @@ export default function LogInForm() {
         label="Почта"
         placeholder="Введите почту"
         className="email-input"
-        valueInput={email}
+        value={email}
         onChange={e => setEmail(e.target.value)}
         errorText={errorsMessage.email}
       />
@@ -69,7 +69,7 @@ export default function LogInForm() {
         className="password-input"
         iconAfter={showPassword ? 'EYE_CLOSED' : 'EYE'}
         onClickIconAfter={toggleShowPassword}
-        valueInput={password}
+        value={password}
         onChange={e => setPassword(e.target.value)}
         errorText={errorsMessage.password}
       />
