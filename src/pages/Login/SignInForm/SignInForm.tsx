@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import Input, { InputProps } from '../../../components/Input/Input'
-import SubmitButton from '../../../components/SubmitButton/SubmitButton'
-import InputPassword from '../../../components/InputPassword/InputPassword'
 import { users } from '../../../services/api/userModule/users/users'
-import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage'
 import { useNavigate } from 'react-router'
 import { useAppDispatch } from '../../../hooks/redux/reduxHooks'
 import { setUser } from '../../../redux/auth/authSlice'
+import './SignInForm.scss'
+import Input from '../../../components/UI/Input/Input'
+import { Button } from '../../../components/UI/Button/Button'
 
 export default function SignInForm() {
   const navigate = useNavigate()
@@ -15,13 +14,22 @@ export default function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorsMessage, setErrorsMessage] = useState<{
+    email?: string
+    password?: string
+    repeatPassword?: string
+  }>({})
+  const [showPassword, setShowPassword] = useState(false)
 
   const tryCreateUser = async (event: React.FormEvent) => {
     event.preventDefault()
+    setErrorsMessage({})
 
     if (password !== repeatPassword) {
-      setErrorMessage('Пароли не совпадают')
+      setErrorsMessage({
+        password: 'Пароли не совпадают',
+        repeatPassword: 'Пароли не совпадают',
+      })
       return
     }
 
@@ -32,62 +40,70 @@ export default function SignInForm() {
       navigate('/')
     } catch (e) {
       if (e instanceof Error) {
-        setErrorMessage(e.message)
+        const message = e.message.toLowerCase()
+        if (message.includes('email')) {
+          setErrorsMessage({ email: e.message })
+        } else if (message.includes('password')) {
+          setErrorsMessage({ password: e.message })
+        } else if (message.includes('repeatPassword')) {
+          setErrorsMessage({ repeatPassword: e.message })
+        } else {
+          setErrorsMessage({
+            email: e.message,
+            password: e.message,
+            repeatPassword: e.message,
+          })
+        }
       } else {
-        setErrorMessage(e as string)
+        setErrorsMessage({
+          email: String(e),
+          password: String(e),
+          repeatPassword: String(e),
+        })
       }
     }
   }
 
+  const toggleShowPassword = () => {
+    setShowPassword(prev => !prev)
+  }
+
   return (
-    <form onSubmit={tryCreateUser}>
-      <Input {...getEmailProps(email, e => setEmail(e.target.value))} />
-      <InputPassword
-        {...getPasswordProps(password, e => setPassword(e.target.value))}
+    <form className="signIn_form" onSubmit={tryCreateUser}>
+      <h4 className="heading_4 signIn_form__heading">Регистрация</h4>
+      <Input
+        type="email"
+        label="Почта"
+        placeholder="Введите почту"
+        className="email-input"
+        valueInput={email}
+        onChange={e => setEmail(e.target.value)}
+        errorText={errorsMessage.email}
       />
-      <InputPassword
-        {...getRepeatPasswordProps(repeatPassword, e =>
-          setRepeatPassword(e.target.value),
-        )}
+      <Input
+        type={showPassword ? 'text' : 'password'}
+        label="Пароль"
+        placeholder="Введите пароль"
+        className="password-input"
+        iconAfter={showPassword ? 'EYE_CLOSED' : 'EYE'}
+        onClickIconAfter={toggleShowPassword}
+        valueInput={password}
+        onChange={e => setPassword(e.target.value)}
+        errorText={errorsMessage.password}
       />
-      {errorMessage.length ? <ErrorMessage text={errorMessage} /> : <></>}
-      <SubmitButton text="Зарегистрироваться" />
+
+      <Input
+        type={showPassword ? 'text' : 'password'}
+        label="Повтор пароля"
+        placeholder="Введите пароль повторно"
+        className="repeatPassword-input"
+        iconAfter={showPassword ? 'EYE_CLOSED' : 'EYE'}
+        onClickIconAfter={toggleShowPassword}
+        valueInput={repeatPassword}
+        onChange={e => setRepeatPassword(e.target.value)}
+        errorText={errorsMessage.repeatPassword}
+      />
+      <Button type="submit" text="Зарегистрироваться" />
     </form>
   )
-}
-
-function getEmailProps(
-  value: string,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-): InputProps {
-  return {
-    value,
-    onChange,
-    label: 'Email',
-    className: 'email-input',
-  }
-}
-
-function getPasswordProps(
-  value: string,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-): InputProps {
-  return {
-    value,
-    onChange,
-    label: 'Пароль',
-    className: 'password-input',
-  }
-}
-
-function getRepeatPasswordProps(
-  value: string,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
-): InputProps {
-  return {
-    value,
-    onChange,
-    label: 'Повтор пароля',
-    className: 'repeat-password-input',
-  }
 }

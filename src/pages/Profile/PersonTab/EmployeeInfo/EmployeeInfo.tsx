@@ -1,6 +1,6 @@
 import { UserProfileEmployee } from '../../../../models/userProfile'
 import { ProfileField } from '../interface/profileField'
-import Input from '../../../../components/Input/Input'
+import Input from '../../../../components/UI/Input/Input'
 
 export default function EmployeeInfo(employee: UserProfileEmployee) {
   const employeeFields: ProfileField[] = [

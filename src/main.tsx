@@ -7,7 +7,7 @@ import { setupStore } from './redux/store.ts'
 import Profile from './pages/Profile/Profile.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import '../src/assets/styles/style.scss'
-
+import './assets/styles/style.scss'
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <Provider store={setupStore()}>
