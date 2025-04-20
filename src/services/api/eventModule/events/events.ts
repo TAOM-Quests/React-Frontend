@@ -1,6 +1,9 @@
+import { Event } from '../../../../models/event'
 import { EventMinimize } from '../../../../models/eventMinimize'
+import { EventStatus } from '../../../../models/eventStatus'
+import { EventType } from '../../../../models/eventType'
 import { eventModule } from '../eventModule'
-import { EventGetDto, EventsGetDto } from './eventsDto'
+import { EventCreateDto, EventGetDto, EventsGetDto } from './eventsDto'
 
 export const events = {
   getManyByParams: (params: EventsGetDto): Promise<EventMinimize[]> =>
@@ -11,6 +14,14 @@ export const events = {
           .join('&'),
     ),
 
-  getOne: (params: EventGetDto): Promise<EventMinimize> =>
-    eventModule<EventMinimize, EventGetDto>(`events/${params.id}`),
+  getOne: (params: EventGetDto): Promise<Event> =>
+    eventModule<Event, EventGetDto>(`events/${params.id}`),
+
+  create: (params: EventCreateDto): Promise<Event> =>
+    eventModule<Event, EventCreateDto>('events', params),
+
+  getTypes: (): Promise<EventType[]> => eventModule<EventType[], null>('types'),
+
+  getStatuses: (): Promise<EventStatus[]> =>
+    eventModule<EventStatus[], null>('statuses'),
 }
