@@ -13,6 +13,11 @@
     flex-direction: row;
     width: 100%;
     gap: 10px;
+
+    @media (max-width: 1220px) {
+      flex-direction: column;
+      gap: 20px;
+    }
   }
 
   &--title {

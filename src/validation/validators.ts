@@ -56,23 +56,6 @@ export function validateDateOfBirth(
 
   return { isValid: true }
 }
-export function validatePhone(
-  phoneNumber: string | undefined,
-  required = true,
-): ValidationResult {
-  if (!phoneNumber || phoneNumber.trim() === '') {
-    if (required) return { isValid: false, error: 'Телефон обязателен' }
-    else return { isValid: true }
-  }
-  const digitsOnly = phoneNumber.replace(/[^\d+]/g, '') // оставляем только цифры и +
-  const regex = /^\+?\d{10,15}$/
-  if (!regex.test(digitsOnly))
-    return {
-      isValid: false,
-      error: 'Телефон должен содержать от 10 до 15 цифр и начинаться с +',
-    }
-  return { isValid: true }
-}
 
 export function validateEmail(
   email: string | undefined,
@@ -82,8 +65,45 @@ export function validateEmail(
     if (required) return { isValid: false, error: 'Почта обязательна' }
     else return { isValid: true }
   }
+
+  if (!email.includes('@')) {
+    return { isValid: false, error: 'Требуется символ @' }
+  }
+
+  const atIndex = email.indexOf('@')
+  const dotIndex = email.indexOf('.', atIndex + 1)
+
+  if (dotIndex === -1) {
+    return { isValid: false, error: 'Требуется символ . после @' }
+  }
+
+  if (dotIndex - atIndex <= 1) {
+    return { isValid: false, error: 'Между @ и . должны быть символы' }
+  }
+
+  // Можно добавить дополнительную проверку на пробелы и общую структуру
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
-  if (!regex.test(email))
+  if (!regex.test(email)) {
     return { isValid: false, error: 'Неверный формат почты' }
+  }
+
+  return { isValid: true }
+}
+
+export function validatePhone(
+  phone: string | undefined,
+  required = true,
+): ValidationResult {
+  if (!phone || phone.trim() === '') {
+    if (required) return { isValid: false, error: 'Телефон обязателен' }
+    else return { isValid: true }
+  }
+
+  // Проверяем, что строка соответствует формату +7(000) 000-00-00
+  const formatRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/
+  if (!formatRegex.test(phone)) {
+    return { isValid: false, error: 'Номер телефона должен быть полностью заполнен' }
+  }
+
   return { isValid: true }
 }

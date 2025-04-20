@@ -16,10 +16,13 @@ import {
 import {
   validateDateOfBirth,
   validateName,
+  validateEmail,
   validatePhone,
 } from '../../../../validation/validators'
-import moment from 'moment'
-import { useMask } from '@react-input/mask'
+
+
+import { MaskedInput } from '../../../../components/MaskedInput/MaskedInput'
+
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -30,6 +33,7 @@ export default function PersonInfo({
   profile,
   updateProfile,
 }: PersonInfoProps) {
+  const isEmployee = 'position' in profile
   const [lastName, setLastName] = useState(profile.lastName)
   const [firstName, setFirstName] = useState(profile.firstName)
   const [patronymic, setPatronymic] = useState(profile.patronymic)
@@ -38,10 +42,6 @@ export default function PersonInfo({
   const [phoneNumber, setPhoneNumber] = useState(profile.phoneNumber)
   const [email, setEmail] = useState(profile.email)
 
-  const inputNumberRef = useMask({
-    mask: '+0 (___) ___-__-__',
-    replacement: { _: /\d/ },
-  })
 
   const handleDateSelect = (date: Date | null) => {
     setBirthDate(date)
@@ -63,7 +63,8 @@ export default function PersonInfo({
   const firstNameValidator = validateName(firstName, false)
   const patronymicValidator = validateName(patronymic, false)
   const birthDateValidator = validateDateOfBirth(birthDate, false)
-  const phoneValidator = validatePhone(phoneNumber, false)
+  const emailValidator = validateEmail(email, false)
+  const phoneNumberValidator = validatePhone(phoneNumber, false)
 
   const personFieldsNames: ProfileField[] = [
     {
@@ -102,17 +103,11 @@ export default function PersonInfo({
 
   const personFieldsContacts: ProfileField[] = [
     {
-      name: 'Телефон',
-      placeholder: 'Введите телефон',
-      value: phoneNumber,
-      onChange: e => setPhoneNumber(e.target.value),
-      // error: phoneValidator.error,
-    },
-    {
       name: 'Почта',
       placeholder: 'Введите почту',
       value: email,
       onChange: e => setEmail(e.target.value),
+      error: emailValidator.error,
     },
   ]
 
@@ -156,7 +151,9 @@ export default function PersonInfo({
               birthDateValidator.isValid &&
               firstNameValidator.isValid &&
               lastNameValidator.isValid &&
-              patronymicValidator.isValid
+              patronymicValidator.isValid &&
+              emailValidator.isValid &&
+              phoneNumberValidator.isValid
             ) {
               toggleChangingMode()
             }
@@ -196,10 +193,6 @@ export default function PersonInfo({
                   label="Дата рождения"
                   placeholder="Введите дату рождения"
                   value={birthDate}
-                  // value={
-                  //   birthDate ? new Date(birthDate).toLocaleDateString() : ''
-                  // }
-                  // value={birthDate ? birthDate.toLocaleDateString('ru-RU') : ''}
                   disabled={!changingMode}
                   onDateSelect={handleDateSelect}
                   errorText={birthDateValidator.error}
@@ -213,16 +206,26 @@ export default function PersonInfo({
           {personFieldsContacts.map(field => (
             <Input
               key={field.name}
-              // className="personInfo--field"
+              className="personInfo--field"
               type="text"
               label={field.name}
               placeholder={field.placeholder}
               value={field.value}
               disabled={!changingMode}
               onChange={e => field.onChange?.(e)}
-              // errorText={field.error}
+              errorText={field.error}
             />
           ))}
+          <MaskedInput
+                  mask="+7 (999) 999-99-99"
+                  value={phoneNumber}
+                  onChange={e => setPhoneNumber(e.target.value)}
+                  label="Телефон"
+                  placeholder="+7 (___) ___-__-__"
+                  disabled={!changingMode}
+                  errorText={phoneNumberValidator.error}
+                  // iconBefore="PHONE"
+                />
         </ContainerBox>
       </div>
     </div>

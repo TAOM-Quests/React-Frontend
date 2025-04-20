@@ -47,4 +47,13 @@
     line-height: var(--lh_xl_l);
     color: var(--text_c_primary_60);
   }
+
+  // ----------------------------------------
+  // Адаптивность для мобильных устройств (до 480px)
+  @media (max-width: 880px) {
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+  }
+
 }

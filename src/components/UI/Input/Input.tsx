@@ -22,6 +22,7 @@ export interface InputProps
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   iconAfter?: keyof typeof ICON_MAP
   errorText?: string | null
+  disabled?: boolean
   helperText?: string | null
   iconBefore?: keyof typeof ICON_MAP
   iconRefAfter?: ForwardedRef<SVGSVGElement>
