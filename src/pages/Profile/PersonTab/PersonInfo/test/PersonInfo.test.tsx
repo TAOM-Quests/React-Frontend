@@ -1,10 +1,15 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderWithProviders } from "../../../../../mocks/redux/utils";
-import PersonInfo from "../PersonInfo";
-import { typePersonFields, updatedProfile, user, userProfile } from "./personInfoFixture";
-import { userEvent } from "@vitest/browser/context";
-import { users } from "../../../../../services/api/userModule/users/users";
-import { UserProfile } from "../../../../../models/userProfile";
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { renderWithProviders } from '../../../../../mocks/redux/utils'
+import PersonInfo from '../PersonInfo'
+import {
+  typePersonFields,
+  updatedProfile,
+  user,
+  userProfile,
+} from './personInfoFixture'
+import { userEvent } from '@vitest/browser/context'
+import { users } from '../../../../../services/api/userModule/users/users'
+import { UserProfile } from '../../../../../models/userProfile'
 
 const FIELDS_ORDER: (keyof typeof typePersonFields)[] = [
   'lastName',
@@ -12,8 +17,8 @@ const FIELDS_ORDER: (keyof typeof typePersonFields)[] = [
   'patronymic',
   'sex',
   // 'birthDate',
-  'phone',
-  'email'
+  'phoneNumber',
+  'email',
 ]
 
 describe('PersonInfo', () => {
@@ -24,9 +29,9 @@ describe('PersonInfo', () => {
     const store = {
       preloadedState: {
         auth: {
-          value: user
-        }
-      }
+          value: user,
+        },
+      },
     }
     const setElements = () => {
       changeInputsButton = document.querySelector('.change-inputs')!
@@ -38,12 +43,15 @@ describe('PersonInfo', () => {
         profile={userProfile}
         updateProfile={(updatedProfile: UserProfile) => {
           console.log('RERENDER', updatedProfile)
-          renderWithProviders(<PersonInfo profile={updatedProfile} updateProfile={() => {}}/>, store)
+          renderWithProviders(
+            <PersonInfo profile={updatedProfile} updateProfile={() => {}} />,
+            store,
+          )
           unmount()
           setElements()
         }}
       />,
-      store
+      store,
     )
 
     setElements()
@@ -51,7 +59,7 @@ describe('PersonInfo', () => {
 
   test('On start profileFields should be disabled', () => {
     profileFields.forEach(field => {
-      expect(field.getAttribute('disabled')).toBe("")
+      expect(field.getAttribute('disabled')).toBe('')
     })
   })
 
@@ -74,7 +82,10 @@ describe('PersonInfo', () => {
 
     await userEvent.click(changeInputsButton)
     FIELDS_ORDER.forEach(async (field, index) => {
-      await userEvent.type(profileFields[index], typePersonFields[field] as string)
+      await userEvent.type(
+        profileFields[index],
+        typePersonFields[field] as string,
+      )
     })
     await userEvent.click(changeInputsButton)
 
@@ -82,8 +93,9 @@ describe('PersonInfo', () => {
   })
 
   test('On saving person data, personFields values should be changed', async () => {
-    vi.spyOn(users, 'updateProfile')
-      .mockImplementationOnce(async () => updatedProfile)
+    vi.spyOn(users, 'updateProfile').mockImplementationOnce(
+      async () => updatedProfile,
+    )
 
     await userEvent.click(changeInputsButton)
     FIELDS_ORDER.forEach(async (field, index) => {
@@ -92,7 +104,7 @@ describe('PersonInfo', () => {
       await userEvent.type(profileFields[index], typeValue as string)
     })
     await userEvent.click(changeInputsButton)
-    
+
     profileFields.forEach((field, index) => {
       expect(field.value).toBe(typePersonFields[FIELDS_ORDER[index]])
     })

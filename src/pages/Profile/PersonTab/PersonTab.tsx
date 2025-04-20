@@ -14,7 +14,6 @@ export default function PersonTab({ profile, updatePerson }: PersonTabProps) {
   return (
     <div className="personTab">
       <PersonInfo profile={profile} updateProfile={updatePerson} />
-
       {isEmployee && <EmployeeInfo {...profile} />}
     </div>
   )

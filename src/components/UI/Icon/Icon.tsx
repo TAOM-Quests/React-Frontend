@@ -20,6 +20,7 @@ interface IconProps extends SVGAttributes<SVGElement> {
   size?: sizeIcon
   iconRef?: Ref<SVGSVGElement>
   colorIcon?: colorIcon
+  disabled?: boolean
 }
 
 export const Icon = ({
@@ -29,6 +30,7 @@ export const Icon = ({
   onClick,
   iconRef,
   className,
+  disabled,
   ...props
 }: IconProps) => {
   const sizeClass = SIZE_ICONS.includes(size.toString()) ? `icon--${size}` : ''
@@ -48,9 +50,10 @@ export const Icon = ({
         sizeClass,
         colorClass,
         `${onClick && 'icon--click'}`,
+        `${disabled && 'icon--disabled'}`,
         className,
       )}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       style={{ ...sizeStyle, ...colorStyle }}
       viewBox={'0 0 20 20'}
       dangerouslySetInnerHTML={{ __html: getIcon(icon) }}

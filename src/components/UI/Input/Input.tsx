@@ -16,6 +16,7 @@ import React from 'react'
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   label?: string
+  mask?: string
   value?: string | number | ReactNode
   inputRef?: ForwardedRef<HTMLInputElement>
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -156,6 +157,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             (typeof value === 'string' || typeof value === 'number') && (
               <Icon
                 icon="CROSS"
+                disabled={disabled}
                 onClick={() => {
                   onClearSelection?.()
                   internalInputRef.current?.focus()

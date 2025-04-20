@@ -1,4 +1,4 @@
-import {
+import React, {
   useEffect,
   useRef,
   useState,
@@ -10,18 +10,21 @@ import './DateInput.scss'
 import { ButtonCalendar } from '../ButtonCalendar/ButtonCalendar'
 import { Button } from '../Button/Button'
 import Input from '../Input/Input'
-import moment from 'moment'
+import moment, { Moment } from 'moment'
 import 'moment/locale/ru'
 
 moment.locale('ru')
+
+const DATE_FORMAT = 'DD.MM.YYYY'
 
 export interface DateInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value'> {
   onDateSelect: (date: Date | null) => void
   label?: string
-  value?: string | null
+  value?: Date | null
   isRequired?: boolean
   helperText?: string | null
+  errorText?: string | null
 }
 
 export const DateInput = ({
@@ -31,16 +34,19 @@ export const DateInput = ({
   isRequired = false,
   disabled,
   helperText,
+  errorText,
   ...props
 }: DateInputProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [date, setDate] = useState<moment.Moment | null>(null)
-  const [inputValue, setInputValue] = useState('')
+  const [date, setDate] = useState<Moment | null>(value ? moment(value) : null)
+  const [inputValue, setInputValue] = useState<string>(
+    value ? moment(value).format(DATE_FORMAT) : '',
+  )
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
-  const [currentDate, setCurrentDate] = useState(moment())
-  const [dateError, setDateError] = useState<string | null>(null)
+  const [currentDate, setCurrentDate] = useState<Moment>(date || moment())
   const calendarRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<SVGSVGElement>(null)
+
   moment.updateLocale('ru', {
     months: [
       'Январь',
@@ -74,65 +80,51 @@ export const DateInput = ({
 
   useEffect(() => {
     if (value) {
-      const initialDate = moment.utc(value)
-      if (initialDate.isValid()) {
-        setDate(initialDate)
-      } else {
-        setDate(null)
-      }
+      const m = moment(value)
+      setDate(m)
+      setCurrentDate(m)
+      setInputValue(m.format(DATE_FORMAT))
+    } else {
+      setDate(null)
+      setInputValue('')
+      setCurrentDate(moment())
     }
   }, [value])
 
-  useEffect(() => {
-    setInputValue(date ? date.format('DD.MM.YYYY') : '')
-    onDateSelect(date ? date.clone().utc().toDate() : null)
-  }, [date])
+  const formattedDate = date ? date.format('DD.MM.YYYY') : ''
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 8)
     let formattedValue = ''
-
     if (value.length > 2) {
       formattedValue = value.slice(0, 2) + '.' + value.slice(2)
     } else {
       formattedValue = value
     }
-
     if (formattedValue.length > 5) {
       formattedValue =
         formattedValue.slice(0, 5) + '.' + formattedValue.slice(5)
     }
-
     setInputValue(formattedValue)
+    // const parsedDate = moment.utc(formattedValue, 'DD.MM.YYYY', true)
+    // if (parsedDate.isValid()) {
+    //   setDate(parsedDate)
+    //   onDateSelect(parsedDate.clone().utc().toDate())
+    // } else {
+    //   setDate(null)
+    //   onDateSelect(null)
+    // }
 
-    const parsedDate = moment.utc(formattedValue, 'DD.MM.YYYY', true)
-    setDate(parsedDate.isValid() ? parsedDate : null)
-    setDateError(null)
-  }
-
-  const validateDate = (dateString: string): boolean => {
-    if (!isRequired && !dateString) {
-      setDate(null)
-      setDateError(null)
-      return true
-    }
-
-    const parsedDate = moment.utc(dateString, 'DD.MM.YYYY', true)
-    if (parsedDate.isValid()) {
-      setDate(parsedDate)
-      setDateError(null)
-      return true
-    } else {
-      setDate(null)
-      setDateError('Некорректная дата')
-      return false
-    }
+    // const val = e.target.value
+    // if (/^[\d.]*$/.test(val) && val.length <= 10) {
+    //   setInputValue(val)
+    // }
   }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      const isValid = validateDate(inputValue)
+      const isValid = !errorText ? inputValue : ''
       if (inputValue.length === 10 && isValid) {
         setIsOpen(prev => !prev)
       }
@@ -140,48 +132,81 @@ export const DateInput = ({
   }
 
   const toggleCalendar = () => {
-    setIsOpen(prev => !prev)
+    setIsOpen(open => !open)
     setCurrentDate(date || moment())
     setView('days')
   }
 
   const handleDayClick = (day: number) => {
-    setDate(moment.utc(currentDate).date(day))
-    setIsOpen(false)
-    setDateError(null)
-  }
+    // setDate(moment.utc(currentDate).date(day))
+    // setIsOpen(false)
 
+    const newDate = currentDate.clone().date(day)
+    setDate(newDate)
+    setCurrentDate(newDate)
+    setInputValue(newDate.format(DATE_FORMAT))
+    onDateSelect(newDate.toDate())
+    setIsOpen(false)
+  }
   const handleMonthClick = (monthIndex: number) => {
-    setCurrentDate(moment.utc(currentDate).month(monthIndex).date(1))
+    setCurrentDate(currentDate.clone().month(monthIndex).date(1))
     setView('days')
   }
 
   const handleYearClick = (year: number) => {
-    setCurrentDate(moment.utc(currentDate).year(year).month(0).date(1))
+    setCurrentDate(currentDate.clone().year(year).month(0).date(1))
     setView('months')
   }
 
+  // const handleMonthClick = (monthIndex: number) => {
+  //   setCurrentDate(moment.utc(currentDate).month(monthIndex).date(1))
+  //   setView('days')
+  // }
+
+  // const handleYearClick = (year: number) => {
+  //   setCurrentDate(moment.utc(currentDate).year(year).month(0).date(1))
+  //   setView('months')
+  // }
+
   const goToPrevious = () => {
     setCurrentDate(
-      moment
-        .utc(currentDate)
+      currentDate
+        .clone()
         .subtract(
           view === 'days' ? 1 : view === 'months' ? 1 : 10,
-          view === 'days' ? 'month' : view === 'months' ? 'year' : 'year',
+          view === 'days' ? 'month' : 'year',
+        ),
+    )
+    // setCurrentDate(
+    //   moment
+    //     .utc(currentDate)
+    //     .subtract(
+    //       view === 'days' ? 1 : view === 'months' ? 1 : 10,
+    //       view === 'days' ? 'month' : view === 'months' ? 'year' : 'year',
+    //     ),
+    // )
+  }
+  const goToNext = () => {
+    setCurrentDate(
+      currentDate
+        .clone()
+        .add(
+          view === 'days' ? 1 : view === 'months' ? 1 : 10,
+          view === 'days' ? 'month' : 'year',
         ),
     )
   }
 
-  const goToNext = () => {
-    setCurrentDate(
-      moment
-        .utc(currentDate)
-        .add(
-          view === 'days' ? 1 : view === 'months' ? 1 : 10,
-          view === 'days' ? 'month' : view === 'months' ? 'year' : 'year',
-        ),
-    )
-  }
+  // const goToNext = () => {
+  //   setCurrentDate(
+  //     moment
+  //       .utc(currentDate)
+  //       .add(
+  //         view === 'days' ? 1 : view === 'months' ? 1 : 10,
+  //         view === 'days' ? 'month' : view === 'months' ? 'year' : 'year',
+  //       ),
+  //   )
+  // }
 
   const showMonths = () => {
     setView('months')
@@ -305,16 +330,20 @@ export const DateInput = ({
     ))
   }
 
-  const handleFocus = () => {
-    setDateError(null)
-  }
-
   const handleBlur = () => {
-    validateDate(inputValue)
+    const parsed = moment.utc(inputValue, DATE_FORMAT, true)
+    if (parsed.isValid()) {
+      setDate(parsed)
+      setCurrentDate(parsed)
+      setInputValue(parsed.format(DATE_FORMAT)) // форматируем строго
+      onDateSelect(parsed.toDate())
+    } else {
+      // Восстанавливаем последнее валидное значение
+      setInputValue(date ? date.format(DATE_FORMAT) : '')
+    }
   }
 
   let calendarContent: JSX.Element = <></>
-
   if (isOpen) {
     calendarContent = (
       <div className="calendar" ref={calendarRef}>
@@ -377,11 +406,10 @@ export const DateInput = ({
         maxLength={10}
         iconAfter="CALENDAR"
         disabled={disabled}
-        onClickIconAfter={toggleCalendar}
+        onClickIconAfter={disabled ? undefined : toggleCalendar}
         onBlur={handleBlur}
         iconRefAfter={iconRef}
-        onFocus={handleFocus}
-        errorText={dateError ? dateError : null}
+        errorText={errorText ? errorText : null}
         helperText={helperText}
         {...props}
       />

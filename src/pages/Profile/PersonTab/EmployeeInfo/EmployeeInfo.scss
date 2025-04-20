@@ -1,0 +1,18 @@
+.employeeInfo_containerBoxs {
+  &--right {
+    width: 23.63vw !important;
+  }
+}
+
+.employeeInfo {
+  display: flex;
+  flex-direction: column;
+  // justify-content:;
+  align-items: flex-end;
+  gap: 20px;
+  width: 100%;
+
+  .inputWrapper {
+    min-width: 310px;
+  }
+}

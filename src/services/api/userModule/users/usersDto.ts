@@ -10,7 +10,7 @@ export interface ProfileUpdateDto {
   patronymic?: string
   birthDate?: string | null
   sex?: string
-  phone?: string
+  phoneNumber?: string
 }
 
 export type UserEnterDto = UserEnter | string

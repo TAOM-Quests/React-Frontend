@@ -1,4 +1,6 @@
+import { Department } from './department'
 import { QuestMinimize } from './questMinimize'
+import { UserPosition } from './userPoistion'
 
 export interface UserProfile {
   id: number
@@ -8,13 +10,13 @@ export interface UserProfile {
   patronymic: string
   birthDate: Date | null
   sex: string
-  phone: string
+  phoneNumber: string
   completedQuests: QuestMinimize[]
 }
 
 export interface UserProfileEmployee extends UserProfile {
-  position: string
-  department: string
+  position: UserPosition
+  department: Department
 }
 
 export interface UserProfileUpdated {
@@ -24,5 +26,5 @@ export interface UserProfileUpdated {
   patronymic: string
   birthDate: string | null
   sex: string
-  phone: string
+  phoneNumber: string
 }
