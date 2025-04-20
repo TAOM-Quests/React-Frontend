@@ -1,9 +1,9 @@
-import { UserAuth } from "../../models/userAuth";
-import { users } from "../../services/api/userModule/users/users";
+import { UserAuth } from '../../models/userAuth'
+import { users } from '../../services/api/userModule/users/users'
 
 export const getUserByToken = async (): Promise<UserAuth | null> => {
   const token = localStorage.getItem('token')
-  
+
   if (!token) {
     return null
   }
