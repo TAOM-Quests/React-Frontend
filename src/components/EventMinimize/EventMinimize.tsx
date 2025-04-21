@@ -31,18 +31,6 @@ export default function EventMinimize({
   isEmployeeView,
 }: EventMinimizeProps) {
   const navigate = useNavigate()
-  const getStatusColor = (status: string): TypeBadge => {
-    return statusColor[status] ?? 'neutral'
-  }
-
-  const statusColor: { [key: string]: TypeBadge } = {
-    Черновик: 'neutral',
-    Утверждено: 'success',
-    Отклонено: 'critical',
-    'На утверждении': 'caution',
-    'В работе': 'info',
-    Архив: 'neutral',
-  }
 
   const eventOptionsContextMenu: OptionProps[] = [
     {
@@ -60,6 +48,20 @@ export default function EventMinimize({
       },
     },
   ]
+
+  const statusColor: { [key: string]: TypeBadge } = {
+    Черновик: 'neutral',
+    Утверждено: 'success',
+    Отклонено: 'critical',
+    'На утверждении': 'caution',
+    'В работе': 'info',
+    Архив: 'neutral',
+  }
+
+  const getStatusColor = (status: string): TypeBadge => {
+    return statusColor[status] ?? 'neutral'
+  }
+
   return (
     <ContainerBox
       onClick={() => navigate(`/events/${id}`)}
