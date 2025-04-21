@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import EventMinimizeComponent, {
