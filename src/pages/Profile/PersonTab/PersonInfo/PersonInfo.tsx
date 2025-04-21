@@ -20,9 +20,7 @@ import {
   validatePhone,
 } from '../../../../validation/validators'
 
-
 import { MaskedInput } from '../../../../components/MaskedInput/MaskedInput'
-
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -33,7 +31,6 @@ export default function PersonInfo({
   profile,
   updateProfile,
 }: PersonInfoProps) {
-  const isEmployee = 'position' in profile
   const [lastName, setLastName] = useState(profile.lastName)
   const [firstName, setFirstName] = useState(profile.firstName)
   const [patronymic, setPatronymic] = useState(profile.patronymic)
@@ -41,7 +38,6 @@ export default function PersonInfo({
   const [birthDate, setBirthDate] = useState(profile.birthDate)
   const [phoneNumber, setPhoneNumber] = useState(profile.phoneNumber)
   const [email, setEmail] = useState(profile.email)
-
 
   const handleDateSelect = (date: Date | null) => {
     setBirthDate(date)
@@ -138,9 +134,6 @@ export default function PersonInfo({
 
   return (
     <div className="personInfo">
-      {/* <h1>
-        {lastName} {firstName} {patronymic}
-      </h1> */}
       <div className="personInfo--header">
         <Icon icon="MENU_DOTS" />
         <Button
@@ -217,15 +210,14 @@ export default function PersonInfo({
             />
           ))}
           <MaskedInput
-                  mask="+7 (999) 999-99-99"
-                  value={phoneNumber}
-                  onChange={e => setPhoneNumber(e.target.value)}
-                  label="Телефон"
-                  placeholder="+7 (___) ___-__-__"
-                  disabled={!changingMode}
-                  errorText={phoneNumberValidator.error}
-                  // iconBefore="PHONE"
-                />
+            mask="+7 (999) 999-99-99"
+            value={phoneNumber}
+            onChange={e => setPhoneNumber(e.target.value)}
+            label="Телефон"
+            placeholder="+7 (___) ___-__-__"
+            disabled={!changingMode}
+            errorText={phoneNumberValidator.error}
+          />
         </ContainerBox>
       </div>
     </div>

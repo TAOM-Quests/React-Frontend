@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import TabButton from '../../components/TabButton/TabButton'
 import { users } from '../../services/api/userModule/users/users'
 import { selectAuth, setUser } from '../../redux/auth/authSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux/reduxHooks'

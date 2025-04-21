@@ -1,4 +1,4 @@
-import React, {
+import {
   useEffect,
   useRef,
   useState,
@@ -91,8 +91,6 @@ export const DateInput = ({
     }
   }, [value])
 
-  const formattedDate = date ? date.format('DD.MM.YYYY') : ''
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 8)
     let formattedValue = ''
@@ -106,19 +104,6 @@ export const DateInput = ({
         formattedValue.slice(0, 5) + '.' + formattedValue.slice(5)
     }
     setInputValue(formattedValue)
-    // const parsedDate = moment.utc(formattedValue, 'DD.MM.YYYY', true)
-    // if (parsedDate.isValid()) {
-    //   setDate(parsedDate)
-    //   onDateSelect(parsedDate.clone().utc().toDate())
-    // } else {
-    //   setDate(null)
-    //   onDateSelect(null)
-    // }
-
-    // const val = e.target.value
-    // if (/^[\d.]*$/.test(val) && val.length <= 10) {
-    //   setInputValue(val)
-    // }
   }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -138,9 +123,6 @@ export const DateInput = ({
   }
 
   const handleDayClick = (day: number) => {
-    // setDate(moment.utc(currentDate).date(day))
-    // setIsOpen(false)
-
     const newDate = currentDate.clone().date(day)
     setDate(newDate)
     setCurrentDate(newDate)
@@ -158,16 +140,6 @@ export const DateInput = ({
     setView('months')
   }
 
-  // const handleMonthClick = (monthIndex: number) => {
-  //   setCurrentDate(moment.utc(currentDate).month(monthIndex).date(1))
-  //   setView('days')
-  // }
-
-  // const handleYearClick = (year: number) => {
-  //   setCurrentDate(moment.utc(currentDate).year(year).month(0).date(1))
-  //   setView('months')
-  // }
-
   const goToPrevious = () => {
     setCurrentDate(
       currentDate
@@ -177,14 +149,6 @@ export const DateInput = ({
           view === 'days' ? 'month' : 'year',
         ),
     )
-    // setCurrentDate(
-    //   moment
-    //     .utc(currentDate)
-    //     .subtract(
-    //       view === 'days' ? 1 : view === 'months' ? 1 : 10,
-    //       view === 'days' ? 'month' : view === 'months' ? 'year' : 'year',
-    //     ),
-    // )
   }
   const goToNext = () => {
     setCurrentDate(
@@ -196,17 +160,6 @@ export const DateInput = ({
         ),
     )
   }
-
-  // const goToNext = () => {
-  //   setCurrentDate(
-  //     moment
-  //       .utc(currentDate)
-  //       .add(
-  //         view === 'days' ? 1 : view === 'months' ? 1 : 10,
-  //         view === 'days' ? 'month' : view === 'months' ? 'year' : 'year',
-  //       ),
-  //   )
-  // }
 
   const showMonths = () => {
     setView('months')
