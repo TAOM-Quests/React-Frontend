@@ -4,7 +4,7 @@ import { Icon } from '../UI/Icon/Icon'
 import moment from 'moment'
 import './EventMinimize.scss'
 import { Badge, TypeBadge } from '../UI/Badge/Badge'
-import { OptionType } from '../UI/Option/Option'
+import { OptionProps } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 
 export interface EventMinimizeProps {
@@ -44,7 +44,7 @@ export default function EventMinimize({
     Архив: 'neutral',
   }
 
-  const options: OptionType[] = [
+  const eventOptionsContextMenu: OptionProps[] = [
     {
       id: 1,
       text: 'Редактировать',
@@ -75,7 +75,7 @@ export default function EventMinimize({
           {isEmployeeView && (
             <>
               <Badge type={getStatusColor(status)} text={status} />
-              <ContextMenu options={options}>
+              <ContextMenu options={eventOptionsContextMenu}>
                 <Icon colorIcon="primary" icon="MENU_DOTS" />
               </ContextMenu>
             </>

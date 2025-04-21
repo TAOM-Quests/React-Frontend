@@ -7,13 +7,13 @@ import React, {
   ReactElement,
   ButtonHTMLAttributes,
 } from 'react'
-import { Option, OptionType } from '../UI/Option/Option'
+import { Option, OptionProps } from '../UI/Option/Option'
 import './ContextMenu.scss'
 import { Button } from '../UI/Button/Button'
 import { ContainerBox } from '../ContainerBox/ContainerBox'
 
 interface ContextMenuProps {
-  options: OptionType[]
+  options: OptionProps[]
   selectedId?: number | null
   children?: ReactElement<ButtonHTMLAttributes<HTMLButtonElement>>
 }
