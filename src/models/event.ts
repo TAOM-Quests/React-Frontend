@@ -6,6 +6,7 @@ import { Employee } from './user'
 export interface Event {
   id: number
   name: string
+  image: ServerFile
   description: string
   date: Date
   seatsNumber: number
@@ -19,21 +20,21 @@ export interface Event {
 }
 
 interface Place {
-  isOnline: boolean
+  is_online: boolean
 }
 
 export interface PlaceOnline extends Place {
   platform?: string
   identifier?: string
-  accessCode?: string
-  connectionLink?: string
-  recordLink?: string
+  access_code?: string
+  connection_link?: string
+  record_link?: string
 }
 
 export interface PlaceOffline extends Place {
   floor?: number
   address?: string
-  officeNumber?: string
+  office_number?: string
 }
 
 export interface ScheduleItem {

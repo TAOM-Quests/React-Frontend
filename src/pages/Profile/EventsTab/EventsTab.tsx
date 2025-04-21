@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import EventMinimizeComponent, {
@@ -6,7 +6,14 @@ import EventMinimizeComponent, {
 } from '../../../components/EventMinimize/EventMinimize'
 import { EventMinimize } from '../../../models/eventMinimize'
 import Input from '../../../components/UI/Input/Input'
-
+import { PlaceOffline, PlaceOnline } from '../../../models/event'
+import {
+  Dropdown,
+  DropdownItemType,
+} from '../../../components/UI/Dropdown/Dropdown'
+import './EventsTab.scss'
+import { Button } from '../../../components/UI/Button/Button'
+import { useNavigate } from 'react-router'
 interface EventsFilter {
   name?: string
   type?: number
@@ -24,7 +31,7 @@ export default function EventsTab({ user }: EventsTabProps) {
   useEffect(() => {
     const fetchEvents = async () => {
       setEvents(
-        user.roleId
+        user.isEmployee
           ? await events.getManyByParams({ executor: user.id, ...filter })
           : await events.getManyByParams({ participant: user.id, ...filter }),
       )
@@ -33,43 +40,115 @@ export default function EventsTab({ user }: EventsTabProps) {
     fetchEvents()
   }, [filter])
 
+  const getUniqueDropdownItems = (
+    events: EventMinimize[] | null,
+    selector: (
+      event: EventMinimize,
+    ) => { id: number; name: string } | undefined,
+  ): DropdownItemType[] => {
+    if (!events) return []
+
+    const uniqueMap = new Map<number, { id: number; name: string }>()
+
+    events
+      .filter(event => {
+        const item = selector(event)
+        return !!item && !!item.name
+      })
+      .forEach(event => {
+        const item = selector(event)!
+        if (!uniqueMap.has(item.id)) {
+          uniqueMap.set(item.id, item)
+        }
+      })
+
+    return Array.from(uniqueMap.values()).map(({ id, name }) => ({
+      id,
+      text: name,
+    }))
+  }
+
+  const dropdownTypes = getUniqueDropdownItems(userEvents, e => e.type)
+
+  const dropdownStatuses = getUniqueDropdownItems(userEvents, e => e.status)
+
+  const createDropdownChangeHandler =
+    (key: string, setFilter: Dispatch<React.SetStateAction<EventsFilter>>) =>
+    (selectedItem: DropdownItemType | DropdownItemType[] | null) => {
+      if (selectedItem === null) {
+        setFilter(state => ({ ...state, [key]: undefined }))
+        return
+      }
+
+      if (Array.isArray(selectedItem)) {
+        const first = selectedItem[0]
+        setFilter(state => ({ ...state, [key]: first?.id ?? undefined }))
+      } else {
+        setFilter(state => ({ ...state, [key]: selectedItem.id }))
+      }
+    }
+
+  const navigate = useNavigate()
   return (
-    <div>
-      <Input
-        placeholder="Поиск по названию"
-        onChange={e => setFilter(state => ({ ...state, name: e.target.value }))}
-      />
-      <Input
-        type="number"
-        placeholder="Поиск по типу"
-        onChange={e =>
-          setFilter(state => ({ ...state, type: +e.target.value }))
-        }
-      />
-      <Input
-        type="number"
-        placeholder="Поиск по статусу"
-        onChange={e =>
-          setFilter(state => ({ ...state, status: +e.target.value }))
-        }
-      />
+    <div className="profile_events">
+      <div className="profile_events--filters">
+        <Input
+          value={filter.name}
+          iconBefore="SEARCH"
+          placeholder="Поиск по названию"
+          onChange={e =>
+            setFilter(state => ({ ...state, name: e.target.value }))
+          }
+        />
+        <Dropdown
+          items={dropdownTypes}
+          placeholder="Тип мероприятия"
+          onChangeDropdown={createDropdownChangeHandler('type', setFilter)}
+        />
+        {user.isEmployee && (
+          <>
+            <Dropdown
+              items={dropdownStatuses}
+              placeholder="Статус"
+              onChangeDropdown={createDropdownChangeHandler(
+                'status',
+                setFilter,
+              )}
+            />
 
-      {userEvents && userEvents.length
-        ? userEvents.map(event => {
-            const eventData: EventMinimizeProps = {
-              id: event.id,
-              status: event.status.name,
-              name: event.name ?? '',
-              type: event.type?.name ?? '',
-              address: event.address ?? '',
-              onlineMeeting: event.onlineMeeting ?? '',
-            }
+            <Button
+              onClick={() => navigate('event/create')}
+              text="Создать мероприятие"
+              colorType="primary"
+            />
+          </>
+        )}
+      </div>
+      <div className="profile_events--events">
+        {userEvents && userEvents.length
+          ? userEvents.map(event => {
+              const onlinePlace: PlaceOnline | null =
+                event.places?.find(place => place.is_online) ?? null
+              const offlinePlace: PlaceOffline | null =
+                event.places?.find(place => !place.is_online) ?? null
 
-            if (user.roleId) eventData.isEmployeeView = true
+              const eventData: EventMinimizeProps = {
+                id: event.id,
+                date: event.date ?? null,
+                status: event.status.name,
+                name: event.name ?? '',
+                type: event.type?.name ?? '',
+                address: offlinePlace?.address ?? '',
+                platform: onlinePlace?.platform ?? '',
+                imageUrl: event.image?.url ?? '',
+              }
 
-            return <EventMinimizeComponent key={event.id} {...eventData} />
-          })
-        : 'Мероприятий нет'}
+              if (user.isEmployee) eventData.isEmployeeView = true
+
+              return <EventMinimizeComponent key={event.id} {...eventData} />
+            })
+          : 'Мероприятий нет'}
+      </div>
     </div>
   )
 }

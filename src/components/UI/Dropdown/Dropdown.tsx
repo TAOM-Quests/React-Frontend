@@ -28,7 +28,7 @@ export interface DropdownItemType {
 
 export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   items: DropdownItemType[]
-  onChangeDropdown: (
+  onChangeDropdown?: (
     selectedItem: DropdownItemType | DropdownItemType[] | null,
   ) => void
   label?: string
@@ -52,20 +52,17 @@ export const Dropdown = ({
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
-  // Для single select храним выбранный id, для multiple — массив выбранных id
   const [selectedIds, setSelectedIds] = useState<number[]>(isMultiple ? [] : [])
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Фокус на input с задержкой
   const focusInput = () => {
     setTimeout(() => {
       inputRef.current?.focus()
     }, 0)
   }
 
-  // Открытие dropdown и очистка поиска при single select
   const handleFocus = () => {
     setIsOpen(true)
     if (!isMultiple) {
@@ -73,7 +70,6 @@ export const Dropdown = ({
     }
   }
 
-  // Закрытие dropdown при клике вне
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -89,7 +85,6 @@ export const Dropdown = ({
     }
   }, [])
 
-  // Обработка выбора элемента
   const handleSelect = useCallback(
     (itemId: number, isRemoveAction = false) => {
       if (isMultiple) {
@@ -101,7 +96,7 @@ export const Dropdown = ({
           } else {
             newSelected = [...prev, itemId]
           }
-          onChangeDropdown(
+          onChangeDropdown?.(
             newSelected.length > 0
               ? items.filter(item => newSelected.includes(item.id))
               : null,
@@ -112,7 +107,7 @@ export const Dropdown = ({
       } else {
         setSelectedIds([itemId])
         const selectedItem = items.find(item => item.id === itemId) ?? null
-        onChangeDropdown(selectedItem)
+        onChangeDropdown?.(selectedItem)
         setSearchValue(selectedItem?.text ?? '')
         setIsOpen(false)
       }
@@ -120,26 +115,23 @@ export const Dropdown = ({
     [isMultiple, items, onChangeDropdown],
   )
 
-  // Очистка выбора для single select
   const handleClearSelection = () => {
     if (isMultiple) {
       setSelectedIds([])
-      onChangeDropdown(null)
+      onChangeDropdown?.(null)
     } else {
       setSelectedIds([])
       setSearchValue('')
-      onChangeDropdown(null)
+      onChangeDropdown?.(null)
     }
   }
 
-  // Фильтрация элементов по поиску
   const filteredItems = items.filter(item =>
     item.text.toLowerCase().includes(searchValue.toLowerCase()),
   )
 
-  // Рендер значения в input для single select
   const renderInputValue = () => {
-    if (isMultiple) return searchValue // Для multiple просто показываем поиск
+    if (isMultiple) return searchValue
     const selectedId = selectedIds[0]
     const selectedItem = items.find(item => item.id === selectedId)
     if (!selectedItem) return searchValue
@@ -165,14 +157,13 @@ export const Dropdown = ({
     return selectedItem.text
   }
 
-  // Выбрать все / снять выбор всех для multiple
   const handleCheckboxSelectAll = () => {
     if (selectedIds.length === items.length) {
       setSelectedIds([])
-      onChangeDropdown(null)
+      onChangeDropdown?.(null)
     } else {
       setSelectedIds(items.map(item => item.id))
-      onChangeDropdown(items)
+      onChangeDropdown?.(items)
       focusInput()
     }
   }
