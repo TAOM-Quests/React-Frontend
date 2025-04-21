@@ -3,7 +3,7 @@ import { ContainerBox } from '../ContainerBox/ContainerBox'
 import { Icon } from '../UI/Icon/Icon'
 import moment from 'moment'
 import './EventMinimize.scss'
-import { Badge } from '../UI/Badge/Badge'
+import { Badge, TypeBadge } from '../UI/Badge/Badge'
 import { OptionType } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 
@@ -31,22 +31,17 @@ export default function EventMinimize({
   isEmployeeView,
 }: EventMinimizeProps) {
   const navigate = useNavigate()
+  const getStatusColor = (status: string): TypeBadge => {
+    return statusColor[status] ?? 'neutral'
+  }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Черновик':
-        return 'neutral'
-      case 'Утверждено':
-        return 'success'
-      case 'Отклонено':
-        return 'critical'
-      case 'На утверждении':
-        return 'caution'
-      case 'В работе':
-        return 'info'
-      case 'Архив':
-        return 'neutral'
-    }
+  const statusColor: { [key: string]: TypeBadge } = {
+    Черновик: 'neutral',
+    Утверждено: 'success',
+    Отклонено: 'critical',
+    'На утверждении': 'caution',
+    'В работе': 'info',
+    Архив: 'neutral',
   }
 
   const options: OptionType[] = [
