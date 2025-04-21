@@ -4,6 +4,8 @@ import { Icon } from '../UI/Icon/Icon'
 import moment from 'moment'
 import './EventMinimize.scss'
 import { Badge } from '../UI/Badge/Badge'
+import { OptionType } from '../UI/Option/Option'
+import { ContextMenu } from '../ContextMenu/ContextMenu'
 
 export interface EventMinimizeProps {
   id: number
@@ -47,6 +49,22 @@ export default function EventMinimize({
     }
   }
 
+  const options: OptionType[] = [
+    {
+      id: 1,
+      text: 'Редактировать',
+      onSelect: () => {
+        navigate(`/event/${id}/edit`)
+      },
+    },
+    {
+      id: 2,
+      text: 'Удалить',
+      onSelect: () => {
+        alert(`Удалить событие с id ${id}`)
+      },
+    },
+  ]
   return (
     <ContainerBox
       onClick={() => navigate(`/events/${id}`)}
@@ -62,7 +80,9 @@ export default function EventMinimize({
           {isEmployeeView && (
             <>
               <Badge type={getStatusColor(status)} text={status} />
-              <Icon colorIcon="primary" icon="MENU_DOTS" />
+              <ContextMenu options={options}>
+                <Icon colorIcon="primary" icon="MENU_DOTS" />
+              </ContextMenu>
             </>
           )}
         </div>
