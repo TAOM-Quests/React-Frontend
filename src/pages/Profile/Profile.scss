@@ -1,0 +1,26 @@
+.profile {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 80px 15%;
+  gap: 20px;
+  background-color: var(--bg_body_primary);
+
+  &--header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+
+    @media (max-width: 1220px) {
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+
+  &--title {
+    color: var(--text_c_primary);
+  }
+}

@@ -11,7 +11,7 @@ export const userProfile: UserProfile = {
   patronymic: 'Robertovna',
   birthDate: new Date('07-08-2003'),
   sex: 'Female',
-  phone: '898-888-88-88',
+  phoneNumber: '898-888-88-88',
   completedQuests: [],
 }
 
@@ -23,8 +23,8 @@ export const employeeProfile: UserProfileEmployee = {
   patronymic: 'Olegovich',
   birthDate: new Date('08-12-2003'),
   sex: 'Male',
-  phone: '897-777-77-77',
+  phoneNumber: '897-777-77-77',
+  department: { id: 1, name: 'ПИ' },
   completedQuests: [],
-  position: 'Преподаватель',
-  department: 'ПИ',
+  position: { id: 1, name: 'Преподаватель' },
 }

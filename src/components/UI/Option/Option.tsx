@@ -5,9 +5,9 @@ import { ICON_MAP } from '../../../assets/icons'
 import { Checkbox } from '../Checkbox/Checkbox'
 import './Option.scss'
 
-export type OptionType = {
+export interface OptionProps {
   text: string
-  onSelect: (id: number, selected: boolean) => void
+  onSelect?: (id: number, selected: boolean) => void
   id?: number
   avatar?: {
     src: string
@@ -30,17 +30,17 @@ export const Option = ({
   isSelected = false,
   onSelect,
   className,
-}: OptionType) => {
+}: OptionProps) => {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.stopPropagation()
     if (!isMultiple) {
-      onSelect(id ?? 0, !isSelected)
+      onSelect?.(id ?? 0, !isSelected)
     }
   }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation()
-    onSelect(id ?? 0, !isSelected)
+    onSelect?.(id ?? 0, !isSelected)
   }
 
   const renderContent = () => {

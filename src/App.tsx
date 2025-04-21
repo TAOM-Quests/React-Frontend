@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import './assets/styles/style.scss'
 import { Dropdown, DropdownItemType } from './components/UI/Dropdown/Dropdown'
 import image from './assets/images/mem.png'
@@ -9,6 +9,7 @@ import { Modal } from './components/UI/Modal/Modal'
 
 import { Toggle } from './components/UI/Toggle/Toggle'
 import { Switcher } from './components/UI/Switcher/Switcher'
+import { NumberInput } from './components/UI/NumberInput/NumberInput'
 
 const items: DropdownItemType[] = [
   {
@@ -103,8 +104,26 @@ function App() {
     /*******  7aefc9c4-9c8f-41a9-b013-94e7217e48c4  *******/
     setActiveOption(option)
   }
+
+  const [value, setValue] = useState<number | null>(null)
+
+  // useCallback нужен для мемоизации функции
+  const handleChange = useCallback((newValue: number | null) => {
+    setValue(newValue)
+  }, [])
   return (
     <>
+      <div>
+        <NumberInput
+          label="123"
+          placeholder="85"
+          value={value}
+          onChange={handleChange}
+          min={0}
+          max={100}
+        />
+        <p>Значение: {value === null ? 'Пусто' : value}</p>
+      </div>
       <div>
         <Switcher
           options={options}

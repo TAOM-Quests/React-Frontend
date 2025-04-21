@@ -50,4 +50,9 @@
   &--click {
     cursor: pointer;
   }
+
+  &--disabled {
+    cursor: not-allowed !important;
+    user-select: none;
+  }
 }

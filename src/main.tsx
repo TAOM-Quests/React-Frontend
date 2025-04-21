@@ -8,7 +8,13 @@ import Profile from './pages/Profile/Profile.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import '../src/assets/styles/style.scss'
 import './assets/styles/style.scss'
-createRoot(document.getElementById('root')!).render(
+
+const container = document.getElementById('root')
+const root = createRoot(container!)
+
+document.documentElement.lang = 'ru' // Добавляем атрибут lang
+
+root.render(
   <BrowserRouter>
     <Provider store={setupStore()}>
       <Routes>

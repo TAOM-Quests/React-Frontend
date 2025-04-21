@@ -10,7 +10,6 @@ import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
 import { Option } from '../Option/Option'
 import { ICON_MAP } from '../../../assets/icons'
 import { Tag } from '../Tag/Tag'
-import React from 'react'
 import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
 import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
@@ -29,35 +28,34 @@ export interface DropdownItemType {
 
 export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   items: DropdownItemType[]
-  onChangeDropdown: (selected: number | number[] | null) => void
+  onChangeDropdown?: (
+    selectedItem: DropdownItemType | DropdownItemType[] | null,
+  ) => void
+  label?: string
   isMultiple?: boolean
+  helperText?: string
+  errorText?: string
 }
 
 export const Dropdown = ({
   items,
+  label,
   onChangeDropdown,
   id = generateRandomElementId('dropdown'),
   isMultiple = false,
+  disabled,
+  placeholder,
+  helperText,
+  errorText,
   ...props
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
-  const [singleSelectedItem, setSingleSelectedItem] =
-    useState<DropdownItemType | null>(null)
-
-  const [singleSelectedId, setSingleSelectedId] = useState<number | null>(null)
-  const [multipleSelectedIds, setMultipleSelectedIds] = useState<number[]>([])
+  const [selectedIds, setSelectedIds] = useState<number[]>(isMultiple ? [] : [])
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-
-  const handleFocus = () => {
-    setIsOpen(true)
-    if (!isMultiple) {
-      setSingleSelectedId(null)
-    }
-  }
 
   const focusInput = () => {
     setTimeout(() => {
@@ -65,63 +63,12 @@ export const Dropdown = ({
     }, 0)
   }
 
-  const handleBlur = () => {
-    setTimeout(() => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(document.activeElement) &&
-        !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
-      ) {
-        setIsOpen(false)
-      }
-    }, 200)
-  }
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value)
-  }
-
-  const toggleMultipleSelection = (itemId: number) => {
-    setMultipleSelectedIds(prevSelected => {
-      if (prevSelected.includes(itemId)) {
-        return prevSelected.filter(id => id !== itemId)
-      } else {
-        return [...prevSelected, itemId]
-      }
-    })
-  }
-
-  const handleSelect = useCallback(
-    (itemId: number, isRemoveAction = false) => {
-      if (isMultiple) {
-        toggleMultipleSelection(itemId)
-        if (!isRemoveAction) {
-          focusInput()
-        }
-      } else {
-        const selectedItem = items.find(item => item.id === itemId)
-        setSingleSelectedId(itemId)
-        setSingleSelectedItem(selectedItem ?? null)
-        setSearchValue(selectedItem?.text || '')
-        setIsOpen(false)
-      }
-    },
-    [items, isMultiple, setIsOpen],
-  )
-
-  useEffect(() => {
-    if (isMultiple) {
-      onChangeDropdown(
-        multipleSelectedIds.length > 0 ? multipleSelectedIds : null,
-      )
-    } else {
-      onChangeDropdown(singleSelectedId)
+  const handleFocus = () => {
+    setIsOpen(true)
+    if (!isMultiple) {
+      setSearchValue('')
     }
-  }, [singleSelectedId, multipleSelectedIds, isMultiple])
-
-  const filteredItems = items.filter(item =>
-    item.text.toLowerCase().includes(searchValue.toLowerCase()),
-  )
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -132,84 +79,110 @@ export const Dropdown = ({
         setIsOpen(false)
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside)
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [dropdownRef, setIsOpen])
+  }, [])
 
-  const renderInputValue = () => {
-    if (singleSelectedItem?.avatar) {
-      return (
-        <OptionAvatar
-          size="extraSmall"
-          avatarSrc={singleSelectedItem.avatar.src}
-          description={singleSelectedItem.avatar.description}
-          text={singleSelectedItem.text}
-        />
-      )
-    } else if (
-      singleSelectedItem?.iconBefore ||
-      singleSelectedItem?.iconAfter
-    ) {
-      return (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {singleSelectedItem.iconBefore && (
-            <Icon icon={singleSelectedItem.iconBefore} />
-          )}
-          <span style={{ marginLeft: '8px' }}>{singleSelectedItem.text}</span>
-          {singleSelectedItem.iconAfter && (
-            <Icon icon={singleSelectedItem.iconAfter} />
-          )}
-        </div>
-      )
+  const handleSelect = useCallback(
+    (itemId: number, isRemoveAction = false) => {
+      if (isMultiple) {
+        setSelectedIds(prev => {
+          const isSelected = prev.includes(itemId)
+          let newSelected: number[]
+          if (isSelected) {
+            newSelected = prev.filter(id => id !== itemId)
+          } else {
+            newSelected = [...prev, itemId]
+          }
+          onChangeDropdown?.(
+            newSelected.length > 0
+              ? items.filter(item => newSelected.includes(item.id))
+              : null,
+          )
+          if (!isRemoveAction) focusInput()
+          return newSelected
+        })
+      } else {
+        setSelectedIds([itemId])
+        const selectedItem = items.find(item => item.id === itemId) ?? null
+        onChangeDropdown?.(selectedItem)
+        setSearchValue(selectedItem?.text ?? '')
+        setIsOpen(false)
+      }
+    },
+    [isMultiple, items, onChangeDropdown],
+  )
+
+  const handleClearSelection = () => {
+    if (isMultiple) {
+      setSelectedIds([])
+      onChangeDropdown?.(null)
     } else {
-      return searchValue
+      setSelectedIds([])
+      setSearchValue('')
+      onChangeDropdown?.(null)
     }
   }
 
-  // Обработка выбора всех элементов через Checkbox
-  const handleCheckboxSelectAll = useCallback(() => {
-    if (multipleSelectedIds.length === items.length) {
-      handleDeselectAll()
-    } else {
-      handleSelectAll()
+  const filteredItems = items.filter(item =>
+    item.text.toLowerCase().includes(searchValue.toLowerCase()),
+  )
+
+  const renderInputValue = () => {
+    if (isMultiple) return searchValue
+    const selectedId = selectedIds[0]
+    const selectedItem = items.find(item => item.id === selectedId)
+    if (!selectedItem) return searchValue
+    if (selectedItem.avatar) {
+      return (
+        <OptionAvatar
+          size="extraSmall"
+          avatarSrc={selectedItem.avatar.src}
+          description={selectedItem.avatar.description}
+          text={selectedItem.text}
+        />
+      )
     }
-  }, [items, multipleSelectedIds])
-  // Выбрать все элементы
-  const handleSelectAll = useCallback(() => {
-    const selectAll = items.map(item => item.id)
-    setMultipleSelectedIds(selectAll)
-    focusInput()
-  }, [items, isMultiple])
+    if (selectedItem.iconBefore || selectedItem.iconAfter) {
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          {selectedItem.iconBefore && <Icon icon={selectedItem.iconBefore} />}
+          <span style={{ marginLeft: '8px' }}>{selectedItem.text}</span>
+          {selectedItem.iconAfter && <Icon icon={selectedItem.iconAfter} />}
+        </div>
+      )
+    }
+    return selectedItem.text
+  }
 
-  // Убрать выделение со всех элементов
-  const handleDeselectAll = useCallback(() => {
-    setMultipleSelectedIds([])
-    focusInput()
-  }, [isMultiple])
-
-  const handleClearSelection = () => {
-    setSingleSelectedItem(null)
-    setSearchValue('')
+  const handleCheckboxSelectAll = () => {
+    if (selectedIds.length === items.length) {
+      setSelectedIds([])
+      onChangeDropdown?.(null)
+    } else {
+      setSelectedIds(items.map(item => item.id))
+      onChangeDropdown?.(items)
+      focusInput()
+    }
   }
 
   return (
     <div ref={dropdownRef} data-dropdown-id={id} className="dropdown-container">
-      {isMultiple && (
-        <div className={multipleSelectedIds.length > 0 ? 'selected-items' : ''}>
-          {multipleSelectedIds.map(itemId => {
+      {isMultiple && selectedIds.length > 0 && (
+        <div className="selected-items">
+          {selectedIds.map(itemId => {
             const item = items.find(item => item.id === itemId)
+            if (!item) return null
             return (
               <span key={itemId} className="selected-item">
                 <Tag
-                  text={item?.text || ''}
-                  avatarSrc={item?.avatar?.src}
-                  description={item?.avatar?.description}
-                  iconBefore={item?.iconBefore}
-                  iconAfter={item?.iconAfter}
+                  text={item.text}
+                  avatarSrc={item.avatar?.src}
+                  description={item.avatar?.description}
+                  iconBefore={item.iconBefore}
+                  iconAfter={item.iconAfter}
                   onRemove={() => handleSelect(itemId, true)}
                 />
               </span>
@@ -217,15 +190,31 @@ export const Dropdown = ({
           })}
         </div>
       )}
+
       <Input
         ref={inputRef}
+        label={label}
         type="text"
         iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
-        onClickIconAfter={() => setIsOpen(!isOpen)}
-        valueInput={renderInputValue()}
-        onChange={handleSearch}
+        onClickIconAfter={disabled ? undefined : () => setIsOpen(!isOpen)}
+        value={renderInputValue()}
+        onChange={e => setSearchValue(e.target.value)}
         onFocus={handleFocus}
-        onBlur={handleBlur}
+        onBlur={() => {
+          setTimeout(() => {
+            if (
+              dropdownRef.current &&
+              !dropdownRef.current.contains(document.activeElement) &&
+              !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
+            ) {
+              setIsOpen(false)
+            }
+          }, 200)
+        }}
+        disabled={disabled}
+        placeholder={placeholder}
+        helperText={helperText}
+        errorText={errorText}
         onClearSelection={handleClearSelection}
         {...props}
       />
@@ -237,7 +226,9 @@ export const Dropdown = ({
               id="selectAll"
               className="dropdown-checkbox"
               label="Выбрать все"
-              isSelected={multipleSelectedIds.length === items.length}
+              isSelected={
+                selectedIds.length === items.length && items.length > 0
+              }
               onChange={handleCheckboxSelectAll}
             />
           )}
@@ -252,8 +243,8 @@ export const Dropdown = ({
               isMultiple={isMultiple}
               isSelected={
                 isMultiple
-                  ? multipleSelectedIds.includes(item.id)
-                  : singleSelectedId === item.id
+                  ? selectedIds.includes(item.id)
+                  : selectedIds[0] === item.id
               }
               onSelect={handleSelect}
             />

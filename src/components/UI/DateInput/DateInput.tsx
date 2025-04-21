@@ -1,7 +1,7 @@
 import {
-  useState,
   useEffect,
   useRef,
+  useState,
   ChangeEvent,
   KeyboardEvent,
   InputHTMLAttributes,
@@ -10,200 +10,155 @@ import './DateInput.scss'
 import { ButtonCalendar } from '../ButtonCalendar/ButtonCalendar'
 import { Button } from '../Button/Button'
 import Input from '../Input/Input'
+import moment, { Moment } from 'moment'
+import 'moment/locale/ru'
 
-export interface DateInputProps extends InputHTMLAttributes<HTMLInputElement> {
+moment.locale('ru')
+
+const DATE_FORMAT = 'DD.MM.YYYY'
+
+export interface DateInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value'> {
   onDateSelect: (date: Date | null) => void
+  label?: string
+  value?: Date | null
   isRequired?: boolean
+  helperText?: string | null
+  errorText?: string | null
 }
 
 export const DateInput = ({
+  label,
+  value,
   onDateSelect,
   isRequired = false,
+  disabled,
+  helperText,
+  errorText,
   ...props
 }: DateInputProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [valueDate, setValueDate] = useState<Date | null>(null)
-  const [valueInput, setValueInput] = useState('')
+  const [date, setDate] = useState<Moment | null>(value ? moment(value) : null)
+  const [inputValue, setInputValue] = useState<string>(
+    value ? moment(value).format(DATE_FORMAT) : '',
+  )
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [dateError, setDateError] = useState<string | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [currentDate, setCurrentDate] = useState<Moment>(date || moment())
   const calendarRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<SVGSVGElement>(null)
 
-  const monthNames = [
-    'Янв',
-    'Фев',
-    'Март',
-    'Апр',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Авг',
-    'Сент',
-    'Окт',
-    'Ноя',
-    'Дек',
-  ]
+  moment.updateLocale('ru', {
+    months: [
+      'Январь',
+      'Февраль',
+      'Mарт',
+      'Апрель',
+      'Май',
+      'Июнь',
+      'Июль',
+      'Август',
+      'Сентябрь',
+      'Октябрь',
+      'Ноябрь',
+      'Декабрь',
+    ],
+    monthsShort: [
+      'Янв',
+      'Фев',
+      'Мар',
+      'Апр',
+      'Май',
+      'Июн',
+      'Июл',
+      'Авг',
+      'Сен',
+      'Окт',
+      'Ноя',
+      'Дек',
+    ],
+  })
 
   useEffect(() => {
-    if (valueDate) {
-      setValueInput(formatDate(valueDate))
-      onDateSelect(valueDate)
+    if (value) {
+      const m = moment(value)
+      setDate(m)
+      setCurrentDate(m)
+      setInputValue(m.format(DATE_FORMAT))
     } else {
-      setValueInput('')
-      onDateSelect(null)
+      setDate(null)
+      setInputValue('')
+      setCurrentDate(moment())
     }
-  }, [valueDate, onDateSelect])
-
-  const formatDate = (date: Date): string => {
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const year = date.getFullYear()
-    return `${day}.${month}.${year}`
-  }
-
-  const parseDate = (dateString: string): Date | null => {
-    const parts = dateString.split('.')
-    if (parts.length === 3) {
-      const day = parseInt(parts[0], 10)
-      const month = parseInt(parts[1], 10) - 1
-      const year = parseInt(parts[2], 10)
-
-      if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-        const newDate = new Date(year, month, day)
-        if (
-          newDate.getDate() === day &&
-          newDate.getMonth() === month &&
-          newDate.getFullYear() === year
-        ) {
-          return newDate
-        }
-      }
-    }
-    return null
-  }
+  }, [value])
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value
-    value = value.replace(/[^0-9]/g, '')
-
-    // Маска для ввода
-    if (value.length > 8) {
-      value = value.slice(0, 8)
-    }
-
+    const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 8)
     let formattedValue = ''
     if (value.length > 2) {
       formattedValue = value.slice(0, 2) + '.' + value.slice(2)
     } else {
       formattedValue = value
     }
-
     if (formattedValue.length > 5) {
       formattedValue =
         formattedValue.slice(0, 5) + '.' + formattedValue.slice(5)
     }
-
-    setValueInput(formattedValue)
-
-    const parsedDate = parseDate(formattedValue)
-    if (parsedDate) {
-      setValueDate(parsedDate)
-    } else {
-      setValueDate(null)
-    }
-
-    if (isOpen) {
-      setIsOpen(false)
-    }
-    setDateError(null)
-  }
-
-  const validateDate = (dateString: string): boolean => {
-    if (!isRequired && !dateString) {
-      setDateError(null)
-      onDateSelect(null)
-      return true
-    }
-
-    const parsedDate = parseDate(dateString)
-    if (parsedDate) {
-      setDateError(null)
-      onDateSelect(parsedDate)
-      return true
-    } else {
-      setDateError('Некорректная дата')
-      onDateSelect(null)
-      return false
-    }
+    setInputValue(formattedValue)
   }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      const isValid = validateDate(valueInput)
-      if (valueInput.length === 10 && isValid) {
-        toggleCalendar()
+      const isValid = !errorText ? inputValue : ''
+      if (inputValue.length === 10 && isValid) {
+        setIsOpen(prev => !prev)
       }
     }
   }
 
   const toggleCalendar = () => {
-    setIsOpen(!isOpen)
-    if (!isOpen && valueDate) {
-      setCurrentDate(new Date(valueDate))
-    } else {
-      setCurrentDate(new Date())
-    }
+    setIsOpen(open => !open)
+    setCurrentDate(date || moment())
     setView('days')
   }
 
   const handleDayClick = (day: number) => {
-    const newDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day,
-    )
-    setValueDate(newDate)
+    const newDate = currentDate.clone().date(day)
+    setDate(newDate)
+    setCurrentDate(newDate)
+    setInputValue(newDate.format(DATE_FORMAT))
+    onDateSelect(newDate.toDate())
     setIsOpen(false)
-    setDateError(null)
   }
-
   const handleMonthClick = (monthIndex: number) => {
-    setCurrentDate(prevDate => new Date(prevDate.getFullYear(), monthIndex, 1))
+    setCurrentDate(currentDate.clone().month(monthIndex).date(1))
     setView('days')
   }
 
   const handleYearClick = (year: number) => {
-    setCurrentDate(prevDate => new Date(year, prevDate.getMonth(), 1))
+    setCurrentDate(currentDate.clone().year(year).month(0).date(1))
     setView('months')
   }
 
   const goToPrevious = () => {
-    if (view === 'days') {
-      setCurrentDate(
-        prevDate =>
-          new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1),
-      )
-    } else if (view === 'months') {
-      setCurrentDate(prevDate => new Date(prevDate.getFullYear() - 1, 0, 1))
-    } else if (view === 'years') {
-      setCurrentDate(prevDate => new Date(prevDate.getFullYear() - 10, 0, 1))
-    }
+    setCurrentDate(
+      currentDate
+        .clone()
+        .subtract(
+          view === 'days' ? 1 : view === 'months' ? 1 : 10,
+          view === 'days' ? 'month' : 'year',
+        ),
+    )
   }
-
   const goToNext = () => {
-    if (view === 'days') {
-      setCurrentDate(
-        prevDate =>
-          new Date(prevDate.getFullYear(), prevDate.getMonth() + 1, 1),
-      )
-    } else if (view === 'months') {
-      setCurrentDate(prevDate => new Date(prevDate.getFullYear() + 1, 0, 1))
-    } else if (view === 'years') {
-      setCurrentDate(prevDate => new Date(prevDate.getFullYear() + 10, 0, 1))
-    }
+    setCurrentDate(
+      currentDate
+        .clone()
+        .add(
+          view === 'days' ? 1 : view === 'months' ? 1 : 10,
+          view === 'days' ? 'month' : 'year',
+        ),
+    )
   }
 
   const showMonths = () => {
@@ -214,23 +169,14 @@ export const DateInput = ({
     setView('years')
   }
 
-  const getDaysInMonth = (date: Date): number => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-  }
-
-  const getFirstDayOfMonth = (date: Date): number => {
-    const day = new Date(date.getFullYear(), date.getMonth(), 1).getDay()
-    return day === 0 ? 6 : day - 1 // Сдвигаем дни недели, чтобы понедельник был первым днем (0)
-  }
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        isOpen && // Проверяем, что календарь открыт
+        isOpen &&
         calendarRef.current &&
         !calendarRef.current.contains(event.target as Node) &&
         iconRef.current &&
-        !iconRef.current.contains(event.target as Node) // Проверяем, что клик был не по иконке
+        !iconRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
       }
@@ -241,35 +187,35 @@ export const DateInput = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [calendarRef, setIsOpen, isOpen])
+  }, [isOpen])
 
   const renderDays = () => {
-    const daysInMonth = getDaysInMonth(currentDate)
-    const firstDayOfMonth = getFirstDayOfMonth(currentDate)
+    const daysInMonth = currentDate.daysInMonth()
+    const firstDayOfMonth = currentDate.clone().startOf('month').day()
     const weekdays = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС']
-    const today = new Date()
-    const isToday = (day: number) =>
-      today.getDate() === day &&
-      today.getMonth() === currentDate.getMonth() &&
-      today.getFullYear() === currentDate.getFullYear()
+    const today = moment()
 
-    const days: JSX.Element[] = []
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      days.push(<div key={`empty-${i}`} />)
+    const isToday = (day: number) => {
+      return (
+        today.date() === day &&
+        today.month() === currentDate.month() &&
+        today.year() === currentDate.year()
+      )
     }
 
+    const days: JSX.Element[] = []
+    for (
+      let i = 0;
+      i < (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+      i++
+    ) {
+      days.push(<div key={`empty-${i}`} />)
+    }
     for (let i = 1; i <= daysInMonth; i++) {
-      const date = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        i,
-      )
-      const dayOfWeek = date.getDay() // 0 (Вс) - 6 (Сб)
+      const selectedDate = currentDate.clone().date(i)
+      const dayOfWeek = selectedDate.day()
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
-      const isSelected =
-        valueDate?.getDate() === i &&
-        valueDate?.getMonth() === currentDate.getMonth() &&
-        valueDate?.getFullYear() === currentDate.getFullYear()
+      const isSelected = date && moment(date).isSame(selectedDate, 'day')
 
       let dayColorType: string
       if (isToday(i)) {
@@ -314,6 +260,7 @@ export const DateInput = ({
   }
 
   const renderMonths = () => {
+    const monthNames = moment.monthsShort()
     return monthNames.map((month, index) => (
       <ButtonCalendar
         key={month}
@@ -324,7 +271,7 @@ export const DateInput = ({
   }
 
   const renderYears = () => {
-    const startYear = Math.floor(currentDate.getFullYear() / 20) * 20
+    const startYear = Math.floor(currentDate.year() / 20) * 20
     const years = Array.from({ length: 20 }, (_, i) => startYear + i)
 
     return years.map(year => (
@@ -336,16 +283,20 @@ export const DateInput = ({
     ))
   }
 
-  const handleFocus = () => {
-    setDateError(null)
-  }
-
   const handleBlur = () => {
-    validateDate(valueInput)
+    const parsed = moment.utc(inputValue, DATE_FORMAT, true)
+    if (parsed.isValid()) {
+      setDate(parsed)
+      setCurrentDate(parsed)
+      setInputValue(parsed.format(DATE_FORMAT)) // форматируем строго
+      onDateSelect(parsed.toDate())
+    } else {
+      // Восстанавливаем последнее валидное значение
+      setInputValue(date ? date.format(DATE_FORMAT) : '')
+    }
   }
 
   let calendarContent: JSX.Element = <></>
-
   if (isOpen) {
     calendarContent = (
       <div className="calendar" ref={calendarRef}>
@@ -359,25 +310,21 @@ export const DateInput = ({
           {view === 'days' && (
             <Button
               colorType="subdued"
-              text={
-                monthNames[currentDate.getMonth()] +
-                ' ' +
-                currentDate.getFullYear()
-              }
+              text={moment(currentDate).format('MMMM YYYY')}
               onClick={showMonths}
             />
           )}
           {view === 'months' && (
             <Button
               colorType="subdued"
-              text={currentDate.getFullYear().toString()}
+              text={currentDate.format('YYYY')}
               onClick={showYears}
             />
           )}
           {view === 'years' && (
             <span className="body_m_b calendar--title">
-              {Math.floor(currentDate.getFullYear() / 20) * 20} -{' '}
-              {Math.floor(currentDate.getFullYear() / 20) * 20 + 19}
+              {Math.floor(currentDate.year() / 20) * 20} -{' '}
+              {Math.floor(currentDate.year() / 20) * 20 + 19}
             </span>
           )}
           <Button
@@ -404,18 +351,19 @@ export const DateInput = ({
     <div className="calendar-input-container">
       <Input
         type="text"
-        value={valueInput}
+        label={label}
+        value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleInputKeyDown}
-        ref={inputRef}
         placeholder="ДД.ММ.ГГГГ"
         maxLength={10}
         iconAfter="CALENDAR"
-        onClickIconAfter={toggleCalendar}
+        disabled={disabled}
+        onClickIconAfter={disabled ? undefined : toggleCalendar}
         onBlur={handleBlur}
         iconRefAfter={iconRef}
-        onFocus={handleFocus}
-        errorText={dateError ? dateError : null}
+        errorText={errorText ? errorText : null}
+        helperText={helperText}
         {...props}
       />
       {calendarContent}

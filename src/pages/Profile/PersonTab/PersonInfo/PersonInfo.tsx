@@ -3,6 +3,24 @@ import { Input } from '../../../../components/UI/Input/Input'
 import { UserProfile } from '../../../../models/userProfile'
 import { ProfileField } from '../interface/profileField'
 import { users } from '../../../../services/api/userModule/users/users'
+import { Icon } from '../../../../components/UI/Icon/Icon'
+import { Button } from '../../../../components/UI/Button/Button'
+import './PersonInfo.scss'
+import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
+import { Avatar } from '../../../../components/UI/Avatar/Avatar'
+import { DateInput } from '../../../../components/UI/DateInput/DateInput'
+import {
+  Dropdown,
+  DropdownItemType,
+} from '../../../../components/UI/Dropdown/Dropdown'
+import {
+  validateDateOfBirth,
+  validateName,
+  validateEmail,
+  validatePhone,
+} from '../../../../validation/validators'
+
+import { MaskedInput } from '../../../../components/MaskedInput/MaskedInput'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -18,37 +36,75 @@ export default function PersonInfo({
   const [patronymic, setPatronymic] = useState(profile.patronymic)
   const [sex, setSex] = useState(profile.sex)
   const [birthDate, setBirthDate] = useState(profile.birthDate)
-  const [phone, setPhone] = useState(profile.phone)
+  const [phoneNumber, setPhoneNumber] = useState(profile.phoneNumber)
   const [email, setEmail] = useState(profile.email)
+
+  const handleDateSelect = (date: Date | null) => {
+    setBirthDate(date)
+  }
+
+  const handleChangeSex = (
+    selectedItem: DropdownItemType | DropdownItemType[] | null,
+  ) => {
+    if (selectedItem !== null && !Array.isArray(selectedItem)) {
+      setSex(selectedItem.text)
+    } else {
+      setSex('')
+    }
+  }
 
   const [changingMode, setChangingMode] = useState(false)
 
-  const personFields: ProfileField[] = [
+  const lastNameValidator = validateName(lastName, false)
+  const firstNameValidator = validateName(firstName, false)
+  const patronymicValidator = validateName(patronymic, false)
+  const birthDateValidator = validateDateOfBirth(birthDate, false)
+  const emailValidator = validateEmail(email, false)
+  const phoneNumberValidator = validatePhone(phoneNumber, false)
+
+  const personFieldsNames: ProfileField[] = [
     {
       name: 'Фамилия',
+      placeholder: 'Введите фамилию',
       value: lastName,
       onChange: e => setLastName(e.target.value),
+      error: lastNameValidator.error,
     },
     {
       name: 'Имя',
+      placeholder: 'Введите имя',
       value: firstName,
       onChange: e => setFirstName(e.target.value),
+      error: firstNameValidator.error,
     },
     {
       name: 'Отчество',
+      placeholder: 'Введите отчество',
       value: patronymic,
       onChange: e => setPatronymic(e.target.value),
+      error: patronymicValidator.error,
     },
-    { name: 'Пол', value: sex, onChange: e => setSex(e.target.value) },
-    // {
-    //   name: 'Дата рождения',
-    //   value: birthDate
-    //     ? new Date(birthDate).toDateString()
-    //     : '',
-    //     onChange: (e) => setBirthDate(new Date(e.target.value))
-    // },
-    { name: 'Телефон', value: phone, onChange: e => setPhone(e.target.value) },
-    { name: 'Email', value: email, onChange: e => setEmail(e.target.value) },
+  ]
+
+  const sexItems: DropdownItemType[] = [
+    {
+      id: 0,
+      text: 'Мужской',
+    },
+    {
+      id: 1,
+      text: 'Женский',
+    },
+  ]
+
+  const personFieldsContacts: ProfileField[] = [
+    {
+      name: 'Почта',
+      placeholder: 'Введите почту',
+      value: email,
+      onChange: e => setEmail(e.target.value),
+      error: emailValidator.error,
+    },
   ]
 
   const toggleChangingMode = async () => {
@@ -59,15 +115,17 @@ export default function PersonInfo({
         firstName,
         lastName,
         patronymic,
-        // birthDate: birthDate.toISOString(),
+        birthDate: birthDate instanceof Date ? birthDate.toISOString() : null,
         sex,
-        phone,
+        phoneNumber,
       })
 
       updateProfile({
         ...profile,
         ...updatedFields,
-        birthDate: new Date(updatedFields.birthDate),
+        birthDate: updatedFields.birthDate
+          ? new Date(updatedFields.birthDate)
+          : null,
       })
     }
 
@@ -75,24 +133,92 @@ export default function PersonInfo({
   }
 
   return (
-    <div>
-      <h1>
-        {lastName} {firstName} {patronymic}
-      </h1>
-      <button className="change-inputs" onClick={toggleChangingMode}>
-        {changingMode ? 'Сохранить' : 'Изменить'}
-      </button>
-
-      <div className="person-info">
-        {personFields.map(field => (
-          <Input
-            className="person-field"
-            label={field.name}
-            value={field.value}
+    <div className="personInfo">
+      <div className="personInfo--header">
+        <Icon icon="MENU_DOTS" />
+        <Button
+          text={changingMode ? 'Сохранить' : 'Изменить профиль'}
+          colorType={changingMode ? 'primary' : 'secondary'}
+          onClick={() => {
+            if (
+              birthDateValidator.isValid &&
+              firstNameValidator.isValid &&
+              lastNameValidator.isValid &&
+              patronymicValidator.isValid &&
+              emailValidator.isValid &&
+              phoneNumberValidator.isValid
+            ) {
+              toggleChangingMode()
+            }
+          }}
+          iconBefore={!changingMode ? 'EDIT' : undefined}
+        />
+      </div>
+      <div className="personInfo_containerBoxs">
+        <ContainerBox>
+          <div className="personInfo--info">
+            <Avatar size="extraLarge" isRound={false} />
+            <div className="personInfo--personFields">
+              <div className="personInfo--personFieldsNames">
+                {personFieldsNames.map(field => (
+                  <Input
+                    key={field.name}
+                    className="personInfo--field"
+                    label={field.name}
+                    placeholder={field.placeholder}
+                    value={field.value}
+                    disabled={!changingMode}
+                    onChange={e => field.onChange?.(e)}
+                    errorText={field.error}
+                  />
+                ))}
+              </div>
+              <div className="personInfo--personFieldsInfo">
+                <Dropdown
+                  items={sexItems}
+                  value={sex}
+                  label="Пол"
+                  placeholder="Выберите вариант"
+                  disabled={!changingMode}
+                  onChangeDropdown={handleChangeSex}
+                />
+                <DateInput
+                  label="Дата рождения"
+                  placeholder="Введите дату рождения"
+                  value={birthDate}
+                  disabled={!changingMode}
+                  onDateSelect={handleDateSelect}
+                  errorText={birthDateValidator.error}
+                />
+              </div>
+            </div>
+          </div>
+        </ContainerBox>
+        <ContainerBox className="personInfo_containerBoxs--right">
+          <h6 className="heading_6">Контактные данные</h6>
+          {personFieldsContacts.map(field => (
+            <Input
+              key={field.name}
+              className="personInfo--field"
+              type="text"
+              label={field.name}
+              placeholder={field.placeholder}
+              value={field.value}
+              disabled={!changingMode}
+              onChange={e => field.onChange?.(e)}
+              errorText={field.error}
+            />
+          ))}
+          <MaskedInput
+            mask="+7 (999) 999-99-99"
+            value={phoneNumber}
+            onChange={e => setPhoneNumber(e.target.value)}
+            label="Телефон"
+            placeholder="+7 (___) ___-__-__"
             disabled={!changingMode}
-            onChange={e => field.onChange?.(e)}
+            errorText={phoneNumberValidator.error}
           />
-        ))}
+        </ContainerBox>
       </div>
     </div>
   )

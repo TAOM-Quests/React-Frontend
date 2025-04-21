@@ -45,20 +45,20 @@ export const EventCreateSchedule = ({
         <div className="schedule-item" key={`schedule-item-${index}`}>
           <Input
             iconAfter="TIME"
-            inputValue={item.timeStart.getTime()}
+            value={new Date(item.timeStart).getTime()}
             onChange={e =>
               changeScheduleItem('timeStart', new Date(e.target.value), index)
             }
           />
           <Input
             iconAfter="TIME"
-            inputValue={item.timeEnd.getTime()}
+            value={new Date(item.timeEnd).getTime()}
             onChange={e =>
               changeScheduleItem('timeEnd', new Date(e.target.value), index)
             }
           />
           <Input
-            inputValue={item.name}
+            value={item.name}
             onChange={e => changeScheduleItem('name', e.target.value, index)}
           />
           <Icon icon="DELETE" onClick={() => removeScheduleItem(index)} />

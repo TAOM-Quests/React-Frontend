@@ -13,15 +13,18 @@ import {
 } from 'react'
 import React from 'react'
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
   label?: string
+  mask?: string
+  value?: string | number | ReactNode
   inputRef?: ForwardedRef<HTMLInputElement>
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   iconAfter?: keyof typeof ICON_MAP
   errorText?: string | null
+  disabled?: boolean
   helperText?: string | null
   iconBefore?: keyof typeof ICON_MAP
-  valueInput?: string | number | ReactNode
   iconRefAfter?: ForwardedRef<SVGSVGElement>
   onClickIconAfter?: () => void
   onClearSelection?: () => void
@@ -36,7 +39,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errorText,
       iconBefore,
       iconAfter,
-      valueInput,
+      value,
       onChange,
       type,
       iconRefAfter,
@@ -59,12 +62,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     useEffect(() => {
       setIsInputVisible(
-        valueInput === null ||
-          valueInput === undefined ||
-          typeof valueInput === 'string' ||
-          typeof valueInput === 'number',
+        value === null ||
+          value === undefined ||
+          typeof value === 'string' ||
+          typeof value === 'number',
       )
-    }, [valueInput])
+    }, [value])
 
     useImperativeHandle(
       combinedRef,
@@ -112,7 +115,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             onClick={handleDivClick}
           >
-            {valueInput}
+            {value}
           </div>
 
           <input
@@ -125,8 +128,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             type={type}
             value={
-              typeof valueInput === 'string' || typeof valueInput === 'number'
-                ? valueInput
+              typeof value === 'string' || typeof value === 'number'
+                ? value
                 : ''
             }
             onChange={handleChange}
@@ -139,10 +142,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             }}
             onBlur={e => {
               if (
-                valueInput !== null &&
-                valueInput !== undefined &&
-                typeof valueInput !== 'string' &&
-                typeof valueInput !== 'number'
+                value !== null &&
+                value !== undefined &&
+                typeof value !== 'string' &&
+                typeof value !== 'number'
               ) {
                 setIsInputVisible(false)
               }
@@ -151,11 +154,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {onClearSelection &&
-            valueInput &&
-            (typeof valueInput === 'string' ||
-              typeof valueInput === 'number') && (
+            value &&
+            (typeof value === 'string' || typeof value === 'number') && (
               <Icon
                 icon="CROSS"
+                disabled={disabled}
                 onClick={() => {
                   onClearSelection?.()
                   internalInputRef.current?.focus()

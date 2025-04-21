@@ -16,7 +16,7 @@ export const userProfile: UserProfile = {
   patronymic: 'Robertovna',
   birthDate: new Date('07-08-2003'),
   sex: 'Female',
-  phone: '898-888-88-88',
+  phoneNumber: '898-888-88-88',
   completedQuests: []
 }
 
@@ -28,7 +28,7 @@ export const typePersonFields: ProfileUpdateDto = {
   patronymic: 'Олегович',
   birthDate: '28-06-2003',
   sex: 'Мужской',
-  phone: '8-927-777-77-77'
+  phoneNumber: '8-927-777-77-77'
 }
 
 export const updatedProfile: UserProfileUpdated = {
@@ -38,5 +38,5 @@ export const updatedProfile: UserProfileUpdated = {
   patronymic: 'Олегович',
   birthDate: '28-06-2003',
   sex: 'Мужской',
-  phone: '8-927-777-77-77',
+  phoneNumber: '8-927-777-77-77',
 }

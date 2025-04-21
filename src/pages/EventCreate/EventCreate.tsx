@@ -188,7 +188,7 @@ export const EventCreate = () => {
       <Input
         label="Название мероприятия"
         onChange={e => setName(e.target.value)}
-        valueInput={name}
+        value={name}
       />
       <Dropdown
         id="event-type-dropdown"
@@ -232,42 +232,42 @@ export const EventCreate = () => {
     <div className="places">
       <Input
         label="Адрес"
-        valueInput={address}
+        value={address}
         onChange={e => setAddress(e.target.value)}
       />
       <Input
         label="Этаж"
-        valueInput={floor}
+        value={floor}
         onChange={e => setFloor(+e.target.value)}
       />
       <Input
         label="Аудитория"
-        valueInput={officeNumber}
+        value={officeNumber}
         onChange={e => setOfficeNumber(e.target.value)}
       />
       <Input
         label="Площадка"
-        valueInput={platform}
+        value={platform}
         onChange={e => setPlatform(e.target.value)}
       />
       <Input
         label="Ссылка для подключения"
-        valueInput={connectionLink}
+        value={connectionLink}
         onChange={e => setConnectionLink(e.target.value)}
       />
       <Input
         label="Ссылка на запись и презентацию"
-        valueInput={recordLink}
+        value={recordLink}
         onChange={e => setRecordLink(e.target.value)}
       />
       <Input
         label="Идентификатор"
-        valueInput={identifier}
+        value={identifier}
         onChange={e => setIdentifier(e.target.value)}
       />
       <Input
         label="Код доступа"
-        valueInput={accessCode}
+        value={accessCode}
         onChange={e => setAccessCode(e.target.value)}
       />
     </div>

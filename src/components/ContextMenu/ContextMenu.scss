@@ -1,0 +1,14 @@
+.context-menu {
+  position: absolute;
+  z-index: 1000;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  top: 24px;
+  right: 0;
+
+  &__box {
+    padding: 4px;
+    gap: 6px;
+  }
+}

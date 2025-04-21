@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import TabButton from '../../components/TabButton/TabButton'
 import { users } from '../../services/api/userModule/users/users'
 import { selectAuth, setUser } from '../../redux/auth/authSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux/reduxHooks'
@@ -7,7 +6,8 @@ import { UserProfile } from '../../models/userProfile'
 import PersonTab from './PersonTab/PersonTab'
 import { useNavigate } from 'react-router'
 import EventsTab from './EventsTab/EventsTab'
-
+import { Switcher } from '../../components/UI/Switcher/Switcher'
+import './Profile.scss'
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
 export default function Profile() {
@@ -55,15 +55,16 @@ export default function Profile() {
   }
 
   return (
-    <div>
-      {TABS.map((tab, index) => (
-        <TabButton
-          text={tab}
-          key={index}
-          isActive={tabIndex === index}
-          onClick={() => setTabIndex(index)}
+    <div className="profile">
+      <div className="profile--header">
+        <h5 className="heading_5 profile--title">Личный кабинет</h5>
+        <Switcher
+          options={TABS}
+          onChange={option => setTabIndex(TABS.indexOf(option))}
+          activeOption={TABS[tabIndex]}
         />
-      ))}
+      </div>
+
       {profile && getActiveTab()}
     </div>
   )
