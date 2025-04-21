@@ -25,6 +25,7 @@ export interface EventsTabProps {
 }
 
 export default function EventsTab({ user }: EventsTabProps) {
+  const navigate = useNavigate()
   const [filter, setFilter] = useState<EventsFilter>({})
   const [userEvents, setEvents] = useState<EventMinimize[] | null>(null)
 
@@ -88,7 +89,6 @@ export default function EventsTab({ user }: EventsTabProps) {
       }
     }
 
-  const navigate = useNavigate()
   return (
     <div className="profile_events">
       <div className="profile_events--filters">
@@ -117,7 +117,7 @@ export default function EventsTab({ user }: EventsTabProps) {
             />
 
             <Button
-              onClick={() => navigate('event/create')}
+              onClick={() => navigate('/event/create')}
               text="Создать мероприятие"
               colorType="primary"
             />
