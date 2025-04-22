@@ -16,7 +16,7 @@ import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
-import { EventCreateDto } from '../../services/api/eventModule/events/eventsDto'
+import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -113,26 +113,31 @@ export const EventCreate = () => {
 
   const saveEvent = async () => {
     try {
-      const eventCreate: EventCreateDto = {
-        departmentId: user!.departmentId!,
-      }
+      const eventUpdate: EventUpdateDto = {}
 
-      if (name) eventCreate.name = name
-      if (type) eventCreate.typeId = type.id
-      if (description) eventCreate.description = description
-      if (seatsNumber) eventCreate.seatsNumber = seatsNumber
-      if (getPlaces().length) eventCreate.places = getPlaces()
-      if (schedule.length) eventCreate.schedule = schedule
+      if (name) eventUpdate.name = name
+      if (type) eventUpdate.typeId = type.id
+      if (description) eventUpdate.description = description
+      if (seatsNumber) eventUpdate.seatsNumber = seatsNumber
+      if (getPlaces().length) eventUpdate.places = getPlaces()
+      if (schedule.length) eventUpdate.schedule = schedule
       if (executors.length) {
-        eventCreate.executorsIds = executors.map(executor => executor.id)
+        eventUpdate.executorsIds = executors.map(executor => executor.id)
       }
-      if (image) eventCreate.imageId = image.id
-      if (files.length) eventCreate.filesIds = files.map(file => file.id)
+      if (image) eventUpdate.imageId = image.id
+      if (files.length) eventUpdate.filesIds = files.map(file => file.id)
 
-      const event = await events.create(eventCreate)
+      if (!eventId) {
+        const event = await events.create({
+          ...eventUpdate,
+          departmentId: user!.departmentId!,
+        })
 
-      if (!window.location.pathname.includes(`${event.id}`)) {
-        navigate(`/event/${event.id}/edit`)
+        if (!window.location.pathname.includes(`${event.id}`)) {
+          navigate(`/event/${event.id}/edit`)
+        }
+      } else {
+        await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
       console.log(e)
@@ -178,7 +183,7 @@ export const EventCreate = () => {
           colorType="secondary"
           iconBefore="ARROW_SMALL_LEFT"
         />
-        <Button colorType="primary" text="Создать" />
+        <Button text="Сохранить" onClick={saveEvent} />
       </div>
     </div>
   )
@@ -198,8 +203,8 @@ export const EventCreate = () => {
         }))}
         onChangeDropdown={selected =>
           setType(
-            selected
-              ? (eventTypes.find(type => type.id === +selected) ?? null)
+            !Array.isArray(selected) && selected
+              ? (eventTypes.find(type => type.id === +selected.id) ?? null)
               : null,
           )
         }
@@ -216,7 +221,7 @@ export const EventCreate = () => {
           },
         }))}
         onChangeDropdown={selected =>
-          setExecutors(prevExecutors =>
+          setExecutors(() =>
             eventExecutors.filter(executor =>
               Array.isArray(selected)
                 ? selected.some(sel => sel.id === executor.id)
@@ -277,8 +282,8 @@ export const EventCreate = () => {
     <>
       {!isLoading ? (
         <>
-          <EventCreateImage image={image} setImage={setImage} />
           {renderStateButtons()}
+          <EventCreateImage image={image} setImage={setImage} />
           <TextEditor
             value={description ?? ''}
             onChange={e => setDescription(e.editor.getHTML())}
@@ -287,7 +292,6 @@ export const EventCreate = () => {
           {renderPlaces()}
           <EventCreateSchedule schedule={schedule} setSchedule={setSchedule} />
           <EventCreateFiles files={files} setFiles={setFiles} />
-          <Button text="Сохранить" onClick={saveEvent} />
         </>
       ) : (
         <div>Loading</div>

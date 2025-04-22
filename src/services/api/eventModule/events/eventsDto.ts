@@ -31,3 +31,18 @@ export interface EventCreateDto {
   schedule?: ScheduleItem[]
   places?: (PlaceOnline | PlaceOffline)[]
 }
+
+export interface EventUpdateDto {
+  date?: Date
+  name?: string
+  typeId?: number
+  imageId?: number
+  statusId?: number
+  filesIds?: number[]
+  description?: string
+  inspectorId?: number
+  seatsNumber?: number
+  executorsIds?: number[]
+  schedule?: ScheduleItem[]
+  places?: (PlaceOnline | PlaceOffline)[]
+}
