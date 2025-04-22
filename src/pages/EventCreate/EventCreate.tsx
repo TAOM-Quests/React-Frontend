@@ -69,26 +69,26 @@ export const EventCreate = () => {
         if (event.description) setDescription(event.description)
 
         const offlinePlace: PlaceOffline = event.places.find(
-          place => !place.isOnline,
+          place => !place.is_online,
         ) as PlaceOffline
         const onlinePlace: PlaceOnline = event.places.find(
-          place => place.isOnline,
+          place => place.is_online,
         ) as PlaceOnline
 
         if (offlinePlace) {
           if (offlinePlace.floor) setFloor(offlinePlace.floor)
           if (offlinePlace.address) setAddress(offlinePlace.address)
-          if (offlinePlace.officeNumber)
-            setOfficeNumber(offlinePlace.officeNumber)
+          if (offlinePlace.office_number)
+            setOfficeNumber(offlinePlace.office_number)
         }
 
         if (onlinePlace) {
           if (onlinePlace.platform) setPlatform(onlinePlace.platform)
-          if (onlinePlace.connectionLink)
-            setConnectionLink(onlinePlace.connectionLink)
-          if (onlinePlace.recordLink) setRecordLink(onlinePlace.recordLink)
+          if (onlinePlace.connection_link)
+            setConnectionLink(onlinePlace.connection_link)
+          if (onlinePlace.record_link) setRecordLink(onlinePlace.record_link)
           if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
-          if (onlinePlace.accessCode) setAccessCode(onlinePlace.accessCode)
+          if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
         }
 
         if (event.status) setSchedule(event.schedule)
@@ -144,25 +144,25 @@ export const EventCreate = () => {
 
     if (address || floor || officeNumber) {
       const offlinePlace: PlaceOffline = {
-        isOnline: false,
+        is_online: false,
       }
 
       if (address) offlinePlace.address = address
       if (floor) offlinePlace.floor = floor
-      if (officeNumber) offlinePlace.officeNumber = officeNumber
+      if (officeNumber) offlinePlace.office_number = officeNumber
 
       places.push(offlinePlace)
     }
 
     if (connectionLink || recordLink || identifier || accessCode) {
       const onlinePlace: PlaceOnline = {
-        isOnline: true,
+        is_online: true,
       }
 
-      if (connectionLink) onlinePlace.connectionLink = connectionLink
-      if (recordLink) onlinePlace.recordLink = recordLink
+      if (connectionLink) onlinePlace.connection_link = connectionLink
+      if (recordLink) onlinePlace.record_link = recordLink
       if (identifier) onlinePlace.identifier = identifier
-      if (accessCode) onlinePlace.accessCode = accessCode
+      if (accessCode) onlinePlace.access_code = accessCode
 
       places.push(onlinePlace)
     }
@@ -218,9 +218,9 @@ export const EventCreate = () => {
         onChangeDropdown={selected =>
           setExecutors(prevExecutors =>
             eventExecutors.filter(executor =>
-              typeof selected !== 'number'
-                ? selected?.includes(executor.id)
-                : [],
+              Array.isArray(selected)
+                ? selected.some(sel => sel.id === executor.id)
+                : selected?.id === executor.id,
             ),
           )
         }
