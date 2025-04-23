@@ -4,7 +4,7 @@ import { MenuBar } from './MenuBar/MenuBar'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
-
+import './TextEditor.scss'
 const extensions = [
   StarterKit,
   Underline,

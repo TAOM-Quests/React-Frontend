@@ -1,0 +1,13 @@
+.ProseMirror {
+  border: var(--border_primary) var(--border_c_primary);
+  border-radius: 0 0 8px 8px;
+  padding: 12px;
+  min-height: 150px;
+  max-height: 254px;
+  background: #fff;
+  overflow-y: auto;
+
+  &-focused {
+    outline: none;
+  }
+}
