@@ -26,7 +26,7 @@ export const TextEditor = ({ value, onChange }: TextEditorProps) => {
 
   return (
     editor && (
-      <div>
+      <div className="editor">
         <MenuBar editor={editor} />
         <EditorContent editor={editor} />
       </div>

@@ -1,0 +1,32 @@
+.editor {
+  &--header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    background-color: var(--bg_c_gray_primary);
+    border: var(--border_primary) var(--border_c_secondary);
+    border-radius: 8px 8px 0 0;
+    padding: 10px;
+
+    input[type='number'] {
+      width: 40px;
+      padding: 5px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      margin-right: 5px;
+      text-align: center;
+      outline: none;
+    }
+
+    .icon {
+      transition:
+        background-color 0.2s ease-in-out,
+        color 0.2s ease-in-out;
+
+      &:hover {
+        color: var(--text_c_primary);
+      }
+    }
+  }
+}
