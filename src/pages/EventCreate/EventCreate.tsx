@@ -17,6 +17,8 @@ import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
 import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
+import './EventCreate.scss'
+import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -176,15 +178,13 @@ export const EventCreate = () => {
   }
 
   const renderStateButtons = () => (
-    <div>
-      <div className="state-buttons">
-        <Button
-          text="Назад"
-          colorType="secondary"
-          iconBefore="ARROW_SMALL_LEFT"
-        />
-        <Button text="Сохранить" onClick={saveEvent} />
-      </div>
+    <div className="event_create--header">
+      <Button
+        text="Назад"
+        colorType="secondary"
+        iconBefore="ARROW_SMALL_LEFT"
+      />
+      <Button text="Сохранить" onClick={saveEvent} />
     </div>
   )
 
@@ -281,18 +281,23 @@ export const EventCreate = () => {
   return (
     <>
       {!isLoading ? (
-        <>
+        <div className="event_create">
           {renderStateButtons()}
-          <EventCreateImage image={image} setImage={setImage} />
-          <TextEditor
-            value={description ?? ''}
-            onChange={e => setDescription(e.editor.getHTML())}
-          />
-          {renderManagementData()}
-          {renderPlaces()}
-          <EventCreateSchedule schedule={schedule} setSchedule={setSchedule} />
-          <EventCreateFiles files={files} setFiles={setFiles} />
-        </>
+          <ContainerBox>
+            <EventCreateImage image={image} setImage={setImage} />
+            <TextEditor
+              value={description ?? ''}
+              onChange={e => setDescription(e.editor.getHTML())}
+            />
+            {renderManagementData()}
+            {renderPlaces()}
+            <EventCreateSchedule
+              schedule={schedule}
+              setSchedule={setSchedule}
+            />
+            <EventCreateFiles files={files} setFiles={setFiles} />
+          </ContainerBox>
+        </div>
       ) : (
         <div>Loading</div>
       )}

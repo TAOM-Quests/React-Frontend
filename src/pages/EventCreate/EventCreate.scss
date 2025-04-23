@@ -1,0 +1,17 @@
+.event_create {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 80px 15vw;
+  background-color: var(--bg_body_primary);
+
+  &--header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+  }
+}

@@ -1,7 +1,9 @@
 import { Dispatch, SetStateAction } from 'react'
 import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
 import { ServerFile } from '../../../models/serverFile'
-
+import './EventCreateImage.scss'
+import { Icon } from '../../../components/UI/Icon/Icon'
+import classNames from 'classnames'
 export interface EventCreateImageProps {
   image: ServerFile | null
   setImage: Dispatch<SetStateAction<ServerFile | null>>
@@ -22,13 +24,20 @@ export const EventCreateImage = ({
   }
 
   return (
-    <div>
+    <div className={classNames('upload-area', image && 'upload-area--active')}>
+      <div className="upload-text">
+        <Icon size="extraLarge" icon="ADD_IMAGE" />
+        <span className="body_m_r">
+          Перетащите изображение в эту область для загрузки или нажмите на неё
+        </span>
+      </div>
       {image && <img src={image.url} />}
       <input
         placeholder="Загрузить картинку"
         type="file"
         onChange={e => uploadImage(e)}
       />
+      <div className="preview" id="preview"></div>
     </div>
   )
 }
