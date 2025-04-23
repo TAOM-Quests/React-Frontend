@@ -287,6 +287,8 @@ export const EventCreate = () => {
             <EventCreateImage image={image} setImage={setImage} />
             <TextEditor
               value={description ?? ''}
+              label="Описание мероприятия"
+              placeholder="Описание мероприятия"
               onChange={e => setDescription(e.editor.getHTML())}
             />
             {renderManagementData()}

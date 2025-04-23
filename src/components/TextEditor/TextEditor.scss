@@ -1,3 +1,8 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 .ProseMirror {
   border: var(--border_primary) var(--border_c_primary);
   border-radius: 0 0 8px 8px;
@@ -10,4 +15,20 @@
   &-focused {
     outline: none;
   }
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--text_c_subdued);
+  font-weight: 400;
+  line-height: 20px;
+  font-size: 15px;
+  float: left;
+  height: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.label {
+  color: var(--text_c_subdued);
 }
