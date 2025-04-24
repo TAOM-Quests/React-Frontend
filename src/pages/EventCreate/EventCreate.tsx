@@ -23,6 +23,7 @@ import { DateInput } from '../../components/UI/DateInput/DateInput'
 import { TimeInput } from '../../components/UI/TimeInput/TimeInput'
 import moment from 'moment'
 import { validateDate, validateTime } from '../../validation/validators'
+import { NumberInput } from '../../components/UI/NumberInput/NumberInput'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -214,43 +215,63 @@ export const EventCreate = () => {
   const handleTimeSelect = (time: string) => {
     setTime(time)
   }
+  const handleSeatsNumberSelect = (seatsNumber: number | null) => {
+    setSeatsNumber(seatsNumber)
+  }
   const renderManagementData = () => (
     <div className="management-data">
-      <Input
-        label="Название мероприятия"
-        onChange={e => setName(e.target.value)}
-        value={name}
-      />
-      <DateInput
-        label="Дата рождения"
-        value={date}
-        onDateSelect={handleDateSelect}
-        placeholder="Введите дату мероприятия"
-        errorText={dateValidator.error}
-      />
-      <TimeInput
-        value={time}
-        onTimeSelect={handleTimeSelect}
-        errorText={timeValidator.error}
-      />
+      <div className="management-data__container">
+        <Input
+          label="Название мероприятия"
+          placeholder="Введите название мероприятия"
+          onChange={e => setName(e.target.value)}
+          value={name}
+        />
+        <DateInput
+          label="Дата"
+          value={date}
+          onDateSelect={handleDateSelect}
+          placeholder="Введите дату мероприятия"
+          errorText={dateValidator.error}
+        />
+        <div className="management-data__miniInput">
+          <TimeInput
+            label="Начало"
+            value={time}
+            onTimeSelect={handleTimeSelect}
+            errorText={timeValidator.error}
+          />
+          <NumberInput
+            min={0}
+            value={seatsNumber}
+            label="Количество мест"
+            placeholder="0"
+            onChange={handleSeatsNumberSelect}
+          />
+        </div>
 
+        <Dropdown
+          id="event-type-dropdown"
+          label="Тип мероприятия"
+          placeholder="Выберите тип мероприятия"
+          items={eventTypes.map(type => ({
+            id: type.id,
+            text: type.name,
+          }))}
+          onChangeDropdown={selected =>
+            setType(
+              !Array.isArray(selected) && selected
+                ? (eventTypes.find(type => type.id === +selected.id) ?? null)
+                : null,
+            )
+          }
+        />
+      </div>
       <Dropdown
-        id="event-type-dropdown"
-        items={eventTypes.map(type => ({
-          id: type.id,
-          text: type.name,
-        }))}
-        onChangeDropdown={selected =>
-          setType(
-            !Array.isArray(selected) && selected
-              ? (eventTypes.find(type => type.id === +selected.id) ?? null)
-              : null,
-          )
-        }
-      />
-      <Dropdown
-        id="event-status-dropdown"
-        multiple
+        id="event-executor-dropdown"
+        label="Организаторы"
+        placeholder="Выберите организаторов мероприятия"
+        isMultiple={true}
         items={eventExecutors.map(executor => ({
           id: executor.id,
           text: executor.name,
@@ -273,48 +294,61 @@ export const EventCreate = () => {
   )
 
   const renderPlaces = () => (
-    <div className="places">
+    <>
       <Input
         label="Адрес"
+        placeholder="Введите адрес"
         value={address}
         onChange={e => setAddress(e.target.value)}
       />
-      <Input
-        label="Этаж"
-        value={floor}
-        onChange={e => setFloor(+e.target.value)}
-      />
-      <Input
-        label="Аудитория"
-        value={officeNumber}
-        onChange={e => setOfficeNumber(e.target.value)}
-      />
-      <Input
-        label="Площадка"
-        value={platform}
-        onChange={e => setPlatform(e.target.value)}
-      />
-      <Input
-        label="Ссылка для подключения"
-        value={connectionLink}
-        onChange={e => setConnectionLink(e.target.value)}
-      />
-      <Input
-        label="Ссылка на запись и презентацию"
-        value={recordLink}
-        onChange={e => setRecordLink(e.target.value)}
-      />
-      <Input
-        label="Идентификатор"
-        value={identifier}
-        onChange={e => setIdentifier(e.target.value)}
-      />
-      <Input
-        label="Код доступа"
-        value={accessCode}
-        onChange={e => setAccessCode(e.target.value)}
-      />
-    </div>
+      <div className="places">
+        <div className="places__miniInput">
+          <Input
+            label="Этаж"
+            placeholder="Введите этаж"
+            value={floor}
+            onChange={e => setFloor(+e.target.value)}
+          />
+          <Input
+            label="Аудитория"
+            placeholder="С-..."
+            value={officeNumber}
+            onChange={e => setOfficeNumber(e.target.value)}
+          />
+        </div>
+
+        <Input
+          label="Площадка"
+          placeholder="Введите площадку"
+          value={platform}
+          onChange={e => setPlatform(e.target.value)}
+        />
+        <Input
+          label="Ссылка для подключения"
+          placeholder="https://..."
+          value={connectionLink}
+          onChange={e => setConnectionLink(e.target.value)}
+        />
+        <Input
+          label="Ссылка на запись и презентацию"
+          placeholder="https://..."
+          value={recordLink}
+          onChange={e => setRecordLink(e.target.value)}
+        />
+        <Input
+          label="Идентификатор"
+          placeholder="Введите идентификатор"
+          value={identifier}
+          onChange={e => setIdentifier(e.target.value)}
+        />
+        <Input
+          label="Код доступа"
+          placeholder="Введите код доступа"
+          value={accessCode}
+          onChange={e => setAccessCode(e.target.value)}
+        />
+      </div>
+    </>
   )
 
   return (
@@ -324,13 +358,13 @@ export const EventCreate = () => {
           {renderStateButtons()}
           <ContainerBox>
             <EventCreateImage image={image} setImage={setImage} />
+            {renderManagementData()}
             <TextEditor
               value={description ?? ''}
               label="Описание мероприятия"
               placeholder="Описание мероприятия"
               onChange={e => setDescription(e.editor.getHTML())}
             />
-            {renderManagementData()}
             {renderPlaces()}
             <EventCreateSchedule
               schedule={schedule}
