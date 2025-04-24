@@ -32,7 +32,7 @@ export const EventCreate = () => {
   const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string>('')
   const [date, setDate] = useState<Date | null>(null)
-  const [time, setTime] = useState<string | null>('')
+  const [time, setTime] = useState<string>('')
   const [type, setType] = useState<EventType | null>(null)
   const [executors, setExecutors] = useState<Employee[]>([])
   const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
@@ -103,6 +103,7 @@ export const EventCreate = () => {
 
         if (event.name) setName(event.name)
         if (event.date) setDate(event.date)
+        if (event.date) setTime(moment(event.date).format('HH:mm'))
         if (event.type) setType(event.type)
         if (event.executors) setExecutors(event.executors)
         if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
@@ -156,7 +157,11 @@ export const EventCreate = () => {
       const eventUpdate: EventUpdateDto = {}
 
       if (name) eventUpdate.name = name
-      if (date) eventUpdate.date = date
+      if (date && time)
+        eventUpdate.date = moment(date)
+          .set('hour', +time.split(':')[0])
+          .set('minute', +time.split(':')[1])
+          .toDate()
       if (type) eventUpdate.typeId = type.id
       if (description) eventUpdate.description = description
       if (seatsNumber) eventUpdate.seatsNumber = seatsNumber
@@ -229,7 +234,7 @@ export const EventCreate = () => {
   const handleDateSelect = (date: Date | null) => {
     setDate(date)
   }
-  const handleTimeSelect = (time: string | null) => {
+  const handleTimeSelect = (time: string) => {
     setTime(time)
   }
   const renderManagementData = () => (

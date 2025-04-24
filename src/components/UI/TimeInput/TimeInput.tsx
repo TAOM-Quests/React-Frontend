@@ -9,12 +9,12 @@ import Input from '../Input/Input'
 
 interface TimeInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value'> {
-  onTimeSelect: (time: string | null) => void
+  onTimeSelect: (time: string) => void
   label?: string
-  value?: string | null
+  value?: string
   isRequired?: boolean
-  helperText?: string | null
-  errorText?: string | null
+  helperText?: string
+  errorText?: string
 }
 
 export const TimeInput = ({
@@ -26,7 +26,7 @@ export const TimeInput = ({
   errorText,
   ...props
 }: TimeInputProps) => {
-  const [valueInput, setValueInput] = useState('')
+  const [valueInput, setValueInput] = useState(value)
   const [timeError, setTimeError] = useState<string | null>(null)
 
   // Маска для ввода времени
@@ -41,7 +41,7 @@ export const TimeInput = ({
   const validateTime = (time: string) => {
     if (!time && !isRequired) {
       setTimeError(null)
-      onTimeSelect(null) // если не обязательно и пусто, то null
+      onTimeSelect('') // если не обязательно и пусто, то null
       return true
     }
 
@@ -56,12 +56,12 @@ export const TimeInput = ({
         return true
       } else {
         setTimeError('Некорректное время (ЧЧ:ММ)')
-        onTimeSelect(null)
+        onTimeSelect('')
         return false
       }
     } else {
       setTimeError('Введите время в формате ЧЧ:ММ')
-      onTimeSelect(null)
+      onTimeSelect('')
       return false
     }
   }
@@ -69,12 +69,12 @@ export const TimeInput = ({
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      validateTime(valueInput)
+      validateTime(valueInput ?? '')
     }
   }
 
   const handleBlur = () => {
-    validateTime(valueInput)
+    validateTime(valueInput ?? '')
   }
 
   return (
