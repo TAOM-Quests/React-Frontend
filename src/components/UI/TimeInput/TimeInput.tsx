@@ -7,18 +7,28 @@ import {
 import './TimeInput.scss'
 import Input from '../Input/Input'
 
-interface TimeInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TimeInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value'> {
   onTimeSelect: (time: string | null) => void
+  label?: string
+  value?: string | null
   isRequired?: boolean
+  helperText?: string | null
+  errorText?: string | null
 }
 
 export const TimeInput = ({
+  label,
+  value,
   onTimeSelect,
   isRequired = false,
+  helperText,
+  errorText,
   ...props
 }: TimeInputProps) => {
   const [valueInput, setValueInput] = useState('')
   const [timeError, setTimeError] = useState<string | null>(null)
+
   // Маска для ввода времени
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.replace(/[^0-9]/g, '')
@@ -58,6 +68,7 @@ export const TimeInput = ({
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault()
       validateTime(valueInput)
     }
   }
@@ -70,6 +81,7 @@ export const TimeInput = ({
     <div className="time-input-container">
       <Input
         type="text"
+        label={label}
         value={valueInput}
         onKeyDown={handleInputKeyDown}
         onChange={handleInputChange}
@@ -77,6 +89,7 @@ export const TimeInput = ({
         maxLength={5}
         className="time-input"
         iconAfter="TIME"
+        helperText={helperText}
         errorText={timeError ? timeError : null}
         onBlur={handleBlur}
         {...props}

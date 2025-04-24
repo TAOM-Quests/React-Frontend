@@ -19,6 +19,10 @@ import { ServerFile } from '../../models/serverFile'
 import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
 import './EventCreate.scss'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
+import { DateInput } from '../../components/UI/DateInput/DateInput'
+import { TimeInput } from '../../components/UI/TimeInput/TimeInput'
+import moment from 'moment'
+import { validateDate, validateTime } from '../../validation/validators'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -27,7 +31,8 @@ export const EventCreate = () => {
   const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
   const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string>('')
-  // const [date, setDate] = useState<Date | null>(null)
+  const [date, setDate] = useState<Date | null>(null)
+  const [time, setTime] = useState<string | null>('')
   const [type, setType] = useState<EventType | null>(null)
   const [executors, setExecutors] = useState<Employee[]>([])
   const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
@@ -47,6 +52,39 @@ export const EventCreate = () => {
   const user = useAppSelector(selectAuth)
   const eventId = useParams().id
 
+  if (date instanceof Date && time !== null) {
+    const [hours, minutes] = time.split(':').map(Number)
+    date.setHours(hours, minutes, 0)
+  }
+
+  console.log(date)
+
+  // if (time !== null) {
+  //   const [hours, minutes] = time.split(':').map(Number)
+
+  //   if (date instanceof Date) {
+  //     const dateMoment = moment.utc(date)
+  //     console.log(dateMoment)
+
+  //     // Устанавливаем часы и минуты
+  //     dateMoment.hour(hours)
+  //     dateMoment.minute(minutes)
+  //     dateMoment.second(0)
+  //     dateMoment.millisecond(0)
+
+  //     const newDate = dateMoment.toDate()
+  //     console.log(newDate)
+
+  //     console.log(date)
+  //     console.log(time)
+  //   }
+  // }
+  // console.log(date)
+  // console.log(time)
+
+  const dateValidator = validateDate(date)
+  const timeValidator = validateTime(time)
+
   useEffect(() => {
     const fetchCreateEventData = async () => {
       try {
@@ -64,7 +102,7 @@ export const EventCreate = () => {
         const event = await events.getOne({ id })
 
         if (event.name) setName(event.name)
-        //if (event.) setDate(event.date)
+        if (event.date) setDate(event.date)
         if (event.type) setType(event.type)
         if (event.executors) setExecutors(event.executors)
         if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
@@ -118,6 +156,7 @@ export const EventCreate = () => {
       const eventUpdate: EventUpdateDto = {}
 
       if (name) eventUpdate.name = name
+      if (date) eventUpdate.date = date
       if (type) eventUpdate.typeId = type.id
       if (description) eventUpdate.description = description
       if (seatsNumber) eventUpdate.seatsNumber = seatsNumber
@@ -187,7 +226,12 @@ export const EventCreate = () => {
       <Button text="Сохранить" onClick={saveEvent} />
     </div>
   )
-
+  const handleDateSelect = (date: Date | null) => {
+    setDate(date)
+  }
+  const handleTimeSelect = (time: string | null) => {
+    setTime(time)
+  }
   const renderManagementData = () => (
     <div className="management-data">
       <Input
@@ -195,6 +239,14 @@ export const EventCreate = () => {
         onChange={e => setName(e.target.value)}
         value={name}
       />
+      <DateInput
+        label="Дата рождения"
+        value={date}
+        onDateSelect={handleDateSelect}
+        placeholder="Введите дату мероприятия"
+      />
+      <TimeInput value={time} onTimeSelect={handleTimeSelect} />
+
       <Dropdown
         id="event-type-dropdown"
         items={eventTypes.map(type => ({
