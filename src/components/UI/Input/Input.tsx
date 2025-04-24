@@ -59,6 +59,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const internalInputRef = useRef<HTMLInputElement>(null)
     const combinedRef = inputRef || ref
+    const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
 
     useEffect(() => {
       setIsInputVisible(
@@ -137,10 +138,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             placeholder={placeholder}
             style={{ display: isInputVisible ? 'flex' : 'none' }}
             onFocus={e => {
+              setErrorFocus(false)
               setIsInputVisible(true)
               onFocus?.(e)
             }}
             onBlur={e => {
+              setErrorFocus(true)
               if (
                 value !== null &&
                 value !== undefined &&
@@ -178,7 +181,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {showHelperText && (
           <div className="body_s_m helperText">{helperText}</div>
         )}
-        {errorText && <div className="body_s_m errorText">{errorText}</div>}
+        {errorText && errorFocus && (
+          <div className="body_s_m errorText">{errorText}</div>
+        )}
       </div>
     )
   },

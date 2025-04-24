@@ -12,7 +12,6 @@ interface TimeInputProps
   onTimeSelect: (time: string) => void
   label?: string
   value?: string
-  isRequired?: boolean
   helperText?: string
   errorText?: string
 }
@@ -21,13 +20,12 @@ export const TimeInput = ({
   label,
   value,
   onTimeSelect,
-  isRequired = false,
   helperText,
   errorText,
   ...props
 }: TimeInputProps) => {
-  const [valueInput, setValueInput] = useState(value)
-  const [timeError, setTimeError] = useState<string | null>(null)
+  const [valueInput, setValueInput] = useState(value ?? '')
+  const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
 
   // Маска для ввода времени
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,45 +34,23 @@ export const TimeInput = ({
     let formatted = val
     if (val.length > 2) formatted = val.slice(0, 2) + ':' + val.slice(2)
     setValueInput(formatted)
-    setTimeError(null)
-  }
-  const validateTime = (time: string) => {
-    if (!time && !isRequired) {
-      setTimeError(null)
-      onTimeSelect('') // если не обязательно и пусто, то null
-      return true
-    }
-
-    if (time.length === 5) {
-      const [hh, mm] = time.split(':')
-      const h = Number(hh)
-      const m = Number(mm)
-
-      if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
-        setTimeError(null)
-        onTimeSelect(`${hh}:${mm}`)
-        return true
-      } else {
-        setTimeError('Некорректное время (ЧЧ:ММ)')
-        onTimeSelect('')
-        return false
-      }
-    } else {
-      setTimeError('Введите время в формате ЧЧ:ММ')
-      onTimeSelect('')
-      return false
-    }
   }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      validateTime(valueInput ?? '')
+      e.currentTarget.blur()
+      setErrorFocus(true)
+      onTimeSelect(valueInput)
     }
   }
 
   const handleBlur = () => {
-    validateTime(valueInput ?? '')
+    setErrorFocus(true)
+    onTimeSelect(valueInput)
+  }
+  const handleFocus = () => {
+    setErrorFocus(false)
   }
 
   return (
@@ -88,10 +64,11 @@ export const TimeInput = ({
         placeholder="ЧЧ:ММ"
         maxLength={5}
         className="time-input"
-        iconAfter="TIME"
         helperText={helperText}
-        errorText={timeError ? timeError : null}
+        iconAfter="TIME"
+        errorText={errorFocus ? errorText : null}
         onBlur={handleBlur}
+        onFocus={handleFocus}
         {...props}
       />
     </div>

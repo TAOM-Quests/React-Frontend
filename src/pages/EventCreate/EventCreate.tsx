@@ -52,36 +52,6 @@ export const EventCreate = () => {
   const user = useAppSelector(selectAuth)
   const eventId = useParams().id
 
-  if (date instanceof Date && time !== null) {
-    const [hours, minutes] = time.split(':').map(Number)
-    date.setHours(hours, minutes, 0)
-  }
-
-  console.log(date)
-
-  // if (time !== null) {
-  //   const [hours, minutes] = time.split(':').map(Number)
-
-  //   if (date instanceof Date) {
-  //     const dateMoment = moment.utc(date)
-  //     console.log(dateMoment)
-
-  //     // Устанавливаем часы и минуты
-  //     dateMoment.hour(hours)
-  //     dateMoment.minute(minutes)
-  //     dateMoment.second(0)
-  //     dateMoment.millisecond(0)
-
-  //     const newDate = dateMoment.toDate()
-  //     console.log(newDate)
-
-  //     console.log(date)
-  //     console.log(time)
-  //   }
-  // }
-  // console.log(date)
-  // console.log(time)
-
   const dateValidator = validateDate(date)
   const timeValidator = validateTime(time)
 
@@ -157,7 +127,7 @@ export const EventCreate = () => {
       const eventUpdate: EventUpdateDto = {}
 
       if (name) eventUpdate.name = name
-      if (date && time)
+      if (date || time)
         eventUpdate.date = moment(date)
           .set('hour', +time.split(':')[0])
           .set('minute', +time.split(':')[1])
@@ -228,7 +198,14 @@ export const EventCreate = () => {
         colorType="secondary"
         iconBefore="ARROW_SMALL_LEFT"
       />
-      <Button text="Сохранить" onClick={saveEvent} />
+      <Button
+        text="Сохранить"
+        onClick={() => {
+          if (dateValidator.isValid && timeValidator.isValid) {
+            saveEvent()
+          }
+        }}
+      />
     </div>
   )
   const handleDateSelect = (date: Date | null) => {
@@ -249,8 +226,13 @@ export const EventCreate = () => {
         value={date}
         onDateSelect={handleDateSelect}
         placeholder="Введите дату мероприятия"
+        errorText={dateValidator.error}
       />
-      <TimeInput value={time} onTimeSelect={handleTimeSelect} />
+      <TimeInput
+        value={time}
+        onTimeSelect={handleTimeSelect}
+        errorText={timeValidator.error}
+      />
 
       <Dropdown
         id="event-type-dropdown"

@@ -113,7 +113,7 @@ export const validatePhone = (
 
 export const validateDate = (
   dob: Date | null | undefined,
-  required = true,
+  required = false,
 ): ValidationResult => {
   if (!dob) {
     if (required) return { isValid: false, error: 'Дата обязательна' }
@@ -132,31 +132,24 @@ export const validateDate = (
 
 export const validateTime = (
   time: string | null | undefined,
-  required = true,
+  required = false,
 ): ValidationResult => {
   if (!time) {
     if (required) return { isValid: false, error: 'Время обязательно' }
     else return { isValid: true }
   }
-  const trimmed = time.trim()
 
-  // Проверяем формат HH:mm с ведущими нулями, часы 00-23, минуты 00-59
-  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/
-  const match = trimmed.match(timeRegex)
+  if (time.length === 5) {
+    const [hh, mm] = time.split(':')
 
-  if (!match) {
-    return { isValid: false, error: 'Неверный формат времени. Ожидается ЧЧ:мм' }
-  }
-
-  // Дополнительно можно проверить, что часы и минуты в допустимом диапазоне (уже проверено regex)
-  const hours = Number(match[1])
-  const minutes = Number(match[2])
-
-  if (hours < 0 || hours > 23) {
-    return { isValid: false, error: 'Часы должны быть от 00 до 23' }
-  }
-  if (minutes < 0 || minutes > 59) {
-    return { isValid: false, error: 'Минуты должны быть от 00 до 59' }
+    if (+hh > 23) {
+      return { isValid: false, error: 'Часы должны быть от 00 до 23' }
+    }
+    if (+mm > 59) {
+      return { isValid: false, error: 'Минуты должны быть от 00 до 59' }
+    }
+  } else {
+    return { isValid: false, error: 'Ожидается формат ЧЧ:ММ' }
   }
 
   return { isValid: true }
