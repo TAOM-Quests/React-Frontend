@@ -213,15 +213,7 @@ export const EventCreate = () => {
       />
     </div>
   )
-  const handleDateSelect = (date: Date | null) => {
-    setDate(date)
-  }
-  const handleTimeSelect = (time: string) => {
-    setTime(time)
-  }
-  const handleSeatsNumberSelect = (seatsNumber: number | null) => {
-    setSeatsNumber(seatsNumber)
-  }
+
   const renderManagementData = () => (
     <div className="management-data">
       <div className="management-data__container">
@@ -231,29 +223,6 @@ export const EventCreate = () => {
           onChange={e => setName(e.target.value)}
           value={name}
         />
-        <DateInput
-          label="Дата"
-          value={date}
-          onDateSelect={handleDateSelect}
-          placeholder="Введите дату мероприятия"
-          errorText={dateValidator.error}
-        />
-        <div className="management-data__miniInput">
-          <TimeInput
-            label="Начало"
-            value={time}
-            onTimeSelect={handleTimeSelect}
-            errorText={timeValidator.error}
-          />
-          <NumberInput
-            min={0}
-            value={seatsNumber}
-            label="Количество мест"
-            placeholder="0"
-            onChange={handleSeatsNumberSelect}
-          />
-        </div>
-
         <Dropdown
           id="event-type-dropdown"
           label="Тип мероприятия"
@@ -270,6 +239,28 @@ export const EventCreate = () => {
             )
           }
         />
+        <DateInput
+          label="Дата"
+          value={date}
+          onDateSelect={date => setDate(date)}
+          placeholder="Введите дату мероприятия"
+          errorText={dateValidator.error}
+        />
+        <div className="management-data__miniInput">
+          <TimeInput
+            label="Время"
+            value={time}
+            onTimeSelect={time => setTime(time)}
+            errorText={timeValidator.error}
+          />
+          <NumberInput
+            min={0}
+            value={seatsNumber}
+            label="Количество мест"
+            placeholder="Кол-во мест"
+            onChange={seatsNumber => setSeatsNumber(seatsNumber)}
+          />
+        </div>
       </div>
       <Dropdown
         id="event-executor-dropdown"
@@ -307,11 +298,12 @@ export const EventCreate = () => {
       />
       <div className="places">
         <div className="places__miniInput">
-          <Input
+          <NumberInput
+            min={0}
             label="Этаж"
-            placeholder="Введите этаж"
             value={floor}
-            onChange={e => setFloor(+e.target.value)}
+            placeholder="Введите этаж"
+            onChange={floor => setFloor(floor)}
           />
           <Input
             label="Аудитория"
