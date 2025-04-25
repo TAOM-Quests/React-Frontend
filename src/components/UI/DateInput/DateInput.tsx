@@ -11,9 +11,6 @@ import { ButtonCalendar } from '../ButtonCalendar/ButtonCalendar'
 import { Button } from '../Button/Button'
 import Input from '../Input/Input'
 import moment, { Moment } from 'moment'
-import 'moment/locale/ru'
-
-moment.locale('ru')
 
 const DATE_FORMAT = 'DD.MM.YYYY'
 
@@ -46,37 +43,6 @@ export const DateInput = ({
   const [currentDate, setCurrentDate] = useState<Moment>(date || moment())
   const calendarRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<SVGSVGElement>(null)
-
-  moment.updateLocale('ru', {
-    months: [
-      'Январь',
-      'Февраль',
-      'Mарт',
-      'Апрель',
-      'Май',
-      'Июнь',
-      'Июль',
-      'Август',
-      'Сентябрь',
-      'Октябрь',
-      'Ноябрь',
-      'Декабрь',
-    ],
-    monthsShort: [
-      'Янв',
-      'Фев',
-      'Мар',
-      'Апр',
-      'Май',
-      'Июн',
-      'Июл',
-      'Авг',
-      'Сен',
-      'Окт',
-      'Ноя',
-      'Дек',
-    ],
-  })
 
   useEffect(() => {
     if (value) {
