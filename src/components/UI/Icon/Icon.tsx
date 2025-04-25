@@ -1,4 +1,4 @@
-import { MouseEventHandler, Ref, SVGAttributes } from 'react'
+import { Ref, SVGAttributes } from 'react'
 import classNames from 'classnames'
 import { getIcon, ICON_MAP } from '../../../assets/icons'
 import './Icon.scss'
