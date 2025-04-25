@@ -31,3 +31,8 @@ export interface EventCreateDto {
   schedule?: ScheduleItem[]
   places?: (PlaceOnline | PlaceOffline)[]
 }
+
+export interface changeParticipantDto {
+  add?: number[]
+  remove?: number[]
+}

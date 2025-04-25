@@ -41,9 +41,9 @@ export const EventCreate = () => {
   const [schedule, setSchedule] = useState<ScheduleItem[]>([])
   const [files, setFiles] = useState<ServerFile[]>([])
 
+  const eventId = useParams().id
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
-  const eventId = useParams().id
 
   useEffect(() => {
     const fetchCreateEventData = async () => {
