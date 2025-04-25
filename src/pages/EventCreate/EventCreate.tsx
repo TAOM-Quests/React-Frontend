@@ -53,8 +53,8 @@ export const EventCreate = () => {
   const user = useAppSelector(selectAuth)
   const eventId = useParams().id
 
-  const dateValidator = validateDate(date)
-  const timeValidator = validateTime(time)
+  let dateValidator = validateDate(date, !!time)
+  let timeValidator = validateTime(time, !!date)
 
   useEffect(() => {
     const fetchCreateEventData = async () => {
@@ -123,26 +123,30 @@ export const EventCreate = () => {
     }
   }, [user])
 
+  useEffect(() => {
+    dateValidator = validateDate(date, !!time)
+    timeValidator = validateTime(time, !!date)
+  }, [date, time])
+
   const saveEvent = async () => {
     try {
-      const eventUpdate: EventUpdateDto = {}
-
-      if (name) eventUpdate.name = name
-      if (date || time)
-        eventUpdate.date = moment(date)
-          .set('hour', +time.split(':')[0])
-          .set('minute', +time.split(':')[1])
-          .toDate()
-      if (type) eventUpdate.typeId = type.id
-      if (description) eventUpdate.description = description
-      if (seatsNumber) eventUpdate.seatsNumber = seatsNumber
-      if (getPlaces().length) eventUpdate.places = getPlaces()
-      if (schedule.length) eventUpdate.schedule = schedule
-      if (executors.length) {
-        eventUpdate.executorsIds = executors.map(executor => executor.id)
+      const eventUpdate: EventUpdateDto = {
+        name,
+        date: date
+          ? moment(date)
+              .set('hour', +time.split(':')[0])
+              .set('minute', +time.split(':')[1])
+              .toDate()
+          : undefined,
+        typeId: type?.id,
+        description,
+        seatsNumber: seatsNumber ?? undefined,
+        places: getPlaces(),
+        schedule,
+        executorsIds: executors.map(executor => executor.id),
+        imageId: image?.id,
+        filesIds: files.map(file => file.id),
       }
-      if (image) eventUpdate.imageId = image.id
-      if (files.length) eventUpdate.filesIds = files.map(file => file.id)
 
       if (!eventId) {
         const event = await events.create({
