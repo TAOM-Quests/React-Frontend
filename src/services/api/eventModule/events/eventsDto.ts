@@ -5,8 +5,11 @@ import {
 } from '../../../../models/event'
 
 export interface EventsGetDto {
-  date?: Date
   type?: number
+  limit?: number
+  dateEnd?: Date
+  offset?: number
+  dateStart?: Date
   executor?: number
   department?: number
   participant?: number
