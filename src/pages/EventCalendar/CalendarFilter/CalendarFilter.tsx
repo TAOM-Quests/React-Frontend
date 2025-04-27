@@ -4,6 +4,7 @@ import { Button } from '../../../components/UI/Button/Button'
 import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
 import { Moment } from 'moment'
 import { EventsFilter } from '../EventCalendar'
+import { isArray } from 'lodash'
 
 export interface CalendarFilterProps {
   types: EventType[]
@@ -11,14 +12,18 @@ export interface CalendarFilterProps {
   departments: Department[]
   setFilter: (filter: EventsFilter) => void
   setSelectedPeriod: (date: Moment) => void
+  selectedType?: number
+  selectedDepartment?: number
 }
 
 export const CalendarFilter = ({
   types,
   setFilter,
   departments,
+  selectedType,
   selectedPeriod,
   setSelectedPeriod,
+  selectedDepartment,
 }: CalendarFilterProps) => {
   return (
     <div>
@@ -28,14 +33,25 @@ export const CalendarFilter = ({
             id: type.id,
             text: type.name,
           }))}
-          onSelect={selected => setFilter({ type: +selected })}
+          selectedIds={selectedType ? [selectedType] : []}
+          onChangeDropdown={selected =>
+            setFilter({
+              type: selected && !isArray(selected) ? +selected.id : undefined,
+            })
+          }
         />
         <Dropdown
           items={departments.map(department => ({
             id: department.id,
             text: department.name,
           }))}
-          onSelect={selected => setFilter({ department: +selected })}
+          selectedIds={selectedDepartment ? [selectedDepartment] : []}
+          onChangeDropdown={selected =>
+            setFilter({
+              department:
+                selected && !isArray(selected) ? +selected.id : undefined,
+            })
+          }
         />
       </div>
       <div>

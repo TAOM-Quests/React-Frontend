@@ -43,6 +43,8 @@ export const EventCalendar = () => {
   }, [])
 
   useEffect(() => {
+    console.log('filter', filter)
+
     const fetchEvents = async () => {
       try {
         setIsLoading(true)
@@ -94,10 +96,14 @@ export const EventCalendar = () => {
           <div>
             <CalendarFilter
               types={eventTypes}
-              setFilter={setFilter}
+              setFilter={(addFilter: EventsFilter) =>
+                setFilter({ ...filter, ...addFilter })
+              }
+              selectedType={filter.type}
               departments={eventDepartments}
               selectedPeriod={selectedPeriod}
               setSelectedPeriod={setSelectedPeriod}
+              selectedDepartment={filter.department}
             />
           </div>
           <div>{renderDays()}</div>
