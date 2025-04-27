@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Event } from '../../../../models/event'
 import { EventMinimize } from '../../../../models/eventMinimize'
 import { EventStatus } from '../../../../models/eventStatus'
@@ -11,13 +12,18 @@ import {
 } from './eventsDto'
 
 export const events = {
-  getManyByParams: (params: EventsGetDto): Promise<EventMinimize[]> =>
-    eventModule<EventMinimize[], EventsGetDto>(
-      `events${Object.values(params).length ? '?' : ''}` +
-        Object.entries(params)
-          .map(([key, value]) => `${key}=${value}`)
-          .join('&'),
-    ),
+  getManyByParams: (params: EventsGetDto): Promise<EventMinimize[]> => {
+    let queryString = Object.entries(params)
+      .map(
+        ([key, value]) =>
+          `${key}=${value instanceof Date ? moment(value).format('YYYY-MM-DD') : value}`,
+      )
+      .join('&')
+
+    return eventModule<EventMinimize[], EventsGetDto>(
+      `events${queryString ? `?${queryString}` : ''}`,
+    )
+  },
 
   getOne: (params: EventGetDto): Promise<Event> =>
     eventModule<Event, EventGetDto>(`events/${params.id}`),
