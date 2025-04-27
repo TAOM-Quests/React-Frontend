@@ -6,6 +6,7 @@ import { Department } from '../../models/department'
 import { EventType } from '../../models/eventType'
 import { CalendarFilter } from './CalendarFilter/CalendarFilter'
 import { CalendarDay } from './CalendarDay/CalendarDay'
+import { commonEntities } from '../../services/api/commonModule/commonEntities/commonEntities'
 export interface EventsFilter {
   type?: number
   department?: number
@@ -26,8 +27,12 @@ export const EventCalendar = () => {
     const fetchFilterData = async () => {
       try {
         setIsLoading(true)
+
         const eventTypes = await eventsApi.getTypes()
+        const eventDepartments = await commonEntities.getDepartments()
+
         setEventTypes(eventTypes)
+        setEventDepartments(eventDepartments)
         setIsLoading(false)
       } catch (error) {
         console.log(error)
@@ -41,11 +46,13 @@ export const EventCalendar = () => {
     const fetchEvents = async () => {
       try {
         setIsLoading(true)
+
         const events = await eventsApi.getManyByParams({
           dateStart: selectedPeriod.startOf('month').toDate(),
           dateEnd: selectedPeriod.endOf('month').toDate(),
           ...filter,
         })
+
         setEvents(events)
         setIsLoading(false)
       } catch (error) {

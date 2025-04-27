@@ -15,13 +15,11 @@ export const CalendarDay = ({
 }: CalendarDayProps) => {
   const getEventTime = (event: EventMinimize): string => {
     const startTime = event.schedule[0]?.timeStart
-    const endTime = event.schedule[0]?.timeEnd
+    const endTime = last(event.schedule)?.timeEnd
 
-    return (
-      startTime &&
-      endTime &&
-      `${moment(startTime).format('HH:mm')} - ${moment(endTime).format('HH:mm')}`
-    )
+    return startTime && endTime
+      ? `${moment(startTime).format('HH:mm')} - ${moment(endTime).format('HH:mm')}`
+      : ''
   }
 
   const renderOneEvent = (event: EventMinimize) => (
