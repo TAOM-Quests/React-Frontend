@@ -1,5 +1,5 @@
-import Question from './question'
-import QuestResult from './questResult'
+import { QuestQuestion } from './questQuestion'
+import { QuestResult } from './questResult'
 
 export default interface Quest {
   id: number
@@ -9,5 +9,5 @@ export default interface Quest {
   tags: string[]
   difficult: number
   results: QuestResult[]
-  questions: Question[]
+  questions: QuestQuestion[]
 }

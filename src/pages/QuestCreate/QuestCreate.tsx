@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { QuestGroup } from '../../models/questGroup'
 import { QuestDifficult } from '../../models/questDifficult'
 import { QuestTag } from '../../models/questTag'
-import { quests } from '../../services/api/questModule/quests/quests'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { ServerFile } from '../../models/serverFile'
 import { QuestCreateMainData } from './QuestCreateMainData/QuestCreateMainData'
+import { QuestQuestion } from '../../models/questQuestion'
+import { QuestCreateQuestions } from './QuestCreateQuestions/QuestCreateQuestions'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -17,6 +18,7 @@ export const QuestCreate = () => {
   const [tags, setTags] = useState<QuestTag[]>([])
   const [time, setTime] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+  const [questions, setQuestions] = useState<QuestQuestion[]>([])
 
   const user = useAppSelector(selectAuth)
 
@@ -40,6 +42,10 @@ export const QuestCreate = () => {
             setIsLoading={setIsLoading}
             setDifficulty={setDifficulty}
             setDescription={setDescription}
+          />
+          <QuestCreateQuestions
+            questions={questions}
+            setQuestions={setQuestions}
           />
         </div>
       ) : (
