@@ -1,11 +1,15 @@
 import Input from '../../../components/UI/Input/Input'
 import {
   QuestQuestion,
+  QuestQuestionMultiple,
   QuestQuestionSingle,
 } from '../../../models/questQuestion'
-import { QuestCreateQuestionSingle } from './QuestCreateQuestionSingle'
+import { QuestCreateQuestionSingle } from './QuestCreateQuestionSingle/QuestCreateQuestionSingle'
 import { Button } from '../../../components/UI/Button/Button'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
+import { OptionProps } from '../../../components/UI/Option/Option'
+import { ContextMenu } from '../../../components/ContextMenu/ContextMenu'
+import { QuestCreateQuestionMultiple } from './QuestCreateQuestionMultiple/QuestCreateQuestionMultiple'
 
 export interface QuestCreateQuestionsProps {
   questions: QuestQuestion[]
@@ -16,6 +20,35 @@ export const QuestCreateQuestions = ({
   questions,
   setQuestions,
 }: QuestCreateQuestionsProps) => {
+  const addQuestionContextMenuOptions: OptionProps[] = [
+    {
+      text: 'Единичный выбор',
+      onSelect: () => {
+        setQuestions([
+          ...questions,
+          {
+            text: '',
+            type: 'single',
+            answer: { options: [''], correctAnswer: 0 },
+          } as QuestQuestionSingle,
+        ])
+      },
+    },
+    {
+      text: 'Множественный выбор',
+      onSelect: () => {
+        setQuestions([
+          ...questions,
+          {
+            text: '',
+            type: 'multiple',
+            answer: { options: [''], correctAnswer: [0] },
+          } as QuestQuestionMultiple,
+        ])
+      },
+    },
+  ]
+
   const renderQuestion = (question: QuestQuestion, index: number) => (
     <div>
       <Input
@@ -37,7 +70,7 @@ export const QuestCreateQuestions = ({
   return (
     <>
       {questions.map((question, index) => (
-        <ContainerBox>
+        <ContainerBox key={index}>
           {renderQuestion(question, index)}
           {question.type === 'single' && (
             <QuestCreateQuestionSingle
@@ -47,23 +80,24 @@ export const QuestCreateQuestions = ({
               singleQuestion={question as QuestQuestionSingle}
             />
           )}
+          {question.type === 'multiple' && (
+            <QuestCreateQuestionMultiple
+              questions={questions}
+              setQuestions={setQuestions}
+              multipleQuestionIndex={index}
+              multipleQuestion={question as QuestQuestionMultiple}
+            />
+          )}
         </ContainerBox>
       ))}
-      <Button
-        isIconOnly
-        isButtonCircle
-        iconBefore="PLUS"
-        onClick={() =>
-          setQuestions([
-            ...questions,
-            {
-              text: '',
-              type: 'single',
-              answer: { options: [''], correctAnswer: 0 },
-            } as QuestQuestionSingle,
-          ])
-        }
-      />
+      <ContextMenu options={addQuestionContextMenuOptions}>
+        <Button
+          isIconOnly
+          isButtonCircle
+          iconBefore="PLUS"
+          colorType={'accent'}
+        />
+      </ContextMenu>
     </>
   )
 }

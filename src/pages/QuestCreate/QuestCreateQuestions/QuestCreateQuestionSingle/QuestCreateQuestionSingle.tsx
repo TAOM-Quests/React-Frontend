@@ -2,11 +2,11 @@ import { clone } from 'lodash'
 import {
   QuestQuestion,
   QuestQuestionSingle,
-} from '../../../models/questQuestion'
-import Input from '../../../components/UI/Input/Input'
-import { Toggle } from '../../../components/UI/Toggle/Toggle'
-import { Button } from '../../../components/UI/Button/Button'
-import { Icon } from '../../../components/UI/Icon/Icon'
+} from '../../../../models/questQuestion'
+import Input from '../../../../components/UI/Input/Input'
+import { Toggle } from '../../../../components/UI/Toggle/Toggle'
+import { Button } from '../../../../components/UI/Button/Button'
+import { Icon } from '../../../../components/UI/Icon/Icon'
 
 export interface QuestCreateQuestionSingleProps {
   questions: QuestQuestion[]
@@ -67,7 +67,7 @@ export const QuestCreateQuestionSingle = ({
     <>
       Правильные ответы
       {singleQuestion.answer.options.map((option, optionIndex) => (
-        <div>
+        <div key={optionIndex}>
           <Input
             value={option}
             onChange={e => updateOption(e.target.value, optionIndex)}
