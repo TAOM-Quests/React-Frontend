@@ -24,7 +24,6 @@ export interface QuestCreateMainDataProps {
   setTime: (time: string) => void
   difficulty: QuestDifficult | null
   setTags: (tags: QuestTag[]) => void
-  setIsLoading: (isLoading: boolean) => void
   setImage: (image: ServerFile | null) => void
   setGroup: (group: QuestGroup | null) => void
   setDescription: (description: string) => void
@@ -44,7 +43,6 @@ export const QuestCreateMainData = ({
   setGroup,
   difficulty,
   description,
-  setIsLoading,
   setDifficulty,
   setDescription,
 }: QuestCreateMainDataProps) => {

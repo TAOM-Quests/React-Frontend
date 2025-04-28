@@ -11,16 +11,19 @@ import { QuestCreateQuestions } from './QuestCreateQuestions/QuestCreateQuestion
 import { QuestResult } from '../../models/questResult'
 import { QuestCreateResults } from './QuestCreateResults/QuestCreateResults'
 import { useNavigate } from 'react-router'
+import { SaveQuestDto } from '../../services/api/questModule/quests/questsDto'
+import { quests } from '../../services/api/questModule/quests/quests'
+import { Button } from '../../components/UI/Button/Button'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string>('')
-  const [group, setGroup] = useState<QuestGroup | null>(null)
-  const [difficulty, setDifficulty] = useState<QuestDifficult | null>(null)
-  const [tags, setTags] = useState<QuestTag[]>([])
   const [time, setTime] = useState<string>('')
+  const [tags, setTags] = useState<QuestTag[]>([])
   const [description, setDescription] = useState<string>('')
+  const [group, setGroup] = useState<QuestGroup | null>(null)
+  const [image, setImage] = useState<ServerFile | null>(null)
+  const [difficulty, setDifficulty] = useState<QuestDifficult | null>(null)
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
   const [results, setResults] = useState<QuestResult[]>([])
 
@@ -33,10 +36,34 @@ export const QuestCreate = () => {
     }
   }, [user])
 
+  const saveQuest = async () => {
+    setIsLoading(true)
+
+    const saveQuest: SaveQuestDto = {
+      executorId: user!.id,
+      departmentId: user!.departmentId!,
+    }
+
+    if (name) saveQuest.name = name
+    if (time) saveQuest.time = time
+    if (group) saveQuest.groupId = group.id
+    if (image) saveQuest.imageId = image.id
+    if (description) saveQuest.description = description
+    if (difficulty) saveQuest.difficultId = difficulty.id
+    if (tags.length) saveQuest.tagsIds = tags.map(tag => tag.id)
+    if (questions.length) saveQuest.questions = questions
+    if (results.length) saveQuest.results = results
+
+    await quests.create(saveQuest)
+
+    setIsLoading(false)
+  }
+
   return (
     <>
       {!isLoading ? (
         <div>
+          <Button text="Сохранить" onClick={saveQuest} />
           <QuestCreateMainData
             name={name}
             time={time}
@@ -50,7 +77,6 @@ export const QuestCreate = () => {
             setGroup={setGroup}
             difficulty={difficulty}
             description={description}
-            setIsLoading={setIsLoading}
             setDifficulty={setDifficulty}
             setDescription={setDescription}
           />
