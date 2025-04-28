@@ -1,6 +1,7 @@
 import Input from '../../../components/UI/Input/Input'
 import {
   QuestQuestion,
+  QuestQuestionBoxSorting,
   QuestQuestionConnection,
   QuestQuestionMultiple,
   QuestQuestionSingle,
@@ -12,6 +13,7 @@ import { OptionProps } from '../../../components/UI/Option/Option'
 import { ContextMenu } from '../../../components/ContextMenu/ContextMenu'
 import { QuestCreateQuestionMultiple } from './QuestCreateQuestionMultiple/QuestCreateQuestionMultiple'
 import { QuestCreateQuestionConnection } from './QuestCreateQuestionConnection/QuestCreateQuestionConnection'
+import { QuestCreateQuestionBoxSorting } from './QuestCreateQuestionBoxSorting/QuestCreateQuestionBoxSorting'
 
 export interface QuestCreateQuestionsProps {
   questions: QuestQuestion[]
@@ -62,6 +64,22 @@ export const QuestCreateQuestions = ({
         ])
       },
     },
+    {
+      text: 'Сортировка',
+      onSelect: () => {
+        setQuestions([
+          ...questions,
+          {
+            text: '',
+            type: 'boxSorting',
+            answer: {
+              options: [''],
+              correctAnswer: [{ name: '', options: [0] }],
+            },
+          } as QuestQuestionBoxSorting,
+        ])
+      },
+    },
   ]
 
   const renderQuestion = (question: QuestQuestion, index: number) => (
@@ -109,6 +127,14 @@ export const QuestCreateQuestions = ({
               setQuestions={setQuestions}
               connectionQuestionIndex={index}
               connectionQuestion={question as QuestQuestionConnection}
+            />
+          )}
+          {question.type === 'boxSorting' && (
+            <QuestCreateQuestionBoxSorting
+              questions={questions}
+              setQuestions={setQuestions}
+              boxSortingQuestionIndex={index}
+              boxSortingQuestion={question as QuestQuestionBoxSorting}
             />
           )}
         </ContainerBox>
