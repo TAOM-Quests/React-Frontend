@@ -8,6 +8,8 @@ import { ServerFile } from '../../models/serverFile'
 import { QuestCreateMainData } from './QuestCreateMainData/QuestCreateMainData'
 import { QuestQuestion } from '../../models/questQuestion'
 import { QuestCreateQuestions } from './QuestCreateQuestions/QuestCreateQuestions'
+import { QuestResult } from '../../models/questResult'
+import { QuestCreateResults } from './QuestCreateResults/QuestCreateResults'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -19,6 +21,7 @@ export const QuestCreate = () => {
   const [time, setTime] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
+  const [result, setResult] = useState<QuestResult[]>([])
 
   const user = useAppSelector(selectAuth)
 
@@ -47,6 +50,7 @@ export const QuestCreate = () => {
             questions={questions}
             setQuestions={setQuestions}
           />
+          <QuestCreateResults results={result} setResults={setResult} />
         </div>
       ) : (
         'Loading...'

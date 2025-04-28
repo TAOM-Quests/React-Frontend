@@ -1,5 +1,7 @@
 export interface QuestResult {
-  id: number
   name: string
+  minPoints: number
   description: string
+  id?: number
+  imageId?: number
 }
