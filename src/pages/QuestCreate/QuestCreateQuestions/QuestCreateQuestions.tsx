@@ -1,6 +1,7 @@
 import Input from '../../../components/UI/Input/Input'
 import {
   QuestQuestion,
+  QuestQuestionConnection,
   QuestQuestionMultiple,
   QuestQuestionSingle,
 } from '../../../models/questQuestion'
@@ -10,6 +11,7 @@ import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { OptionProps } from '../../../components/UI/Option/Option'
 import { ContextMenu } from '../../../components/ContextMenu/ContextMenu'
 import { QuestCreateQuestionMultiple } from './QuestCreateQuestionMultiple/QuestCreateQuestionMultiple'
+import { QuestCreateQuestionConnection } from './QuestCreateQuestionConnection/QuestCreateQuestionConnection'
 
 export interface QuestCreateQuestionsProps {
   questions: QuestQuestion[]
@@ -44,6 +46,19 @@ export const QuestCreateQuestions = ({
             type: 'multiple',
             answer: { options: [''], correctAnswer: [0] },
           } as QuestQuestionMultiple,
+        ])
+      },
+    },
+    {
+      text: 'Сопоставление',
+      onSelect: () => {
+        setQuestions([
+          ...questions,
+          {
+            text: '',
+            type: 'connection',
+            answer: { options: ['', ''], correctAnswer: ['0 - 1'] },
+          } as QuestQuestionConnection,
         ])
       },
     },
@@ -86,6 +101,14 @@ export const QuestCreateQuestions = ({
               setQuestions={setQuestions}
               multipleQuestionIndex={index}
               multipleQuestion={question as QuestQuestionMultiple}
+            />
+          )}
+          {question.type === 'connection' && (
+            <QuestCreateQuestionConnection
+              questions={questions}
+              setQuestions={setQuestions}
+              connectionQuestionIndex={index}
+              connectionQuestion={question as QuestQuestionConnection}
             />
           )}
         </ContainerBox>
