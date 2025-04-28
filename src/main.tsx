@@ -11,6 +11,7 @@ import './assets/styles/style.scss'
 import { Event } from './pages/Event/Event.tsx'
 import moment from 'moment'
 import { EventCalendar } from './pages/EventCalendar/EventCalendar.tsx'
+import { QuestCreate } from './pages/QuestCreate/QuestCreate.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -59,6 +60,7 @@ root.render(
         <Route path="event/create" element={<EventCreate />} />
         <Route path="event/:id/edit" element={<EventCreate />} />
         <Route path="event/calendar" element={<EventCalendar />} />
+        <Route path="quest/create" element={<QuestCreate />} />
       </Routes>
     </Provider>
   </BrowserRouter>,

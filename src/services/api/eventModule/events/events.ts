@@ -20,13 +20,13 @@ export const events = {
       )
       .join('&')
 
-    return eventModule<EventMinimize[], EventsGetDto>(
+    return eventModule<EventMinimize[], null>(
       `events${queryString ? `?${queryString}` : ''}`,
     )
   },
 
   getOne: (params: EventGetDto): Promise<Event> =>
-    eventModule<Event, EventGetDto>(`events/${params.id}`),
+    eventModule<Event, null>(`events/${params.id}`),
 
   create: (params: EventCreateDto): Promise<Event> =>
     eventModule<Event, EventCreateDto>('events', params),
