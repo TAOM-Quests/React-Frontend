@@ -3,6 +3,7 @@ import {
   QuestQuestion,
   QuestQuestionBoxSorting,
   QuestQuestionConnection,
+  QuestQuestionFree,
   QuestQuestionMultiple,
   QuestQuestionSingle,
 } from '../../../models/questQuestion'
@@ -14,6 +15,8 @@ import { ContextMenu } from '../../../components/ContextMenu/ContextMenu'
 import { QuestCreateQuestionMultiple } from './QuestCreateQuestionMultiple/QuestCreateQuestionMultiple'
 import { QuestCreateQuestionConnection } from './QuestCreateQuestionConnection/QuestCreateQuestionConnection'
 import { QuestCreateQuestionBoxSorting } from './QuestCreateQuestionBoxSorting/QuestCreateQuestionBoxSorting'
+import { QuestCreateQuestionFree } from './QuestCreateQuestionFree/QuestCreateQuestionFree'
+import { Icon } from '../../../components/UI/Icon/Icon'
 
 export interface QuestCreateQuestionsProps {
   questions: QuestQuestion[]
@@ -80,7 +83,28 @@ export const QuestCreateQuestions = ({
         ])
       },
     },
+    {
+      text: 'Ввод ответа',
+      onSelect: () => {
+        setQuestions([
+          ...questions,
+          {
+            text: '',
+            type: 'free',
+            answer: {
+              correctAnswer: '',
+            },
+          } as QuestQuestionFree,
+        ])
+      },
+    },
   ]
+
+  const removeQuestion = (index: number) => {
+    setQuestions(
+      questions.filter((_, indexQuestion) => indexQuestion !== index),
+    )
+  }
 
   const renderQuestion = (question: QuestQuestion, index: number) => (
     <div>
@@ -104,6 +128,10 @@ export const QuestCreateQuestions = ({
     <>
       {questions.map((question, index) => (
         <ContainerBox key={index}>
+          <div>
+            <h2>Задание {index + 1}</h2>
+            <Icon icon="CROSS" onClick={() => removeQuestion(index)} />
+          </div>
           {renderQuestion(question, index)}
           {question.type === 'single' && (
             <QuestCreateQuestionSingle
@@ -135,6 +163,14 @@ export const QuestCreateQuestions = ({
               setQuestions={setQuestions}
               boxSortingQuestionIndex={index}
               boxSortingQuestion={question as QuestQuestionBoxSorting}
+            />
+          )}
+          {question.type === 'free' && (
+            <QuestCreateQuestionFree
+              questions={questions}
+              setQuestions={setQuestions}
+              freeQuestionIndex={index}
+              freeQuestion={question as QuestQuestionFree}
             />
           )}
         </ContainerBox>

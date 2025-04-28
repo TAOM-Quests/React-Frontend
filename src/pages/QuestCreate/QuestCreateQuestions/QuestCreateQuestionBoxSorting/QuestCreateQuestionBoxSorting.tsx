@@ -6,8 +6,6 @@ import {
 import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
-import { Toggle } from '../../../../components/UI/Toggle/Toggle'
-
 export interface QuestCreateQuestionBoxSortingProps {
   questions: QuestQuestion[]
   boxSortingQuestionIndex: number
