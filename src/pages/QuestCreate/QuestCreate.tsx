@@ -22,7 +22,7 @@ export const QuestCreate = () => {
   const [time, setTime] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
-  const [result, setResult] = useState<QuestResult[]>([])
+  const [results, setResults] = useState<QuestResult[]>([])
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -58,7 +58,7 @@ export const QuestCreate = () => {
             questions={questions}
             setQuestions={setQuestions}
           />
-          <QuestCreateResults results={result} setResults={setResult} />
+          <QuestCreateResults results={results} setResults={setResults} />
         </div>
       ) : (
         'Loading...'
