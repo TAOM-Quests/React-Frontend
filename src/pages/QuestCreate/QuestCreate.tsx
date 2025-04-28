@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { QuestGroup } from '../../models/questGroup'
 import { QuestDifficult } from '../../models/questDifficult'
 import { QuestTag } from '../../models/questTag'
@@ -10,6 +10,7 @@ import { QuestQuestion } from '../../models/questQuestion'
 import { QuestCreateQuestions } from './QuestCreateQuestions/QuestCreateQuestions'
 import { QuestResult } from '../../models/questResult'
 import { QuestCreateResults } from './QuestCreateResults/QuestCreateResults'
+import { useNavigate } from 'react-router'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -23,7 +24,14 @@ export const QuestCreate = () => {
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
   const [result, setResult] = useState<QuestResult[]>([])
 
+  const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
+
+  useEffect(() => {
+    if (!user || !user.isEmployee) {
+      navigate('/')
+    }
+  }, [user])
 
   return (
     <>
