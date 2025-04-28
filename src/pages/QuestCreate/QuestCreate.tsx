@@ -10,7 +10,7 @@ import { QuestQuestion } from '../../models/questQuestion'
 import { QuestCreateQuestions } from './QuestCreateQuestions/QuestCreateQuestions'
 import { QuestResult } from '../../models/questResult'
 import { QuestCreateResults } from './QuestCreateResults/QuestCreateResults'
-import { useNavigate } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { SaveQuestDto } from '../../services/api/questModule/quests/questsDto'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { Button } from '../../components/UI/Button/Button'
@@ -27,6 +27,7 @@ export const QuestCreate = () => {
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
   const [results, setResults] = useState<QuestResult[]>([])
 
+  const questId = useParams().id
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
 
@@ -35,6 +36,30 @@ export const QuestCreate = () => {
       navigate('/')
     }
   }, [user])
+
+  useEffect(() => {
+    const fetchQuestData = async () => {
+      setIsLoading(true)
+
+      const quest = await quests.getById(+questId!)
+
+      if (quest.name) setName(quest.name)
+      if (quest.time) setTime(quest.time)
+      if (quest.tags) setTags(quest.tags)
+      if (quest.description) setDescription(quest.description)
+      if (quest.group) setGroup(quest.group)
+      if (quest.image) setImage(quest.image)
+      if (quest.difficult) setDifficulty(quest.difficult)
+      if (quest.questions) setQuestions(quest.questions)
+      if (quest.results) setResults(quest.results)
+
+      setIsLoading(false)
+    }
+
+    if (questId) {
+      fetchQuestData()
+    }
+  }, [])
 
   const saveQuest = async () => {
     setIsLoading(true)
@@ -54,7 +79,9 @@ export const QuestCreate = () => {
     if (questions.length) saveQuest.questions = questions
     if (results.length) saveQuest.results = results
 
-    await quests.create(saveQuest)
+    const { id } = await quests.create(saveQuest)
+
+    navigate(`/quest/${id}/edit`)
 
     setIsLoading(false)
   }

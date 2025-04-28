@@ -61,6 +61,7 @@ root.render(
         <Route path="event/:id/edit" element={<EventCreate />} />
         <Route path="event/calendar" element={<EventCalendar />} />
         <Route path="quest/create" element={<QuestCreate />} />
+        <Route path="quest/:id/edit" element={<QuestCreate />} />
       </Routes>
     </Provider>
   </BrowserRouter>,

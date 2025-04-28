@@ -4,6 +4,7 @@ import { QuestGroup } from './questGroup'
 import { QuestQuestion } from './questQuestion'
 import { QuestResult } from './questResult'
 import { QuestTag } from './questTag'
+import { ServerFile } from './serverFile'
 
 export default interface Quest {
   id: number
@@ -12,6 +13,8 @@ export default interface Quest {
   time?: string
   tags?: QuestTag[]
   group?: QuestGroup
+  image?: ServerFile
+  description?: string
   results?: QuestResult[]
   difficult: QuestDifficult
   questions?: QuestQuestion[]

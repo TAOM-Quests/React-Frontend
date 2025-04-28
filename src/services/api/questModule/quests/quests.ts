@@ -5,6 +5,9 @@ import { questModule } from '../questModule'
 import { QuestGroupsGetDto, QuestTagsGetDto, SaveQuestDto } from './questsDto'
 
 export const quests = {
+  getById: (id: number): Promise<Quest> =>
+    questModule<Quest, null>(`quests/${id}`),
+
   create: (params: SaveQuestDto): Promise<Quest> =>
     questModule<Quest, SaveQuestDto>('quests', params),
 
