@@ -2,9 +2,11 @@ import { useRef, useState } from 'react'
 import {
   QuestQuestion as QuestQuestionInterface,
   QuestQuestionSingle as QuestQuestionSingleInterface,
+  QuestQuestionMultiple as QuestQuestionMultipleInterface,
 } from '../../../models/questQuestion'
 import { Button } from '../../../components/UI/Button/Button'
 import { QuestQuestionSingle } from './QuestQuestionSingle/QuestQuestionSingle'
+import { QuestQuestionMultiple } from './QuestQuestionSingleMultiple/QuestQuestionMultiple'
 
 export interface QuestQuestionProps {
   setNextQuestion: (userAnswer: any) => void
@@ -24,6 +26,12 @@ export const QuestQuestion = ({
 
   const questionRef = useRef<QuestQuestionRefData>(null)
 
+  const showNextQuestion = () => {
+    setIsCheckMode(false)
+    setIsAnswerReady(false)
+    setNextQuestion(questionRef.current!.userAnswer)
+  }
+
   return (
     <div>
       <h2>{question.text}</h2>
@@ -35,6 +43,14 @@ export const QuestQuestion = ({
           question={question as QuestQuestionSingleInterface}
         />
       )}
+      {question.type === 'multiple' && (
+        <QuestQuestionMultiple
+          ref={questionRef}
+          isCheckMode={isCheckMode}
+          setIsAnswerReady={setIsAnswerReady}
+          question={question as QuestQuestionMultipleInterface}
+        />
+      )}
       {!isCheckMode && (
         <Button
           text="Ответить"
@@ -42,12 +58,7 @@ export const QuestQuestion = ({
           disabled={!isAnswerReady}
         />
       )}
-      {isCheckMode && (
-        <Button
-          text="Далее"
-          onClick={() => setNextQuestion(questionRef.current!.userAnswer)}
-        />
-      )}
+      {isCheckMode && <Button text="Далее" onClick={showNextQuestion} />}
     </div>
   )
 }
