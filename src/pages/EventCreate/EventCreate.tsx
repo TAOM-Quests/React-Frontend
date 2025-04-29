@@ -11,7 +11,10 @@ import Input from '../../components/UI/Input/Input'
 import { Dropdown } from '../../components/UI/Dropdown/Dropdown'
 import { users } from '../../services/api/userModule/users/users'
 import { PlaceOffline, PlaceOnline, ScheduleItem } from '../../models/event'
-import { EventCreateSchedule } from './EventCreateSchedule/EventCreateSchedule'
+import {
+  EventCreateSchedule,
+  ValidationError,
+} from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
@@ -48,6 +51,11 @@ export const EventCreate = () => {
   const [accessCode, setAccessCode] = useState<string>('')
   const [schedule, setSchedule] = useState<ScheduleItem[]>([])
   const [files, setFiles] = useState<ServerFile[]>([])
+
+  const [scheduleErrors, setScheduleErrors] = useState<ValidationError[]>([])
+  const isScheduleValid = scheduleErrors.every(
+    err => Object.keys(err).length === 0,
+  )
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -205,8 +213,15 @@ export const EventCreate = () => {
       />
       <Button
         text="Сохранить"
+        disabled={
+          !dateValidator.isValid || !timeValidator.isValid || !isScheduleValid
+        }
         onClick={() => {
-          if (dateValidator.isValid && timeValidator.isValid) {
+          if (
+            dateValidator.isValid &&
+            timeValidator.isValid &&
+            isScheduleValid
+          ) {
             saveEvent()
           }
         }}
@@ -365,6 +380,7 @@ export const EventCreate = () => {
             <EventCreateSchedule
               schedule={schedule}
               setSchedule={setSchedule}
+              onErrorsChange={setScheduleErrors}
             />
             <EventCreateFiles files={files} setFiles={setFiles} />
           </ContainerBox>

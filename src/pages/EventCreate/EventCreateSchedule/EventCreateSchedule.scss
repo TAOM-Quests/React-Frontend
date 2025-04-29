@@ -14,8 +14,9 @@
   &--item {
     display: flex;
     flex-direction: row;
+
     gap: 10px;
-    align-items: center;
+    align-items: start;
     width: 100%;
 
     @media (max-width: 830px) {
