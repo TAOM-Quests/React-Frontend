@@ -22,8 +22,12 @@ export const Quest = () => {
   useEffect(() => {
     const fetchQuestData = async () => {
       try {
+        setIsLoading(true)
+
         const fetchedQuest = await quests.getById(+questId!)
         setQuest(fetchedQuest)
+
+        setIsLoading(false)
       } catch (e) {
         console.error(e)
       }
@@ -37,7 +41,7 @@ export const Quest = () => {
     }
   }, [])
 
-  const setNextQuestion = () => {
+  const setNextQuestion = (userAnswer: any) => {
     if (currentQuestionIndex !== quest!.questions!.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex! + 1)
     } else {
@@ -65,7 +69,7 @@ export const Quest = () => {
               }}
             />
           )}
-          {currentQuestionIndex && (
+          {currentQuestionIndex !== null && (
             <ContainerBox>
               {quest.time && <Badge text={quest.time} />}
               <Badge
