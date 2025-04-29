@@ -79,9 +79,11 @@ export const QuestCreate = () => {
     if (questions.length) saveQuest.questions = questions
     if (results.length) saveQuest.results = results
 
-    const { id } = await quests.create(saveQuest)
+    const { id } = questId
+      ? await quests.update(+questId, saveQuest)
+      : await quests.create(saveQuest)
 
-    navigate(`/quest/${id}/edit`)
+    if (!questId) navigate(`/quest/${id}/edit`)
 
     setIsLoading(false)
   }

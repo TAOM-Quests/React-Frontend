@@ -11,6 +11,9 @@ export const quests = {
   create: (params: SaveQuestDto): Promise<Quest> =>
     questModule<Quest, SaveQuestDto>('quests', params),
 
+  update: (id: number, params: SaveQuestDto): Promise<Quest> =>
+    questModule<Quest, SaveQuestDto>(`quests/${id}`, params),
+
   getDifficulties: (): Promise<QuestDifficult[]> =>
     questModule<QuestDifficult[], null>('difficulties'),
 
