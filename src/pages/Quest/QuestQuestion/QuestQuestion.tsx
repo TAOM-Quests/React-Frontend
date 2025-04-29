@@ -3,10 +3,12 @@ import {
   QuestQuestion as QuestQuestionInterface,
   QuestQuestionSingle as QuestQuestionSingleInterface,
   QuestQuestionMultiple as QuestQuestionMultipleInterface,
+  QuestQuestionConnection as QuestQuestionConnectionInterface,
 } from '../../../models/questQuestion'
 import { Button } from '../../../components/UI/Button/Button'
 import { QuestQuestionSingle } from './QuestQuestionSingle/QuestQuestionSingle'
 import { QuestQuestionMultiple } from './QuestQuestionSingleMultiple/QuestQuestionMultiple'
+import { QuestQuestionConnection } from './QuestQuestionConnection/QuestQuestionConnection'
 
 export interface QuestQuestionProps {
   setNextQuestion: (userAnswer: any) => void
@@ -49,6 +51,14 @@ export const QuestQuestion = ({
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
           question={question as QuestQuestionMultipleInterface}
+        />
+      )}
+      {question.type === 'connection' && (
+        <QuestQuestionConnection
+          ref={questionRef}
+          isCheckMode={isCheckMode}
+          setIsAnswerReady={setIsAnswerReady}
+          question={question as QuestQuestionConnectionInterface}
         />
       )}
       {!isCheckMode && (

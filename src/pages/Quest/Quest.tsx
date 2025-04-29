@@ -73,7 +73,7 @@ export const Quest = () => {
             <ContainerBox>
               {quest.time && <Badge text={quest.time} />}
               <Badge
-                text={`${currentQuestionIndex} из ${quest.questions?.length}`}
+                text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
               />
               <QuestQuestion
                 question={quest.questions![currentQuestionIndex]}
