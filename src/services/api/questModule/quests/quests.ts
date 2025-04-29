@@ -1,4 +1,4 @@
-import Quest from '../../../../models/quest'
+import { Quest } from '../../../../models/quest'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
 import { questModule } from '../questModule'
