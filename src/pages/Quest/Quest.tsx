@@ -3,6 +3,9 @@ import { Quest as QuestInterface } from '../../models/quest'
 import { useEffect, useState } from 'react'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { QuestStartView } from './QuestStartView/QuestStartView'
+import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
+import { Badge } from '../../components/UI/Badge/Badge'
+import { QuestQuestion } from './QuestQuestion/QuestQuestion'
 
 export const Quest = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -34,6 +37,15 @@ export const Quest = () => {
     }
   }, [])
 
+  const setNextQuestion = () => {
+    if (currentQuestionIndex !== quest!.questions!.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex! + 1)
+    } else {
+      setCurrentQuestionIndex(null)
+      setIsResultView(true)
+    }
+  }
+
   return (
     <>
       {!isLoading && quest ? (
@@ -52,6 +64,18 @@ export const Quest = () => {
                 setCurrentQuestionIndex(0)
               }}
             />
+          )}
+          {currentQuestionIndex && (
+            <ContainerBox>
+              {quest.time && <Badge text={quest.time} />}
+              <Badge
+                text={`${currentQuestionIndex} из ${quest.questions?.length}`}
+              />
+              <QuestQuestion
+                question={quest.questions![currentQuestionIndex]}
+                setNextQuestion={setNextQuestion}
+              />
+            </ContainerBox>
           )}
         </div>
       ) : (
