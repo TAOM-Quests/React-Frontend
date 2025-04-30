@@ -4,11 +4,13 @@ import {
   QuestQuestionSingle as QuestQuestionSingleInterface,
   QuestQuestionMultiple as QuestQuestionMultipleInterface,
   QuestQuestionConnection as QuestQuestionConnectionInterface,
+  QuestQuestionBoxSorting as QuestQuestionBoxSortingInterface,
 } from '../../../models/questQuestion'
 import { Button } from '../../../components/UI/Button/Button'
 import { QuestQuestionSingle } from './QuestQuestionSingle/QuestQuestionSingle'
 import { QuestQuestionMultiple } from './QuestQuestionSingleMultiple/QuestQuestionMultiple'
 import { QuestQuestionConnection } from './QuestQuestionConnection/QuestQuestionConnection'
+import { QuestQuestionBoxSorting } from './QuestQuestionBoxSorting/QuestQuestionBoxSorting'
 
 export interface QuestQuestionProps {
   setNextQuestion: (userAnswer: any) => void
@@ -59,6 +61,14 @@ export const QuestQuestion = ({
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
           question={question as QuestQuestionConnectionInterface}
+        />
+      )}
+      {question.type === 'boxSorting' && (
+        <QuestQuestionBoxSorting
+          ref={questionRef}
+          isCheckMode={isCheckMode}
+          setIsAnswerReady={setIsAnswerReady}
+          question={question as QuestQuestionBoxSortingInterface}
         />
       )}
       {!isCheckMode && (

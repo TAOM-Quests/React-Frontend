@@ -34,11 +34,11 @@ export interface QuestQuestionBoxSorting extends QuestQuestion {
   type: 'boxSorting'
   answer: {
     options: string[]
-    correctAnswer: Box[]
+    correctAnswer: QuestQuestionBoxSortingAnswer[]
   }
 }
 
-interface Box {
+export interface QuestQuestionBoxSortingAnswer {
   name: string
   options: number[]
 }

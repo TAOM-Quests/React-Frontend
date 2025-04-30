@@ -112,17 +112,11 @@ export const QuestQuestionConnection = forwardRef(
     }
 
     return (
-      <div>
-        {JSON.stringify(dndOptions)}
-        <hr />
-        {JSON.stringify(userAnswer)}
-        <hr />
-        <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
-          {dndOptions.map((option, optionIndex) =>
-            renderOption(option, optionIndex),
-          )}
-        </DragDropProvider>
-      </div>
+      <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
+        {dndOptions.map((option, optionIndex) =>
+          renderOption(option, optionIndex),
+        )}
+      </DragDropProvider>
     )
   },
 )
