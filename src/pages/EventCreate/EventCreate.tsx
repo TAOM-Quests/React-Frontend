@@ -27,6 +27,12 @@ import { TimeInput } from '../../components/UI/TimeInput/TimeInput'
 import moment from 'moment'
 import { validateDate, validateTime } from '../../validation/validators'
 import { NumberInput } from '../../components/UI/NumberInput/NumberInput'
+import { Checkbox } from '../../components/UI/Checkbox/Checkbox'
+
+const additionalInfoItems: string[] = [
+  'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
+  'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
+]
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -56,6 +62,7 @@ export const EventCreate = () => {
   const isScheduleValid = scheduleErrors.every(
     err => Object.keys(err).length === 0,
   )
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -63,6 +70,14 @@ export const EventCreate = () => {
 
   let dateValidator = validateDate(date, !!time)
   let timeValidator = validateTime(time, !!date)
+
+  const handleChange = (text: string) => {
+    setCheckedItems(prev =>
+      prev.includes(text)
+        ? prev.filter(item => item !== text)
+        : [...prev, text],
+    )
+  }
 
   useEffect(() => {
     const fetchCreateEventData = async () => {
@@ -369,20 +384,41 @@ export const EventCreate = () => {
           {renderStateButtons()}
           <ContainerBox>
             <EventCreateImage image={image} setImage={setImage} />
-            {renderManagementData()}
-            <TextEditor
-              value={description ?? ''}
-              label="Описание мероприятия"
-              placeholder="Описание мероприятия"
-              onChange={e => setDescription(e.editor.getHTML())}
-            />
-            {renderPlaces()}
-            <EventCreateSchedule
-              schedule={schedule}
-              setSchedule={setSchedule}
-              onErrorsChange={setScheduleErrors}
-            />
-            <EventCreateFiles files={files} setFiles={setFiles} />
+            <div className="event_create--container">
+              <div>
+                {renderManagementData()}
+                <TextEditor
+                  value={description ?? ''}
+                  label="Описание мероприятия"
+                  placeholder="Описание мероприятия"
+                  onChange={e => setDescription(e.editor.getHTML())}
+                />
+                {renderPlaces()}
+                <EventCreateSchedule
+                  schedule={schedule}
+                  setSchedule={setSchedule}
+                  onErrorsChange={setScheduleErrors}
+                />
+              </div>
+              <div>
+                <EventCreateFiles files={files} setFiles={setFiles} />
+                <div className="additional-info">
+                  <label className="body_s_sb label">
+                    Дополнительная информация
+                  </label>
+                  <div className="additional-info_checkboxes">
+                    {additionalInfoItems.map((text, index) => (
+                      <Checkbox
+                        key={index}
+                        isSelected={checkedItems.includes(text)}
+                        onChange={() => handleChange(text)}
+                        label={text}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </ContainerBox>
         </div>
       ) : (

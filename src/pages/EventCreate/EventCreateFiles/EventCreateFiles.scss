@@ -3,6 +3,12 @@
   flex-direction: column;
   gap: 6px;
 
+  .areaFile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .cardsFile {
     display: flex;
     flex-wrap: wrap;
@@ -11,6 +17,11 @@
     max-height: 310px;
     overflow-y: auto;
     overflow-x: hidden;
+
+    @media (max-width: 845px) {
+      flex-direction: column;
+      flex-wrap: nowrap;
+    }
   }
 }
 
