@@ -1,4 +1,3 @@
-import React from 'react'
 import './CardFile.scss'
 import { Icon } from '../UI/Icon/Icon'
 
@@ -18,13 +17,13 @@ const formatFileSize = (size: number): string => {
   return `${(size / (1024 * 1024 * 1024)).toFixed(2)} ГБ`
 }
 
-const CardFile: React.FC<CardFileProps> = ({
+export const CardFile = ({
   fileName,
   size,
   url,
   extension,
   onRemove,
-}) => (
+}: CardFileProps) => (
   <div className={'cardFile'}>
     <div className={'cardFile--iconFile'}>
       <Icon colorIcon="subdued" className="iconFile " icon="FILE" />
@@ -48,5 +47,3 @@ const CardFile: React.FC<CardFileProps> = ({
     />
   </div>
 )
-
-export default CardFile
