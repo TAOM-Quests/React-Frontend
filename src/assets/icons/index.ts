@@ -25,7 +25,7 @@ import { DRAG_GRIP } from './dragGrip'
 import { EDIT } from './edit'
 import { DELETE } from './delete'
 import { BOLD } from './bold'
-import { ITALIC } from './Italic'
+import { ITALIC } from './italic'
 import { UNDERLINE } from './underline'
 import { STRIKE } from './strike'
 import { LIST } from './list'
@@ -40,6 +40,7 @@ import { HEADING_3 } from './heading_3'
 import { HEADING_4 } from './heading_4'
 import { HEADING_5 } from './heading_5'
 import { HEADING_6 } from './heading_6'
+import { FILE } from './file'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -84,6 +85,7 @@ export const ICON_MAP = {
   HEADING_4: HEADING_4,
   HEADING_5: HEADING_5,
   HEADING_6: HEADING_6,
+  FILE: FILE,
 }
 
 type IconName = keyof typeof ICON_MAP

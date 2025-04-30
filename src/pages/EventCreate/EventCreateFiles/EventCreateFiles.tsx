@@ -1,7 +1,10 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
 import { ServerFile } from '../../../models/serverFile'
-
+import classNames from 'classnames'
+import { Icon } from '../../../components/UI/Icon/Icon'
+import './EventCreateFiles.scss'
+import CardFile from '../../../components/CardFile/CardFile'
 export interface EventCreateFilesProps {
   files: ServerFile[]
   setFiles: Dispatch<SetStateAction<ServerFile[]>>
@@ -25,13 +28,34 @@ export const EventCreateFiles = ({
   }
 
   return (
-    <div>
-      <input type="file" multiple onChange={uploadFiles} />
-      {files.map(file => (
-        <a key={file.id} href={file.url}>
-          {file.originalName}.{file.extension}
-        </a>
-      ))}
+    <div className={classNames('area-file')}>
+      <label className="body_s_sb label">Материалы</label>
+      <div className={classNames('upload-area-file')}>
+        <div className="upload-text">
+          <Icon size="extraLarge" icon="FOLDER_UPLOAD" />
+          <span className="body_m_r">
+            Перетащите файл в эту область для загрузки или нажмите на неё
+          </span>
+        </div>
+        <input
+          type="file"
+          placeholder="Загрузить файл"
+          multiple
+          onChange={uploadFiles}
+        />
+      </div>
+      <div className="cardsFile">
+        {files.map(file => (
+          <CardFile
+            key={file.id}
+            fileName={file.originalName}
+            size={file.size}
+            url={file.url}
+            extension={file.extension}
+            onRemove={() => alert('Удалить файл')}
+          />
+        ))}
+      </div>
     </div>
   )
 }

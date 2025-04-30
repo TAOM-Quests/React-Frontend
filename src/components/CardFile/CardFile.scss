@@ -1,0 +1,94 @@
+.cardFile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg_c_secondary);
+  border-radius: 8px;
+  border: var(--border_primary) var(--border_c_primary);
+  box-shadow: var(--drop_shadow);
+  padding: 10px;
+  min-width: 270px;
+  height: 96px;
+  gap: 10px;
+  flex-basis: calc((100% - 10px) / 2);
+
+  &--iconFile {
+    position: relative;
+    width: 46px;
+    height: 48px;
+    flex-shrink: 0;
+
+    .iconFile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 46px;
+      height: 48px;
+    }
+
+    .docText {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--text_c_accent);
+      font-weight: 700;
+      font-size: 12px;
+      border: 1.5px solid var(--border_c_accent);
+      border-radius: 3px;
+      padding: 3px 5px;
+      background: var(--bg_c_secondary);
+      user-select: none;
+      pointer-events: none;
+    }
+  }
+
+  &--info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    flex: 1 1 auto;
+    min-width: 0;
+
+    .fileName {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      color: var(--text_c_primary);
+
+      .name {
+        min-width: 0;
+        max-width: 100%;
+        flex: 0 1 auto;
+      }
+      .extension {
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+    }
+
+    .fileSize {
+      color: var(--text_c_subdued);
+    }
+  }
+}
+
+.cardFile--closeBtn {
+  transition: color 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  &:hover {
+    color: #e53935;
+  }
+}
+
+.cardFile--saveBtn {
+  transition: color 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+  &:hover {
+    color: var(--text_c_accent);
+  }
+}
