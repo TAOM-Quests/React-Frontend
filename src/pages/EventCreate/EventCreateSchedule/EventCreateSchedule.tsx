@@ -6,6 +6,7 @@ import { ScheduleItem } from '../../../models/event'
 import './EventCreateSchedule.scss'
 import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
 import moment from 'moment'
+import { validateTime } from '../../../validation/validators'
 
 export interface EventCreateScheduleProps {
   schedule: ScheduleItem[]
@@ -48,24 +49,30 @@ export const EventCreateSchedule = ({
     time: string,
     index: number,
   ) => {
-    if (field === 'timeEnd' && !time.trim()) {
-      // Если timeEnd пустой, сохраняем null
-      changeScheduleItem(field, null, index)
+    const validation = validateTime(time, true)
+
+    setErrors(prevErrors => {
+      const newErrors = [...prevErrors]
+      if (!validation.isValid) {
+        newErrors[index] = {
+          ...newErrors[index],
+          [field]: validation.error,
+        }
+      } else {
+        newErrors[index] = {
+          ...newErrors[index],
+          [field]: undefined,
+        }
+      }
+      if (onErrorsChange) onErrorsChange(newErrors)
+      return newErrors
+    })
+
+    if (!validation.isValid) {
       return
     }
 
-    if (!time.trim()) {
-      // Для timeStart пустое значение не допустимо, но на всякий случай
-      changeScheduleItem(field, null, index)
-      return
-    }
-
-    const newDate = moment()
-      .hour(moment(time, TIME_FORMAT).hour())
-      .minute(moment(time, TIME_FORMAT).minute())
-      .second(0)
-      .toDate()
-
+    const newDate = moment(time, TIME_FORMAT).toDate()
     changeScheduleItem(field, newDate, index)
   }
 
@@ -87,6 +94,11 @@ export const EventCreateSchedule = ({
       // timeStart обязательное
       if (!timeStart) {
         error.timeStart = 'Начальное время обязательно'
+      }
+
+      // endStart обязательное
+      if (!timeEnd) {
+        error.timeEnd = 'Конечное время обязательно'
       }
 
       // Если timeEnd есть, проверяем, что timeStart <= timeEnd
