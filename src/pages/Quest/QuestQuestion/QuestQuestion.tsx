@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import {
   QuestQuestion as QuestQuestionInterface,
+  QuestQuestionFree as QuestQuestionFreeInterface,
   QuestQuestionSingle as QuestQuestionSingleInterface,
   QuestQuestionMultiple as QuestQuestionMultipleInterface,
   QuestQuestionConnection as QuestQuestionConnectionInterface,
@@ -11,6 +12,7 @@ import { QuestQuestionSingle } from './QuestQuestionSingle/QuestQuestionSingle'
 import { QuestQuestionMultiple } from './QuestQuestionSingleMultiple/QuestQuestionMultiple'
 import { QuestQuestionConnection } from './QuestQuestionConnection/QuestQuestionConnection'
 import { QuestQuestionBoxSorting } from './QuestQuestionBoxSorting/QuestQuestionBoxSorting'
+import { QuestQuestionFree } from './QuestQuestionFree/QuestQuestionFree'
 
 export interface QuestQuestionProps {
   setNextQuestion: (userAnswer: any) => void
@@ -69,6 +71,14 @@ export const QuestQuestion = ({
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
           question={question as QuestQuestionBoxSortingInterface}
+        />
+      )}
+      {question.type === 'free' && (
+        <QuestQuestionFree
+          ref={questionRef}
+          isCheckMode={isCheckMode}
+          setIsAnswerReady={setIsAnswerReady}
+          question={question as QuestQuestionFreeInterface}
         />
       )}
       {!isCheckMode && (
