@@ -127,6 +127,29 @@ p {
   margin: 0;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main-content {
+  flex: 1 0 auto; // Контент занимает всё доступное пространство
+}
+
+// .footer {
+//   flex-shrink: 0;
+// }
+
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 body {
   /* WebKit (Chrome, Safari) */
   &::-webkit-scrollbar {
@@ -254,6 +277,12 @@ body {
 
 .body_s_m {
   font-weight: var(--medium);
+  font-size: var(--fs_s);
+  line-height: var(--lh_s_xs);
+}
+
+.body_s_r {
+  font-weight: var(--regular);
   font-size: var(--fs_s);
   line-height: var(--lh_s_xs);
 }

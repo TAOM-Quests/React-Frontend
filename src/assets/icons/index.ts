@@ -27,6 +27,8 @@ import { DELETE } from './delete'
 import { EXCEL } from './excel'
 import { TAOM } from './taom'
 import { LOGOUT } from './logout'
+import { DZEN } from './dzen'
+import { VK } from './vk'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -58,6 +60,8 @@ export const ICON_MAP = {
   EXCEL: EXCEL,
   TAOM: TAOM,
   LOGOUT: LOGOUT,
+  DZEN: DZEN,
+  VK: VK,
 }
 
 type IconName = keyof typeof ICON_MAP
