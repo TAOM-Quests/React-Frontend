@@ -15,7 +15,14 @@ export const QuestQuestionSingle = forwardRef(
   ) => {
     const [userAnswer, setUserAnswer] = useState<number | null>(null)
 
-    useImperativeHandle(ref, () => ({ userAnswer }), [userAnswer])
+    useImperativeHandle(
+      ref,
+      () => ({
+        userAnswer,
+        isCorrectAnswer: userAnswer === question.answer.correctAnswer,
+      }),
+      [userAnswer],
+    )
     useEffect(() => setIsAnswerReady(userAnswer !== null), [userAnswer])
 
     const getOptionClassName = (optionIndex: number): string => {

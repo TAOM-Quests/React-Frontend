@@ -4,6 +4,7 @@ import {
   QuestQuestionBoxSorting as QuestQuestionBoxSortingInterface,
 } from '../../../../models/questQuestion'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
+import { isEqual } from 'lodash'
 
 export interface QuestQuestionBoxSortingProps {
   isCheckMode: boolean
@@ -25,7 +26,14 @@ export const QuestQuestionBoxSorting = forwardRef(
       })),
     )
 
-    useImperativeHandle(ref, () => ({ userAnswer }), [userAnswer])
+    useImperativeHandle(
+      ref,
+      () => ({
+        userAnswer,
+        isCorrectAnswer: isEqual(userAnswer, question.answer.correctAnswer),
+      }),
+      [userAnswer],
+    )
     useEffect(
       () =>
         setIsAnswerReady(

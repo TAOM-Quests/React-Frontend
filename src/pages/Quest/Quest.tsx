@@ -7,6 +7,11 @@ import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
 import { Badge } from '../../components/UI/Badge/Badge'
 import { QuestQuestion } from './QuestQuestion/QuestQuestion'
 
+interface UserAnswer {
+  answer: any
+  isCorrectAnswer: boolean
+}
+
 export const Quest = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [quest, setQuest] = useState<QuestInterface | null>(null)
@@ -14,6 +19,7 @@ export const Quest = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
     number | null
   >(null)
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
   const [isResultView, setIsResultView] = useState<boolean>(false)
 
   const questId = useParams().id
@@ -41,7 +47,9 @@ export const Quest = () => {
     }
   }, [])
 
-  const setNextQuestion = (userAnswer: any) => {
+  const setNextQuestion = (userAnswer: any, isCorrectAnswer: boolean) => {
+    setUserAnswers([...userAnswers, { answer: userAnswer, isCorrectAnswer }])
+
     if (currentQuestionIndex !== quest!.questions!.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex! + 1)
     } else {

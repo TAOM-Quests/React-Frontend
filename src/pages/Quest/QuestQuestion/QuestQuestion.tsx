@@ -15,12 +15,13 @@ import { QuestQuestionBoxSorting } from './QuestQuestionBoxSorting/QuestQuestion
 import { QuestQuestionFree } from './QuestQuestionFree/QuestQuestionFree'
 
 export interface QuestQuestionProps {
-  setNextQuestion: (userAnswer: any) => void
   question: QuestQuestionInterface
+  setNextQuestion: (userAnswer: any, isCorrectAnswer: boolean) => void
 }
 
 export interface QuestQuestionRefData {
   userAnswer: any
+  isCorrectAnswer: boolean
 }
 
 export const QuestQuestion = ({
@@ -35,7 +36,10 @@ export const QuestQuestion = ({
   const showNextQuestion = () => {
     setIsCheckMode(false)
     setIsAnswerReady(false)
-    setNextQuestion(questionRef.current!.userAnswer)
+    setNextQuestion(
+      questionRef.current!.userAnswer,
+      questionRef.current!.isCorrectAnswer,
+    )
   }
 
   return (

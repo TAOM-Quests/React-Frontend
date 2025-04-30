@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionMultiple as QuestQuestionMultipleInterface } from '../../../../models/questQuestion'
 import { Button } from '../../../../components/UI/Button/Button'
+import { isEqual } from 'lodash'
 
 export interface QuestQuestionMultipleProps {
   isCheckMode: boolean
@@ -15,7 +16,14 @@ export const QuestQuestionMultiple = forwardRef(
   ) => {
     const [userAnswer, setUserAnswer] = useState<number[]>([])
 
-    useImperativeHandle(ref, () => ({ userAnswer }), [userAnswer])
+    useImperativeHandle(
+      ref,
+      () => ({
+        userAnswer,
+        isCorrectAnswer: isEqual(userAnswer, question.answer.correctAnswer),
+      }),
+      [userAnswer],
+    )
     useEffect(() => setIsAnswerReady(userAnswer.length > 0), [userAnswer])
 
     const getOptionClassName = (optionIndex: number): string => {

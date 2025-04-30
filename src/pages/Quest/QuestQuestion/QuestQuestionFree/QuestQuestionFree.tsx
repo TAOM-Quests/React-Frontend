@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionFree as QuestQuestionFreeInterface } from '../../../../models/questQuestion'
 import Input from '../../../../components/UI/Input/Input'
+import { toLower } from 'lodash'
 
 export interface QuestQuestionFreeProps {
   isCheckMode: boolean
@@ -15,7 +16,16 @@ export const QuestQuestionFree = forwardRef(
   ) => {
     const [userAnswer, setUserAnswer] = useState<string>('')
 
-    useImperativeHandle(ref, () => ({ userAnswer }), [userAnswer])
+    useImperativeHandle(
+      ref,
+      () => ({
+        userAnswer,
+        isCorrectAnswer:
+          toLower(userAnswer).trim() ===
+          toLower(question.answer.correctAnswer).trim(),
+      }),
+      [userAnswer],
+    )
     useEffect(() => setIsAnswerReady(!!userAnswer.trim()), [userAnswer])
 
     return (

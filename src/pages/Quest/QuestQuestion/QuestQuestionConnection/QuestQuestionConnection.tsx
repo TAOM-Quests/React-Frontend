@@ -3,6 +3,7 @@ import { QuestQuestionConnection as QuestQuestionConnectionInterface } from '../
 import { DragDropProvider, useDraggable } from '@dnd-kit/react'
 import { useDroppable } from '@dnd-kit/react'
 import { Icon } from '../../../../components/UI/Icon/Icon'
+import { isEqual } from 'lodash'
 
 export interface QuestQuestionConnectionProps {
   isCheckMode: boolean
@@ -30,7 +31,14 @@ export const QuestQuestionConnection = forwardRef(
       })),
     )
 
-    useImperativeHandle(ref, () => ({ userAnswer }), [userAnswer])
+    useImperativeHandle(
+      ref,
+      () => ({
+        userAnswer,
+        isCorrectAnswer: isEqual(userAnswer, question.answer.correctAnswer),
+      }),
+      [userAnswer],
+    )
     useEffect(
       () => setIsAnswerReady(userAnswer.length === dndOptions.length / 2),
       [userAnswer],
