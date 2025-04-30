@@ -12,6 +12,7 @@ import { Event } from './pages/Event/Event.tsx'
 import moment from 'moment'
 import { EventCalendar } from './pages/EventCalendar/EventCalendar.tsx'
 import { QuestCreate } from './pages/QuestCreate/QuestCreate.tsx'
+import { Header } from './components/Header/Header.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -52,6 +53,7 @@ document.documentElement.lang = 'ru' // Добавляем атрибут lang
 root.render(
   <BrowserRouter>
     <Provider store={setupStore()}>
+      <Header />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />

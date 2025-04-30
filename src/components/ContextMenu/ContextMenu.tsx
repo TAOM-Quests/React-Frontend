@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useRef,
-  useState,
   cloneElement,
   isValidElement,
   ReactElement,
@@ -14,38 +13,35 @@ import { ContainerBox } from '../ContainerBox/ContainerBox'
 
 interface ContextMenuProps {
   options: OptionProps[]
-  selectedId?: number | null
   children?: ReactElement<ButtonHTMLAttributes<HTMLButtonElement>>
+  selectedId?: number | null
+  isVisible?: boolean
+  onToggle?: () => void
 }
 
 export const ContextMenu = ({
   options,
   selectedId,
   children,
+  isVisible = false,
+  onToggle,
 }: ContextMenuProps) => {
-  const [visible, setVisible] = useState(false)
   const menuRef = useRef<HTMLUListElement>(null)
-
-  const handleOpenMenu = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setVisible(visible => !visible)
-  }
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setVisible(false)
+        onToggle && onToggle() // Закрываем меню снаружи
       }
     }
 
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setVisible(false)
+        onToggle && onToggle()
       }
     }
 
-    if (visible) {
+    if (isVisible) {
       document.addEventListener('click', handleClickOutside)
       document.addEventListener('keydown', handleEsc)
     } else {
@@ -57,7 +53,13 @@ export const ContextMenu = ({
       document.removeEventListener('click', handleClickOutside)
       document.removeEventListener('keydown', handleEsc)
     }
-  }, [visible])
+  }, [isVisible, onToggle])
+
+  const handleOpenMenu = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onToggle && onToggle()
+  }
 
   const trigger = isValidElement(children) ? (
     cloneElement(children, { onClick: handleOpenMenu })
@@ -69,7 +71,7 @@ export const ContextMenu = ({
     <>
       {trigger}
 
-      {visible && (
+      {isVisible && (
         <ul className="context-menu" ref={menuRef}>
           <ContainerBox className="context-menu__box">
             {options.map(option => (
@@ -80,7 +82,6 @@ export const ContextMenu = ({
                 isSelected={option.id === selectedId}
                 onSelect={(id, selected) => {
                   option.onSelect?.(id, selected)
-                  setVisible(false)
                 }}
               />
             ))}

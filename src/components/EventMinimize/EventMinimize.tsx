@@ -6,6 +6,7 @@ import './EventMinimize.scss'
 import { Badge, TypeBadge } from '../UI/Badge/Badge'
 import { OptionProps } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
+import { useState } from 'react'
 
 export interface EventMinimizeProps {
   id: number
@@ -30,6 +31,7 @@ export default function EventMinimize({
   imageUrl,
   isEmployeeView,
 }: EventMinimizeProps) {
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null)
   const navigate = useNavigate()
 
   const eventOptionsContextMenu: OptionProps[] = [
@@ -62,6 +64,14 @@ export default function EventMinimize({
     return statusColor[status] ?? 'neutral'
   }
 
+  const toggleMenu = () => {
+    if (openMenuId === id) {
+      setOpenMenuId(null)
+    } else {
+      setOpenMenuId(id)
+    }
+  }
+
   return (
     <ContainerBox
       onClick={() => navigate(`/event/${id}`)}
@@ -77,7 +87,11 @@ export default function EventMinimize({
           {isEmployeeView && (
             <>
               <Badge type={getStatusColor(status)} text={status} />
-              <ContextMenu options={eventOptionsContextMenu}>
+              <ContextMenu
+                isVisible={openMenuId === id}
+                onToggle={toggleMenu}
+                options={eventOptionsContextMenu}
+              >
                 <Icon colorIcon="primary" icon="MENU_DOTS" />
               </ContextMenu>
             </>

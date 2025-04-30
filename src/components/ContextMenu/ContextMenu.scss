@@ -2,10 +2,10 @@
   position: absolute;
   z-index: 1000;
   user-select: none;
-  margin: 0;
+  margin: 4px 0 0 0;
   padding: 0;
-  top: 24px;
-  right: 0;
+  // top: 24px; //Возможно надо, а возможно нет
+  // right: 0;
 
   &__box {
     padding: 4px;
