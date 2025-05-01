@@ -18,9 +18,8 @@ export const EventExecutors = ({ executors }: EventExecutorsProps) => {
       <h5 className="heading_5 event-executors__title">Организаторы</h5>
       <div className="event-executors__executors">
         {executors.map((executor, idx) => (
-          <>
+          <div key={executor.id}>
             <div
-              key={executor.id}
               className="event-executors__avatar-wrap"
               ref={el => (avatarRefs.current[idx] = el)}
               onMouseEnter={() => setActiveId(executor.id)}
@@ -40,7 +39,7 @@ export const EventExecutors = ({ executors }: EventExecutorsProps) => {
                 position={executor.position}
               />
             )}
-          </>
+          </div>
         ))}
       </div>
     </ContainerBox>

@@ -1,5 +1,4 @@
 import moment from 'moment'
-import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { Button } from '../../../components/UI/Button/Button'
 import { Icon } from '../../../components/UI/Icon/Icon'
 import { Department } from '../../../models/department'

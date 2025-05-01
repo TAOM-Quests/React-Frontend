@@ -12,3 +12,9 @@
     height: 74px;
   }
 }
+
+@media (max-width: 400px) {
+  .event-executors__title {
+    font-size: 20px;
+  }
+}

@@ -8,7 +8,9 @@ export interface EventOnlinePlaceProps {
 export const EventOnlinePlace = ({ place }: EventOnlinePlaceProps) => {
   return (
     <ContainerBox>
-      <h5 className="heading_5">Для онлайн подключения</h5>
+      <h5 className="heading_5 event-online-place__title">
+        Для онлайн подключения
+      </h5>
       <div className="event-online-place">
         <div className="event-online-place__platform">
           <span className="body_m_r">Площадка и ссылка для подключения</span>

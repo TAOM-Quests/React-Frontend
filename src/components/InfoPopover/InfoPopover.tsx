@@ -1,6 +1,8 @@
 import { ReactNode, RefObject, useEffect, useState } from 'react'
 import './InfoPopover.scss'
 
+import { usePopper } from 'react-popper'
+
 interface InfoPopoverProps {
   anchorRef: RefObject<HTMLDivElement>
   isVisible: boolean
@@ -18,30 +20,40 @@ export const InfoPopover = ({
   text,
   children,
 }: InfoPopoverProps) => {
-  const [coords, setCoords] = useState({ left: 0, top: 0 })
+  const [popperElement, setPopperElement] = useState<HTMLElement | null>(null)
 
-  useEffect(() => {
-    if (anchorRef.current && isVisible) {
-      const rect = anchorRef.current.getBoundingClientRect()
-      setCoords({
-        left: rect.left + rect.width / 2,
-        top: rect.top,
-      })
-    }
-  }, [anchorRef, isVisible])
+  const { styles, attributes } = usePopper(anchorRef.current, popperElement, {
+    placement: 'top',
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: [0, 8], // сдвиг по X и Y: 8px ниже анкора
+        },
+      },
+      {
+        name: 'preventOverflow',
+        options: {
+          padding: 8,
+        },
+      },
+      {
+        name: 'flip',
+        options: {
+          fallbackPlacements: ['top', 'bottom', 'right', 'left'],
+        },
+      },
+    ],
+  })
 
   if (!isVisible) return null
 
   return (
     <div
+      ref={setPopperElement}
       className="info-popover"
-      style={{
-        position: 'fixed',
-        left: coords.left,
-        top: coords.top,
-        transform: 'translate(-50%, -110%)',
-        zIndex: 1000,
-      }}
+      style={styles.popper}
+      {...attributes.popper}
     >
       <div className="info-popover__card">
         {children ? (
