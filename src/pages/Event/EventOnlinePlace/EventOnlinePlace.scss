@@ -1,0 +1,30 @@
+.event-online-place {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: var(--bg_c_gray_primary);
+  border-radius: 8px;
+
+  &__platform {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .platform_link {
+      color: var(--text_c_accent);
+      text-decoration: none;
+    }
+  }
+
+  &__identifier,
+  &__code {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    border-bottom: var(--border_secondary) var(--border_c_accent);
+  }
+}

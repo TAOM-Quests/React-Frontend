@@ -9,12 +9,12 @@ export interface EventOfflinePlaceProps {
 export const EventOfflinePlace = ({ place }: EventOfflinePlaceProps) => {
   return (
     <ContainerBox className="event-offline">
-      <Icon icon="DEPARTMENT" colorIcon="subdued" size="Large" />
+      <Icon icon="DEPARTMENT" colorIcon="subdued" size="large" />
       <div className="event-offline-place">
         <h6 className="heading_6">Этаж {place.floor}</h6>
-        <p className="heading_5 office_number">
-          {place.office_number} Felbnjhbz
-        </p>
+        {place.office_number && (
+          <p className="heading_5 office_number">{place.office_number}</p>
+        )}
       </div>
     </ContainerBox>
   )
