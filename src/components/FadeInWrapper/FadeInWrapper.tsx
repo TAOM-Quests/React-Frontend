@@ -3,18 +3,18 @@ import './FadeInWrapper.scss'
 
 interface FadeInWrapperProps {
   children: ReactNode
+  style?: CSSProperties
+  className?: string
   threshold?: number // сколько % элемента должно быть видно, чтобы сработать
   rootMargin?: string // отступы для области видимости
-  className?: string
-  style?: CSSProperties
 }
 
 export const FadeInWrapper = ({
+  style,
   children,
+  className = '',
   threshold = 0.1,
   rootMargin = '0px',
-  className = '',
-  style,
 }: FadeInWrapperProps) => {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
@@ -27,7 +27,7 @@ export const FadeInWrapper = ({
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             setVisible(true)
-            observer.unobserve(entry.target) // отключаем наблюдение после появления
+            observer.unobserve(entry.target)
           }
         })
       },

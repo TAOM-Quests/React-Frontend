@@ -61,28 +61,33 @@ export const Event = () => {
                   </ContainerBox>
                 </FadeInWrapper>
               )}
+
               {event.files && (
                 <FadeInWrapper>
                   <EventFiles files={event.files} />
                 </FadeInWrapper>
               )}
             </div>
+
             <div className="event-details__right">
               {placeOffline && (
                 <FadeInWrapper>
                   <EventOfflinePlace place={placeOffline} />
                 </FadeInWrapper>
               )}
+
               {event.schedule.length && (
                 <FadeInWrapper>
                   <EventSchedule schedule={event.schedule} />
                 </FadeInWrapper>
               )}
+
               {event.executors.length && (
                 <FadeInWrapper>
                   <EventExecutors executors={event.executors} />
                 </FadeInWrapper>
               )}
+
               {placeOnline && (
                 <FadeInWrapper>
                   <EventOnlinePlace place={placeOnline} />

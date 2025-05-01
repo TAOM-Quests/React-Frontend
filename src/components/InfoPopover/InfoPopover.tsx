@@ -1,24 +1,23 @@
-import { ReactNode, RefObject, useEffect, useState } from 'react'
-import './InfoPopover.scss'
-
+import { ReactNode, RefObject, useState } from 'react'
 import { usePopper } from 'react-popper'
+import './InfoPopover.scss'
 
 interface InfoPopoverProps {
   anchorRef: RefObject<HTMLDivElement>
   isVisible: boolean
   name?: string
-  position?: string
   text?: string
   children?: ReactNode
+  position?: string
 }
 
 export const InfoPopover = ({
+  name,
+  text,
+  position,
+  children,
   anchorRef,
   isVisible,
-  name,
-  position,
-  text,
-  children,
 }: InfoPopoverProps) => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null)
 
@@ -28,7 +27,7 @@ export const InfoPopover = ({
       {
         name: 'offset',
         options: {
-          offset: [0, 8], // сдвиг по X и Y: 8px ниже анкора
+          offset: [0, 8], // сдвиг по X и Y: 8px ниже
         },
       },
       {

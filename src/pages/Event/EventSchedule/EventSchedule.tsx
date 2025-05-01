@@ -1,9 +1,8 @@
 import moment from 'moment'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { ScheduleItem } from '../../../models/event'
-import './EventSchedule.scss'
-import { useEffect, useRef, useState } from 'react'
 import { FadeInWrapper } from '../../../components/FadeInWrapper/FadeInWrapper'
+import './EventSchedule.scss'
 
 export interface EventScheduleProps {
   schedule: ScheduleItem[]
@@ -21,11 +20,13 @@ export const EventSchedule = ({ schedule }: EventScheduleProps) => {
               {idx !== schedule.length - 1 && (
                 <div className="event-schedule__line" />
               )}
+
               <div className="event-schedule__content">
                 <div className="body_xl_m event-schedule__time">
                   {moment(item.timeStart).format('HH:mm')} -{' '}
                   {moment(item.timeEnd).format('HH:mm')}
                 </div>
+
                 {item.name && (
                   <div className="body_m_r event-schedule__desc">
                     {item.name}

@@ -9,29 +9,29 @@ import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { useNavigate } from 'react-router'
 import { Participant } from '../../../models/user'
-import './EventMainData.scss'
 import { EventType } from '../../../models/eventType'
+import './EventMainData.scss'
 
 export interface EventMainDataProps {
   eventId: number
   department: Department
   date?: Date
   name?: string
-  image?: ServerFile
-  participants?: Participant[]
-  places?: (PlaceOnline | PlaceOffline)[]
   type?: EventType
+  image?: ServerFile
+  places?: (PlaceOnline | PlaceOffline)[]
+  participants?: Participant[]
 }
 
 export const EventMainData = ({
   date,
   name,
+  type,
   image,
   places,
   eventId,
   department,
   participants,
-  type,
 }: EventMainDataProps) => {
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -64,15 +64,18 @@ export const EventMainData = ({
       <div className="event-banner__overlay" />
       <div className="event-banner__content">
         <h3 className="heading_3 event-banner__title">{name}</h3>
+
         <div className="event-banner__info-rows">
           <div className="body_xl_m event-banner__info-row">
             <Icon icon="CALENDAR" colorIcon="subdued" />
             <span>{moment(date).format('DD MMMM YYYY год')}</span>
           </div>
+
           <div className="body_xl_m event-banner__info-row">
             <Icon icon="TIME" colorIcon="subdued" />
             <span>{moment(date).format('HH:mm')}</span>
           </div>
+
           {placeOffline?.address && (
             <div className="body_xl_m event-banner__info-row">
               <Icon icon="MARKER_MAP" colorIcon="subdued" />
@@ -86,10 +89,12 @@ export const EventMainData = ({
               <span>{placeOnline?.platform}</span>
             </div>
           )}
+
           <div className="body_xl_m event-banner__info-row">
             <Icon icon="DEPARTMENT" colorIcon="subdued" />
             <span>{department.name}</span>
           </div>
+
           <div className="body_xl_m event-banner__info-row">
             <Icon icon="GRADUATION_CAP" colorIcon="subdued" />
             <span>{type?.name}</span>

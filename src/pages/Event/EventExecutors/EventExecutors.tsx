@@ -2,8 +2,8 @@ import { useRef, useState } from 'react'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { Avatar } from '../../../components/UI/Avatar/Avatar'
 import { Employee } from '../../../models/user'
-import './EventExecutors.scss'
 import { InfoPopover } from '../../../components/InfoPopover/InfoPopover'
+import './EventExecutors.scss'
 
 export interface EventExecutorsProps {
   executors: Employee[]
@@ -11,6 +11,7 @@ export interface EventExecutorsProps {
 
 export const EventExecutors = ({ executors }: EventExecutorsProps) => {
   const [activeId, setActiveId] = useState<number | null>(null)
+
   const avatarRefs = useRef<(HTMLDivElement | null)[]>([])
 
   return (

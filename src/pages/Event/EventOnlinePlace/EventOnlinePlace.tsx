@@ -14,6 +14,7 @@ export const EventOnlinePlace = ({ place }: EventOnlinePlaceProps) => {
       <div className="event-online-place">
         <div className="event-online-place__platform">
           <span className="body_m_r">Площадка и ссылка для подключения</span>
+
           {place.connection_link ? (
             <a className="heading_5 platform_link" href={place.connection_link}>
               {place.platform}
