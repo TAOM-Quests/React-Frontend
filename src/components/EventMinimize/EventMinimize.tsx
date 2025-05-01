@@ -64,7 +64,7 @@ export default function EventMinimize({
 
   return (
     <ContainerBox
-      onClick={() => navigate(`/events/${id}`)}
+      onClick={() => navigate(`/event/${id}`)}
       className="eventMinimize"
     >
       <div className="eventMinimize__image-wrapper">

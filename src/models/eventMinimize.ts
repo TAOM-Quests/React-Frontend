@@ -1,4 +1,4 @@
-import { PlaceOffline, PlaceOnline } from './event'
+import { PlaceOffline, PlaceOnline, ScheduleItem } from './event'
 import { EventStatus } from './eventStatus'
 import { EventType } from './eventType'
 import { ServerFile } from './serverFile'
@@ -8,7 +8,8 @@ export interface EventMinimize {
   status: EventStatus
   date?: Date
   name?: string
-  type?: EventType,
-  places?: (PlaceOffline | PlaceOnline)[],
+  type?: EventType
   image?: ServerFile
+  schedule: ScheduleItem[]
+  places?: (PlaceOffline | PlaceOnline)[]
 }

@@ -5,8 +5,11 @@ import {
 } from '../../../../models/event'
 
 export interface EventsGetDto {
-  date?: Date
   type?: number
+  limit?: number
+  dateEnd?: Date
+  offset?: number
+  dateStart?: Date
   executor?: number
   department?: number
   participant?: number
@@ -30,6 +33,11 @@ export interface EventCreateDto {
   executorsIds?: number[]
   schedule?: ScheduleItem[]
   places?: (PlaceOnline | PlaceOffline)[]
+}
+
+export interface changeParticipantDto {
+  add?: number[]
+  remove?: number[]
 }
 
 export interface EventUpdateDto {

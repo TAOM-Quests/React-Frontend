@@ -28,13 +28,14 @@ export interface DropdownItemType {
 
 export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   items: DropdownItemType[]
+  label?: string
+  errorText?: string
+  helperText?: string
+  isMultiple?: boolean
+  selectedIds?: number[]
   onChangeDropdown?: (
     selectedItem: DropdownItemType | DropdownItemType[] | null,
   ) => void
-  label?: string
-  isMultiple?: boolean
-  helperText?: string
-  errorText?: string
 }
 
 export const Dropdown = ({
@@ -47,12 +48,18 @@ export const Dropdown = ({
   placeholder,
   helperText,
   errorText,
+  selectedIds: selectedIdsProp,
   ...props
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [searchValue, setSearchValue] = useState('')
-
-  const [selectedIds, setSelectedIds] = useState<number[]>(isMultiple ? [] : [])
+  const [searchValue, setSearchValue] = useState(
+    !isMultiple && selectedIdsProp
+      ? (items.find(item => item.id === selectedIdsProp[0])?.text ?? '')
+      : '',
+  )
+  const [selectedIds, setSelectedIds] = useState<number[]>(
+    selectedIdsProp ?? [],
+  )
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)

@@ -31,11 +31,19 @@ export default function EventsTab({ user }: EventsTabProps) {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      setEvents(
-        user.isEmployee
-          ? await events.getManyByParams({ executor: user.id, ...filter })
-          : await events.getManyByParams({ participant: user.id, ...filter }),
-      )
+      const fetchedEvents = user.isEmployee
+        ? await events.getManyByParams({
+            executor: user.id,
+            offset: userEvents?.length,
+            ...filter,
+          })
+        : await events.getManyByParams({
+            participant: user.id,
+            offset: userEvents?.length,
+            ...filter,
+          })
+
+      setEvents([...(userEvents ?? []), ...fetchedEvents])
     }
 
     fetchEvents()

@@ -64,9 +64,9 @@ export const EventCreate = () => {
   )
   const [checkedItems, setCheckedItems] = useState<string[]>([])
 
+  const eventId = useParams().id
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
-  const eventId = useParams().id
 
   let dateValidator = validateDate(date, !!time)
   let timeValidator = validateTime(time, !!date)

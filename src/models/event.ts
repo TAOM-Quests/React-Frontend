@@ -1,3 +1,4 @@
+import { Department } from './department'
 import { EventStatus } from './eventStatus'
 import { EventType } from './eventType'
 import { ServerFile } from './serverFile'
@@ -5,18 +6,19 @@ import { Employee } from './user'
 
 export interface Event {
   id: number
+  date: Date
   name: string
+  type: EventType
   image: ServerFile
   description: string
-  date: Date
   seatsNumber: number
-  inspector: Employee
-  executors: Employee[]
-  places: (PlaceOnline | PlaceOffline)[]
-  schedule: ScheduleItem[]
-  type: EventType
-  status: EventStatus
   files: ServerFile[]
+  inspector: Employee
+  status: EventStatus
+  executors: Employee[]
+  department: Department
+  schedule: ScheduleItem[]
+  places: (PlaceOnline | PlaceOffline)[]
 }
 
 interface Place {
