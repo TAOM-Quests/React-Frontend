@@ -38,7 +38,6 @@ export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
-  const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
   const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string>('')
   const [date, setDate] = useState<Date | null>(null)
@@ -62,8 +61,8 @@ export const EventCreate = () => {
   const isScheduleValid = scheduleErrors.every(
     err => Object.keys(err).length === 0,
   )
-  const [checkedItems, setCheckedItems] = useState<string[]>([])
-
+  const [additionalInfoTexts, setAdditionalInfoTexts] = useState<string[]>([])
+  console.log(additionalInfoTexts)
   const eventId = useParams().id
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -72,7 +71,7 @@ export const EventCreate = () => {
   let timeValidator = validateTime(time, !!date)
 
   const handleChange = (text: string) => {
-    setCheckedItems(prev =>
+    setAdditionalInfoTexts(prev =>
       prev.includes(text)
         ? prev.filter(item => item !== text)
         : [...prev, text],
@@ -83,7 +82,6 @@ export const EventCreate = () => {
     const fetchCreateEventData = async () => {
       try {
         setEventTypes(await events.getTypes())
-        setEventStatuses(await events.getStatuses())
         setEventExecutors(await users.getEmployees())
         setIsLoading(false)
       } catch (e) {
@@ -410,7 +408,7 @@ export const EventCreate = () => {
                     {additionalInfoItems.map((text, index) => (
                       <Checkbox
                         key={index}
-                        isSelected={checkedItems.includes(text)}
+                        isSelected={additionalInfoTexts.includes(text)}
                         onChange={() => handleChange(text)}
                         label={text}
                       />
