@@ -1,0 +1,52 @@
+.header {
+  &__nav {
+    &-list {
+      display: flex;
+      flex-direction: row;
+      gap: 40px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    &-link-menu {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+    }
+
+    &-link {
+      color: var(--text_c_secondary);
+      text-decoration: none;
+      transition: color 0.2s ease-in-out;
+      position: relative;
+
+      .icon {
+        transition: color 0.2s ease-in-out;
+      }
+      &:hover,
+      &:hover .icon {
+        color: var(--text_c_accent);
+      }
+
+      &--active {
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: var(--bg_c_secondary);
+          transition: background-color 0.2s ease-in-out;
+        }
+      }
+      &--active:hover {
+        &::after {
+          background-color: var(--bg_c_accent);
+        }
+      }
+    }
+  }
+}

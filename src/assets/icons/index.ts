@@ -41,6 +41,11 @@ import { HEADING_4 } from './heading_4'
 import { HEADING_5 } from './heading_5'
 import { HEADING_6 } from './heading_6'
 import { FILE } from './file'
+import { EXCEL } from './excel'
+import { TAOM } from './taom'
+import { LOGOUT } from './logout'
+import { DZEN } from './dzen'
+import { VK } from './vk'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -86,6 +91,11 @@ export const ICON_MAP = {
   HEADING_5: HEADING_5,
   HEADING_6: HEADING_6,
   FILE: FILE,
+  EXCEL: EXCEL,
+  TAOM: TAOM,
+  LOGOUT: LOGOUT,
+  DZEN: DZEN,
+  VK: VK,
 }
 
 type IconName = keyof typeof ICON_MAP
