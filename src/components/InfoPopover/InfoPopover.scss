@@ -1,0 +1,23 @@
+.info-popover {
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &__card {
+    background-color: var(--bg_c_secondary);
+    border-radius: 8px;
+    box-shadow: var(--drop_shadow_popover);
+    padding: 20px;
+    min-width: 180px;
+    max-width: 360px;
+    text-align: left;
+  }
+
+  &__name {
+    color: var(--text_c_primary);
+  }
+
+  &__position {
+    color: var(--text_c_primary);
+  }
+}

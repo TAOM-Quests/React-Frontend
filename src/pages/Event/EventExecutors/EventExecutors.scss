@@ -1,0 +1,14 @@
+.event-executors {
+  &__avatar-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  &__executors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    height: 74px;
+  }
+}
