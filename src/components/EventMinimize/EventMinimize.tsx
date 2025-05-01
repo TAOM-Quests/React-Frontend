@@ -32,6 +32,7 @@ export default function EventMinimize({
   isEmployeeView,
 }: EventMinimizeProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
+
   const navigate = useNavigate()
 
   const eventOptionsContextMenu: OptionProps[] = [

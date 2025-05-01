@@ -62,6 +62,7 @@ interface HeaderMenuProps {
 export const HeaderMenu = ({ onNavigate }: HeaderMenuProps) => {
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
+
   const user = useAppSelector(selectAuth)
   const navigate = useNavigate()
 

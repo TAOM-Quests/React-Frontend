@@ -1,10 +1,16 @@
 import './Footer.scss'
 import { LOGO } from '../../assets/images/logo.ts'
 import { Icon } from '../UI/Icon/Icon.tsx'
+import { ICON_MAP } from '../../assets/icons/index.ts'
+
+interface SocialLink {
+  href: string
+  icon: keyof typeof ICON_MAP
+}
 
 interface FooterLink {
   label: string
-  href?: string
+  href: string
 }
 
 interface FooterSection {
@@ -18,7 +24,15 @@ interface ContactInfo {
   addressLines: string[]
 }
 
-const footerData = {
+interface FooterData {
+  logoAlt: string
+  socialLinks: SocialLink[]
+  sections: FooterSection[]
+  contacts: ContactInfo
+  copyright: string
+}
+
+const footerData: FooterData = {
   logoAlt: 'Тольяттинская академия управления',
   socialLinks: [
     { href: 'https://vk.com/taom_ru', icon: 'VK' },
