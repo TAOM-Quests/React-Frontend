@@ -27,7 +27,6 @@ export const TimeInput = ({
   const [valueInput, setValueInput] = useState(value ?? '')
   const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
 
-  // Маска для ввода времени
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.replace(/[^0-9]/g, '')
     if (val.length > 4) val = val.slice(0, 4)

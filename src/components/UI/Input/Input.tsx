@@ -80,12 +80,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     )
 
     const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation() // Останавливаем всплытие события
-      setIsInputVisible(true) // Показываем input при клике на div
+      e.stopPropagation()
+      setIsInputVisible(true)
       setTimeout(() => {
         internalInputRef.current?.focus()
-      }, 0) //  <---  Устанавливаем фокус на input
-      onClearSelection?.() // Очищаем выбор в Dropdown
+      }, 0)
+      onClearSelection?.()
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

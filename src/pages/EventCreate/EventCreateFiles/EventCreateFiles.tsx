@@ -41,18 +41,18 @@ export const EventCreateFiles = ({
           </div>
           <input
             type="file"
-            placeholder="Загрузить файл"
             multiple
             onChange={uploadFiles}
+            placeholder="Загрузить файл"
           />
         </div>
         <div className="cardsFile">
           {files.map(file => (
             <CardFile
               key={file.id}
-              fileName={file.originalName}
-              size={file.size}
               url={file.url}
+              size={file.size}
+              fileName={file.originalName}
               extension={file.extension}
               onRemove={() => alert('Удалить файл')}
             />

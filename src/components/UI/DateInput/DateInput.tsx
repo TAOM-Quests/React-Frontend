@@ -258,10 +258,9 @@ export const DateInput = ({
     if (parsed.isValid()) {
       setDate(parsed)
       setCurrentDate(parsed)
-      setInputValue(parsed.format(DATE_FORMAT)) // форматируем строго
+      setInputValue(parsed.format(DATE_FORMAT))
       onDateSelect(parsed.toDate())
     } else {
-      // Восстанавливаем последнее валидное значение
       setInputValue(date ? date.format(DATE_FORMAT) : '')
     }
   }

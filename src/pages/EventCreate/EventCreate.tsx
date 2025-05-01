@@ -1,19 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useNavigate, useParams } from 'react-router'
 import { EventType } from '../../models/eventType'
 import { Employee } from '../../models/user'
 import { Button } from '../../components/UI/Button/Button'
-import { EventStatus } from '../../models/eventStatus'
 import { events } from '../../services/api/eventModule/events/events'
-import Input from '../../components/UI/Input/Input'
-import { Dropdown } from '../../components/UI/Dropdown/Dropdown'
 import { users } from '../../services/api/userModule/users/users'
 import { PlaceOffline, PlaceOnline, ScheduleItem } from '../../models/event'
 import {
   EventCreateSchedule,
-  ValidationError,
+  EventCreateScheduleRef,
 } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateImage } from './EventCreateImage/EventCreateImage'
@@ -22,12 +19,13 @@ import { ServerFile } from '../../models/serverFile'
 import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
 import './EventCreate.scss'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
-import { DateInput } from '../../components/UI/DateInput/DateInput'
-import { TimeInput } from '../../components/UI/TimeInput/TimeInput'
 import moment from 'moment'
-import { validateDate, validateTime } from '../../validation/validators'
-import { NumberInput } from '../../components/UI/NumberInput/NumberInput'
+
 import { Checkbox } from '../../components/UI/Checkbox/Checkbox'
+import { EventCreatePlace } from './EventCreatePlace/EventCreatePlace'
+import { EventCreateManagementData } from './EventCreateManagementData/EventCreateManagementData'
+import { validateDate } from '../../validation/validateDate'
+import { validateTime } from '../../validation/validateTime'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -36,16 +34,21 @@ const additionalInfoItems: string[] = [
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const eventId = useParams().id
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
+
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
-  const [image, setImage] = useState<ServerFile | null>(null)
+
   const [name, setName] = useState<string>('')
-  const [date, setDate] = useState<Date | null>(null)
-  const [time, setTime] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
   const [type, setType] = useState<EventType | null>(null)
   const [executors, setExecutors] = useState<Employee[]>([])
+  const [date, setDate] = useState<Date | null>(null)
+  const [time, setTime] = useState<string>('')
   const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
-  const [description, setDescription] = useState<string>('')
+
   const [address, setAddress] = useState<string>('')
   const [floor, setFloor] = useState<number | null>(null)
   const [officeNumber, setOfficeNumber] = useState<string>('')
@@ -54,21 +57,17 @@ export const EventCreate = () => {
   const [recordLink, setRecordLink] = useState<string>('')
   const [identifier, setIdentifier] = useState<string>('')
   const [accessCode, setAccessCode] = useState<string>('')
+
   const [schedule, setSchedule] = useState<ScheduleItem[]>([])
+  const scheduleRef = useRef<EventCreateScheduleRef>(null)
+  const [hasScheduleErrors, setHasScheduleErrors] = useState(false)
+
+  const [image, setImage] = useState<ServerFile | null>(null)
   const [files, setFiles] = useState<ServerFile[]>([])
-
-  const [scheduleErrors, setScheduleErrors] = useState<ValidationError[]>([])
-  const isScheduleValid = scheduleErrors.every(
-    err => Object.keys(err).length === 0,
-  )
   const [additionalInfoTexts, setAdditionalInfoTexts] = useState<string[]>([])
-  console.log(additionalInfoTexts)
-  const eventId = useParams().id
-  const navigate = useNavigate()
-  const user = useAppSelector(selectAuth)
 
-  let dateValidator = validateDate(date, !!time)
-  let timeValidator = validateTime(time, !!date)
+  const dateValidator = useMemo(() => validateDate(date, !!time), [date, time])
+  const timeValidator = useMemo(() => validateTime(time, !!date), [time, date])
 
   const handleChange = (text: string) => {
     setAdditionalInfoTexts(prev =>
@@ -143,11 +142,6 @@ export const EventCreate = () => {
       navigate('/')
     }
   }, [user])
-
-  useEffect(() => {
-    dateValidator = validateDate(date, !!time)
-    timeValidator = validateTime(time, !!date)
-  }, [date, time])
 
   const saveEvent = async () => {
     try {
@@ -227,152 +221,19 @@ export const EventCreate = () => {
       <Button
         text="Сохранить"
         disabled={
-          !dateValidator.isValid || !timeValidator.isValid || !isScheduleValid
+          !dateValidator.isValid || !timeValidator.isValid || hasScheduleErrors
         }
         onClick={() => {
           if (
             dateValidator.isValid &&
             timeValidator.isValid &&
-            isScheduleValid
+            !hasScheduleErrors
           ) {
             saveEvent()
           }
         }}
       />
     </div>
-  )
-
-  const renderManagementData = () => (
-    <div className="management-data">
-      <div className="management-data__container">
-        <Input
-          label="Название мероприятия"
-          placeholder="Введите название мероприятия"
-          onChange={e => setName(e.target.value)}
-          value={name}
-        />
-        <Dropdown
-          id="event-type-dropdown"
-          label="Тип мероприятия"
-          placeholder="Выберите тип мероприятия"
-          items={eventTypes.map(type => ({
-            id: type.id,
-            text: type.name,
-          }))}
-          onChangeDropdown={selected =>
-            setType(
-              !Array.isArray(selected) && selected
-                ? (eventTypes.find(type => type.id === +selected.id) ?? null)
-                : null,
-            )
-          }
-        />
-        <DateInput
-          label="Дата"
-          value={date}
-          onDateSelect={date => setDate(date)}
-          placeholder="Введите дату мероприятия"
-          errorText={dateValidator.error}
-        />
-        <div className="management-data__miniInput">
-          <TimeInput
-            label="Время"
-            value={time}
-            onTimeSelect={time => setTime(time)}
-            errorText={timeValidator.error}
-          />
-          <NumberInput
-            min={0}
-            value={seatsNumber}
-            label="Количество мест"
-            placeholder="Кол-во мест"
-            onChange={seatsNumber => setSeatsNumber(seatsNumber)}
-          />
-        </div>
-      </div>
-      <Dropdown
-        id="event-executor-dropdown"
-        label="Организаторы"
-        placeholder="Выберите организаторов мероприятия"
-        isMultiple={true}
-        items={eventExecutors.map(executor => ({
-          id: executor.id,
-          text: executor.name,
-          avatar: {
-            src: executor.avatar?.url ?? '',
-            description: executor.position,
-          },
-        }))}
-        onChangeDropdown={selected =>
-          setExecutors(() =>
-            eventExecutors.filter(executor =>
-              Array.isArray(selected)
-                ? selected.some(sel => sel.id === executor.id)
-                : selected?.id === executor.id,
-            ),
-          )
-        }
-      />
-    </div>
-  )
-
-  const renderPlaces = () => (
-    <>
-      <Input
-        label="Адрес"
-        placeholder="Введите адрес"
-        value={address}
-        onChange={e => setAddress(e.target.value)}
-      />
-      <div className="places">
-        <div className="places__miniInput">
-          <NumberInput
-            min={0}
-            label="Этаж"
-            value={floor}
-            placeholder="Введите этаж"
-            onChange={floor => setFloor(floor)}
-          />
-          <Input
-            label="Аудитория"
-            placeholder="С-..."
-            value={officeNumber}
-            onChange={e => setOfficeNumber(e.target.value)}
-          />
-        </div>
-
-        <Input
-          label="Площадка"
-          placeholder="Введите площадку"
-          value={platform}
-          onChange={e => setPlatform(e.target.value)}
-        />
-        <Input
-          label="Ссылка для подключения"
-          placeholder="https://..."
-          value={connectionLink}
-          onChange={e => setConnectionLink(e.target.value)}
-        />
-        <Input
-          label="Ссылка на запись и презентацию"
-          placeholder="https://..."
-          value={recordLink}
-          onChange={e => setRecordLink(e.target.value)}
-        />
-        <Input
-          label="Идентификатор"
-          placeholder="Введите идентификатор"
-          value={identifier}
-          onChange={e => setIdentifier(e.target.value)}
-        />
-        <Input
-          label="Код доступа"
-          placeholder="Введите код доступа"
-          value={accessCode}
-          onChange={e => setAccessCode(e.target.value)}
-        />
-      </div>
-    </>
   )
 
   return (
@@ -384,18 +245,53 @@ export const EventCreate = () => {
             <EventCreateImage image={image} setImage={setImage} />
             <div className="event_create--container">
               <div>
-                {renderManagementData()}
+                <EventCreateManagementData
+                  name={name}
+                  setName={setName}
+                  eventTypes={eventTypes}
+                  type={type}
+                  setType={setType}
+                  date={date}
+                  setDate={setDate}
+                  dateValidator={dateValidator}
+                  time={time}
+                  setTime={setTime}
+                  timeValidator={timeValidator}
+                  seatsNumber={seatsNumber}
+                  setSeatsNumber={setSeatsNumber}
+                  eventExecutors={eventExecutors}
+                  executors={executors}
+                  setExecutors={setExecutors}
+                />
                 <TextEditor
                   value={description ?? ''}
                   label="Описание мероприятия"
                   placeholder="Описание мероприятия"
                   onChange={e => setDescription(e.editor.getHTML())}
                 />
-                {renderPlaces()}
+                <EventCreatePlace
+                  address={address}
+                  setAddress={setAddress}
+                  floor={floor}
+                  setFloor={setFloor}
+                  officeNumber={officeNumber}
+                  setOfficeNumber={setOfficeNumber}
+                  platform={platform}
+                  setPlatform={setPlatform}
+                  connectionLink={connectionLink}
+                  setConnectionLink={setConnectionLink}
+                  recordLink={recordLink}
+                  setRecordLink={setRecordLink}
+                  identifier={identifier}
+                  setIdentifier={setIdentifier}
+                  accessCode={accessCode}
+                  setAccessCode={setAccessCode}
+                />
                 <EventCreateSchedule
+                  ref={scheduleRef}
                   schedule={schedule}
                   setSchedule={setSchedule}
-                  onErrorsChange={setScheduleErrors}
+                  onErrorsChange={setHasScheduleErrors}
                 />
               </div>
               <div>
