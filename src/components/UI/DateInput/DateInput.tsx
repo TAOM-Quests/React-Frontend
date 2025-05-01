@@ -20,8 +20,8 @@ export interface DateInputProps
   label?: string
   value?: Date | null
   isRequired?: boolean
-  helperText?: string | null
-  errorText?: string | null
+  helperText?: string
+  errorText?: string
 }
 
 export const DateInput = ({
@@ -41,6 +41,7 @@ export const DateInput = ({
   )
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
   const [currentDate, setCurrentDate] = useState<Moment>(date || moment())
+  const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<SVGSVGElement>(null)
 
@@ -79,6 +80,8 @@ export const DateInput = ({
       if (inputValue.length === 10 && isValid) {
         setIsOpen(prev => !prev)
       }
+      e.currentTarget.blur()
+      setErrorFocus(true)
     }
   }
 
@@ -250,16 +253,20 @@ export const DateInput = ({
   }
 
   const handleBlur = () => {
+    setErrorFocus(true)
     const parsed = moment.utc(inputValue, DATE_FORMAT, true)
     if (parsed.isValid()) {
       setDate(parsed)
       setCurrentDate(parsed)
-      setInputValue(parsed.format(DATE_FORMAT)) // форматируем строго
+      setInputValue(parsed.format(DATE_FORMAT))
       onDateSelect(parsed.toDate())
     } else {
-      // Восстанавливаем последнее валидное значение
       setInputValue(date ? date.format(DATE_FORMAT) : '')
     }
+  }
+
+  const handleFocus = () => {
+    setErrorFocus(false)
   }
 
   let calendarContent: JSX.Element = <></>
@@ -327,8 +334,9 @@ export const DateInput = ({
         disabled={disabled}
         onClickIconAfter={disabled ? undefined : toggleCalendar}
         onBlur={handleBlur}
+        onFocus={handleFocus}
         iconRefAfter={iconRef}
-        errorText={errorText ? errorText : null}
+        errorText={errorFocus ? errorText : null}
         helperText={helperText}
         {...props}
       />

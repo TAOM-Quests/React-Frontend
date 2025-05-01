@@ -34,6 +34,7 @@
 
     &--active {
       border-bottom: var(--border_bottom) var(--border_bottom_c_secondary);
+      margin: 0 0 3px 0;
     }
 
     &--active p {
@@ -55,5 +56,4 @@
     gap: 10px;
     height: auto;
   }
-
 }

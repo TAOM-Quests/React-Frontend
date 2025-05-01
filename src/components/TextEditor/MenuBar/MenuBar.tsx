@@ -1,38 +1,40 @@
 import { Editor } from '@tiptap/react'
-
+import './MenuBar.scss'
+import { Icon } from '../../UI/Icon/Icon'
+import { ICON_MAP } from '../../../assets/icons'
 export interface MenuBarProps {
   editor: Editor
 }
 
 interface EditorAction {
-  text: string
+  icon: keyof typeof ICON_MAP
   onClick: () => void
 }
 
 export const MenuBar = ({ editor }: MenuBarProps) => {
   const actions: EditorAction[] = [
     {
-      text: 'Bold',
+      icon: 'BOLD',
       onClick: () => editor.chain().focus().toggleBold().run(),
     },
     {
-      text: 'Italic',
+      icon: 'ITALIC',
       onClick: () => editor.chain().focus().toggleItalic().run(),
     },
     {
-      text: 'Underline',
+      icon: 'UNDERLINE',
       onClick: () => editor.chain().focus().toggleUnderline().run(),
     },
     {
-      text: 'Strike',
+      icon: 'STRIKE',
       onClick: () => editor.chain().focus().toggleStrike().run(),
     },
     {
-      text: 'List',
+      icon: 'LIST',
       onClick: () => editor.chain().focus().toggleBulletList().run(),
     },
     {
-      text: 'Link',
+      icon: 'LINK',
       onClick: () =>
         editor
           .chain()
@@ -41,39 +43,110 @@ export const MenuBar = ({ editor }: MenuBarProps) => {
           .run(),
     },
     {
-      text: 'Left',
+      icon: 'LEFT',
       onClick: () => editor.chain().focus().setTextAlign('left').run(),
     },
     {
-      text: 'Center',
+      icon: 'CENTER',
       onClick: () => editor.chain().focus().setTextAlign('center').run(),
     },
     {
-      text: 'Right',
+      icon: 'RIGHT',
       onClick: () => editor.chain().focus().setTextAlign('right').run(),
     },
     {
-      text: 'Justify',
+      icon: 'JUSTIFY',
       onClick: () => editor.chain().focus().setTextAlign('justify').run(),
     },
   ]
 
-  return (
-    <div style={{ display: 'inline' }}>
-      <input
-        type="number"
-        min={1}
-        max={6}
-        onChange={e =>
-          editor.commands.toggleHeading({
-            level: +e.target.value as 1 | 2 | 3 | 4 | 5 | 6,
+  const headings: EditorAction[] = [
+    {
+      icon: 'HEADING_1',
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .toggleHeading({
+            level: 1,
           })
-        }
-      />
+          .run(),
+    },
+    {
+      icon: 'HEADING_2',
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .toggleHeading({
+            level: 2,
+          })
+          .run(),
+    },
+    {
+      icon: 'HEADING_3',
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .toggleHeading({
+            level: 3,
+          })
+          .run(),
+    },
+    {
+      icon: 'HEADING_4',
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .toggleHeading({
+            level: 4,
+          })
+          .run(),
+    },
+    {
+      icon: 'HEADING_5',
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .toggleHeading({
+            level: 5,
+          })
+          .run(),
+    },
+    {
+      icon: 'HEADING_6',
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .toggleHeading({
+            level: 6,
+          })
+          .run(),
+    },
+  ]
+
+  return (
+    <div className="editor--header">
+      {headings.map((action, index) => (
+        <Icon
+          key={index}
+          onClick={action.onClick}
+          icon={action.icon}
+          colorIcon="neutral"
+        />
+      ))}
       {actions.map((action, index) => (
-        <button key={index} onClick={action.onClick}>
-          {action.text}
-        </button>
+        <Icon
+          key={index}
+          onClick={action.onClick}
+          icon={action.icon}
+          colorIcon="neutral"
+          size="extraSmall"
+        />
       ))}
     </div>
   )

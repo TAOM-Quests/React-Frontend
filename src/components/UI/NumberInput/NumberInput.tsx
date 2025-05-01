@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useRef } from 'react'
+import React, { InputHTMLAttributes, useRef, useState } from 'react'
 import './NumberInput.scss'
 import { Icon } from '../Icon/Icon'
 import classNames from 'classnames'
@@ -10,8 +10,8 @@ interface NumberInputProps
   onChange?: (value: number | null) => void
   min?: number
   max?: number
-  errorText?: string | null
-  helperText?: string | null
+  errorText?: string
+  helperText?: string
 }
 
 export const NumberInput = ({
@@ -29,48 +29,54 @@ export const NumberInput = ({
 }: NumberInputProps) => {
   const showHelperText = helperText && !errorText
   const inputRef = useRef<HTMLInputElement>(null)
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const val = event.target.value
-    if (val === '') {
+  const [valueInput, setValueInput] = useState(value ?? null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = +e.target.value
+    if (val === 0) {
       onChange?.(null)
+      setValueInput(null)
       return
     }
-    const newValue = Number(val)
-    if (!isNaN(newValue)) {
-      if (min !== undefined && newValue < min) {
-        onChange?.(min)
-      } else if (max !== undefined && newValue > max) {
-        onChange?.(max)
-      } else {
-        onChange?.(newValue)
-      }
-    }
+    setValueInput(val)
+    onChange?.(val)
   }
 
   const handleIncrement = () => {
-    if (onChange) {
-      const currentValue = value === null ? 0 : value
-      if (max === undefined || currentValue < max) {
-        onChange(currentValue + 1)
-      }
-    }
+    setValueInput(prev => {
+      const next = prev === null ? 1 : prev + 1
+      if (max !== undefined && next > max) return prev
+      onChange?.(next)
+      return next
+    })
   }
 
   const handleDecrement = () => {
-    if (onChange) {
-      const currentValue = value === null ? 0 : value
-      if (min === undefined || currentValue > min) {
-        onChange(currentValue - 1)
+    setValueInput(prev => {
+      if (prev === null) return null
+      const next = prev - 1
+      if (min !== undefined && next < min) return null
+      if (next === 0) {
+        onChange?.(null)
+        return null
       }
-    }
+      onChange?.(next)
+      return next
+    })
   }
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       if (inputRef.current) {
         inputRef.current.blur()
       }
+      onChange?.(valueInput)
     }
   }
+
+  const handleBlur = () => {
+    onChange?.(valueInput)
+  }
+
   return (
     <div className="inputWrapperNumber">
       {label && <label className="label_inputNumber body_s_sb">{label}</label>}
@@ -84,13 +90,14 @@ export const NumberInput = ({
         <input
           ref={inputRef}
           type="number"
-          value={value === null ? '' : value}
+          value={valueInput === null ? '' : valueInput}
           onChange={handleChange}
           min={min}
           max={max}
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder={placeholder}
+          onBlur={handleBlur}
           className={classNames(
             'body_m_r',
             'input_number',
