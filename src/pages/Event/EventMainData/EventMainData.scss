@@ -1,0 +1,61 @@
+.event-banner {
+  position: relative;
+  display: flex;
+  padding: 80px 15vw;
+  height: 100vh;
+  background-color: #d9ecf9; // запасной цвет, если нет фона
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: var(--text_c_primary);
+  overflow: hidden;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(
+      217,
+      236,
+      249,
+      0.55
+    ); // светло-голубое полупрозрачное затемнение
+    z-index: 1;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__info-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__info-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    padding: 24px;
+
+    &__content {
+      max-width: 100%;
+    }
+  }
+}
