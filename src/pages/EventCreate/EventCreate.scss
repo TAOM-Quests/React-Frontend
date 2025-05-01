@@ -1,0 +1,178 @@
+.event_create {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 80px 15vw;
+  background-color: var(--bg_body_primary);
+  &--header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+
+    @media (max-width: 380px) {
+      flex-direction: column;
+    }
+  }
+
+  &--container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+
+    > div:first-child {
+      display: flex;
+      flex-direction: column;
+      flex: 1.2;
+      gap: 10px;
+    }
+
+    > div:last-child {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 10px;
+    }
+
+    @media (max-width: 1436px) {
+      flex-direction: column;
+
+      > div:first-child,
+      > div:last-child {
+        flex: 1;
+      }
+    }
+  }
+
+  .additional-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &_checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .checkbox_wrapper {
+        align-items: start;
+      }
+      p {
+        white-space: normal;
+      }
+    }
+  }
+}
+
+.management-data {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .inputWrapper,
+    .calendar-input-container,
+    .dropdown-container {
+      flex-basis: calc((100% - 10px) / 2);
+      min-width: 250px;
+    }
+
+    @media (max-width: 420px) {
+      .inputWrapper,
+      .calendar-input-container,
+      .dropdown-container {
+        min-width: 100% !important;
+      }
+    }
+
+    @media (max-width: 785px) {
+      .inputWrapper,
+      .calendar-input-container,
+      .dropdown-container {
+        flex-basis: 100%;
+      }
+    }
+  }
+
+  &__miniInput {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-basis: calc((100% - 10px) / 2);
+    @media (max-width: 785px) {
+      flex-basis: 100%;
+    }
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+
+    .inputWrapper,
+    .inputWrapperNumber {
+      min-width: 120px;
+      width: 100%;
+    }
+    .time-input-container {
+      width: 100%;
+    }
+  }
+}
+
+.places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .inputWrapper,
+  .calendar-input-container,
+  .dropdown-container {
+    flex-basis: calc((100% - 10px) / 2);
+    min-width: 250px;
+  }
+  @media (max-width: 420px) {
+    .inputWrapper,
+    .calendar-input-container,
+    .dropdown-container {
+      min-width: 100% !important;
+    }
+  }
+
+  @media (max-width: 785px) {
+    .inputWrapper,
+    .calendar-input-container,
+    .dropdown-container {
+      flex-basis: 100%;
+    }
+  }
+
+  &__miniInput {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-basis: calc((100% - 10px) / 2);
+
+    @media (max-width: 785px) {
+      flex-basis: 100%;
+    }
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+
+    @media (max-width: 420px) {
+      .inputWrapper,
+      .inputWrapperNumber {
+        min-width: 100%;
+      }
+    }
+
+    .inputWrapper,
+    .inputWrapperNumber {
+      min-width: 120px;
+    }
+  }
+}
