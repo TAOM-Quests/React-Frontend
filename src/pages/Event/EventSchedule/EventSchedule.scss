@@ -9,10 +9,7 @@
 }
 
 .event-schedule__title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 24px;
-  color: #16243b;
+  color: var(--text_c_primary);
 }
 
 .event-schedule__timeline {
@@ -22,15 +19,27 @@
 
 .event-schedule__item {
   position: relative;
-  margin-bottom: 36px;
+  // margin-bottom: 36px;
   min-height: 48px;
   display: flex;
   align-items: flex-start;
+
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
 }
 
 .event-schedule__circle {
   position: absolute;
-  left: -30px;
+  left: -29px;
   top: 4px;
   width: 18px;
   height: 18px;
@@ -44,29 +53,33 @@
 .event-schedule__line {
   position: absolute;
   left: -21px;
-  top: 22px;
-  width: 2px;
-  height: calc(100% - 22px);
+  top: 15px;
+  width: 3px;
+  height: calc(100% - 10px);
   background: #1ea6e8;
   z-index: 1;
 }
 
 .event-schedule__content {
   margin-left: 12px;
-  padding-bottom: 8px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .event-schedule__time {
-  font-weight: 700;
-  color: #16243b;
-  font-size: 16px;
-  margin-bottom: 2px;
+  color: var(--text_c_primary);
 }
 
 .event-schedule__desc {
+  color: var(--text_c_primary);
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
   color: #3a4c65;
   font-size: 15px;
-  line-height: 1.4;
 }
 
 @media (max-width: 600px) {
@@ -76,5 +89,16 @@
   }
   .event-schedule__title {
     font-size: 18px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
