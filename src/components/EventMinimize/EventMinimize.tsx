@@ -17,6 +17,7 @@ export interface EventMinimizeProps {
   address: string
   platform: string
   imageUrl: string
+  department?: string
   isEmployeeView?: boolean
 }
 

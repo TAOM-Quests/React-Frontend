@@ -1,6 +1,7 @@
 import { DepartmentsSlider } from './DepartmentsSlider/DepartmentsSlider'
 import './Home.scss'
 import { bannerData } from './HomeData/bannerData'
+import { UpcomingEvents } from './UpcomingEvents/UpcomingEvents'
 
 export const Home = () => {
   return (
@@ -27,7 +28,9 @@ export const Home = () => {
       <div className="departments-list">
         <DepartmentsSlider />
       </div>
-      <h1>Home</h1>
+      <div className="upcoming-events">
+        <UpcomingEvents />
+      </div>
     </div>
   )
 }
