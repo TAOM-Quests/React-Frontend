@@ -15,6 +15,8 @@ import { EventFiles } from './EventFiles/EventFiles'
 import { EventOnlinePlace } from './EventOnlinePlace/EventOnlinePlace'
 import './Event.scss'
 import { FadeInWrapper } from '../../components/FadeInWrapper/FadeInWrapper'
+import { Loading } from '../../components/Loading/Loading'
+
 export const Event = () => {
   const [event, setEvent] = useState<EventInterface | null>(null)
 
@@ -98,7 +100,7 @@ export const Event = () => {
           </div>
         </div>
       ) : (
-        'Loading...'
+        <Loading />
       )}
     </>
   )
