@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router'
 import { SaveQuestDto } from '../../services/api/questModule/quests/questsDto'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { Button } from '../../components/UI/Button/Button'
+import { Loading } from '../../components/Loading/Loading'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -114,7 +115,7 @@ export const QuestCreate = () => {
           <QuestCreateResults results={results} setResults={setResults} />
         </div>
       ) : (
-        'Loading...'
+        <Loading />
       )}
     </>
   )

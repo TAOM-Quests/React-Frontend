@@ -26,6 +26,7 @@ import { EventCreatePlace } from './EventCreatePlace/EventCreatePlace'
 import { EventCreateManagementData } from './EventCreateManagementData/EventCreateManagementData'
 import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
+import { Loading } from '../../components/Loading/Loading'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -316,7 +317,7 @@ export const EventCreate = () => {
           </ContainerBox>
         </div>
       ) : (
-        <div>Loading</div>
+        <Loading />
       )}
     </>
   )
