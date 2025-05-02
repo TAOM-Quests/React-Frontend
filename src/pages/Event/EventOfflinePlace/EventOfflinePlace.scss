@@ -1,0 +1,17 @@
+.event-offline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  border-left: 4px solid var(--bg_c_accent);
+
+  &-place {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .office_number {
+      font-weight: 400;
+    }
+  }
+}

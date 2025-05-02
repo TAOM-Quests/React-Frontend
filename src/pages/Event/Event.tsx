@@ -13,6 +13,8 @@ import { EventOfflinePlace } from './EventOfflinePlace/EventOfflinePlace'
 import { EventExecutors } from './EventExecutors/EventExecutors'
 import { EventFiles } from './EventFiles/EventFiles'
 import { EventOnlinePlace } from './EventOnlinePlace/EventOnlinePlace'
+import './Event.scss'
+import { FadeInWrapper } from '../../components/FadeInWrapper/FadeInWrapper'
 import { Loading } from '../../components/Loading/Loading'
 
 export const Event = () => {
@@ -50,21 +52,51 @@ export const Event = () => {
       {event ? (
         <div>
           <EventMainData eventId={+eventId!} {...event} />
-          <div>
-            {event.description && (
-              <ContainerBox>{event.description}</ContainerBox>
-            )}
-            {event.files && <EventFiles files={event.files} />}
-          </div>
-          <div>
-            {placeOffline && <EventOfflinePlace place={placeOffline} />}
-            {event.schedule.length && (
-              <EventSchedule schedule={event.schedule} />
-            )}
-            {event.executors.length && (
-              <EventExecutors executors={event.executors} />
-            )}
-            {placeOnline && <EventOnlinePlace place={placeOnline} />}
+          <div className="event-details">
+            <div className="event-details__left">
+              {event.description && (
+                <FadeInWrapper>
+                  <ContainerBox>
+                    <div
+                      className="event-details--description"
+                      dangerouslySetInnerHTML={{ __html: event.description }}
+                    />
+                  </ContainerBox>
+                </FadeInWrapper>
+              )}
+
+              {event.files && (
+                <FadeInWrapper>
+                  <EventFiles files={event.files} />
+                </FadeInWrapper>
+              )}
+            </div>
+
+            <div className="event-details__right">
+              {placeOffline && (
+                <FadeInWrapper>
+                  <EventOfflinePlace place={placeOffline} />
+                </FadeInWrapper>
+              )}
+
+              {event.schedule.length && (
+                <FadeInWrapper>
+                  <EventSchedule schedule={event.schedule} />
+                </FadeInWrapper>
+              )}
+
+              {event.executors.length && (
+                <FadeInWrapper>
+                  <EventExecutors executors={event.executors} />
+                </FadeInWrapper>
+              )}
+
+              {placeOnline && (
+                <FadeInWrapper>
+                  <EventOnlinePlace place={placeOnline} />
+                </FadeInWrapper>
+              )}
+            </div>
           </div>
         </div>
       ) : (

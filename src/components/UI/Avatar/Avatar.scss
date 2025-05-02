@@ -17,16 +17,19 @@
 
   &--extraSmall {
     width: 30px;
+    min-width: 30px;
     height: 30px;
   }
 
   &--small {
     width: 44px;
+    min-width: 44px;
     height: 44px;
   }
 
   &--large {
     width: 64px;
+    min-width: 64px;
     height: 64px;
     border-radius: 16px;
     transition: all 0.2s;

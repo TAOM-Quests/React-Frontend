@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { users } from '../../services/api/userModule/users/users'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
-import { OptionAvatar } from '../User/OptionAvatar/OptionAvatar'
 
 export const Header = () => {
   const [userInfo, setUserInfo] = useState<UserProfile | null>(null)
@@ -69,7 +68,7 @@ export const Header = () => {
       </nav>
 
       <div className="header__user" onClick={() => navigate('/profile')}>
-        <span className="body_l_sb">
+        <span className="body_l_sb user-name-header">
           {userInfo?.firstName} {userInfo?.lastName}
         </span>
         <Avatar />
