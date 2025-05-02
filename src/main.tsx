@@ -14,7 +14,7 @@ import { EventCalendar } from './pages/EventCalendar/EventCalendar.tsx'
 import { QuestCreate } from './pages/QuestCreate/QuestCreate.tsx'
 import { Header } from './components/Header/Header.tsx'
 import { Footer } from './components/Footer/Footer.tsx'
-import { Home } from './pages/Home.tsx'
+import { Home } from './pages/Home/Home.tsx'
 
 moment.updateLocale('ru', {
   months: [

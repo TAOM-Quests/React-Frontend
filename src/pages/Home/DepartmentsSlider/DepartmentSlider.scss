@@ -1,0 +1,51 @@
+.departments-slider {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 0;
+
+  .swiper {
+    padding: 40px 20px;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: var(--text_c_accent);
+    background: var(--bg_c_secondary);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 2px 8px rgba(30, 166, 232, 0.08);
+    top: 50%;
+    transition: all 0.3s ease;
+    opacity: 0;
+    &:hover {
+      background: var(--bg_c_accent);
+      color: var(--text_c_secondary);
+    }
+
+    &::after {
+      font-size: 20px;
+    }
+  }
+  &:hover {
+    .swiper-button-next,
+    .swiper-button-prev {
+      opacity: 1;
+    }
+  }
+
+  .swiper-button-next {
+    right: 0;
+  }
+  .swiper-button-prev {
+    left: 0;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: auto;
+  }
+}

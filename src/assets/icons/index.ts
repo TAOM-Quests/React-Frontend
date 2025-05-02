@@ -20,6 +20,7 @@ import { CHECK } from './check'
 import { TIME } from './time'
 import { TIMER } from './timer'
 import { ARROW_SMALL_LEFT } from './arrowSmallLeft'
+import { ARROW_SMALL_RIGHT } from './arrowSmallRight'
 import { PLUS } from './plus'
 import { DRAG_GRIP } from './dragGrip'
 import { EDIT } from './edit'
@@ -70,6 +71,7 @@ export const ICON_MAP = {
   TIME: TIME,
   TIMER: TIMER,
   ARROW_SMALL_LEFT: ARROW_SMALL_LEFT,
+  ARROW_SMALL_RIGHT: ARROW_SMALL_RIGHT,
   PLUS: PLUS,
   DRAG_GRIP: DRAG_GRIP,
   EDIT: EDIT,
