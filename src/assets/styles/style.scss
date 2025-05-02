@@ -32,6 +32,9 @@
   --text_color_accent: 0, 154, 193;
   --text_c_accent: rgb(var(--text_color_accent));
   --text_c_accent_60: rgba(var(--text_color_accent), 0.6);
+  --text_c_accent: rgb(var(--text_color_accent));
+  --text_c_accent_hover: rgba(var(--text_color_accent), 0.85);
+  --text_c_accent_active: rgba(var(--text_color_accent), 0.72);
 
   --text_color_subdued: 116, 116, 118;
   --text_c_subdued: rgb(var(--text_color_subdued));

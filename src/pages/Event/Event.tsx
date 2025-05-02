@@ -56,6 +56,7 @@ export const Event = () => {
                 <FadeInWrapper>
                   <ContainerBox>
                     <div
+                      className="event-details--description"
                       dangerouslySetInnerHTML={{ __html: event.description }}
                     />
                   </ContainerBox>
