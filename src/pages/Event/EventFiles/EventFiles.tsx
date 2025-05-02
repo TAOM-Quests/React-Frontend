@@ -10,7 +10,7 @@ export interface EventFilesProps {
 export const EventFiles = ({ files }: EventFilesProps) => {
   return (
     <ContainerBox>
-      <h5 className="heading_5 event-files__title">Mатериалы</h5>
+      <h5 className="heading_5 event-files__title">Материалы</h5>
       <div className="event-files">
         {files.map(file => (
           <CardFile

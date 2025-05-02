@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { Avatar } from '../../../components/UI/Avatar/Avatar'
 import { Employee } from '../../../models/user'
-import { InfoPopover } from '../../../components/InfoPopover/InfoPopover'
+import { InfoPopper } from '../../../components/InfoPopper/InfoPopper'
 import './EventExecutors.scss'
 
 export interface EventExecutorsProps {
@@ -33,7 +33,7 @@ export const EventExecutors = ({ executors }: EventExecutorsProps) => {
               />
             </div>
             {activeId === executor.id && avatarRefs.current[idx] && (
-              <InfoPopover
+              <InfoPopper
                 anchorRef={{ current: avatarRefs.current[idx] }}
                 isVisible={activeId === executor.id}
                 name={executor.name}

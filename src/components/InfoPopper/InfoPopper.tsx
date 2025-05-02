@@ -1,8 +1,8 @@
 import { ReactNode, RefObject, useState } from 'react'
 import { usePopper } from 'react-popper'
-import './InfoPopover.scss'
+import './InfoPopper.scss'
 
-interface InfoPopoverProps {
+interface InfoPopperProps {
   anchorRef: RefObject<HTMLDivElement>
   isVisible: boolean
   name?: string
@@ -11,14 +11,14 @@ interface InfoPopoverProps {
   position?: string
 }
 
-export const InfoPopover = ({
+export const InfoPopper = ({
   name,
   text,
   position,
   children,
   anchorRef,
   isVisible,
-}: InfoPopoverProps) => {
+}: InfoPopperProps) => {
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null)
 
   const { styles, attributes } = usePopper(anchorRef.current, popperElement, {
@@ -50,22 +50,20 @@ export const InfoPopover = ({
   return (
     <div
       ref={setPopperElement}
-      className="info-popover"
+      className="info-popper"
       style={styles.popper}
       {...attributes.popper}
     >
-      <div className="info-popover__card">
+      <div className="info-popper__card">
         {children ? (
           children
         ) : (
           <>
-            {name && (
-              <div className="body_xl_sb info-popover__name">{name}</div>
-            )}
+            {name && <div className="body_xl_sb info-popper__name">{name}</div>}
             {position && (
-              <div className="body_m_m info-popover__position">{position}</div>
+              <div className="body_m_m info-popper__position">{position}</div>
             )}
-            {text && <div className="body_m_m info-popover__text">{text}</div>}
+            {text && <div className="body_m_m info-popper__text">{text}</div>}
           </>
         )}
       </div>
