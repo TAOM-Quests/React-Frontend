@@ -32,6 +32,9 @@
   --text_color_accent: 0, 154, 193;
   --text_c_accent: rgb(var(--text_color_accent));
   --text_c_accent_60: rgba(var(--text_color_accent), 0.6);
+  --text_c_accent: rgb(var(--text_color_accent));
+  --text_c_accent_hover: rgba(var(--text_color_accent), 0.85);
+  --text_c_accent_active: rgba(var(--text_color_accent), 0.72);
 
   --text_color_subdued: 116, 116, 118;
   --text_c_subdued: rgb(var(--text_color_subdued));
@@ -113,6 +116,7 @@
 
   //Box-shadow
   --drop_shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+  --drop_shadow_popper: 0 2px 16px rgba(11, 35, 64, 0.13);
 
   --width_text_ellipsis: calc(100% - 35px);
 }
@@ -241,6 +245,12 @@ body {
 
 .body_l_m {
   font-weight: var(--medium);
+  font-size: var(--fs_l);
+  line-height: var(--lh_xl_l);
+}
+
+.body_l_r {
+  font-weight: var(--regular);
   font-size: var(--fs_l);
   line-height: var(--lh_xl_l);
 }

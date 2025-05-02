@@ -1,5 +1,7 @@
+import { CardFile } from '../../../components/CardFile/CardFile'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { ServerFile } from '../../../models/serverFile'
+import './EventFiles.scss'
 
 export interface EventFilesProps {
   files: ServerFile[]
@@ -8,11 +10,18 @@ export interface EventFilesProps {
 export const EventFiles = ({ files }: EventFilesProps) => {
   return (
     <ContainerBox>
-      {files.map(file => (
-        <a key={file.id} href={file.url}>
-          {file.originalName}.{file.extension}
-        </a>
-      ))}
+      <h5 className="heading_5 event-files__title">Материалы</h5>
+      <div className="event-files">
+        {files.map(file => (
+          <CardFile
+            key={file.id}
+            url={file.url}
+            size={file.size}
+            fileName={file.originalName}
+            extension={file.extension}
+          />
+        ))}
+      </div>
     </ContainerBox>
   )
 }

@@ -153,3 +153,9 @@
   bottom: 0;
   z-index: 1040;
 }
+
+@media (max-width: 380px) {
+  .user-name-header {
+    display: none;
+  }
+}

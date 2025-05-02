@@ -1,10 +1,10 @@
-import './CardFile.scss'
 import { Icon } from '../UI/Icon/Icon'
+import './CardFile.scss'
 
 interface CardFileProps {
-  fileName: string
-  size: number
   url: string
+  size: number
+  fileName: string
   extension: string
   onRemove?: () => void
 }
@@ -18,17 +18,18 @@ const formatFileSize = (size: number): string => {
 }
 
 export const CardFile = ({
-  fileName,
-  size,
   url,
-  extension,
+  size,
+  fileName,
   onRemove,
+  extension,
 }: CardFileProps) => (
   <div className={'cardFile'}>
     <div className={'cardFile--iconFile'}>
       <Icon colorIcon="subdued" className="iconFile " icon="FILE" />
       <span className={'docText'}>{extension.toLocaleUpperCase()}</span>
     </div>
+
     <div className={'cardFile--info'}>
       <span className={'fileName'}>
         <span className="body_m_sb text_ellipsis name">{fileName}</span>
@@ -36,9 +37,11 @@ export const CardFile = ({
       </span>
       <div className={'body_s_m fileSize'}>{formatFileSize(size)}</div>
     </div>
+
     <a href={url} aria-label="Сохранить">
       <Icon className={'cardFile--saveBtn'} icon="DOWNLOAD" />
     </a>
+
     <Icon
       icon="DELETE"
       className={'cardFile--closeBtn'}
