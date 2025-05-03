@@ -11,8 +11,17 @@ export const quests = {
   create: (params: SaveQuestDto): Promise<Quest> =>
     questModule<Quest, SaveQuestDto>('quests', params),
 
-  update: (id: number, params: SaveQuestDto): Promise<Quest> =>
-    questModule<Quest, SaveQuestDto>(`quests/${id}`, params),
+  update: (id: number, params: SaveQuestDto): Promise<Quest> => {
+    for (const question of params.questions ?? []) {
+      question.questId = id
+    }
+
+    for (const result of params.results ?? []) {
+      result.questId = id
+    }
+
+    return questModule<Quest, SaveQuestDto>(`quests/${id}`, { ...params, id })
+  },
 
   getDifficulties: (): Promise<QuestDifficult[]> =>
     questModule<QuestDifficult[], null>('difficulties'),

@@ -4,4 +4,5 @@ export interface QuestResult {
   description: string
   id?: number
   imageId?: number
+  questId?: number
 }

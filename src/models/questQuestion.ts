@@ -2,6 +2,7 @@ export interface QuestQuestion {
   text: string
   type: QuestionType
   id?: number
+  questId?: number
 }
 
 type QuestionType = 'single' | 'multiple' | 'connection' | 'boxSorting' | 'free'
