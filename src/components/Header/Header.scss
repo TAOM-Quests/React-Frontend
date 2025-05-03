@@ -1,0 +1,161 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg_c_primary);
+  color: var(--text_c_secondary);
+  padding: 16px 24px;
+  position: relative;
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .context-menu {
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+    max-width: 486px;
+    min-width: 200px;
+    box-sizing: border-box;
+  }
+
+  &__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 28px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    span {
+      width: 100%;
+      height: 3px;
+      background-color: var(--text_c_secondary);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      display: block;
+      position: relative;
+    }
+
+    &--open {
+      span:nth-child(1) {
+        transform: rotate(45deg);
+        top: 8px;
+        position: relative;
+      }
+
+      span:nth-child(2) {
+        opacity: 0;
+      }
+
+      span:nth-child(3) {
+        transform: rotate(-45deg);
+        top: -8px;
+        position: relative;
+      }
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 40px;
+
+    &-list {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    &-link {
+      color: var(--text_c_secondary);
+      text-decoration: none;
+      transition: color 0.2s ease-in-out;
+      position: relative;
+      white-space: nowrap;
+
+      &:hover {
+        color: var(--text_c_accent);
+      }
+
+      &--active {
+        font-weight: bold;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: var(--text_c_accent);
+        }
+      }
+    }
+  }
+
+  /* Адаптив */
+
+  @media (max-width: 1075px) {
+    &__burger {
+      display: flex;
+    }
+
+    &__left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &__nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 250px;
+      background-color: var(--bg_c_primary);
+      flex-direction: column;
+      max-height: 100vh;
+      padding: 24px 16px;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 1050;
+
+      &--open {
+        transform: translateX(0);
+      }
+
+      &-list {
+        flex-direction: column !important;
+        gap: 20px !important;
+      }
+    }
+  }
+}
+
+/* Оверлей для затемнения фона при открытом меню */
+.header__overlay {
+  position: fixed;
+  top: 0;
+  left: 250px; /* ширина меню */
+  right: 0;
+  bottom: 0;
+  z-index: 1040;
+}
+
+@media (max-width: 380px) {
+  .user-name-header {
+    display: none;
+  }
+}

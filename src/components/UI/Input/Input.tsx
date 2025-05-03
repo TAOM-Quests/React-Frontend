@@ -59,6 +59,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const internalInputRef = useRef<HTMLInputElement>(null)
     const combinedRef = inputRef || ref
+    const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
 
     useEffect(() => {
       setIsInputVisible(
@@ -79,12 +80,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     )
 
     const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation() // Останавливаем всплытие события
-      setIsInputVisible(true) // Показываем input при клике на div
+      e.stopPropagation()
+      setIsInputVisible(true)
       setTimeout(() => {
         internalInputRef.current?.focus()
-      }, 0) //  <---  Устанавливаем фокус на input
-      onClearSelection?.() // Очищаем выбор в Dropdown
+      }, 0)
+      onClearSelection?.()
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,10 +138,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             placeholder={placeholder}
             style={{ display: isInputVisible ? 'flex' : 'none' }}
             onFocus={e => {
+              setErrorFocus(false)
               setIsInputVisible(true)
               onFocus?.(e)
             }}
             onBlur={e => {
+              setErrorFocus(true)
               if (
                 value !== null &&
                 value !== undefined &&
@@ -178,7 +181,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {showHelperText && (
           <div className="body_s_m helperText">{helperText}</div>
         )}
-        {errorText && <div className="body_s_m errorText">{errorText}</div>}
+        {errorText && errorFocus && (
+          <div className="body_s_m errorText">{errorText}</div>
+        )}
       </div>
     )
   },

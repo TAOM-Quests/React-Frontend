@@ -20,10 +20,33 @@ import { CHECK } from './check'
 import { TIME } from './time'
 import { TIMER } from './timer'
 import { ARROW_SMALL_LEFT } from './arrowSmallLeft'
+import { ARROW_SMALL_RIGHT } from './arrowSmallRight'
 import { PLUS } from './plus'
 import { DRAG_GRIP } from './dragGrip'
 import { EDIT } from './edit'
 import { DELETE } from './delete'
+import { BOLD } from './bold'
+import { ITALIC } from './italic'
+import { UNDERLINE } from './underline'
+import { STRIKE } from './strike'
+import { LIST } from './list'
+import { LINK } from './link'
+import { LEFT } from './left'
+import { CENTER } from './center'
+import { RIGHT } from './right'
+import { JUSTIFY } from './justify'
+import { HEADING_1 } from './heading_1'
+import { HEADING_2 } from './heading_2'
+import { HEADING_3 } from './heading_3'
+import { HEADING_4 } from './heading_4'
+import { HEADING_5 } from './heading_5'
+import { HEADING_6 } from './heading_6'
+import { FILE } from './file'
+import { EXCEL } from './excel'
+import { TAOM } from './taom'
+import { LOGOUT } from './logout'
+import { DZEN } from './dzen'
+import { VK } from './vk'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -48,10 +71,33 @@ export const ICON_MAP = {
   TIME: TIME,
   TIMER: TIMER,
   ARROW_SMALL_LEFT: ARROW_SMALL_LEFT,
+  ARROW_SMALL_RIGHT: ARROW_SMALL_RIGHT,
   PLUS: PLUS,
   DRAG_GRIP: DRAG_GRIP,
   EDIT: EDIT,
   DELETE: DELETE,
+  BOLD: BOLD,
+  ITALIC: ITALIC,
+  UNDERLINE: UNDERLINE,
+  STRIKE: STRIKE,
+  LIST: LIST,
+  LINK: LINK,
+  LEFT: LEFT,
+  CENTER: CENTER,
+  RIGHT: RIGHT,
+  JUSTIFY: JUSTIFY,
+  HEADING_1: HEADING_1,
+  HEADING_2: HEADING_2,
+  HEADING_3: HEADING_3,
+  HEADING_4: HEADING_4,
+  HEADING_5: HEADING_5,
+  HEADING_6: HEADING_6,
+  FILE: FILE,
+  EXCEL: EXCEL,
+  TAOM: TAOM,
+  LOGOUT: LOGOUT,
+  DZEN: DZEN,
+  VK: VK,
 }
 
 type IconName = keyof typeof ICON_MAP

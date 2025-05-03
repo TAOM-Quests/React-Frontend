@@ -1,0 +1,22 @@
+.editor {
+  &--header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background-color: var(--bg_c_gray_primary);
+    border: var(--border_primary) var(--border_c_secondary);
+    border-radius: 8px 8px 0 0;
+    padding: 10px;
+
+    .icon {
+      transition:
+        background-color 0.2s ease-in-out,
+        color 0.2s ease-in-out;
+
+      &:hover {
+        color: var(--text_c_primary);
+      }
+    }
+  }
+}

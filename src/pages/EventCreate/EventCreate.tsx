@@ -1,35 +1,55 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useNavigate, useParams } from 'react-router'
 import { EventType } from '../../models/eventType'
 import { Employee } from '../../models/user'
 import { Button } from '../../components/UI/Button/Button'
-import { EventStatus } from '../../models/eventStatus'
 import { events } from '../../services/api/eventModule/events/events'
-import Input from '../../components/UI/Input/Input'
-import { Dropdown } from '../../components/UI/Dropdown/Dropdown'
 import { users } from '../../services/api/userModule/users/users'
 import { PlaceOffline, PlaceOnline, ScheduleItem } from '../../models/event'
-import { EventCreateSchedule } from './EventCreateSchedule/EventCreateSchedule'
+import {
+  EventCreateSchedule,
+  EventCreateScheduleRef,
+} from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
-import { EventCreateDto } from '../../services/api/eventModule/events/eventsDto'
+import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
+import './EventCreate.scss'
+import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
+import moment from 'moment'
+
+import { Checkbox } from '../../components/UI/Checkbox/Checkbox'
+import { EventCreatePlace } from './EventCreatePlace/EventCreatePlace'
+import { EventCreateManagementData } from './EventCreateManagementData/EventCreateManagementData'
+import { validateDate } from '../../validation/validateDate'
+import { validateTime } from '../../validation/validateTime'
+import { Loading } from '../../components/Loading/Loading'
+
+const additionalInfoItems: string[] = [
+  'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
+  'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
+]
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const eventId = useParams().id
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
+
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
-  const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
-  const [image, setImage] = useState<ServerFile | null>(null)
+
   const [name, setName] = useState<string>('')
-  // const [date, setDate] = useState<Date | null>(null)
+  const [description, setDescription] = useState<string>('')
   const [type, setType] = useState<EventType | null>(null)
   const [executors, setExecutors] = useState<Employee[]>([])
+  const [date, setDate] = useState<Date | null>(null)
+  const [time, setTime] = useState<string>('')
   const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
-  const [description, setDescription] = useState<string>('')
+
   const [address, setAddress] = useState<string>('')
   const [floor, setFloor] = useState<number | null>(null)
   const [officeNumber, setOfficeNumber] = useState<string>('')
@@ -38,18 +58,30 @@ export const EventCreate = () => {
   const [recordLink, setRecordLink] = useState<string>('')
   const [identifier, setIdentifier] = useState<string>('')
   const [accessCode, setAccessCode] = useState<string>('')
-  const [schedule, setSchedule] = useState<ScheduleItem[]>([])
-  const [files, setFiles] = useState<ServerFile[]>([])
 
-  const eventId = useParams().id
-  const navigate = useNavigate()
-  const user = useAppSelector(selectAuth)
+  const [schedule, setSchedule] = useState<ScheduleItem[]>([])
+  const scheduleRef = useRef<EventCreateScheduleRef>(null)
+  const [hasScheduleErrors, setHasScheduleErrors] = useState(false)
+
+  const [image, setImage] = useState<ServerFile | null>(null)
+  const [files, setFiles] = useState<ServerFile[]>([])
+  const [additionalInfoTexts, setAdditionalInfoTexts] = useState<string[]>([])
+
+  const dateValidator = useMemo(() => validateDate(date, !!time), [date, time])
+  const timeValidator = useMemo(() => validateTime(time, !!date), [time, date])
+
+  const handleChange = (text: string) => {
+    setAdditionalInfoTexts(prev =>
+      prev.includes(text)
+        ? prev.filter(item => item !== text)
+        : [...prev, text],
+    )
+  }
 
   useEffect(() => {
     const fetchCreateEventData = async () => {
       try {
         setEventTypes(await events.getTypes())
-        setEventStatuses(await events.getStatuses())
         setEventExecutors(await users.getEmployees())
         setIsLoading(false)
       } catch (e) {
@@ -62,33 +94,34 @@ export const EventCreate = () => {
         const event = await events.getOne({ id })
 
         if (event.name) setName(event.name)
-        //if (event.) setDate(event.date)
+        if (event.date) setDate(event.date)
+        if (event.date) setTime(moment(event.date).format('HH:mm'))
         if (event.type) setType(event.type)
         if (event.executors) setExecutors(event.executors)
         if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
         if (event.description) setDescription(event.description)
 
         const offlinePlace: PlaceOffline = event.places.find(
-          place => !place.isOnline,
+          place => !place.is_online,
         ) as PlaceOffline
         const onlinePlace: PlaceOnline = event.places.find(
-          place => place.isOnline,
+          place => place.is_online,
         ) as PlaceOnline
 
         if (offlinePlace) {
           if (offlinePlace.floor) setFloor(offlinePlace.floor)
           if (offlinePlace.address) setAddress(offlinePlace.address)
-          if (offlinePlace.officeNumber)
-            setOfficeNumber(offlinePlace.officeNumber)
+          if (offlinePlace.office_number)
+            setOfficeNumber(offlinePlace.office_number)
         }
 
         if (onlinePlace) {
           if (onlinePlace.platform) setPlatform(onlinePlace.platform)
-          if (onlinePlace.connectionLink)
-            setConnectionLink(onlinePlace.connectionLink)
-          if (onlinePlace.recordLink) setRecordLink(onlinePlace.recordLink)
+          if (onlinePlace.connection_link)
+            setConnectionLink(onlinePlace.connection_link)
+          if (onlinePlace.record_link) setRecordLink(onlinePlace.record_link)
           if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
-          if (onlinePlace.accessCode) setAccessCode(onlinePlace.accessCode)
+          if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
         }
 
         if (event.status) setSchedule(event.schedule)
@@ -113,26 +146,35 @@ export const EventCreate = () => {
 
   const saveEvent = async () => {
     try {
-      const eventCreate: EventCreateDto = {
-        departmentId: user!.departmentId!,
+      const eventUpdate: EventUpdateDto = {
+        name,
+        date: date
+          ? moment(date)
+              .set('hour', +time.split(':')[0])
+              .set('minute', +time.split(':')[1])
+              .toDate()
+          : undefined,
+        typeId: type?.id,
+        description,
+        seatsNumber: seatsNumber ?? undefined,
+        places: getPlaces(),
+        schedule,
+        executorsIds: executors.map(executor => executor.id),
+        imageId: image?.id,
+        filesIds: files.map(file => file.id),
       }
 
-      if (name) eventCreate.name = name
-      if (type) eventCreate.typeId = type.id
-      if (description) eventCreate.description = description
-      if (seatsNumber) eventCreate.seatsNumber = seatsNumber
-      if (getPlaces().length) eventCreate.places = getPlaces()
-      if (schedule.length) eventCreate.schedule = schedule
-      if (executors.length) {
-        eventCreate.executorsIds = executors.map(executor => executor.id)
-      }
-      if (image) eventCreate.imageId = image.id
-      if (files.length) eventCreate.filesIds = files.map(file => file.id)
+      if (!eventId) {
+        const event = await events.create({
+          ...eventUpdate,
+          departmentId: user!.departmentId!,
+        })
 
-      const event = await events.create(eventCreate)
-
-      if (!window.location.pathname.includes(`${event.id}`)) {
-        navigate(`/event/${event.id}/edit`)
+        if (!window.location.pathname.includes(`${event.id}`)) {
+          navigate(`/event/${event.id}/edit`)
+        }
+      } else {
+        await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
       console.log(e)
@@ -144,25 +186,25 @@ export const EventCreate = () => {
 
     if (address || floor || officeNumber) {
       const offlinePlace: PlaceOffline = {
-        isOnline: false,
+        is_online: false,
       }
 
       if (address) offlinePlace.address = address
       if (floor) offlinePlace.floor = floor
-      if (officeNumber) offlinePlace.officeNumber = officeNumber
+      if (officeNumber) offlinePlace.office_number = officeNumber
 
       places.push(offlinePlace)
     }
 
     if (connectionLink || recordLink || identifier || accessCode) {
       const onlinePlace: PlaceOnline = {
-        isOnline: true,
+        is_online: true,
       }
 
-      if (connectionLink) onlinePlace.connectionLink = connectionLink
-      if (recordLink) onlinePlace.recordLink = recordLink
+      if (connectionLink) onlinePlace.connection_link = connectionLink
+      if (recordLink) onlinePlace.record_link = recordLink
       if (identifier) onlinePlace.identifier = identifier
-      if (accessCode) onlinePlace.accessCode = accessCode
+      if (accessCode) onlinePlace.access_code = accessCode
 
       places.push(onlinePlace)
     }
@@ -171,104 +213,26 @@ export const EventCreate = () => {
   }
 
   const renderStateButtons = () => (
-    <div>
-      <div className="state-buttons">
-        <Button
-          text="Назад"
-          colorType="secondary"
-          iconBefore="ARROW_SMALL_LEFT"
-        />
-        <Button colorType="primary" text="Создать" />
-      </div>
-    </div>
-  )
-
-  const renderManagementData = () => (
-    <div className="management-data">
-      <Input
-        label="Название мероприятия"
-        onChange={e => setName(e.target.value)}
-        value={name}
+    <div className="event_create--header">
+      <Button
+        text="Назад"
+        colorType="secondary"
+        iconBefore="ARROW_SMALL_LEFT"
       />
-      <Dropdown
-        id="event-type-dropdown"
-        items={eventTypes.map(type => ({
-          id: type.id,
-          text: type.name,
-        }))}
-        onChangeDropdown={selected =>
-          setType(
-            selected
-              ? (eventTypes.find(type => type.id === +selected) ?? null)
-              : null,
-          )
+      <Button
+        text="Сохранить"
+        disabled={
+          !dateValidator.isValid || !timeValidator.isValid || hasScheduleErrors
         }
-      />
-      <Dropdown
-        id="event-status-dropdown"
-        multiple
-        items={eventExecutors.map(executor => ({
-          id: executor.id,
-          text: executor.name,
-          avatar: {
-            src: executor.avatar?.url ?? '',
-            description: executor.position,
-          },
-        }))}
-        onChangeDropdown={selected =>
-          setExecutors(prevExecutors =>
-            eventExecutors.filter(executor =>
-              typeof selected !== 'number'
-                ? selected?.includes(executor.id)
-                : [],
-            ),
-          )
-        }
-      />
-    </div>
-  )
-
-  const renderPlaces = () => (
-    <div className="places">
-      <Input
-        label="Адрес"
-        value={address}
-        onChange={e => setAddress(e.target.value)}
-      />
-      <Input
-        label="Этаж"
-        value={floor}
-        onChange={e => setFloor(+e.target.value)}
-      />
-      <Input
-        label="Аудитория"
-        value={officeNumber}
-        onChange={e => setOfficeNumber(e.target.value)}
-      />
-      <Input
-        label="Площадка"
-        value={platform}
-        onChange={e => setPlatform(e.target.value)}
-      />
-      <Input
-        label="Ссылка для подключения"
-        value={connectionLink}
-        onChange={e => setConnectionLink(e.target.value)}
-      />
-      <Input
-        label="Ссылка на запись и презентацию"
-        value={recordLink}
-        onChange={e => setRecordLink(e.target.value)}
-      />
-      <Input
-        label="Идентификатор"
-        value={identifier}
-        onChange={e => setIdentifier(e.target.value)}
-      />
-      <Input
-        label="Код доступа"
-        value={accessCode}
-        onChange={e => setAccessCode(e.target.value)}
+        onClick={() => {
+          if (
+            dateValidator.isValid &&
+            timeValidator.isValid &&
+            !hasScheduleErrors
+          ) {
+            saveEvent()
+          }
+        }}
       />
     </div>
   )
@@ -276,21 +240,84 @@ export const EventCreate = () => {
   return (
     <>
       {!isLoading ? (
-        <>
-          <EventCreateImage image={image} setImage={setImage} />
+        <div className="event_create">
           {renderStateButtons()}
-          <TextEditor
-            value={description ?? ''}
-            onChange={e => setDescription(e.editor.getHTML())}
-          />
-          {renderManagementData()}
-          {renderPlaces()}
-          <EventCreateSchedule schedule={schedule} setSchedule={setSchedule} />
-          <EventCreateFiles files={files} setFiles={setFiles} />
-          <Button text="Сохранить" onClick={saveEvent} />
-        </>
+          <ContainerBox>
+            <EventCreateImage image={image} setImage={setImage} />
+            <div className="event_create--container">
+              <div>
+                <EventCreateManagementData
+                  name={name}
+                  setName={setName}
+                  eventTypes={eventTypes}
+                  type={type}
+                  setType={setType}
+                  date={date}
+                  setDate={setDate}
+                  dateValidator={dateValidator}
+                  time={time}
+                  setTime={setTime}
+                  timeValidator={timeValidator}
+                  seatsNumber={seatsNumber}
+                  setSeatsNumber={setSeatsNumber}
+                  eventExecutors={eventExecutors}
+                  executors={executors}
+                  setExecutors={setExecutors}
+                />
+                <TextEditor
+                  value={description ?? ''}
+                  label="Описание мероприятия"
+                  placeholder="Описание мероприятия"
+                  onChange={e => setDescription(e.editor.getHTML())}
+                />
+                <EventCreatePlace
+                  address={address}
+                  setAddress={setAddress}
+                  floor={floor}
+                  setFloor={setFloor}
+                  officeNumber={officeNumber}
+                  setOfficeNumber={setOfficeNumber}
+                  platform={platform}
+                  setPlatform={setPlatform}
+                  connectionLink={connectionLink}
+                  setConnectionLink={setConnectionLink}
+                  recordLink={recordLink}
+                  setRecordLink={setRecordLink}
+                  identifier={identifier}
+                  setIdentifier={setIdentifier}
+                  accessCode={accessCode}
+                  setAccessCode={setAccessCode}
+                />
+                <EventCreateSchedule
+                  ref={scheduleRef}
+                  schedule={schedule}
+                  setSchedule={setSchedule}
+                  onErrorsChange={setHasScheduleErrors}
+                />
+              </div>
+              <div>
+                <EventCreateFiles files={files} setFiles={setFiles} />
+                <div className="additional-info">
+                  <label className="body_s_sb label">
+                    Дополнительная информация
+                  </label>
+                  <div className="additional-info_checkboxes">
+                    {additionalInfoItems.map((text, index) => (
+                      <Checkbox
+                        key={index}
+                        isSelected={additionalInfoTexts.includes(text)}
+                        onChange={() => handleChange(text)}
+                        label={text}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ContainerBox>
+        </div>
       ) : (
-        <div>Loading</div>
+        <Loading />
       )}
     </>
   )

@@ -7,6 +7,7 @@ import { EventType } from '../../models/eventType'
 import { CalendarFilter } from './CalendarFilter/CalendarFilter'
 import { CalendarDay } from './CalendarDay/CalendarDay'
 import { commonEntities } from '../../services/api/commonModule/commonEntities/commonEntities'
+import { Loading } from '../../components/Loading/Loading'
 export interface EventsFilter {
   type?: number
   department?: number
@@ -109,7 +110,7 @@ export const EventCalendar = () => {
           <div>{renderDays()}</div>
         </>
       ) : (
-        <p>Loading...</p>
+        <Loading />
       )}
     </>
   )

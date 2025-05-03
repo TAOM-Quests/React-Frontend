@@ -1,0 +1,46 @@
+.schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &__container-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  &--item {
+    display: flex;
+    flex-direction: row;
+
+    gap: 10px;
+    align-items: start;
+    width: 100%;
+
+    @media (max-width: 830px) {
+      flex-direction: column;
+    }
+  }
+  &--time {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+  }
+  &--itemName {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    .inputWrapper {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,147 @@
+.footer {
+  background-color: var(--bg_c_primary); // темно-синий фон
+  color: var(--text_c_secondary);
+  padding: 40px 60px;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  &__logo-social {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    & .footer__logo img {
+      width: 180px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    & .footer__social {
+      display: flex;
+      gap: 16px;
+
+      &-link {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        color: #6ea1c6;
+        transition: color 0.3s;
+
+        .icon {
+          transition: color 0.3s;
+        }
+
+        &:hover .icon {
+          color: var(--text_c_accent_hover) !important;
+        }
+      }
+    }
+  }
+
+  &__sections {
+    flex: 5 1 600px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  &__section {
+    min-width: 140px;
+    max-width: 180px;
+
+    &-title {
+      color: var(--text_c_accent);
+      margin-bottom: 16px;
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    &-item {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__link {
+    color: var(--text_c_secondary);
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: var(--bg_c_accent_hover) !important;
+    }
+  }
+
+  &__contacts {
+    max-width: 220px;
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: var(--text_c_secondary);
+    }
+
+    & .footer__address-line {
+      // margin-bottom: 8px;
+      line-height: 1.4;
+    }
+  }
+
+  &__bottom {
+    margin-top: 40px;
+    border-top: 2px solid var(--border_c_primary);
+    padding-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text_c_secondary);
+  }
+
+  /* Адаптив */
+
+  @media (max-width: 900px) {
+    padding: 30px 20px;
+
+    &__top {
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    &__sections {
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    &__section {
+      max-width: 100%;
+    }
+
+    &__logo-social {
+      align-items: center;
+
+      & .footer__logo img {
+        width: 140px;
+      }
+    }
+  }
+}

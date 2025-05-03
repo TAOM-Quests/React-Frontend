@@ -13,14 +13,12 @@ import {
   Dropdown,
   DropdownItemType,
 } from '../../../../components/UI/Dropdown/Dropdown'
-import {
-  validateDateOfBirth,
-  validateName,
-  validateEmail,
-  validatePhone,
-} from '../../../../validation/validators'
 
 import { MaskedInput } from '../../../../components/MaskedInput/MaskedInput'
+import { validateName } from '../../../../validation/validateName'
+import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
+import { validateEmail } from '../../../../validation/validateEmail'
+import { validatePhone } from '../../../../validation/validatePhone'
 
 export interface PersonInfoProps {
   profile: UserProfile
