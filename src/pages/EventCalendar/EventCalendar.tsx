@@ -8,6 +8,7 @@ import { CalendarFilter } from './CalendarFilter/CalendarFilter'
 import { CalendarDay } from './CalendarDay/CalendarDay'
 import { commonEntities } from '../../services/api/commonModule/commonEntities/commonEntities'
 import { Loading } from '../../components/Loading/Loading'
+import './EventCalendar.scss'
 export interface EventsFilter {
   type?: number
   department?: number
@@ -68,6 +69,20 @@ export const EventCalendar = () => {
 
   const renderDays = (): ReactNode => {
     const daysInMonth = selectedPeriod.daysInMonth()
+    const firstDayOfMonth = selectedPeriod.clone().date(1)
+
+    let weekDayIndex = firstDayOfMonth.isoWeekday()
+
+    const emptyCells = []
+    for (let i = 1; i < weekDayIndex; i++) {
+      emptyCells.push(
+        <div
+          key={`empty-${i}`}
+          className="calendarPage-day calendarPage-day--empty"
+        />,
+      )
+    }
+
     const daysComponents: JSX.Element[] = []
 
     for (let i = 1; i <= daysInMonth; i++) {
@@ -87,31 +102,47 @@ export const EventCalendar = () => {
       )
     }
 
-    return <>{daysComponents}</>
+    return (
+      <>
+        {emptyCells}
+        {daysComponents}
+      </>
+    )
   }
 
   return (
     <>
-      {!isLoading ? (
-        <>
-          <div>
-            <CalendarFilter
-              types={eventTypes}
-              setFilter={(addFilter: EventsFilter) =>
-                setFilter({ ...filter, ...addFilter })
-              }
-              selectedType={filter.type}
-              departments={eventDepartments}
-              selectedPeriod={selectedPeriod}
-              setSelectedPeriod={setSelectedPeriod}
-              selectedDepartment={filter.department}
-            />
+      <div className="calendarPage">
+        <div className="calendarPage__filter-container">
+          <CalendarFilter
+            types={eventTypes}
+            setFilter={(addFilter: EventsFilter) =>
+              setFilter({ ...filter, ...addFilter })
+            }
+            selectedType={filter.type}
+            departments={eventDepartments}
+            selectedPeriod={selectedPeriod}
+            setSelectedPeriod={setSelectedPeriod}
+            selectedDepartment={filter.department}
+          />
+        </div>
+        <div className="calendarPage__days-container">
+          <div className="calendarPage__weekdays">
+            <div className="body_l_sb calendarPage__weekday">Пн</div>
+            <div className="body_l_sb calendarPage__weekday">Вт</div>
+            <div className="body_l_sb calendarPage__weekday">Ср</div>
+            <div className="body_l_sb calendarPage__weekday">Чт</div>
+            <div className="body_l_sb calendarPage__weekday">Пт</div>
+            <div className="body_l_sb calendarPage__weekday">Сб</div>
+            <div className="body_l_sb calendarPage__weekday">Вс</div>
           </div>
-          <div>{renderDays()}</div>
-        </>
-      ) : (
-        <Loading />
-      )}
+          {!isLoading ? (
+            <div className="calendarPage__days-grid">{renderDays()}</div>
+          ) : (
+            <Loading />
+          )}
+        </div>
+      </div>
     </>
   )
 }

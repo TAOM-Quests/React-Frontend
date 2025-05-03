@@ -26,13 +26,14 @@ export const CalendarFilter = ({
   selectedDepartment,
 }: CalendarFilterProps) => {
   return (
-    <div>
-      <div>
+    <div className="calendarPage-filter">
+      <div className="calendarPage-filter__dropdowns">
         <Dropdown
           items={types.map(type => ({
             id: type.id,
             text: type.name,
           }))}
+          placeholder="Тип мероприятия"
           selectedIds={selectedType ? [selectedType] : []}
           onChangeDropdown={selected =>
             setFilter({
@@ -45,6 +46,7 @@ export const CalendarFilter = ({
             id: department.id,
             text: department.name,
           }))}
+          placeholder="Кафедра"
           selectedIds={selectedDepartment ? [selectedDepartment] : []}
           onChangeDropdown={selected =>
             setFilter({
@@ -54,7 +56,7 @@ export const CalendarFilter = ({
           }
         />
       </div>
-      <div>
+      <div className="calendarPage-filter__period">
         <Button
           isIconOnly
           iconBefore="ANGLE_LEFT"
@@ -70,6 +72,11 @@ export const CalendarFilter = ({
             setSelectedPeriod(selectedPeriod.clone().add(1, 'month'))
           }
         />
+      </div>
+      <div className="calendarPage-filter__view-modes">
+        <Button text="Сегодня" onClick={() => {}} />
+        <Button text="Месяц" onClick={() => {}} />
+        <Button text="Год" onClick={() => {}} />
       </div>
     </div>
   )
