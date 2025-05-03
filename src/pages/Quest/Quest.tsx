@@ -6,6 +6,7 @@ import { QuestStartView } from './QuestStartView/QuestStartView'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
 import { Badge } from '../../components/UI/Badge/Badge'
 import { QuestQuestion } from './QuestQuestion/QuestQuestion'
+import { QuestResultView } from './QuestResultView/QuestResultView'
 
 interface UserAnswer {
   answer: any
@@ -88,6 +89,15 @@ export const Quest = () => {
                 setNextQuestion={setNextQuestion}
               />
             </ContainerBox>
+          )}
+          {isResultView && (
+            <QuestResultView
+              results={quest.results ?? []}
+              questionCount={quest.questions?.length ?? 0}
+              userCorrectAnswerCount={
+                userAnswers.filter(answer => answer.isCorrectAnswer).length
+              }
+            />
           )}
         </div>
       ) : (
