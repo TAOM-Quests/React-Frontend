@@ -1,0 +1,32 @@
+.connection-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  .label {
+    color: var(--text_c_subdued);
+  }
+
+  .connection-question-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    .inputWrapper {
+      width: 100%;
+    }
+  }
+}
