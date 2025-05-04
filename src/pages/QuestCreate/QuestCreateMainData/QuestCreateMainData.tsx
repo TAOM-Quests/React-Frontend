@@ -12,6 +12,7 @@ import { quests } from '../../../services/api/questModule/quests/quests'
 import { isArray } from 'lodash'
 import { TextEditor } from '../../../components/TextEditor/TextEditor'
 import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
+import './QuestCreateMainData.scss'
 
 export interface QuestCreateMainDataProps {
   name: string
@@ -76,14 +77,54 @@ export const QuestCreateMainData = ({
     fetchCreateQuestData()
   }, [])
 
+  const handleAddNewTag = (text: string) => {
+    const newTag = { id: Date.now(), name: text }
+    setQuestTags(prev => [...prev, newTag])
+    setTags([...tags, newTag])
+  }
+
+  const handleAddNewGroup = (text: string) => {
+    const newGroup = { id: Date.now(), name: text }
+    setQuestGroups(prev => [...prev, newGroup])
+    setGroup(newGroup)
+  }
+
   return (
-    <ContainerBox>
-      <div>
+    <ContainerBox className="questCreateMainData">
+      <div className="questCreateMainData--left">
         <Input
           label="Название квеста"
+          placeholder="Введите название квеста"
           value={name}
           onChange={e => setName(e.target.value)}
         />
+
+        <div className="questCreateMainData--inputsMini">
+          <Dropdown
+            items={questDifficulties.map(difficult => ({
+              id: difficult.id,
+              text: difficult.name,
+            }))}
+            onChangeDropdown={selected =>
+              selected &&
+              !isArray(selected) &&
+              setDifficulty(
+                questDifficulties.find(
+                  difficult => difficult.id === +selected,
+                ) ?? null,
+              )
+            }
+            placeholder="Выберите сложность"
+            label="Сложность"
+            selectedIds={difficulty ? [difficulty.id] : []}
+          />
+          <TimeInput
+            value={time}
+            label="Время прохождения"
+            onTimeSelect={time => setTime(time ?? '')}
+          />
+        </div>
+
         <Dropdown
           items={questGroups.map(group => ({ id: group.id, text: group.name }))}
           onChangeDropdown={selected =>
@@ -92,23 +133,10 @@ export const QuestCreateMainData = ({
             setGroup(questGroups.find(group => group.id === +selected) ?? null)
           }
           label="Группа квестов"
+          placeholder="Выберите группу"
           selectedIds={group ? [group.id] : []}
-        />
-        <Dropdown
-          items={questDifficulties.map(difficult => ({
-            id: difficult.id,
-            text: difficult.name,
-          }))}
-          onChangeDropdown={selected =>
-            selected &&
-            !isArray(selected) &&
-            setDifficulty(
-              questDifficulties.find(difficult => difficult.id === +selected) ??
-                null,
-            )
-          }
-          label="Сложность"
-          selectedIds={difficulty ? [difficulty.id] : []}
+          isAllowAddNewItem
+          onAddNewItem={handleAddNewGroup}
         />
         <Dropdown
           items={questTags.map(tag => ({ id: tag.id, text: tag.name }))}
@@ -117,14 +145,18 @@ export const QuestCreateMainData = ({
             setTags(questTags.filter(tag => tag.id === +selected))
           }
           label="Теги"
+          placeholder="Выберите теги"
           selectedIds={tags.map(tag => tag.id)}
           isMultiple
+          isAllowAddNewItem
+          onAddNewItem={handleAddNewTag}
         />
-        <TimeInput value={time} onTimeSelect={time => setTime(time ?? '')} />
       </div>
-      <div>
+      <div className="questCreateMainData--right">
         <TextEditor
           value={description}
+          placeholder="Введите описание"
+          label="Описание"
           onChange={e => setDescription(e.editor.getHTML())}
         />
       </div>

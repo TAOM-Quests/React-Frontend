@@ -14,6 +14,7 @@ import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
 import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
 import './Dropdown.scss'
+import { Button } from '../Button/Button'
 
 export interface DropdownItemType {
   id: number
@@ -33,6 +34,8 @@ export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   helperText?: string
   isMultiple?: boolean
   selectedIds?: number[]
+  isAllowAddNewItem?: boolean
+  onAddNewItem?: (text: string) => void
   onChangeDropdown?: (
     selectedItem: DropdownItemType | DropdownItemType[] | null,
   ) => void
@@ -49,6 +52,8 @@ export const Dropdown = ({
   helperText,
   errorText,
   selectedIds: selectedIdsProp,
+  isAllowAddNewItem = false,
+  onAddNewItem,
   ...props
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -63,6 +68,20 @@ export const Dropdown = ({
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const showAddButton =
+    isAllowAddNewItem &&
+    searchValue.trim() !== '' &&
+    !items.some(
+      item => item.text.toLowerCase() === searchValue.trim().toLowerCase(),
+    )
+  const handleAddNewItem = () => {
+    if (!onAddNewItem) return
+    const newText = searchValue.trim()
+    onAddNewItem(newText)
+    setSearchValue('')
+    setIsOpen(false)
+  }
 
   const focusInput = () => {
     setTimeout(() => {
@@ -197,34 +216,43 @@ export const Dropdown = ({
           })}
         </div>
       )}
-
-      <Input
-        ref={inputRef}
-        label={label}
-        type="text"
-        iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
-        onClickIconAfter={disabled ? undefined : () => setIsOpen(!isOpen)}
-        value={renderInputValue()}
-        onChange={e => setSearchValue(e.target.value)}
-        onFocus={handleFocus}
-        onBlur={() => {
-          setTimeout(() => {
-            if (
-              dropdownRef.current &&
-              !dropdownRef.current.contains(document.activeElement) &&
-              !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
-            ) {
-              setIsOpen(false)
-            }
-          }, 200)
-        }}
-        disabled={disabled}
-        placeholder={placeholder}
-        helperText={helperText}
-        errorText={errorText}
-        onClearSelection={handleClearSelection}
-        {...props}
-      />
+      <div className="input-showAddButton">
+        <Input
+          ref={inputRef}
+          label={label}
+          type="text"
+          iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
+          onClickIconAfter={disabled ? undefined : () => setIsOpen(!isOpen)}
+          value={renderInputValue()}
+          onChange={e => setSearchValue(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={() => {
+            setTimeout(() => {
+              if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(document.activeElement) &&
+                !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
+              ) {
+                setIsOpen(false)
+              }
+            }, 200)
+          }}
+          disabled={disabled}
+          placeholder={placeholder}
+          helperText={helperText}
+          errorText={errorText}
+          onClearSelection={handleClearSelection}
+          {...props}
+        />
+        {showAddButton && (
+          <Button
+            colorType="secondary"
+            text="Добавить"
+            iconBefore="ADD"
+            onClick={handleAddNewItem}
+          />
+        )}
+      </div>
 
       {isOpen && (
         <div className="dropdown-menu">

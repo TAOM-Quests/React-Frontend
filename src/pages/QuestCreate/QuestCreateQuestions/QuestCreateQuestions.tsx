@@ -17,6 +17,8 @@ import { QuestCreateQuestionConnection } from './QuestCreateQuestionConnection/Q
 import { QuestCreateQuestionBoxSorting } from './QuestCreateQuestionBoxSorting/QuestCreateQuestionBoxSorting'
 import { QuestCreateQuestionFree } from './QuestCreateQuestionFree/QuestCreateQuestionFree'
 import { Icon } from '../../../components/UI/Icon/Icon'
+import { useState } from 'react'
+import './QuestCreateQuestions.scss'
 
 export interface QuestCreateQuestionsProps {
   questions: QuestQuestion[]
@@ -124,6 +126,12 @@ export const QuestCreateQuestions = ({
     </div>
   )
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsMenuOpen(isMenuOpen => !isMenuOpen)
+  }
+
   return (
     <>
       {questions.map((question, index) => (
@@ -175,7 +183,13 @@ export const QuestCreateQuestions = ({
           )}
         </ContainerBox>
       ))}
-      <ContextMenu options={addQuestionContextMenuOptions}>
+
+      <ContextMenu
+        isVisible={isMenuOpen}
+        onToggle={toggleMenu}
+        options={addQuestionContextMenuOptions}
+        className="add-question-context-menu"
+      >
         <Button
           isIconOnly
           isButtonCircle
@@ -183,6 +197,7 @@ export const QuestCreateQuestions = ({
           colorType={'accent'}
         />
       </ContextMenu>
+
       {addQuestionContextMenuOptions.map((option, index) => (
         <Button
           text={option.text}

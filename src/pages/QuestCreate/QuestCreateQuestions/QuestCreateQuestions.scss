@@ -1,0 +1,9 @@
+.add-question-context-menu {
+  .item_selected {
+    background-color: var(--bg_c_secondary);
+
+    &:hover {
+      background-color: var(--bg_c_secondary_hover);
+    }
+  }
+}
