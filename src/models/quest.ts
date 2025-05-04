@@ -6,7 +6,7 @@ import { QuestResult } from './questResult'
 import { QuestTag } from './questTag'
 import { ServerFile } from './serverFile'
 
-export default interface Quest {
+export interface Quest {
   id: number
   department: Department
   name?: string
