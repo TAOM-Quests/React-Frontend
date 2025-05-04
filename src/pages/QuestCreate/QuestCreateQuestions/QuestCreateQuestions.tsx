@@ -183,20 +183,21 @@ export const QuestCreateQuestions = ({
           )}
         </ContainerBox>
       ))}
-
-      <ContextMenu
-        isVisible={isMenuOpen}
-        onToggle={toggleMenu}
-        options={addQuestionContextMenuOptions}
-        className="add-question-context-menu"
-      >
-        <Button
-          isIconOnly
-          isButtonCircle
-          iconBefore="PLUS"
-          colorType={'accent'}
-        />
-      </ContextMenu>
+      <div>
+        <ContextMenu
+          isVisible={isMenuOpen}
+          onToggle={toggleMenu}
+          options={addQuestionContextMenuOptions}
+          className="add-question-context-menu"
+        >
+          <Button
+            isIconOnly
+            isButtonCircle
+            iconBefore="PLUS"
+            colorType={'accent'}
+          />
+        </ContextMenu>
+      </div>
 
       {/* {addQuestionContextMenuOptions.map((option, index) => (
         <Button

@@ -81,12 +81,15 @@ export const QuestCreateResults = ({
           <div className="quest-create-results__result--line"></div>
         </div>
       ))}
-      <Button
-        iconAfter="ADD"
-        text="Добавить"
-        onClick={addResult}
-        colorType={'secondary'}
-      />
+      <div>
+        <Button
+          iconAfter="ADD"
+          text="Добавить"
+          size="small"
+          onClick={addResult}
+          colorType={'secondary'}
+        />
+      </div>
     </ContainerBox>
   )
 }
