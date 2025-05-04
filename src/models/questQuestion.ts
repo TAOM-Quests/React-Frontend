@@ -2,6 +2,7 @@ export interface QuestQuestion {
   text: string
   type: QuestionType
   id?: number
+  imageId?: number
   questId?: number
 }
 
