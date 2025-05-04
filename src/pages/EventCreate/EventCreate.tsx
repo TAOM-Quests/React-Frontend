@@ -32,6 +32,7 @@ const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
   'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
 ]
+const additionalInfoSeparator = '<-- Additional info ->'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -93,13 +94,24 @@ export const EventCreate = () => {
       try {
         const event = await events.getOne({ id })
 
-        if (event.name) setName(event.name)
         if (event.date) setDate(event.date)
-        if (event.date) setTime(moment(event.date).format('HH:mm'))
+        if (event.name) setName(event.name)
         if (event.type) setType(event.type)
+        if (event.image) setImage(event.image)
+        if (event.files) setFiles(event.files)
+        if (event.status) setSchedule(event.schedule)
         if (event.executors) setExecutors(event.executors)
+        if (event.description)
+          setDescription(event.description.split(additionalInfoSeparator)[0])
+        if (event.description)
+          setAdditionalInfoTexts(
+            event.description
+              .split(additionalInfoSeparator)[1]
+              .split('<br>')
+              .map(item => item.trim()),
+          )
         if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
-        if (event.description) setDescription(event.description)
+        if (event.date) setTime(moment(event.date).format('HH:mm'))
 
         const offlinePlace: PlaceOffline = event.places.find(
           place => !place.is_online,
@@ -123,9 +135,6 @@ export const EventCreate = () => {
           if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
           if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
         }
-
-        if (event.status) setSchedule(event.schedule)
-        if (event.files) setFiles(event.files)
       } catch (e) {
         console.log(e)
       }
@@ -155,7 +164,12 @@ export const EventCreate = () => {
               .toDate()
           : undefined,
         typeId: type?.id,
-        description,
+        description:
+          description +
+          `
+          ${additionalInfoSeparator}
+          ${additionalInfoTexts.join('<br>')}
+        `,
         seatsNumber: seatsNumber ?? undefined,
         places: getPlaces(),
         schedule,
@@ -196,11 +210,12 @@ export const EventCreate = () => {
       places.push(offlinePlace)
     }
 
-    if (connectionLink || recordLink || identifier || accessCode) {
+    if (platform || connectionLink || recordLink || identifier || accessCode) {
       const onlinePlace: PlaceOnline = {
         is_online: true,
       }
 
+      if (platform) onlinePlace.platform = platform
       if (connectionLink) onlinePlace.connection_link = connectionLink
       if (recordLink) onlinePlace.record_link = recordLink
       if (identifier) onlinePlace.identifier = identifier

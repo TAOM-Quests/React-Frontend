@@ -3,7 +3,7 @@ import { ServerFile } from './serverFile'
 interface User {
   id: number
   name: string
-  avatar?: ServerFile
+  image?: ServerFile
 }
 
 export type Participant = User
