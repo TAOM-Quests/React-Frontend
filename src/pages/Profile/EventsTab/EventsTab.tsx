@@ -27,7 +27,7 @@ export interface EventsTabProps {
 export default function EventsTab({ user }: EventsTabProps) {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<EventsFilter>({})
-  const [userEvents, setEvents] = useState<EventMinimize[] | null>(null)
+  const [userEvents, setEvents] = useState<EventMinimize[]>([])
 
   useEffect(() => {
     const fetchEvents = async () => {
