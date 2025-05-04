@@ -54,5 +54,6 @@
   &--disabled {
     cursor: not-allowed !important;
     user-select: none;
+    opacity: var(--disabled_opacity);
   }
 }

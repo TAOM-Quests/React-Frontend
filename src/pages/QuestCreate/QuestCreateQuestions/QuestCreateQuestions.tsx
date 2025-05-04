@@ -113,6 +113,7 @@ export const QuestCreateQuestions = ({
       <Input
         label="Вопрос"
         value={question.text}
+        placeholder="Введите вопрос"
         onChange={e =>
           setQuestions(
             questions.map((question, indexQuestion) =>
@@ -136,9 +137,9 @@ export const QuestCreateQuestions = ({
     <div className="quest-create-questions">
       {questions.map((question, index) => (
         <ContainerBox key={index}>
-          <div>
-            <h2>Задание {index + 1}</h2>
-            <Icon icon="CROSS" onClick={() => removeQuestion(index)} />
+          <div className="quest-create-questions__header">
+            <p className="body_xl_sb">Задание {index + 1}</p>
+            <Icon icon="DELETE" onClick={() => removeQuestion(index)} />
           </div>
           {renderQuestion(question, index)}
           {question.type === 'single' && (
