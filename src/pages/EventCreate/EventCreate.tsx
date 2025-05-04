@@ -27,6 +27,7 @@ import { EventCreateManagementData } from './EventCreateManagementData/EventCrea
 import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
 import { Loading } from '../../components/Loading/Loading'
+import { EventTag } from '../../models/eventTag'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -40,6 +41,7 @@ export const EventCreate = () => {
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
 
+  const [eventTags, setEventTags] = useState<EventTag[]>([])
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
 
@@ -82,11 +84,14 @@ export const EventCreate = () => {
   useEffect(() => {
     const fetchCreateEventData = async () => {
       try {
+        if (!user) throw new Error('User not found')
+
+        setEventTags(await events.getTags(user.departmentId))
         setEventTypes(await events.getTypes())
         setEventExecutors(await users.getEmployees())
         setIsLoading(false)
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreatePage] ${e}`)
       }
     }
 
