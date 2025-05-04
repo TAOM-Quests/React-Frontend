@@ -5,6 +5,8 @@ import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
 import { Moment } from 'moment'
 import { EventsFilter } from '../EventCalendar'
 import { isArray } from 'lodash'
+import moment from 'moment'
+import './CalendarFilter.scss'
 
 export interface CalendarFilterProps {
   types: EventType[]
@@ -12,6 +14,8 @@ export interface CalendarFilterProps {
   departments: Department[]
   setFilter: (filter: EventsFilter) => void
   setSelectedPeriod: (date: Moment) => void
+  viewMode: 'month' | 'year'
+  setViewMode: (mode: 'month' | 'year') => void
   selectedType?: number
   selectedDepartment?: number
 }
@@ -19,6 +23,8 @@ export interface CalendarFilterProps {
 export const CalendarFilter = ({
   types,
   setFilter,
+  viewMode,
+  setViewMode,
   departments,
   selectedType,
   selectedPeriod,
@@ -59,24 +65,50 @@ export const CalendarFilter = ({
       <div className="calendarPage-filter__period">
         <Button
           isIconOnly
+          colorType="accent"
           iconBefore="ANGLE_LEFT"
           onClick={() =>
-            setSelectedPeriod(selectedPeriod.clone().subtract(1, 'month'))
+            setSelectedPeriod(
+              viewMode === 'month'
+                ? selectedPeriod.clone().subtract(1, 'month')
+                : selectedPeriod.clone().subtract(1, 'year'),
+            )
           }
         />
-        <p>{selectedPeriod.format('MMMM YYYY')}</p>
+        <p className="body_xl_sb calendarPage-filter__date">
+          {viewMode === 'month'
+            ? selectedPeriod.format('MMMM YYYY')
+            : selectedPeriod.format('YYYY')}
+        </p>
         <Button
           isIconOnly
+          colorType="accent"
           iconBefore="ANGLE_RIGHT"
           onClick={() =>
-            setSelectedPeriod(selectedPeriod.clone().add(1, 'month'))
+            setSelectedPeriod(
+              viewMode === 'month'
+                ? selectedPeriod.clone().add(1, 'month')
+                : selectedPeriod.clone().add(1, 'year'),
+            )
           }
         />
       </div>
       <div className="calendarPage-filter__view-modes">
-        <Button text="Сегодня" onClick={() => {}} />
-        <Button text="Месяц" onClick={() => {}} />
-        <Button text="Год" onClick={() => {}} />
+        <Button
+          text="Сегодня"
+          colorType="subdued"
+          onClick={() => setSelectedPeriod(moment().set('date', 1))}
+        />
+        <Button
+          text="Месяц"
+          colorType={viewMode === 'month' ? 'primary' : 'secondary'}
+          onClick={() => setViewMode('month')}
+        />
+        <Button
+          text="Год"
+          colorType={viewMode === 'year' ? 'primary' : 'secondary'}
+          onClick={() => setViewMode('year')}
+        />
       </div>
     </div>
   )

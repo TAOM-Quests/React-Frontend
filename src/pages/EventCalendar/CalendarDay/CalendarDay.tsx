@@ -1,27 +1,27 @@
 import { last } from 'lodash'
 import { EventMinimize } from '../../../models/eventMinimize'
-import moment from 'moment'
+import moment, { Moment } from 'moment'
 import { Tag } from '../../../components/UI/Tag/Tag'
 import { useEffect, useState } from 'react'
 import { Modal } from '../../../components/UI/Modal/Modal'
 import { useNavigate } from 'react-router'
 import EventMinimizeComponent from '../../../components/EventMinimize/EventMinimize'
 import { PlaceOffline, PlaceOnline } from '../../../models/event'
+import classNames from 'classnames'
+import './CalendarDay.scss'
 
 export interface CalendarDayProps {
-  isToday: boolean
-  dayNumber: number
+  day: Moment
   events: EventMinimize[]
+  isToday: boolean
 }
 
-export const CalendarDay = ({
-  events,
-  isToday,
-  dayNumber,
-}: CalendarDayProps) => {
+export const CalendarDay = ({ events, isToday, day }: CalendarDayProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const navigate = useNavigate()
+
+  const isWeekend = day.day() === 0 || day.day() === 6
 
   const openEventsModal = () => {
     setIsModalOpen(true)
@@ -119,7 +119,13 @@ export const CalendarDay = ({
       )}
 
       <div className="calendarPage-day__header">
-        <span className="body_m_sb calendarPage-day__number">{dayNumber}</span>
+        <span
+          className={classNames('body_m_sb', 'calendarPage-day__number', {
+            'calendarPage-day__number--weekend': isWeekend,
+          })}
+        >
+          {day.format('D')}
+        </span>
         {isToday && events.length === 1 && (
           <Tag text="Сегодня" type="primary" size="small" />
         )}
@@ -129,7 +135,7 @@ export const CalendarDay = ({
 
       {isModalOpen && (
         <Modal
-          title={`Мероприятия на ${dayNumber} число`}
+          title={`Мероприятия на ${day.format('D MMMM YYYY')}`}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         >
