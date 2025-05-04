@@ -5,6 +5,7 @@ import { Icon } from '../../../components/UI/Icon/Icon'
 import Input from '../../../components/UI/Input/Input'
 import { NumberInput } from '../../../components/UI/NumberInput/NumberInput'
 import { QuestResult } from '../../../models/questResult'
+import './QuestCreateResults.scss'
 
 export interface QuestCreateResultsProps {
   results: QuestResult[]
@@ -26,38 +27,58 @@ export const QuestCreateResults = ({
     setResults(results.filter((_, i) => i !== index))
 
   return (
-    <ContainerBox>
-      <h2>Результаты квеста</h2>
+    <ContainerBox className="quest-create-results">
+      <p className="body_xl_sb quest-create-results__title">
+        Результаты квеста
+      </p>
       {results.map((result, resultIndex) => (
-        <div key={resultIndex}>
-          <Icon icon="CROSS" onClick={() => removeResult(resultIndex)} />
-          <Input
-            label="Название"
-            value={result.name}
-            onChange={e =>
-              updateResult({ ...result, name: e.target.value }, resultIndex)
-            }
-          />
-          <NumberInput
-            min={0}
-            value={result.minPoints}
-            label="Минимальное количество правильных ответов"
-            onChange={minPoints =>
-              updateResult(
-                { ...result, minPoints: minPoints ?? 0 },
-                resultIndex,
-              )
-            }
-          />
-          <TextEditor
-            value={result.description}
-            onChange={description =>
-              updateResult(
-                { ...result, description: description.editor.getHTML() ?? '' },
-                resultIndex,
-              )
-            }
-          />
+        <div key={resultIndex} className="quest-create-results__result">
+          <div className="quest-create-results__result--container">
+            <div className="quest-create-results__result--content">
+              <div className="quest-create-results__result--inputsMini">
+                <Input
+                  label="Название"
+                  placeholder="Введите название"
+                  value={result.name}
+                  onChange={e =>
+                    updateResult(
+                      { ...result, name: e.target.value },
+                      resultIndex,
+                    )
+                  }
+                />
+                <NumberInput
+                  min={0}
+                  value={result.minPoints}
+                  label="Мин кол-во верных ответов"
+                  placeholder="0..."
+                  onChange={minPoints =>
+                    updateResult(
+                      { ...result, minPoints: minPoints ?? 0 },
+                      resultIndex,
+                    )
+                  }
+                />
+              </div>
+              <TextEditor
+                value={result.description}
+                label="Описание"
+                placeholder="Введите описание"
+                onChange={description =>
+                  updateResult(
+                    {
+                      ...result,
+                      description: description.editor.getHTML() ?? '',
+                    },
+                    resultIndex,
+                  )
+                }
+              />
+            </div>
+
+            <Icon icon="DELETE" onClick={() => removeResult(resultIndex)} />
+          </div>
+          <div className="quest-create-results__result--line"></div>
         </div>
       ))}
       <Button

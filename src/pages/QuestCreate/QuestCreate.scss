@@ -1,0 +1,19 @@
+.quest-create {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .quest-questions-results {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+}

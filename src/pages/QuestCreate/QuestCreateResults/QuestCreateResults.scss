@@ -1,0 +1,77 @@
+.quest-create-results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+
+  &__title {
+    color: var(--text_c_primary);
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    &--container {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+
+    // border-bottom: var(--border_bottom_dashed) var(--border_bottom_c_accent);
+
+    // border-bottom: 2px solid;
+    // border-image: repeating-linear-gradient(
+    //     to right,
+    //     var(--border_bottom_c_accent) 0,
+    //     var(--border_bottom_c_accent) 10px,
+    //     transparent 10px,
+    //     transparent 20px
+    //   )
+    //   1 stretch;
+
+    // &::after {
+    //   content: '';
+    //   position: absolute;
+    //   bottom: 0;
+    //   left: 0;
+    //   width: 100%;
+    //   height: 3px;
+    //   border-radius: 4px;
+    //   background: repeating-linear-gradient(
+    //     to right,
+    //     black,
+    //     black 15px,
+    //     transparent 15px,
+    //     transparent 30px
+    //   );
+    // }
+
+    &--content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    &--inputsMini {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+
+      * {
+        width: 100%;
+      }
+    }
+
+    &--line {
+      position: relative;
+      padding-bottom: 10px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='4'><rect x='0' y='0' width='10' height='2' rx='2' ry='2' fill='%23009AC1'/></svg>");
+      background-repeat: repeat-x;
+      background-position: bottom left;
+      background-size: 25px 4px;
+    }
+  }
+}

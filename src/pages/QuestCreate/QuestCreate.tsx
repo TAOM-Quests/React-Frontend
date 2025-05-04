@@ -15,6 +15,7 @@ import { SaveQuestDto } from '../../services/api/questModule/quests/questsDto'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { Button } from '../../components/UI/Button/Button'
 import { Loading } from '../../components/Loading/Loading'
+import './QuestCreate.scss'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -100,8 +101,17 @@ export const QuestCreate = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
-          <Button text="Сохранить" onClick={saveQuest} />
+        <div className="quest-create">
+          <div className="quest-create__header">
+            <Button
+              text="Назад"
+              colorType="secondary"
+              iconBefore="ARROW_SMALL_LEFT"
+              onClick={() => navigate(-1)}
+            />
+            <Button text="Сохранить" onClick={saveQuest} />
+          </div>
+
           <QuestCreateMainData
             name={name}
             time={time}
@@ -118,11 +128,13 @@ export const QuestCreate = () => {
             setDifficulty={setDifficulty}
             setDescription={setDescription}
           />
-          <QuestCreateQuestions
-            questions={questions}
-            setQuestions={setQuestions}
-          />
-          <QuestCreateResults results={results} setResults={setResults} />
+          <div className="quest-questions-results">
+            <QuestCreateQuestions
+              questions={questions}
+              setQuestions={setQuestions}
+            />
+            <QuestCreateResults results={results} setResults={setResults} />
+          </div>
         </div>
       ) : (
         <Loading />

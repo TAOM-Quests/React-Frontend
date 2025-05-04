@@ -133,7 +133,7 @@ export const QuestCreateQuestions = ({
   }
 
   return (
-    <>
+    <div className="quest-create-questions">
       {questions.map((question, index) => (
         <ContainerBox key={index}>
           <div>
@@ -198,13 +198,13 @@ export const QuestCreateQuestions = ({
         />
       </ContextMenu>
 
-      {addQuestionContextMenuOptions.map((option, index) => (
+      {/* {addQuestionContextMenuOptions.map((option, index) => (
         <Button
           text={option.text}
           key={index}
           onClick={option.onSelect as () => void}
         />
-      ))}
-    </>
+      ))} */}
+    </div>
   )
 }

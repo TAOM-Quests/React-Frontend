@@ -106,12 +106,14 @@
   //Border-bottom-color
   --border_bottom_c_primary: #fff;
   --border_bottom_c_secondary: #021a33;
+  --border_bottom_c_accent: #009ac1;
 
   --border_bottom_color: 116, 116, 118;
   --border_bottom_c_hover: rgba(var(--border_bottom_color), 0.8);
 
   //Border-bottom
   --border_bottom: 3px solid;
+  --border_bottom_dashed: 2px dashed;
 
   //Opacity
   --disabled_opacity: 0.5;
