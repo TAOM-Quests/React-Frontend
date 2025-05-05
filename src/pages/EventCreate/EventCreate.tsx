@@ -155,6 +155,8 @@ export const EventCreate = () => {
 
   const saveEvent = async () => {
     try {
+      if (!user) throw new Error('User not authenticated')
+
       const eventUpdate: EventUpdateDto = {
         name,
         date: date
@@ -178,6 +180,13 @@ export const EventCreate = () => {
         filesIds: files.map(file => file.id),
       }
 
+      if (
+        eventUpdate.executorsIds &&
+        !eventUpdate.executorsIds.includes(user.id)
+      ) {
+        eventUpdate.executorsIds.push(user.id)
+      }
+
       if (!eventId) {
         const event = await events.create({
           ...eventUpdate,
@@ -191,7 +200,7 @@ export const EventCreate = () => {
         await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
-      console.log(e)
+      console.log(`[QuestCreatePag] ${e}`)
     }
   }
 
@@ -233,6 +242,7 @@ export const EventCreate = () => {
         text="Назад"
         colorType="secondary"
         iconBefore="ARROW_SMALL_LEFT"
+        onClick={() => navigate(-1)}
       />
       <Button
         text="Сохранить"
