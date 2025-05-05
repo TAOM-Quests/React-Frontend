@@ -49,8 +49,6 @@ export const QuestQuestionBoxSorting = forwardRef(
     const dropHandler = (e: any) => {
       if (e.canceled) return
 
-      console.log('Event', e)
-
       setUserAnswer(
         userAnswer.map((box, boxIndex) => {
           const targetType = e.target?.id?.split('-')[0]

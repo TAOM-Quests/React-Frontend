@@ -85,7 +85,7 @@ export const EventCreate = () => {
         setEventExecutors(await users.getEmployees())
         setIsLoading(false)
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreate] ${e}`)
       }
     }
 
@@ -127,7 +127,7 @@ export const EventCreate = () => {
         if (event.status) setSchedule(event.schedule)
         if (event.files) setFiles(event.files)
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreate] ${e}`)
       }
     }
 
@@ -177,7 +177,7 @@ export const EventCreate = () => {
         await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
-      console.log(e)
+      console.log(`[EventCreate] ${e}`)
     }
   }
 

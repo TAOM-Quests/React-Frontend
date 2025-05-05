@@ -26,7 +26,7 @@ export const Header = () => {
 
         setUserInfo(await users.getProfile({ id: user.id }))
       } catch (e) {
-        console.log(e)
+        console.log(`[Header] ${e}`)
         navigate('/login')
       }
     }

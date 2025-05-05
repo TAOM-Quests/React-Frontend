@@ -35,8 +35,8 @@ export const EventCalendar = () => {
         setEventTypes(eventTypes)
         setEventDepartments(eventDepartments)
         setIsLoading(false)
-      } catch (error) {
-        console.log(error)
+      } catch (e) {
+        console.log(`[EventCalendar] ${e}`)
       }
     }
 
@@ -44,8 +44,6 @@ export const EventCalendar = () => {
   }, [])
 
   useEffect(() => {
-    console.log('filter', filter)
-
     const fetchEvents = async () => {
       try {
         setIsLoading(true)
@@ -58,8 +56,8 @@ export const EventCalendar = () => {
 
         setEvents(events)
         setIsLoading(false)
-      } catch (error) {
-        console.log(error)
+      } catch (e) {
+        console.log(`[EventCalendar] ${e}`)
       }
     }
 
