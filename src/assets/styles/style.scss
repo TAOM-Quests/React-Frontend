@@ -320,6 +320,13 @@ body {
   text-overflow: ellipsis;
 }
 
+.text_ellipsis_label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 .lineDash {
   position: relative;
   padding-bottom: 10px;
