@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
-import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
+import {
+  Dropdown,
+  DropdownItemType,
+} from '../../../components/UI/Dropdown/Dropdown'
 import Input from '../../../components/UI/Input/Input'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { QuestDifficult } from '../../../models/questDifficult'
@@ -17,16 +20,16 @@ import './QuestCreateMainData.scss'
 export interface QuestCreateMainDataProps {
   name: string
   time: string
-  tags: QuestTag[]
+  tags: DropdownItemType[]
   image: ServerFile | null
-  group: QuestGroup | null
+  group: DropdownItemType | null
   description: string
   setName: (name: string) => void
   setTime: (time: string) => void
   difficulty: QuestDifficult | null
-  setTags: (tags: QuestTag[]) => void
+  setTags: (tags: DropdownItemType[]) => void
   setImage: (image: ServerFile | null) => void
-  setGroup: (group: QuestGroup | null) => void
+  setGroup: (group: DropdownItemType | null) => void
   setDescription: (description: string) => void
   setDifficulty: (difficulty: QuestDifficult | null) => void
 }
@@ -47,8 +50,8 @@ export const QuestCreateMainData = ({
   setDifficulty,
   setDescription,
 }: QuestCreateMainDataProps) => {
-  const [questTags, setQuestTags] = useState<QuestTag[]>([])
-  const [questGroups, setQuestGroups] = useState<QuestGroup[]>([])
+  const [questTags, setQuestTags] = useState<DropdownItemType[]>([])
+  const [questGroups, setQuestGroups] = useState<DropdownItemType[]>([])
   const [questDifficulties, setQuestDifficulties] = useState<QuestDifficult[]>(
     [],
   )
@@ -66,8 +69,10 @@ export const QuestCreateMainData = ({
         })
         const questDifficulties = await quests.getDifficulties()
 
-        setQuestTags(questTags)
-        setQuestGroups(questGroups)
+        setQuestTags(questTags.map(tag => ({ id: tag.id, text: tag.name })))
+        setQuestGroups(
+          questGroups.map(group => ({ id: group.id, text: group.name })),
+        )
         setQuestDifficulties(questDifficulties)
       } catch (e) {
         console.log(e)
@@ -76,18 +81,6 @@ export const QuestCreateMainData = ({
 
     fetchCreateQuestData()
   }, [])
-
-  const handleAddNewTag = (text: string) => {
-    const newTag = { id: Date.now(), name: text }
-    setQuestTags(prev => [...prev, newTag])
-    setTags([...tags, newTag])
-  }
-
-  const handleAddNewGroup = (text: string) => {
-    const newGroup = { id: Date.now(), name: text }
-    setQuestGroups(prev => [...prev, newGroup])
-    setGroup(newGroup)
-  }
 
   return (
     <ContainerBox className="questCreateMainData">
@@ -126,30 +119,23 @@ export const QuestCreateMainData = ({
         </div>
 
         <Dropdown
-          items={questGroups.map(group => ({ id: group.id, text: group.name }))}
+          items={questGroups}
           onChangeDropdown={selected =>
-            selected &&
-            !isArray(selected) &&
-            setGroup(questGroups.find(group => group.id === +selected) ?? null)
+            selected && !isArray(selected) && setGroup(selected)
           }
           label="Группа квестов"
           placeholder="Выберите группу"
           selectedIds={group ? [group.id] : []}
           isAllowAddNewItem
-          onAddNewItem={handleAddNewGroup}
         />
         <Dropdown
-          items={questTags.map(tag => ({ id: tag.id, text: tag.name }))}
-          onChangeDropdown={selected =>
-            isArray(selected) &&
-            setTags(questTags.filter(tag => tag.id === +selected))
-          }
+          items={questTags.concat(tags.filter(tag => tag.isUserAdded))}
+          onChangeDropdown={selected => isArray(selected) && setTags(selected)}
           label="Теги"
           placeholder="Выберите теги"
           selectedIds={tags.map(tag => tag.id)}
           isMultiple
           isAllowAddNewItem
-          onAddNewItem={handleAddNewTag}
         />
       </div>
       <div className="questCreateMainData--right">

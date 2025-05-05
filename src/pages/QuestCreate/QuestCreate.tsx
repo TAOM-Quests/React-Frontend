@@ -16,6 +16,7 @@ import { quests } from '../../services/api/questModule/quests/quests'
 import { Button } from '../../components/UI/Button/Button'
 import { Loading } from '../../components/Loading/Loading'
 import './QuestCreate.scss'
+import { DropdownItemType } from '../../components/UI/Dropdown/Dropdown'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -25,8 +26,8 @@ export const QuestCreate = () => {
   const [time, setTime] = useState<string>('')
   const [description, setDescription] = useState<string>('')
 
-  const [tags, setTags] = useState<QuestTag[]>([])
-  const [group, setGroup] = useState<QuestGroup | null>(null)
+  const [tags, setTags] = useState<DropdownItemType[]>([])
+  const [group, setGroup] = useState<DropdownItemType | null>(null)
   const [difficulty, setDifficulty] = useState<QuestDifficult | null>(null)
 
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
@@ -43,6 +44,10 @@ export const QuestCreate = () => {
   }, [user])
 
   useEffect(() => {
+    console.log(tags)
+  }, [tags])
+
+  useEffect(() => {
     const fetchQuestData = async () => {
       setIsLoading(true)
 
@@ -50,9 +55,14 @@ export const QuestCreate = () => {
 
       if (quest.name) setName(quest.name)
       if (quest.time) setTime(quest.time)
-      if (quest.tags) setTags(quest.tags)
+      if (quest.tags)
+        setTags(quest.tags.map(tag => ({ id: tag.id, text: tag.name })))
       if (quest.description) setDescription(quest.description)
-      if (quest.group) setGroup(quest.group)
+      if (quest.group)
+        setGroup({
+          id: quest.group.id,
+          text: quest.group.name,
+        } as DropdownItemType)
       if (quest.image) setImage(quest.image)
       if (quest.difficult) setDifficulty(quest.difficult)
       if (quest.questions) setQuestions(quest.questions)

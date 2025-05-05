@@ -23,6 +23,7 @@ export interface DropdownItemType {
     src: string
     description?: string
   }
+  isUserAdded?: boolean
   iconAfter?: keyof typeof ICON_MAP
   iconBefore?: keyof typeof ICON_MAP
 }
@@ -35,7 +36,6 @@ export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   isMultiple?: boolean
   selectedIds?: number[]
   isAllowAddNewItem?: boolean
-  onAddNewItem?: (text: string) => void
   onChangeDropdown?: (
     selectedItem: DropdownItemType | DropdownItemType[] | null,
   ) => void
@@ -53,7 +53,6 @@ export const Dropdown = ({
   errorText,
   selectedIds: selectedIdsProp,
   isAllowAddNewItem = false,
-  onAddNewItem,
   ...props
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -76,9 +75,21 @@ export const Dropdown = ({
       item => item.text.toLowerCase() === searchValue.trim().toLowerCase(),
     )
   const handleAddNewItem = () => {
-    if (!onAddNewItem) return
     const newText = searchValue.trim()
-    onAddNewItem(newText)
+    const newItem: DropdownItemType = {
+      id: Date.now(),
+      text: newText,
+      isUserAdded: true,
+    }
+
+    if (onChangeDropdown) {
+      onChangeDropdown([
+        ...items.filter(item => selectedIds.includes(item.id)),
+        newItem,
+      ])
+    }
+
+    setSelectedIds(prev => [...prev, newItem.id])
     setSearchValue('')
     setIsOpen(false)
   }
