@@ -17,7 +17,7 @@ import { QuestCreateQuestionConnection } from './QuestCreateQuestionConnection/Q
 import { QuestCreateQuestionBoxSorting } from './QuestCreateQuestionBoxSorting/QuestCreateQuestionBoxSorting'
 import { QuestCreateQuestionFree } from './QuestCreateQuestionFree/QuestCreateQuestionFree'
 import { Icon } from '../../../components/UI/Icon/Icon'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './QuestCreateQuestions.scss'
 
 export interface QuestCreateQuestionsProps {
@@ -29,6 +29,10 @@ export const QuestCreateQuestions = ({
   questions,
   setQuestions,
 }: QuestCreateQuestionsProps) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const lastQuestionRef = useRef<HTMLDivElement>(null)
+
   const addQuestionContextMenuOptions: OptionProps[] = [
     {
       text: 'Единичный выбор',
@@ -102,6 +106,15 @@ export const QuestCreateQuestions = ({
     },
   ]
 
+  useEffect(() => {
+    if (lastQuestionRef.current) {
+      lastQuestionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+    }
+  }, [questions.length])
+
   const removeQuestion = (index: number) => {
     setQuestions(
       questions.filter((_, indexQuestion) => indexQuestion !== index),
@@ -127,8 +140,6 @@ export const QuestCreateQuestions = ({
     </div>
   )
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
   const toggleMenu = () => {
     setIsMenuOpen(isMenuOpen => !isMenuOpen)
   }
@@ -136,7 +147,10 @@ export const QuestCreateQuestions = ({
   return (
     <div className="quest-create-questions">
       {questions.map((question, index) => (
-        <ContainerBox key={index}>
+        <ContainerBox
+          key={index}
+          ref={index === questions.length - 1 ? lastQuestionRef : null}
+        >
           <div className="quest-create-questions__header">
             <p className="body_xl_sb">Задание {index + 1}</p>
             <Icon icon="DELETE" onClick={() => removeQuestion(index)} />

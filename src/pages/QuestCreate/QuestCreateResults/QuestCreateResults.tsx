@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { TextEditor } from '../../../components/TextEditor/TextEditor'
 import { Button } from '../../../components/UI/Button/Button'
@@ -16,6 +17,17 @@ export const QuestCreateResults = ({
   results,
   setResults,
 }: QuestCreateResultsProps) => {
+  const lastResultRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (lastResultRef.current) {
+      lastResultRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+    }
+  }, [results.length])
+
   const updateResult = (result: QuestResult, index: number) => {
     setResults(results.map((r, i) => (i === index ? result : r)))
   }
@@ -32,7 +44,11 @@ export const QuestCreateResults = ({
         Результаты квеста
       </p>
       {results.map((result, resultIndex) => (
-        <div key={resultIndex} className="quest-create-results__result">
+        <div
+          key={resultIndex}
+          ref={resultIndex === results.length - 1 ? lastResultRef : null}
+          className="quest-create-results__result"
+        >
           <div className="quest-create-results__result--container">
             <div className="quest-create-results__result--content">
               <div className="quest-create-results__result--inputsMini">

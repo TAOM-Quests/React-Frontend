@@ -7,6 +7,7 @@ import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
 import './QuestCreateQuestionBoxSorting.scss'
+import { useEffect, useRef } from 'react'
 
 export interface QuestCreateQuestionBoxSortingProps {
   questions: QuestQuestion[]
