@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useState } from 'react'
+import { Dispatch, useEffect, useRef, useState } from 'react'
 import { UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import EventMinimizeComponent, {
@@ -14,6 +14,7 @@ import {
 import './EventsTab.scss'
 import { Button } from '../../../components/UI/Button/Button'
 import { useNavigate } from 'react-router'
+import { ScrollController } from '../../../components/ScrollController/ScrollController'
 interface EventsFilter {
   name?: string
   type?: number
@@ -25,29 +26,30 @@ export interface EventsTabProps {
 }
 
 export default function EventsTab({ user }: EventsTabProps) {
-  const navigate = useNavigate()
   const [filter, setFilter] = useState<EventsFilter>({})
   const [userEvents, setEvents] = useState<EventMinimize[]>([])
 
+  const navigate = useNavigate()
+
   useEffect(() => {
-    const fetchEvents = async () => {
-      const fetchedEvents = user.isEmployee
-        ? await events.getManyByParams({
-            executor: user.id,
-            offset: userEvents?.length,
-            ...filter,
-          })
-        : await events.getManyByParams({
-            participant: user.id,
-            offset: userEvents?.length,
-            ...filter,
-          })
-
-      setEvents([...(userEvents ?? []), ...fetchedEvents])
-    }
-
     fetchEvents()
   }, [filter])
+
+  const fetchEvents = async () => {
+    const fetchedEvents = user.isEmployee
+      ? await events.getManyByParams({
+          executor: user.id,
+          offset: userEvents?.length,
+          ...filter,
+        })
+      : await events.getManyByParams({
+          participant: user.id,
+          offset: userEvents?.length,
+          ...filter,
+        })
+
+    setEvents([...(userEvents ?? []), ...fetchedEvents])
+  }
 
   const getUniqueDropdownItems = (
     events: EventMinimize[] | null,
@@ -78,7 +80,6 @@ export default function EventsTab({ user }: EventsTabProps) {
   }
 
   const dropdownTypes = getUniqueDropdownItems(userEvents, e => e.type)
-
   const dropdownStatuses = getUniqueDropdownItems(userEvents, e => e.status)
 
   const createDropdownChangeHandler =
@@ -132,7 +133,11 @@ export default function EventsTab({ user }: EventsTabProps) {
           </>
         )}
       </div>
-      <div className="profile_events--events">
+      <ScrollController
+        onEndScroll={fetchEvents}
+        className="profile_events--events"
+        style={{ overflow: 'scroll' }}
+      >
         {userEvents && userEvents.length
           ? userEvents.map(event => {
               const onlinePlace: PlaceOnline | null =
@@ -156,7 +161,7 @@ export default function EventsTab({ user }: EventsTabProps) {
               return <EventMinimizeComponent key={event.id} {...eventData} />
             })
           : 'Мероприятий нет'}
-      </div>
+      </ScrollController>
     </div>
   )
 }
