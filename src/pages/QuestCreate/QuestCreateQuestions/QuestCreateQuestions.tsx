@@ -213,14 +213,6 @@ export const QuestCreateQuestions = ({
           />
         </ContextMenu>
       </div>
-
-      {/* {addQuestionContextMenuOptions.map((option, index) => (
-        <Button
-          text={option.text}
-          key={index}
-          onClick={option.onSelect as () => void}
-        />
-      ))} */}
     </div>
   )
 }

@@ -8,7 +8,6 @@ import Input from '../../../../components/UI/Input/Input'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import { Button } from '../../../../components/UI/Button/Button'
 import './QuestCreateQuestionMultiple.scss'
-import { a } from 'vitest/dist/chunks/suite.qtkXWc6R.js'
 
 export interface QuestCreateQuestionMultipleProps {
   questions: QuestQuestion[]

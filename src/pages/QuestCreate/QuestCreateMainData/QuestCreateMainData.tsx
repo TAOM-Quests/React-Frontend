@@ -18,9 +18,9 @@ export interface QuestCreateMainDataProps {
   name: string
   time: string
   tags: QuestTag[]
-  description: string
   image: ServerFile | null
   group: QuestGroup | null
+  description: string
   setName: (name: string) => void
   setTime: (time: string) => void
   difficulty: QuestDifficult | null

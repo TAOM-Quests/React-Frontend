@@ -19,13 +19,16 @@ import './QuestCreate.scss'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string>('')
   const [time, setTime] = useState<string>('')
-  const [tags, setTags] = useState<QuestTag[]>([])
   const [description, setDescription] = useState<string>('')
+
+  const [tags, setTags] = useState<QuestTag[]>([])
   const [group, setGroup] = useState<QuestGroup | null>(null)
-  const [image, setImage] = useState<ServerFile | null>(null)
   const [difficulty, setDifficulty] = useState<QuestDifficult | null>(null)
+
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
   const [results, setResults] = useState<QuestResult[]>([])
 
