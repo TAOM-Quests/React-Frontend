@@ -4,8 +4,15 @@ import { Icon } from '../Icon/Icon'
 import { ICON_MAP } from '../../../assets/icons'
 import './Button.scss'
 
-export type TypeButton = 'primary' | 'secondary' | 'accent' | 'subdued'
-export type Size = 'large' | 'small'
+export type TypeButton =
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'subdued'
+  | 'correct'
+  | 'wrong'
+  | 'activeAnswer'
+export type Size = 'extraLarge' | 'large' | 'small'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string

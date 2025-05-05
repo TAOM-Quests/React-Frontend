@@ -1,4 +1,3 @@
-import { Badge } from '../../../components/UI/Badge/Badge'
 import { Button } from '../../../components/UI/Button/Button'
 import { Tag } from '../../../components/UI/Tag/Tag'
 import './QuestStartView.scss'
@@ -24,7 +23,7 @@ export const QuestStartView = ({
 }: QuestStartViewProps) => {
   return (
     <div className="quest-start">
-      <div className="quest-start__tags">
+      <div className="quest__tags">
         {tags.map((tag, index) => (
           <Tag key={index} text={tag} type="secondary" size="small" />
         ))}

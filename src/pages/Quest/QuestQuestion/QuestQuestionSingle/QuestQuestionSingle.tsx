@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionSingle as QuestQuestionSingleInterface } from '../../../../models/questQuestion'
 import { Button } from '../../../../components/UI/Button/Button'
+import './QuestQuestionSingle.scss'
 
 export interface QuestQuestionSingleProps {
   isCheckMode: boolean
@@ -44,7 +45,7 @@ export const QuestQuestionSingle = forwardRef(
     }
 
     return (
-      <div>
+      <div className="quest-question-single">
         {question.answer.options.map((option, optionIndex) => (
           <Button
             text={option}

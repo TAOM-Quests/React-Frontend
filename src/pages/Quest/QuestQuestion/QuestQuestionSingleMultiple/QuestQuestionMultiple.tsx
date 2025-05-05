@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionMultiple as QuestQuestionMultipleInterface } from '../../../../models/questQuestion'
-import { Button } from '../../../../components/UI/Button/Button'
+import { Button, TypeButton } from '../../../../components/UI/Button/Button'
 import { isEqual } from 'lodash'
+import './QuestQuestionMultiple.scss'
 
 export interface QuestQuestionMultipleProps {
   isCheckMode: boolean
@@ -26,22 +27,22 @@ export const QuestQuestionMultiple = forwardRef(
     )
     useEffect(() => setIsAnswerReady(userAnswer.length > 0), [userAnswer])
 
-    const getOptionClassName = (optionIndex: number): string => {
-      let className = 'option'
+    const getOptionColorType = (optionIndex: number): TypeButton => {
+      let colorType: TypeButton = 'secondary'
 
       if (isCheckMode) {
         if (question.answer.correctAnswer.includes(optionIndex)) {
-          className += ' option--correct'
+          colorType = 'correct'
         } else if (userAnswer.includes(optionIndex)) {
-          className += ' option--wrong'
+          colorType = 'wrong'
         }
       } else {
         if (userAnswer.includes(optionIndex)) {
-          className += ' option--active'
+          colorType = 'activeAnswer'
         }
       }
 
-      return className
+      return colorType
     }
 
     const toggleOption = (optionIndex: number) => {
@@ -53,15 +54,15 @@ export const QuestQuestionMultiple = forwardRef(
     }
 
     return (
-      <div>
+      <div className="quest-question-multiple">
         {question.answer.options.map((option, optionIndex) => (
           <Button
             text={option}
             key={optionIndex}
             disabled={isCheckMode}
-            colorType={'secondary'}
+            colorType={getOptionColorType(optionIndex)}
+            size="extraLarge"
             onClick={() => toggleOption(optionIndex)}
-            className={getOptionClassName(optionIndex)}
           />
         ))}
       </div>

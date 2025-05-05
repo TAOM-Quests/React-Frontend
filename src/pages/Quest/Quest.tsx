@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { QuestStartView } from './QuestStartView/QuestStartView'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
-import { Badge } from '../../components/UI/Badge/Badge'
 import { QuestQuestion } from './QuestQuestion/QuestQuestion'
 import { QuestResultView } from './QuestResultView/QuestResultView'
 import { SaveQuestCompleteDto } from '../../services/api/questModule/quests/questsDto'
@@ -12,6 +11,7 @@ import { selectAuth } from '../../redux/auth/authSlice'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import './Quest.scss'
 import designImage from '../../assets/images/design.png'
+import { Tag } from '../../components/UI/Tag/Tag'
 interface UserAnswer {
   answer: any
   isCorrectAnswer: boolean
@@ -131,11 +131,18 @@ export const Quest = () => {
             />
           )}
           {currentQuestionIndex !== null && (
-            <ContainerBox>
-              {quest.time && <Badge text={quest.time} />}
-              <Badge
-                text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
-              />
+            <ContainerBox className="quest__container-questions">
+              <div className="quest__tags">
+                {quest.time && (
+                  <Tag text={quest.time} type="subdued" size="small" />
+                )}
+                <Tag
+                  text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
+                  type="subdued"
+                  size="small"
+                />
+              </div>
+
               <QuestQuestion
                 question={quest.questions![currentQuestionIndex]}
                 setNextQuestion={setNextQuestion}

@@ -13,13 +13,6 @@
     padding: 80px 20px;
   }
 
-  &__tags {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-  }
-
   &__title {
     display: -webkit-box;
     -webkit-line-clamp: 4; /* Ограничить до 3 строк */
