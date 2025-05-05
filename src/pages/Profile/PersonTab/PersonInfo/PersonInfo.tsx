@@ -19,6 +19,8 @@ import { validateName } from '../../../../validation/validateName'
 import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../../validation/validateEmail'
 import { validatePhone } from '../../../../validation/validatePhone'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
+import { ServerFile } from '../../../../models/serverFile'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -29,6 +31,7 @@ export default function PersonInfo({
   profile,
   updateProfile,
 }: PersonInfoProps) {
+  const [image, setImage] = useState(profile.image)
   const [lastName, setLastName] = useState(profile.lastName)
   const [firstName, setFirstName] = useState(profile.firstName)
   const [patronymic, setPatronymic] = useState(profile.patronymic)
@@ -107,15 +110,18 @@ export default function PersonInfo({
 
   const toggleChangingMode = async () => {
     if (changingMode) {
+      console.log('IMAGE', image)
+
       const updatedFields = await users.updateProfile({
         id: profile.id,
-        email,
-        firstName,
-        lastName,
-        patronymic,
-        birthDate: birthDate instanceof Date ? birthDate.toISOString() : null,
         sex,
+        email,
+        lastName,
+        firstName,
+        patronymic,
         phoneNumber,
+        imageId: image?.id,
+        birthDate: birthDate instanceof Date ? birthDate.toISOString() : null,
       })
 
       updateProfile({
@@ -155,7 +161,11 @@ export default function PersonInfo({
       <div className="personInfo_containerBoxs">
         <ContainerBox>
           <div className="personInfo--info">
-            <Avatar size="extraLarge" isRound={false} />
+            <ImageContainer
+              disabled={!changingMode}
+              selectedImages={profile.image ? [profile.image] : []}
+              onSelectImages={selectedImages => setImage(selectedImages[0])}
+            />
             <div className="personInfo--personFields">
               <div className="personInfo--personFieldsNames">
                 {personFieldsNames.map(field => (

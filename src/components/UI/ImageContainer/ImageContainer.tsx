@@ -6,6 +6,7 @@ import './ImageContainer.scss'
 import classNames from 'classnames'
 
 export interface ImageContainerProps {
+  disabled?: boolean
   isMultiple?: boolean
   placeholder?: string
   selectedImages?: ServerFile[]
@@ -13,6 +14,7 @@ export interface ImageContainerProps {
 }
 
 export const ImageContainer = ({
+  disabled,
   placeholder,
   onSelectImages,
   isMultiple = false,
@@ -25,7 +27,7 @@ export const ImageContainer = ({
   useEffect(() => {
     if (!onSelectImages) return
 
-    onSelectImages(selectedImagesProps ?? [])
+    onSelectImages(selectedImages ?? [])
   }, [selectedImages])
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,13 +53,15 @@ export const ImageContainer = ({
         <span className="body_m_r">{placeholder}</span>
       </div>
       {selectedImages.map(image => (
-        <img src={image.url} />
+        <img key={image.id} src={image.url} />
       ))}
       <input
-        placeholder="Загрузить картинку"
         type="file"
+        disabled={disabled}
         multiple={isMultiple}
         onChange={e => uploadImage(e)}
+        accept=".png, .jpg, .jpeg, .svg"
+        placeholder="Загрузить картинку"
       />
       <div className="preview" id="preview"></div>
     </div>
