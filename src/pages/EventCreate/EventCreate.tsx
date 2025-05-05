@@ -242,6 +242,7 @@ export const EventCreate = () => {
         text="Назад"
         colorType="secondary"
         iconBefore="ARROW_SMALL_LEFT"
+        onClick={() => navigate(-1)}
       />
       <Button
         text="Сохранить"
