@@ -11,5 +11,5 @@ export interface UserAuth {
 }
 
 export interface EmployeeAuth extends UserAuth {
-  departmentId?: number
+  departmentId: number
 }

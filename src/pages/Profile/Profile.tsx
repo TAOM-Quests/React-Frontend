@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from 'react-router'
 import EventsTab from './EventsTab/EventsTab'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import './Profile.scss'
+
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
 export default function Profile() {
@@ -27,7 +28,7 @@ export default function Profile() {
 
         setProfile(await users.getProfile({ id: user.id }))
       } catch (e) {
-        console.log(e)
+        console.log(`[Profile] ${e}`)
         navigate('/login')
       }
     }

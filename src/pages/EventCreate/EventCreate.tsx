@@ -13,7 +13,6 @@ import {
   EventCreateScheduleRef,
 } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
-import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
 import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
@@ -27,6 +26,8 @@ import { EventCreateManagementData } from './EventCreateManagementData/EventCrea
 import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
 import { Loading } from '../../components/Loading/Loading'
+import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
+import { EmployeeAuth } from '../../models/userAuth'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -38,7 +39,7 @@ export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const eventId = useParams().id
   const navigate = useNavigate()
-  const user = useAppSelector(selectAuth)
+  const user = useAppSelector(selectAuth) as EmployeeAuth
 
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
@@ -190,7 +191,7 @@ export const EventCreate = () => {
       if (!eventId) {
         const event = await events.create({
           ...eventUpdate,
-          departmentId: user!.departmentId!,
+          departmentId: user.departmentId,
         })
 
         if (!window.location.pathname.includes(`${event.id}`)) {
@@ -268,7 +269,11 @@ export const EventCreate = () => {
         <div className="event_create">
           {renderStateButtons()}
           <ContainerBox>
-            <EventCreateImage image={image} setImage={setImage} />
+            <ImageContainer
+              selectedImages={image ? [image] : []}
+              onSelectImages={images => setImage(images[0])}
+              placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
+            />
             <div className="event_create--container">
               <div>
                 <EventCreateManagementData
