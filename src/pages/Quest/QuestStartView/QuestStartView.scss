@@ -1,0 +1,78 @@
+.quest-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  z-index: 1;
+  text-align: center;
+  color: var(--text_c_secondary);
+  max-width: 1050px;
+  padding: 20px;
+
+  @media (max-width: 1350px) {
+    padding: 80px 20px;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  &__title {
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Ограничить до 3 строк */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media (max-width: 1250px) {
+      h1 {
+        font-size: 36px;
+        line-height: 40px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      h1 {
+        font-size: 24px;
+        line-height: 28px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      h1 {
+        font-size: 20px;
+        line-height: var(--lh_xl_l);
+      }
+    }
+  }
+
+  &__desc {
+    a {
+      color: var(--text_c_accent);
+    }
+
+    @media (max-width: 1250px) {
+      p {
+        font-size: var(--fs_l);
+        line-height: var(--lh_xl_l);
+      }
+    }
+
+    @media (max-width: 700px) {
+      p {
+        font-size: var(--fs_m);
+        line-height: var(--lh_m);
+      }
+    }
+
+    @media (max-width: 460px) {
+      p {
+        font-size: var(--fs_s);
+        line-height: var(--lh_s_xs);
+      }
+    }
+  }
+}

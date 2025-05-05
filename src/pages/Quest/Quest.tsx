@@ -10,7 +10,8 @@ import { QuestResultView } from './QuestResultView/QuestResultView'
 import { SaveQuestCompleteDto } from '../../services/api/questModule/quests/questsDto'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
-
+import './Quest.scss'
+import designImage from '../../assets/images/design.png'
 interface UserAnswer {
   answer: any
   isCorrectAnswer: boolean
@@ -107,8 +108,12 @@ export const Quest = () => {
   return (
     <>
       {!isLoading && quest ? (
-        <div>
-          <img src={quest.image?.url} />
+        <div
+          className="quest"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${designImage})`, // url(${quest.image?.url})
+          }}
+        >
           {isStartView && (
             <QuestStartView
               name={quest.name ?? ''}
