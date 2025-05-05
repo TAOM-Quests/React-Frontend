@@ -65,14 +65,5 @@
         width: 100%;
       }
     }
-
-    &--line {
-      position: relative;
-      padding-bottom: 10px;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='4'><rect x='0' y='0' width='10' height='2' rx='2' ry='2' fill='%23009AC1'/></svg>");
-      background-repeat: repeat-x;
-      background-position: bottom left;
-      background-size: 25px 4px;
-    }
   }
 }

@@ -78,7 +78,7 @@ export const QuestCreateResults = ({
 
             <Icon icon="DELETE" onClick={() => removeResult(resultIndex)} />
           </div>
-          <div className="quest-create-results__result--line"></div>
+          <div className="lineDash"></div>
         </div>
       ))}
       <div>

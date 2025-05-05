@@ -143,13 +143,13 @@ export const QuestCreateQuestionBoxSorting = ({
             <div>
               <Button
                 size="small"
-                text="Добавить ответ"
+                text="Добавить"
                 iconBefore="ADD"
                 onClick={() => addOption(boxIndex)}
                 colorType={'secondary'}
               />
             </div>
-            <div className="quest-create-results__result--line"></div>
+            <div className="lineDash"></div>
           </div>
         ))}
       </div>
