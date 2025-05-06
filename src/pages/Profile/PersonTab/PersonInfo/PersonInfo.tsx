@@ -7,7 +7,6 @@ import { Icon } from '../../../../components/UI/Icon/Icon'
 import { Button } from '../../../../components/UI/Button/Button'
 import './PersonInfo.scss'
 import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
-import { Avatar } from '../../../../components/UI/Avatar/Avatar'
 import { DateInput } from '../../../../components/UI/DateInput/DateInput'
 import {
   Dropdown,
@@ -19,6 +18,7 @@ import { validateName } from '../../../../validation/validateName'
 import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../../validation/validateEmail'
 import { validatePhone } from '../../../../validation/validatePhone'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -29,6 +29,7 @@ export default function PersonInfo({
   profile,
   updateProfile,
 }: PersonInfoProps) {
+  const [image, setImage] = useState(profile.image)
   const [lastName, setLastName] = useState(profile.lastName)
   const [firstName, setFirstName] = useState(profile.firstName)
   const [patronymic, setPatronymic] = useState(profile.patronymic)
@@ -109,13 +110,14 @@ export default function PersonInfo({
     if (changingMode) {
       const updatedFields = await users.updateProfile({
         id: profile.id,
-        email,
-        firstName,
-        lastName,
-        patronymic,
-        birthDate: birthDate instanceof Date ? birthDate.toISOString() : null,
         sex,
+        email,
+        lastName,
+        firstName,
+        patronymic,
         phoneNumber,
+        imageId: image?.id,
+        birthDate: birthDate instanceof Date ? birthDate.toISOString() : null,
       })
 
       updateProfile({
@@ -155,7 +157,14 @@ export default function PersonInfo({
       <div className="personInfo_containerBoxs">
         <ContainerBox>
           <div className="personInfo--info">
-            <Avatar size="extraLarge" isRound={false} />
+            <ImageContainer
+              disabled={!changingMode}
+              selectedImages={profile.image ? [profile.image] : []}
+              onSelectImages={selectedImages => {
+                console.log(selectedImages)
+                setImage(selectedImages[0])
+              }}
+            />
             <div className="personInfo--personFields">
               <div className="personInfo--personFieldsNames">
                 {personFieldsNames.map(field => (

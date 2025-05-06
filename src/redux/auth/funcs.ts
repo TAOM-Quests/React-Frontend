@@ -10,9 +10,13 @@ export const getUserByToken = async (): Promise<UserAuth | null> => {
 
   try {
     return await users.auth(token)
-  } catch (e) {
+  } catch (e: any) {
     console.log(`[Auth] ${e}`)
-    localStorage.removeItem('token')
+
+    if (+e.split(' - ')[0] === 404) {
+      localStorage.removeItem('token')
+    }
+
     return null
   }
 }
