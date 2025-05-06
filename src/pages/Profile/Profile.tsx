@@ -41,6 +41,8 @@ export default function Profile() {
       setUser({
         ...user!,
         email: updatedProfile.email,
+        image: updatedProfile.image,
+        name: `${updatedProfile.lastName ?? ''} ${updatedProfile.firstName ?? ''}`.trim(),
       }),
     )
     setProfile(updatedProfile)

@@ -7,7 +7,6 @@ import { Icon } from '../../../../components/UI/Icon/Icon'
 import { Button } from '../../../../components/UI/Button/Button'
 import './PersonInfo.scss'
 import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
-import { Avatar } from '../../../../components/UI/Avatar/Avatar'
 import { DateInput } from '../../../../components/UI/DateInput/DateInput'
 import {
   Dropdown,
@@ -20,7 +19,6 @@ import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../../validation/validateEmail'
 import { validatePhone } from '../../../../validation/validatePhone'
 import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
-import { ServerFile } from '../../../../models/serverFile'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -110,8 +108,6 @@ export default function PersonInfo({
 
   const toggleChangingMode = async () => {
     if (changingMode) {
-      console.log('IMAGE', image)
-
       const updatedFields = await users.updateProfile({
         id: profile.id,
         sex,
@@ -164,7 +160,10 @@ export default function PersonInfo({
             <ImageContainer
               disabled={!changingMode}
               selectedImages={profile.image ? [profile.image] : []}
-              onSelectImages={selectedImages => setImage(selectedImages[0])}
+              onSelectImages={selectedImages => {
+                console.log(selectedImages)
+                setImage(selectedImages[0])
+              }}
             />
             <div className="personInfo--personFields">
               <div className="personInfo--personFieldsNames">
