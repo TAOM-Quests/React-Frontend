@@ -136,7 +136,7 @@ export const QuestQuestionBoxSorting = forwardRef(
               const isPlaced = !!userAnswer.find(box =>
                 box.options.includes(optionIndex),
               )
-              console.log('optionIndex', optionIndex, 'isPlaced', isPlaced)
+
               if (!isPlaced) {
                 return (
                   <Draggable

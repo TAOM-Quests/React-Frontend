@@ -111,7 +111,7 @@ export const Quest = () => {
         <div
           className="quest"
           style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${designImage})`, // url(${quest.image?.url})
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${designImage})`, // url(${quest.image?.url})
           }}
         >
           {isStartView && (
@@ -151,6 +151,9 @@ export const Quest = () => {
           )}
           {isResultView && (
             <QuestResultView
+              time={quest.time}
+              tags={quest.tags?.map(tag => tag.name) ?? []}
+              difficulty={quest.difficult?.name}
               results={quest.results ?? []}
               questionCount={quest.questions?.length ?? 0}
               userCorrectAnswerCount={
