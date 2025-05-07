@@ -5,6 +5,10 @@
   height: 280px;
   overflow: hidden;
   flex-basis: calc((100% - 40px) / 3);
+  background-color: #d9ecf9;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 
   @media (max-width: 1297px) {
     flex-basis: calc((100% - 40px) / 1);
