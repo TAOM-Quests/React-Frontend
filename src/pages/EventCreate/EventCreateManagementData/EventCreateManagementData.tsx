@@ -5,18 +5,25 @@ import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
 import { DateInput } from '../../../components/UI/DateInput/DateInput'
 import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
 import { NumberInput } from '../../../components/UI/NumberInput/NumberInput'
+import { EventTag } from '../../../models/eventTag'
+import { Dispatch, SetStateAction } from 'react'
+import { isArray } from 'lodash'
 
 interface EventCreateManagementDataProps {
   name: string
   setName: (value: string) => void
 
-  eventTypes: EventType[]
+  tags: (EventTag & { isUserAdded?: boolean })[]
+  eventTags: EventTag[]
+  setTags: Dispatch<SetStateAction<(EventTag & { isUserAdded?: boolean })[]>>
+
   type: EventType | null
+  eventTypes: EventType[]
   setType: (value: EventType | null) => void
 
   date: Date | null
-  setDate: (value: Date | null) => void
   dateValidator: { error?: string }
+  setDate: (value: Date | null) => void
 
   time: string
   setTime: (value: string) => void
@@ -25,8 +32,8 @@ interface EventCreateManagementDataProps {
   seatsNumber: number | null
   setSeatsNumber: (value: number | null) => void
 
-  eventExecutors: Employee[]
   executors: Employee[]
+  eventExecutors: Employee[]
   setExecutors: (value: Employee[]) => void
 }
 
@@ -34,6 +41,9 @@ export const EventCreateManagementData = ({
   name,
   setName,
   eventTypes,
+  tags,
+  setTags,
+  eventTags,
   type,
   setType,
   date,
@@ -48,7 +58,6 @@ export const EventCreateManagementData = ({
   executors,
   setExecutors,
 }: EventCreateManagementDataProps) => {
-  const selectedIds = executors.map(e => e.id)
   return (
     <div className="management-data">
       <div className="management-data__container">
@@ -111,7 +120,14 @@ export const EventCreateManagementData = ({
             description: executor.position,
           },
         }))}
-        selectedIds={selectedIds}
+        selectedItems={executors.map(executor => ({
+          id: executor.id,
+          text: executor.name,
+          avatar: {
+            src: executor.image?.url ?? '',
+            description: executor.position,
+          },
+        }))}
         onChangeDropdown={selected =>
           setExecutors(
             eventExecutors.filter(executor =>
@@ -119,6 +135,32 @@ export const EventCreateManagementData = ({
                 ? selected.some(sel => sel.id === executor.id)
                 : selected?.id === executor.id,
             ),
+          )
+        }
+      />
+      <Dropdown
+        id="event-tag-dropdown"
+        label="Теги"
+        placeholder="Выберите теги мероприятия"
+        isMultiple
+        isAllowAddNewItem
+        items={eventTags.map(tag => ({
+          id: tag.id,
+          text: tag.name,
+        }))}
+        selectedItems={tags.map(tag => ({
+          id: tag.id,
+          text: tag.name,
+        }))}
+        onChangeDropdown={selected =>
+          setTags(prevTags =>
+            isArray(selected)
+              ? selected.map(sel => ({
+                  id: sel.id,
+                  name: sel.text,
+                  isUserAdded: sel.isUserAdded,
+                }))
+              : prevTags,
           )
         }
       />

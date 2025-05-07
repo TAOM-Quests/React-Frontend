@@ -148,6 +148,7 @@ export const Dropdown = ({
   const handleClearSelection = () => {
     if (isMultiple) {
       setSelectedItems([])
+      setSearchValue('')
       onChangeDropdown?.(null)
     } else {
       setSelectedItems([])
