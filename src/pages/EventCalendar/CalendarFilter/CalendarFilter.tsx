@@ -7,11 +7,12 @@ import { EventsFilter } from '../EventCalendar'
 import { isArray } from 'lodash'
 import moment from 'moment'
 import './CalendarFilter.scss'
+import { useEffect, useState } from 'react'
+import { events } from '../../../services/api/eventModule/events/events'
+import { commonEntities } from '../../../services/api/commonModule/commonEntities/commonEntities'
 
 export interface CalendarFilterProps {
-  types: EventType[]
   selectedPeriod: Moment
-  departments: Department[]
   setFilter: (filter: EventsFilter) => void
   setSelectedPeriod: (date: Moment) => void
   viewMode: 'month' | 'year'
@@ -21,46 +22,71 @@ export interface CalendarFilterProps {
 }
 
 export const CalendarFilter = ({
-  types,
   setFilter,
   viewMode,
   setViewMode,
-  departments,
   selectedType,
   selectedPeriod,
   setSelectedPeriod,
   selectedDepartment,
 }: CalendarFilterProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [types, setTypes] = useState<EventType[]>([])
+  const [departments, setDepartments] = useState<Department[]>([])
+
+  useEffect(() => {
+    const fetchFilterData = async () => {
+      try {
+        setIsLoading(true)
+
+        const eventTypes = await events.getTypes()
+        const eventDepartments = await commonEntities.getDepartments()
+
+        setTypes(eventTypes)
+        setDepartments(eventDepartments)
+        setIsLoading(false)
+      } catch (e) {
+        console.log(`[CalendarFilter] ${e}`)
+      }
+    }
+
+    fetchFilterData()
+  }, [])
+
   return (
     <div className="calendarPage-filter">
       <div className="calendarPage-filter__dropdowns">
-        <Dropdown
-          items={types.map(type => ({
-            id: type.id,
-            text: type.name,
-          }))}
-          placeholder="Тип мероприятия"
-          selectedIds={selectedType ? [selectedType] : []}
-          onChangeDropdown={selected =>
-            setFilter({
-              type: selected && !isArray(selected) ? +selected.id : undefined,
-            })
-          }
-        />
-        <Dropdown
-          items={departments.map(department => ({
-            id: department.id,
-            text: department.name,
-          }))}
-          placeholder="Кафедра"
-          selectedIds={selectedDepartment ? [selectedDepartment] : []}
-          onChangeDropdown={selected =>
-            setFilter({
-              department:
-                selected && !isArray(selected) ? +selected.id : undefined,
-            })
-          }
-        />
+        {!isLoading && (
+          <Dropdown
+            items={types.map(type => ({
+              id: type.id,
+              text: type.name,
+            }))}
+            placeholder="Тип мероприятия"
+            selectedIds={selectedType ? [selectedType] : []}
+            onChangeDropdown={selected =>
+              setFilter({
+                type: selected && !isArray(selected) ? +selected.id : undefined,
+              })
+            }
+          />
+        )}
+        {!isLoading && (
+          <Dropdown
+            items={departments.map(department => ({
+              id: department.id,
+              text: department.name,
+            }))}
+            placeholder="Кафедра"
+            selectedIds={selectedDepartment ? [selectedDepartment] : []}
+            onChangeDropdown={selected =>
+              setFilter({
+                department:
+                  selected && !isArray(selected) ? +selected.id : undefined,
+              })
+            }
+          />
+        )}
       </div>
       <div className="calendarPage-filter__period">
         <Button

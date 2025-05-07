@@ -1,14 +1,12 @@
 import { Moment } from 'moment'
 import { EventMinimize } from '../../../models/eventMinimize'
-import { Loading } from '../../../components/Loading/Loading'
 import { MonthViewDays } from './MonthViewDays'
 
 interface MonthViewProps {
   month: Moment
   events: EventMinimize[]
-  isLoading?: boolean
 }
-export const MonthView = ({ month, events, isLoading }: MonthViewProps) => {
+export const MonthView = ({ month, events }: MonthViewProps) => {
   return (
     <>
       <div className="calendarPage__weekdays">
@@ -20,13 +18,9 @@ export const MonthView = ({ month, events, isLoading }: MonthViewProps) => {
         <div className="body_l_sb calendarPage__weekday">Сб</div>
         <div className="body_l_sb calendarPage__weekday">Вс</div>
       </div>
-      {!isLoading ? (
-        <div className="calendarPage__days-grid">
-          <MonthViewDays month={month} events={events} />
-        </div>
-      ) : (
-        <Loading />
-      )}
+      <div className="calendarPage__days-grid">
+        <MonthViewDays month={month} events={events} />
+      </div>
     </>
   )
 }
