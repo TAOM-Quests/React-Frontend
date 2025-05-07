@@ -85,7 +85,6 @@ export const EventCreate = () => {
       try {
         setEventTypes(await events.getTypes())
         setEventExecutors(await users.getEmployees())
-        setIsLoading(false)
       } catch (e) {
         console.log(e)
       }
@@ -93,6 +92,8 @@ export const EventCreate = () => {
 
     const fetchEventData = async (id: number) => {
       try {
+        setIsLoading(true)
+
         const event = await events.getOne({ id })
 
         if (event.date) setDate(event.date)
@@ -136,8 +137,10 @@ export const EventCreate = () => {
           if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
           if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
         }
+
+        setIsLoading(false)
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreate] ${e}`)
       }
     }
 
@@ -201,7 +204,7 @@ export const EventCreate = () => {
         await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
-      console.log(`[QuestCreatePag] ${e}`)
+      console.log(`[EventCreate] ${e}`)
     }
   }
 
@@ -271,7 +274,7 @@ export const EventCreate = () => {
           <ContainerBox>
             <ImageContainer
               selectedImages={image ? [image] : []}
-              onSelectImages={images => setImage(images[0])}
+              onSelectImages={images => setImage(images[0] ?? null)}
               placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
             />
             <div className="event_create--container">

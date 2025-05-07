@@ -28,7 +28,7 @@ export const ImageContainer = ({
     if (!onSelectImages) return
 
     onSelectImages(selectedImages ?? [])
-  }, [selectedImages])
+  }, [selectedImages, selectedImagesProps])
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
