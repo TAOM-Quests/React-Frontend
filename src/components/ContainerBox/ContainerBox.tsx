@@ -1,4 +1,10 @@
-import { CSSProperties, MouseEventHandler, ReactNode } from 'react'
+import {
+  forwardRef,
+  CSSProperties,
+  MouseEventHandler,
+  ReactNode,
+  Ref,
+} from 'react'
 import classNames from 'classnames'
 import './ContainerBox.scss'
 
@@ -9,19 +15,19 @@ interface ContainerBoxProps {
   className?: string
 }
 
-export const ContainerBox = ({
-  style,
-  onClick,
-  children,
-  className,
-}: ContainerBoxProps) => {
-  return (
-    <div
-      onClick={onClick}
-      style={style}
-      className={classNames('container-box', className)}
-    >
-      {children}
-    </div>
-  )
-}
+type RefType = HTMLDivElement
+
+export const ContainerBox = forwardRef<RefType, ContainerBoxProps>(
+  ({ style, onClick, children, className }, ref: Ref<RefType>) => {
+    return (
+      <div
+        ref={ref}
+        style={style}
+        onClick={onClick}
+        className={classNames('container-box', className)}
+      >
+        {children}
+      </div>
+    )
+  },
+)

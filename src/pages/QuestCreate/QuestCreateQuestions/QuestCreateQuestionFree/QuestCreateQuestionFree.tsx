@@ -3,6 +3,7 @@ import {
   QuestQuestion,
   QuestQuestionFree,
 } from '../../../../models/questQuestion'
+import './QuestCreateQuestionFree.scss'
 
 export interface QuestCreateQuestionFreeProps {
   freeQuestionIndex: number
@@ -29,11 +30,13 @@ export const QuestCreateQuestionFree = ({
   }
 
   return (
-    <>
+    <div>
       <Input
         value={freeQuestion.answer.correctAnswer}
+        label="Ответ"
+        placeholder="Введите ответ"
         onChange={e => updateAnswer(e.target.value)}
       />
-    </>
+    </div>
   )
 }

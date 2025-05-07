@@ -86,7 +86,7 @@ export const EventCreate = () => {
         setEventTypes(await events.getTypes())
         setEventExecutors(await users.getEmployees())
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreate] ${e}`)
       }
     }
 

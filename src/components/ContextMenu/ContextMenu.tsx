@@ -5,13 +5,14 @@ import React, {
   isValidElement,
   ReactElement,
   ButtonHTMLAttributes,
+  HTMLAttributes,
 } from 'react'
 import { Option, OptionProps } from '../UI/Option/Option'
 import './ContextMenu.scss'
 import { Button } from '../UI/Button/Button'
 import { ContainerBox } from '../ContainerBox/ContainerBox'
 
-interface ContextMenuProps {
+interface ContextMenuProps extends HTMLAttributes<HTMLUListElement> {
   options: OptionProps[]
   children?: ReactElement<ButtonHTMLAttributes<HTMLButtonElement>>
   selectedId?: number | null
@@ -25,6 +26,8 @@ export const ContextMenu = ({
   children,
   isVisible = false,
   onToggle,
+
+  ...props
 }: ContextMenuProps) => {
   const menuRef = useRef<HTMLUListElement>(null)
 
@@ -72,7 +75,11 @@ export const ContextMenu = ({
       {trigger}
 
       {isVisible && (
-        <ul className="context-menu" ref={menuRef}>
+        <ul
+          className={`context-menu ${props.className}`}
+          ref={menuRef}
+          {...props}
+        >
           <ContainerBox className="context-menu__box">
             {options.map(option => (
               <Option

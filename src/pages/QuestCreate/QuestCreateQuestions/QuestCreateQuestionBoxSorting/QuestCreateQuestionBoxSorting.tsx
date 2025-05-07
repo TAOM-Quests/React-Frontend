@@ -6,6 +6,8 @@ import {
 import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
+import './QuestCreateQuestionBoxSorting.scss'
+
 export interface QuestCreateQuestionBoxSortingProps {
   questions: QuestQuestion[]
   boxSortingQuestionIndex: number
@@ -101,49 +103,69 @@ export const QuestCreateQuestionBoxSorting = ({
   }
 
   return (
-    <>
-      {boxSortingQuestion.answer.correctAnswer.map((box, boxIndex) => (
-        <div key={boxIndex}>
-          <Input
-            value={box.name}
-            label="Название контейнера"
-            onChange={e => updateBox(e.target.value, boxIndex)}
-          />
-          <Icon icon="CROSS" onClick={() => removeBox(boxIndex)} />
-          Правильные ответы
-          {boxSortingQuestion.answer.correctAnswer[boxIndex].options.map(
-            optionIndex => (
-              <>
-                <Input
-                  value={boxSortingQuestion.answer.options[optionIndex]}
-                  onChange={e => updateOption(e.target.value, optionIndex)}
-                />
-                <Icon
-                  icon="CROSS"
-                  onClick={() => removeOption(boxIndex, optionIndex)}
-                />
-              </>
-            ),
-          )}
-          <Button
-            size="small"
-            text="Добавить"
-            iconBefore="ADD"
-            onClick={() => addOption(boxIndex)}
-            colorType={'secondary'}
-          />
-        </div>
-      ))}
-      <Button
-        size="small"
-        text="Добавить"
-        iconBefore="ADD"
-        onClick={addBox}
-        colorType={'secondary'}
-        disabled={Object.keys(boxSortingQuestion.answer.correctAnswer).includes(
-          '',
-        )}
-      />
-    </>
+    <div className="boxSorting-questions">
+      <div className="boxSorting-questions__boxes">
+        {boxSortingQuestion.answer.correctAnswer.map((box, boxIndex) => (
+          <div key={boxIndex} className="boxSorting-questions-container">
+            <div className="boxSorting-questions__box">
+              <Input
+                value={box.name}
+                label="Название контейнера"
+                placeholder="Введите название контейнера"
+                onChange={e => updateBox(e.target.value, boxIndex)}
+              />
+              <div className="boxSorting-questions__box-delete">
+                <Icon icon="DELETE" onClick={() => removeBox(boxIndex)} />
+              </div>
+            </div>
+            <div className="boxSorting-questions__options">
+              <label className="label body_s_sb">Варианты ответов</label>
+              <div className="boxSorting-questions__options-list">
+                {boxSortingQuestion.answer.correctAnswer[boxIndex].options.map(
+                  optionIndex => (
+                    <div className="boxSorting-questions__item">
+                      <Input
+                        value={boxSortingQuestion.answer.options[optionIndex]}
+                        placeholder="Введите вариант ответа"
+                        onChange={e =>
+                          updateOption(e.target.value, optionIndex)
+                        }
+                      />
+                      <Icon
+                        icon="CROSS"
+                        onClick={() => removeOption(boxIndex, optionIndex)}
+                      />
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+            <div>
+              <Button
+                size="small"
+                text="Добавить"
+                iconBefore="ADD"
+                onClick={() => addOption(boxIndex)}
+                colorType={'secondary'}
+              />
+            </div>
+            <div className="lineDash"></div>
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <Button
+          size="small"
+          text="Добавить контейнер"
+          iconBefore="ADD"
+          onClick={addBox}
+          colorType={'secondary'}
+          disabled={Object.keys(
+            boxSortingQuestion.answer.correctAnswer,
+          ).includes('')}
+        />
+      </div>
+    </div>
   )
 }

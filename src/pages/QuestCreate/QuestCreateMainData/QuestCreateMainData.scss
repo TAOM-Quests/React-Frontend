@@ -1,0 +1,33 @@
+.questCreateMainData {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+
+  @media (max-width: 1392px) {
+    flex-direction: column;
+  }
+
+  &--left,
+  &--right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &--inputsMini {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    @media (max-width: 700px) {
+      flex-direction: column;
+    }
+
+    .dropdown-container,
+    .time-input-container {
+      width: 100%;
+    }
+  }
+}

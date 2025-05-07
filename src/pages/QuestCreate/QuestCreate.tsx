@@ -15,16 +15,22 @@ import { SaveQuestDto } from '../../services/api/questModule/quests/questsDto'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { Button } from '../../components/UI/Button/Button'
 import { Loading } from '../../components/Loading/Loading'
+import './QuestCreate.scss'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const [image, setImage] = useState<ServerFile | null>(null)
   const [name, setName] = useState<string>('')
   const [time, setTime] = useState<string>('')
-  const [tags, setTags] = useState<QuestTag[]>([])
   const [description, setDescription] = useState<string>('')
-  const [group, setGroup] = useState<QuestGroup | null>(null)
-  const [image, setImage] = useState<ServerFile | null>(null)
+
+  const [tags, setTags] = useState<(QuestTag & { isUserAdded?: boolean })[]>([])
+  const [group, setGroup] = useState<
+    (QuestGroup & { isUserAdded?: boolean }) | null
+  >(null)
   const [difficulty, setDifficulty] = useState<QuestDifficult | null>(null)
+
   const [questions, setQuestions] = useState<QuestQuestion[]>([])
   const [results, setResults] = useState<QuestResult[]>([])
 
@@ -37,6 +43,10 @@ export const QuestCreate = () => {
       navigate('/')
     }
   }, [user])
+
+  useEffect(() => {
+    console.log(tags)
+  }, [tags])
 
   useEffect(() => {
     const fetchQuestData = async () => {
@@ -100,8 +110,17 @@ export const QuestCreate = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
-          <Button text="Сохранить" onClick={saveQuest} />
+        <div className="quest-create">
+          <div className="quest-create__header">
+            <Button
+              text="Назад"
+              colorType="secondary"
+              iconBefore="ARROW_SMALL_LEFT"
+              onClick={() => navigate(-1)}
+            />
+            <Button text="Сохранить" onClick={saveQuest} />
+          </div>
+
           <QuestCreateMainData
             name={name}
             time={time}
@@ -118,11 +137,13 @@ export const QuestCreate = () => {
             setDifficulty={setDifficulty}
             setDescription={setDescription}
           />
-          <QuestCreateQuestions
-            questions={questions}
-            setQuestions={setQuestions}
-          />
-          <QuestCreateResults results={results} setResults={setResults} />
+          <div className="quest-questions-results">
+            <QuestCreateQuestions
+              questions={questions}
+              setQuestions={setQuestions}
+            />
+            <QuestCreateResults results={results} setResults={setResults} />
+          </div>
         </div>
       ) : (
         <Loading />
