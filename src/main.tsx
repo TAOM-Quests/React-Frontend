@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import Login from './pages/Login/Login.tsx'
 import { Provider } from 'react-redux'
@@ -15,6 +14,7 @@ import { QuestCreate } from './pages/QuestCreate/QuestCreate.tsx'
 import { Header } from './components/Header/Header.tsx'
 import { Footer } from './components/Footer/Footer.tsx'
 import { Home } from './pages/Home/Home.tsx'
+import { Quest } from './pages/Quest/Quest.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -66,6 +66,7 @@ root.render(
             <Route path="event/create" element={<EventCreate />} />
             <Route path="event/:id/edit" element={<EventCreate />} />
             <Route path="event/calendar" element={<EventCalendar />} />
+            <Route path="quest/:id" element={<Quest />} />
             <Route path="quest/create" element={<QuestCreate />} />
             <Route path="quest/:id/edit" element={<QuestCreate />} />
           </Routes>

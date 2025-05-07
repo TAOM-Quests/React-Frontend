@@ -102,7 +102,7 @@ export const EventMainData = ({
         </div>
 
         {user &&
-        !participants?.map(participant => participant.id).includes(user.id) ? (
+        participants?.map(participant => participant.id).includes(user.id) ? (
           <div>
             <Button colorType="secondary" text="Вы зарегистрированы" disabled />
           </div>

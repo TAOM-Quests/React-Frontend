@@ -13,7 +13,6 @@ import {
   EventCreateScheduleRef,
 } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
-import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
 import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
@@ -27,17 +26,20 @@ import { EventCreateManagementData } from './EventCreateManagementData/EventCrea
 import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
 import { Loading } from '../../components/Loading/Loading'
+import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
+import { EmployeeAuth } from '../../models/userAuth'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
   'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
 ]
+const additionalInfoSeparator = '<-- Additional info ->'
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const eventId = useParams().id
   const navigate = useNavigate()
-  const user = useAppSelector(selectAuth)
+  const user = useAppSelector(selectAuth) as EmployeeAuth
 
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
@@ -83,7 +85,6 @@ export const EventCreate = () => {
       try {
         setEventTypes(await events.getTypes())
         setEventExecutors(await users.getEmployees())
-        setIsLoading(false)
       } catch (e) {
         console.log(e)
       }
@@ -91,15 +92,28 @@ export const EventCreate = () => {
 
     const fetchEventData = async (id: number) => {
       try {
+        setIsLoading(true)
+
         const event = await events.getOne({ id })
 
-        if (event.name) setName(event.name)
         if (event.date) setDate(event.date)
-        if (event.date) setTime(moment(event.date).format('HH:mm'))
+        if (event.name) setName(event.name)
         if (event.type) setType(event.type)
+        if (event.image) setImage(event.image)
+        if (event.files) setFiles(event.files)
+        if (event.status) setSchedule(event.schedule)
         if (event.executors) setExecutors(event.executors)
+        if (event.description)
+          setDescription(event.description.split(additionalInfoSeparator)[0])
+        if (event.description)
+          setAdditionalInfoTexts(
+            event.description
+              .split(additionalInfoSeparator)[1]
+              .split('<br>')
+              .map(item => item.trim()),
+          )
         if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
-        if (event.description) setDescription(event.description)
+        if (event.date) setTime(moment(event.date).format('HH:mm'))
 
         const offlinePlace: PlaceOffline = event.places.find(
           place => !place.is_online,
@@ -124,10 +138,9 @@ export const EventCreate = () => {
           if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
         }
 
-        if (event.status) setSchedule(event.schedule)
-        if (event.files) setFiles(event.files)
+        setIsLoading(false)
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreate] ${e}`)
       }
     }
 
@@ -146,6 +159,8 @@ export const EventCreate = () => {
 
   const saveEvent = async () => {
     try {
+      if (!user) throw new Error('User not authenticated')
+
       const eventUpdate: EventUpdateDto = {
         name,
         date: date
@@ -155,7 +170,12 @@ export const EventCreate = () => {
               .toDate()
           : undefined,
         typeId: type?.id,
-        description,
+        description:
+          description +
+          `
+          ${additionalInfoSeparator}
+          ${additionalInfoTexts.join('<br>')}
+        `,
         seatsNumber: seatsNumber ?? undefined,
         places: getPlaces(),
         schedule,
@@ -164,10 +184,17 @@ export const EventCreate = () => {
         filesIds: files.map(file => file.id),
       }
 
+      if (
+        eventUpdate.executorsIds &&
+        !eventUpdate.executorsIds.includes(user.id)
+      ) {
+        eventUpdate.executorsIds.push(user.id)
+      }
+
       if (!eventId) {
         const event = await events.create({
           ...eventUpdate,
-          departmentId: user!.departmentId!,
+          departmentId: user.departmentId,
         })
 
         if (!window.location.pathname.includes(`${event.id}`)) {
@@ -177,7 +204,7 @@ export const EventCreate = () => {
         await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
-      console.log(e)
+      console.log(`[EventCreate] ${e}`)
     }
   }
 
@@ -196,11 +223,12 @@ export const EventCreate = () => {
       places.push(offlinePlace)
     }
 
-    if (connectionLink || recordLink || identifier || accessCode) {
+    if (platform || connectionLink || recordLink || identifier || accessCode) {
       const onlinePlace: PlaceOnline = {
         is_online: true,
       }
 
+      if (platform) onlinePlace.platform = platform
       if (connectionLink) onlinePlace.connection_link = connectionLink
       if (recordLink) onlinePlace.record_link = recordLink
       if (identifier) onlinePlace.identifier = identifier
@@ -218,6 +246,7 @@ export const EventCreate = () => {
         text="Назад"
         colorType="secondary"
         iconBefore="ARROW_SMALL_LEFT"
+        onClick={() => navigate(-1)}
       />
       <Button
         text="Сохранить"
@@ -243,7 +272,11 @@ export const EventCreate = () => {
         <div className="event_create">
           {renderStateButtons()}
           <ContainerBox>
-            <EventCreateImage image={image} setImage={setImage} />
+            <ImageContainer
+              selectedImages={image ? [image] : []}
+              onSelectImages={images => setImage(images[0] ?? null)}
+              placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
+            />
             <div className="event_create--container">
               <div>
                 <EventCreateManagementData

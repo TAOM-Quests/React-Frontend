@@ -77,12 +77,22 @@ export const QuestCreate = () => {
     if (description) saveQuest.description = description
     if (difficulty) saveQuest.difficultId = difficulty.id
     if (tags.length) saveQuest.tagsIds = tags.map(tag => tag.id)
-    if (questions.length) saveQuest.questions = questions
-    if (results.length) saveQuest.results = results
+    if (questions.length)
+      saveQuest.questions = questions.map(question => ({
+        ...question,
+        questId: +questId!,
+      }))
+    if (results.length)
+      saveQuest.results = results.map(result => ({
+        ...result,
+        questId: +questId!,
+      }))
 
-    const { id } = await quests.create(saveQuest)
+    const { id } = questId
+      ? await quests.update(+questId, saveQuest)
+      : await quests.create(saveQuest)
 
-    navigate(`/quest/${id}/edit`)
+    if (!questId) navigate(`/quest/${id}/edit`)
 
     setIsLoading(false)
   }

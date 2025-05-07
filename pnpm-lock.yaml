@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@dnd-kit/react':
+        specifier: ^0.1.4
+        version: 0.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mantine/hooks':
         specifier: ^7.17.4
         version: 7.17.4(react@18.3.1)
@@ -811,6 +814,27 @@ packages:
     peerDependencies:
       storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
+  '@dnd-kit/abstract@0.1.4':
+    resolution: {integrity: sha512-HCTMQ5CzCp3V8/Ni0t/s1GMO5RSogQCAEkqHH9Aa37FFzEP0qCEqCn3n8xZi8pn51RLLLGMmsRJpGRX7nAl63A==}
+
+  '@dnd-kit/collision@0.1.4':
+    resolution: {integrity: sha512-aaQLVIqVsF1iAJxgrvVQXAftIUm0pADrCRnJuPha4YPEY2YD3z4bCJ73ZR0o0xiuiOAaiY1Om29dClMFF0Q05w==}
+
+  '@dnd-kit/dom@0.1.4':
+    resolution: {integrity: sha512-b7vZXrGwZJQ3IGH4YerOwffwpg9MDznJzIlmsy+3V6UDpekw6BwWVCBk+psezs/G9jjVsK8smZTgyVB+jkChFg==}
+
+  '@dnd-kit/geometry@0.1.4':
+    resolution: {integrity: sha512-5zSp4zk1o44uAkd8aejX6Uawjtrtm9U6BVkabz125yLNU1xUEho1i7kEtv60+VYAyvbunn7rpzUFvrCvrJb8Iw==}
+
+  '@dnd-kit/react@0.1.4':
+    resolution: {integrity: sha512-SfxrxCJLLiQUO6T5NxLhCLhtl1hNu/UA/OPhc4eyWHvkpmnGW680dYd+5GKWhw0PI1mqYgkq5X0vX8M7V2b6LA==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+
+  '@dnd-kit/state@0.1.4':
+    resolution: {integrity: sha512-fXM6lYPRCKN8RD1SouPE3djTO9BG76F3GYYVuIadazVwKmjhXSbLYSefRtIh/8gx7fVcASmMFG5falbIQkq0qA==}
+
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
     engines: {node: '>=12'}
@@ -1192,6 +1216,9 @@ packages:
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+
+  '@preact/signals-core@1.8.0':
+    resolution: {integrity: sha512-OBvUsRZqNmjzCZXWLxkZfhcgT+Fk8DDcT/8vD6a1xhDemodyy87UJRJfASMuSD8FaAIeGgGm85ydXhm7lr4fyA==}
 
   '@react-input/core@2.0.2':
     resolution: {integrity: sha512-xLLBueYFbant9308uv3cIJQz5NYSixeGspjP3Nt6jogRHTcHYMRmlVFUuSzQiP8Z8/5BdnPkudRSsN0/AJ1fbw==}
@@ -4834,6 +4861,45 @@ snapshots:
       - '@chromatic-com/playwright'
       - react
 
+  '@dnd-kit/abstract@0.1.4':
+    dependencies:
+      '@dnd-kit/geometry': 0.1.4
+      '@dnd-kit/state': 0.1.4
+      tslib: 2.8.1
+
+  '@dnd-kit/collision@0.1.4':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.4
+      '@dnd-kit/geometry': 0.1.4
+      tslib: 2.8.1
+
+  '@dnd-kit/dom@0.1.4':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.4
+      '@dnd-kit/collision': 0.1.4
+      '@dnd-kit/geometry': 0.1.4
+      '@dnd-kit/state': 0.1.4
+      tslib: 2.8.1
+
+  '@dnd-kit/geometry@0.1.4':
+    dependencies:
+      '@dnd-kit/state': 0.1.4
+      tslib: 2.8.1
+
+  '@dnd-kit/react@0.1.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@dnd-kit/abstract': 0.1.4
+      '@dnd-kit/dom': 0.1.4
+      '@dnd-kit/state': 0.1.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      tslib: 2.8.1
+
+  '@dnd-kit/state@0.1.4':
+    dependencies:
+      '@preact/signals-core': 1.8.0
+      tslib: 2.8.1
+
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
 
@@ -5117,6 +5183,8 @@ snapshots:
   '@polka/url@1.0.0-next.28': {}
 
   '@popperjs/core@2.11.8': {}
+
+  '@preact/signals-core@1.8.0': {}
 
   '@react-input/core@2.0.2(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:

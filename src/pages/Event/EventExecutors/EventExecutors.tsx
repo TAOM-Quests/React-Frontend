@@ -28,7 +28,7 @@ export const EventExecutors = ({ executors }: EventExecutorsProps) => {
             >
               <Avatar
                 size="large"
-                src={executor.avatar?.url}
+                src={executor.image?.url}
                 alt={executor.name}
               />
             </div>

@@ -2,6 +2,8 @@ export interface QuestQuestion {
   text: string
   type: QuestionType
   id?: number
+  imageId?: number
+  questId?: number
 }
 
 type QuestionType = 'single' | 'multiple' | 'connection' | 'boxSorting' | 'free'
@@ -34,11 +36,11 @@ export interface QuestQuestionBoxSorting extends QuestQuestion {
   type: 'boxSorting'
   answer: {
     options: string[]
-    correctAnswer: Box[]
+    correctAnswer: QuestQuestionBoxSortingAnswer[]
   }
 }
 
-interface Box {
+export interface QuestQuestionBoxSortingAnswer {
   name: string
   options: number[]
 }
