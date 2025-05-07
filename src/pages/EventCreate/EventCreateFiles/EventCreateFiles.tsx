@@ -17,7 +17,7 @@ export const EventCreateFiles = ({
 }: EventCreateFilesProps) => {
   const uploadFiles = async (e: ChangeEvent<HTMLInputElement>) => {
     const filesToUpload = e.target.files
-    const uploadedFiles = []
+    const uploadedFiles: ServerFile[] = []
 
     for (const file of filesToUpload || []) {
       const uploadedFile = await serverFiles.uploadFile(file)
@@ -25,7 +25,7 @@ export const EventCreateFiles = ({
       uploadedFiles.push(fileStat)
     }
 
-    setFiles(uploadedFiles)
+    setFiles(prevFiles => [...prevFiles, ...uploadedFiles])
   }
 
   return (
@@ -47,14 +47,16 @@ export const EventCreateFiles = ({
           />
         </div>
         <div className="cardsFile">
-          {files.map(file => (
+          {files.map((file, index) => (
             <CardFile
               key={file.id}
               url={file.url}
               size={file.size}
               fileName={file.originalName}
               extension={file.extension}
-              onRemove={() => alert('Удалить файл')}
+              onRemove={() =>
+                setFiles(prevFiles => prevFiles.filter((_, i) => i !== index))
+              }
             />
           ))}
         </div>

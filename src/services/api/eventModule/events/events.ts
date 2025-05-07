@@ -11,6 +11,7 @@ import {
   EventsGetDto,
   EventUpdateDto,
 } from './eventsDto'
+import { EventTag } from '../../../../models/eventTag'
 
 export const events = {
   getManyByParams: (params: EventsGetDto): Promise<EventMinimize[]> => {
@@ -39,6 +40,11 @@ export const events = {
 
   getStatuses: (): Promise<EventStatus[]> =>
     eventModule<EventStatus[], null>('statuses'),
+
+  getTags: (departmentId?: number): Promise<EventTag[]> =>
+    eventModule<EventTag[], null>(
+      `tags${departmentId ? `?department=${departmentId}` : ''}`,
+    ),
 
   changeParticipant: (
     eventId: number,
