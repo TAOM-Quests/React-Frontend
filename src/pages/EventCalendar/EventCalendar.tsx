@@ -35,8 +35,8 @@ export const EventCalendar = () => {
 
         setEvents(events)
         setIsLoading(false)
-      } catch (error) {
-        console.log(error)
+      } catch (e) {
+        console.log(`EventCalendar: ${e}`)
       }
     }
 
