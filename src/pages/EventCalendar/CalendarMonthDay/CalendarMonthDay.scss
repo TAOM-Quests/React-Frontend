@@ -1,0 +1,83 @@
+.calendarMonthDay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  user-select: none;
+
+  @media (max-width: 1180px) {
+    .button_calendarNumber {
+      font-size: 11px;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
+      border-radius: 4px;
+    }
+  }
+  @media (max-width: 770px) {
+    .button_calendarNumber {
+      font-size: 8px;
+      width: 10px;
+      height: 10px;
+      min-width: 10px;
+      min-height: 10px;
+      padding: 3px;
+      border-radius: 2px;
+    }
+  }
+
+  &--today {
+    font-weight: 600;
+  }
+
+  &--has-events {
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+
+.calendarMonthDay__dot {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size: 11px;
+  color: var(--text_c_accent);
+  background: var(--bg_c_secondary);
+  border-radius: 50%;
+  padding: 0 4px;
+  min-width: 16px;
+  min-height: 16px;
+  text-align: center;
+  line-height: 16px;
+  font-weight: bold;
+  pointer-events: none;
+
+  @media (max-width: 1180px) {
+    display: none;
+  }
+}
+
+.calendarMonthDay__number {
+  z-index: 2;
+}
+
+.calendarPage-modal__events-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .eventMinimize {
+    flex-basis: calc((100% - 10px) / 2);
+
+    &__name {
+      text-align: start;
+    }
+  }
+
+  @media (max-width: 750px) {
+    .eventMinimize {
+      flex-basis: 100%;
+    }
+  }
+}

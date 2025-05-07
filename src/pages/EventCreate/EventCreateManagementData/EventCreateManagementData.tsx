@@ -107,7 +107,7 @@ export const EventCreateManagementData = ({
           id: executor.id,
           text: executor.name,
           avatar: {
-            src: executor.avatar?.url ?? '',
+            src: executor.image?.url ?? '',
             description: executor.position,
           },
         }))}

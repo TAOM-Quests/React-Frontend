@@ -4,13 +4,14 @@ export interface ProfileGetDto {
 
 export interface ProfileUpdateDto {
   id: number
-  email?: string
-  firstName?: string
-  lastName?: string
-  patronymic?: string
-  birthDate?: string | null
   sex?: string
+  email?: string
+  imageId?: number
+  lastName?: string
+  firstName?: string
+  patronymic?: string
   phoneNumber?: string
+  birthDate?: string | null
 }
 
 export type UserEnterDto = UserEnter | string

@@ -5,4 +5,5 @@ export interface Response {
 
 export interface ResponseError extends Response {
   message: string
+  statusCode: number
 }

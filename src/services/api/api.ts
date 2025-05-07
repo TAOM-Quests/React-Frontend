@@ -19,7 +19,7 @@ export const api = async <TResult, TParameters>(
   if (response.statusCode >= 400) {
     const responseError = response as ResponseError
 
-    throw new Error(responseError.message)
+    throw new Error(`${responseError.statusCode} - ${responseError.message}`)
   }
 
   const responseData = response as TResult

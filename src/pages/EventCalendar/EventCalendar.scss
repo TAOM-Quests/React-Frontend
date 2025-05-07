@@ -1,0 +1,107 @@
+.calendarPage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 20px 50px;
+
+  @media (max-width: 600px) {
+    padding: 20px 20px;
+  }
+
+  &__days-container {
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: var(--bg_c_gray_primary);
+    border-bottom: var(--border_primary) var(--border_c_secondary);
+  }
+
+  &__weekday {
+    padding: 12px;
+    text-align: center;
+    color: var(--text_c_primary);
+
+    @media (max-width: 460px) {
+      font-size: 13px;
+      padding: 3px;
+    }
+  }
+
+  &__days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+
+    @media (max-width: 460px) {
+      gap: 2px;
+    }
+  }
+
+  //Отображение страницы года
+  &__year-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 3px;
+
+    @media (max-width: 1560px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 380px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__month {
+    height: 376px;
+    @media (max-width: 1180px) {
+      height: 256px;
+    }
+    @media (max-width: 770px) {
+      padding: 10px;
+      height: 180px;
+      gap: 5px;
+    }
+    @media (max-width: 500px) {
+      height: 150px;
+    }
+
+    &-title {
+      text-align: center;
+      color: var(--text_c_primary);
+
+      @media (max-width: 770px) {
+        font-size: 13px;
+      }
+    }
+  }
+
+  &__calendarMonthDay {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__weekdays--mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    color: var(--text_c_subdued_60);
+    text-align: center;
+
+    @media (max-width: 770px) {
+      font-size: 8px;
+    }
+  }
+
+  &__days-grid--mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+
+    text-align: center;
+  }
+}

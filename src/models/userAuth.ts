@@ -1,8 +1,15 @@
+import { ServerFile } from './serverFile'
+
 export interface UserAuth {
   id: number
   email: string
   token: string
+  name?: string
   isAdmin?: boolean
+  image?: ServerFile
   isEmployee?: boolean
-  departmentId?: number
+}
+
+export interface EmployeeAuth extends UserAuth {
+  departmentId: number
 }
