@@ -103,8 +103,6 @@ export const QuestQuestionBoxSorting = forwardRef(
                   className={classNames(
                     'quest-question-box-sorting__box--droppable',
                   )}
-                  //
-                  // style={{ width: 100, height: 100, backgroundColor: 'green' }}
                 >
                   {userAnswer[boxIndex].options.map((option, optionIndex) => {
                     const colorType = getOptionColorAnswerBoxSorting(
