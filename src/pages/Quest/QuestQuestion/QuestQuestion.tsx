@@ -15,6 +15,8 @@ import { QuestQuestionBoxSorting } from './QuestQuestionBoxSorting/QuestQuestion
 import { QuestQuestionFree } from './QuestQuestionFree/QuestQuestionFree'
 import './QuestQuestion.scss'
 
+export type TypeAnswer = 'secondary' | 'activeAnswer' | 'correct' | 'wrong'
+
 export interface QuestQuestionProps {
   question: QuestQuestionInterface
   setNextQuestion: (userAnswer: any, isCorrectAnswer: boolean) => void

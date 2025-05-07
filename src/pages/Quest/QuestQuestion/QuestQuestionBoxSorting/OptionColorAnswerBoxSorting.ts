@@ -1,6 +1,5 @@
 import { QuestQuestionBoxSortingAnswer } from '../../../../models/questQuestion'
-
-type TypeAnswer = 'activeAnswer' | 'correct' | 'wrong'
+import { TypeAnswer } from '../QuestQuestion'
 
 export const getOptionColorAnswerBoxSorting = (
   boxIndex: number,
