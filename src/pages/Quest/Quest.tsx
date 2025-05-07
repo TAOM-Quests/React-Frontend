@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react'
 import { quests } from '../../services/api/questModule/quests/quests'
 import { QuestStartView } from './QuestStartView/QuestStartView'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
-import { Badge } from '../../components/UI/Badge/Badge'
 import { QuestQuestion } from './QuestQuestion/QuestQuestion'
 import { QuestResultView } from './QuestResultView/QuestResultView'
 import { SaveQuestCompleteDto } from '../../services/api/questModule/quests/questsDto'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
-
+import './Quest.scss'
+import { Tag } from '../../components/UI/Tag/Tag'
+import { Loading } from '../../components/Loading/Loading'
 interface UserAnswer {
   answer: any
   isCorrectAnswer: boolean
@@ -18,13 +19,14 @@ interface UserAnswer {
 
 export const Quest = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [quest, setQuest] = useState<QuestInterface | null>(null)
   const [isStartView, setIsStartView] = useState<boolean>(true)
+  const [isResultView, setIsResultView] = useState<boolean>(false)
+
+  const [quest, setQuest] = useState<QuestInterface | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
     number | null
   >(null)
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
-  const [isResultView, setIsResultView] = useState<boolean>(false)
 
   const questId = useParams().id
   const navigate = useNavigate()
@@ -107,8 +109,12 @@ export const Quest = () => {
   return (
     <>
       {!isLoading && quest ? (
-        <div>
-          <img src={quest.image?.url} />
+        <div
+          className="quest"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${quest.image?.url})`,
+          }}
+        >
           {isStartView && (
             <QuestStartView
               name={quest.name ?? ''}
@@ -126,11 +132,18 @@ export const Quest = () => {
             />
           )}
           {currentQuestionIndex !== null && (
-            <ContainerBox>
-              {quest.time && <Badge text={quest.time} />}
-              <Badge
-                text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
-              />
+            <ContainerBox className="quest__container-questions">
+              <div className="quest__tags">
+                {quest.time && (
+                  <Tag text={quest.time} type="subdued" size="small" />
+                )}
+                <Tag
+                  text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
+                  type="subdued"
+                  size="small"
+                />
+              </div>
+
               <QuestQuestion
                 question={quest.questions![currentQuestionIndex]}
                 setNextQuestion={setNextQuestion}
@@ -139,6 +152,9 @@ export const Quest = () => {
           )}
           {isResultView && (
             <QuestResultView
+              time={quest.time}
+              tags={quest.tags?.map(tag => tag.name) ?? []}
+              difficulty={quest.difficult?.name}
               results={quest.results ?? []}
               questionCount={quest.questions?.length ?? 0}
               userCorrectAnswerCount={
@@ -148,7 +164,7 @@ export const Quest = () => {
           )}
         </div>
       ) : (
-        'Loading...'
+        <Loading />
       )}
     </>
   )

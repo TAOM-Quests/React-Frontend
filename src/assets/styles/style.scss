@@ -66,6 +66,12 @@
   --bg_c_subdued_hover: #ebfbff;
   --bg_c_subdued_active: #b4f0ff;
 
+  --bg_c_activeAnswer: #e6e6e6;
+
+  --bg_c_correct: #e2fbe9;
+
+  --bg_c_wrong: #fae3e3;
+
   --bg_c_gray_primary: #f6f6f6;
   --bg_c_gray_primary_hover: #e6e6e6;
   --bg_c_gray_secondary: #e6e6e6;
@@ -78,6 +84,8 @@
   --bg_c_white_calendar: rgb(var(--bg_color_white));
   --bg_c_calendar_secondary: rgba(var(--bg_color_white), 0.2);
   --bg_c_calendar_secondary_hover: rgba(var(--bg_color_white), 0.4);
+
+  --bg_c_image: #d9ecf9;
 
   //Badges-background-color
   --bg_badge_primary: #18181b;

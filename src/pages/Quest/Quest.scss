@@ -1,0 +1,34 @@
+.quest {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--bg_c_image); // запасной цвет, если нет фона
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  padding: 60px 10vw;
+
+  @media (min-width: 1350px) {
+    // height: calc(100vh - 76px);
+    min-height: 870px;
+  }
+
+  @media (max-width: 350px) {
+    padding: 60px 4vw;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  &__container-questions {
+    max-width: 1200px;
+    padding: 60px 10vw;
+  }
+}

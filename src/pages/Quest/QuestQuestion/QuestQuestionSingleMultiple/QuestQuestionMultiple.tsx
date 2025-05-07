@@ -1,11 +1,13 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionMultiple as QuestQuestionMultipleInterface } from '../../../../models/questQuestion'
-import { Button } from '../../../../components/UI/Button/Button'
 import { isEqual } from 'lodash'
+import './QuestQuestionMultiple.scss'
+import { QuestQuestionButton } from '../QuestQuestionButton/QuestQuestionButton'
+import { getOptionColorType } from '../questQuestionUtils'
 
 export interface QuestQuestionMultipleProps {
-  isCheckMode: boolean
   question: QuestQuestionMultipleInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 
@@ -26,24 +28,6 @@ export const QuestQuestionMultiple = forwardRef(
     )
     useEffect(() => setIsAnswerReady(userAnswer.length > 0), [userAnswer])
 
-    const getOptionClassName = (optionIndex: number): string => {
-      let className = 'option'
-
-      if (isCheckMode) {
-        if (question.answer.correctAnswer.includes(optionIndex)) {
-          className += ' option--correct'
-        } else if (userAnswer.includes(optionIndex)) {
-          className += ' option--wrong'
-        }
-      } else {
-        if (userAnswer.includes(optionIndex)) {
-          className += ' option--active'
-        }
-      }
-
-      return className
-    }
-
     const toggleOption = (optionIndex: number) => {
       if (userAnswer.includes(optionIndex)) {
         setUserAnswer(userAnswer.filter(index => index !== optionIndex))
@@ -53,15 +37,20 @@ export const QuestQuestionMultiple = forwardRef(
     }
 
     return (
-      <div>
+      <div className="quest-question-multiple">
         {question.answer.options.map((option, optionIndex) => (
-          <Button
-            text={option}
+          <QuestQuestionButton
             key={optionIndex}
+            text={option}
+            size="extraLarge"
             disabled={isCheckMode}
-            colorType={'secondary'}
+            colorType={getOptionColorType(
+              optionIndex,
+              question.answer.correctAnswer,
+              userAnswer,
+              isCheckMode,
+            )}
             onClick={() => toggleOption(optionIndex)}
-            className={getOptionClassName(optionIndex)}
           />
         ))}
       </div>

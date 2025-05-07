@@ -1,9 +1,8 @@
-.button {
+.quest-question-button {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -11,22 +10,6 @@
 
   // Colors
   &--primary {
-    background-color: var(--bg_c_primary);
-    color: var(--text_c_secondary);
-
-    &:disabled:hover,
-    &:disabled:active {
-      background-color: var(--bg_c_primary);
-    }
-  }
-  &--primary:hover {
-    background-color: var(--bg_c_primary_hover);
-  }
-  &--primary:active {
-    background-color: var(--bg_c_primary_active);
-  }
-
-  &--secondary {
     background-color: var(--bg_c_secondary);
     color: var(--text_c_primary);
     border: var(--border_primary) var(--border_c_primary);
@@ -36,48 +19,15 @@
       background-color: var(--bg_c_secondary);
     }
   }
-  &--secondary:hover {
+  &--primary:hover {
     background-color: var(--bg_c_secondary_hover);
   }
-  &--secondary:active {
+  &--primary:active {
     background-color: var(--bg_c_secondary_active);
-  }
-
-  &--accent {
-    background-color: var(--bg_c_accent);
-    color: var(--text_c_secondary);
-
-    &:disabled:hover,
-    &:disabled:active {
-      background-color: var(--bg_c_accent);
-    }
-  }
-  &--accent:hover {
-    background-color: var(--bg_c_accent_hover);
-  }
-  &--accent:active {
-    background-color: var(--bg_c_accent_active);
-  }
-
-  &--subdued {
-    background: var(--bg_c_subdued);
-    color: var(--text_c_accent);
-
-    &:disabled:hover,
-    &:disabled:active {
-      background-color: var(--bg_c_subdued);
-    }
-  }
-  &--subdued:hover {
-    background-color: var(--bg_c_subdued_hover);
-  }
-  &--subdued:active {
-    background-color: var(--bg_c_subdued_active);
   }
 
   &--activeAnswer {
     background-color: var(--bg_c_activeAnswer);
-    font-weight: 400 !important;
     color: var(--text_c_primary);
     border: var(--border_primary) var(--border_c_secondary);
 
@@ -90,7 +40,7 @@
   &--correct {
     background-color: var(--bg_c_correct);
     color: var(--text_c_primary);
-    font-weight: 400 !important;
+
     border: var(--border_primary) var(--border_c_secondary);
 
     &:disabled:hover,
@@ -102,7 +52,7 @@
   &--wrong {
     background-color: var(--bg_c_wrong);
     color: var(--text_c_primary);
-    font-weight: 400 !important;
+
     border: var(--border_primary) var(--border_c_secondary);
 
     &:disabled:hover,
@@ -120,34 +70,6 @@
   &--large {
     padding: 12px 18px;
     height: 44px;
-  }
-
-  &--small {
-    padding: 8px 18px;
-    height: 32px;
-  }
-
-  // Icon modifiers
-  &--icon-only {
-    width: 44px;
-    height: 44px;
-    padding: 0;
-  }
-
-  &--circle {
-    border-radius: 50%;
-  }
-
-  // Icon spacing
-  &__icon {
-    display: flex;
-
-    &--before {
-      //
-    }
-    &--after {
-      //
-    }
   }
 
   &:disabled {

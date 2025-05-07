@@ -1,0 +1,19 @@
+.quest-question-free {
+  border-radius: 8px;
+  width: 100%;
+
+  &--correct {
+    background-color: var(--bg_c_correct);
+
+    &:hover {
+      background-color: var(--bg_c_correct);
+    }
+  }
+  &--wrong {
+    background-color: var(--bg_c_wrong);
+
+    &:hover {
+      background-color: var(--bg_c_wrong);
+    }
+  }
+}
