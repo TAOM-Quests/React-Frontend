@@ -1,5 +1,12 @@
 .quest-question-single {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+
+  .button {
+    font-weight: 400 !important;
+  }
 }

@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionSingle as QuestQuestionSingleInterface } from '../../../../models/questQuestion'
-import { Button } from '../../../../components/UI/Button/Button'
+import { Button, TypeButton } from '../../../../components/UI/Button/Button'
 import './QuestQuestionSingle.scss'
 
 export interface QuestQuestionSingleProps {
@@ -26,22 +26,22 @@ export const QuestQuestionSingle = forwardRef(
     )
     useEffect(() => setIsAnswerReady(userAnswer !== null), [userAnswer])
 
-    const getOptionClassName = (optionIndex: number): string => {
-      let className = 'option'
+    const getOptionColorType = (optionIndex: number): TypeButton => {
+      let colorType: TypeButton = 'secondary'
 
       if (isCheckMode) {
         if (optionIndex === question.answer.correctAnswer) {
-          className += ' option--correct'
+          colorType = 'correct'
         } else if (optionIndex === userAnswer) {
-          className += ' option--wrong'
+          colorType = 'wrong'
         }
       } else {
         if (optionIndex === userAnswer) {
-          className += ' option--active'
+          colorType = 'activeAnswer'
         }
       }
 
-      return className
+      return colorType
     }
 
     return (
@@ -51,9 +51,9 @@ export const QuestQuestionSingle = forwardRef(
             text={option}
             key={optionIndex}
             disabled={isCheckMode}
-            colorType={'secondary'}
+            size="extraLarge"
             onClick={() => setUserAnswer(optionIndex)}
-            className={getOptionClassName(optionIndex)}
+            colorType={getOptionColorType(optionIndex)}
           />
         ))}
       </div>
