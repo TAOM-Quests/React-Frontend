@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { NavLink, useNavigate } from 'react-router'
-import { ContextMenu } from '../../ContextMenu/ContextMenu'
+import { ContextMenu } from '../../../components/ContextMenu/ContextMenu'
 import './HeaderMenu.scss'
-import { Icon } from '../../UI/Icon/Icon'
+import { Icon } from '../../../components/UI/Icon/Icon'
 
 interface MenuItem {
   id: number

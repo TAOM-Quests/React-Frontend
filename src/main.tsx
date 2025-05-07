@@ -12,11 +12,11 @@ import { Event } from './pages/Event/Event.tsx'
 import moment from 'moment'
 import { EventCalendar } from './pages/EventCalendar/EventCalendar.tsx'
 import { QuestCreate } from './pages/QuestCreate/QuestCreate.tsx'
-import { Header } from './components/Header/Header.tsx'
-import { Footer } from './components/Footer/Footer.tsx'
+import { Header } from './layout/Header/Header.tsx'
+import { Footer } from './layout/Footer/Footer.tsx'
 import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
-import ScrollToTop from './components/ScrollToTop.tsx'
+import ScrollToTop from './layout/ScrollToTop.tsx'
 
 moment.updateLocale('ru', {
   months: [

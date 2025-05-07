@@ -1,6 +1,6 @@
 import './Footer.scss'
 import { LOGO } from '../../assets/images/logo.ts'
-import { Icon } from '../UI/Icon/Icon.tsx'
+import { Icon } from '../../components/UI/Icon/Icon.tsx'
 import { ICON_MAP } from '../../assets/icons/index.ts'
 
 interface SocialLink {

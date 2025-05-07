@@ -1,9 +1,9 @@
-import { Icon } from '../UI/Icon/Icon'
+import { Icon } from '../../components/UI/Icon/Icon'
 import './Header.scss'
 import { selectAuth } from '../../redux/auth/authSlice'
 
 import { HeaderMenu } from './HeaderMenu/HeaderMenu'
-import { Avatar } from '../UI/Avatar/Avatar'
+import { Avatar } from '../../components/UI/Avatar/Avatar'
 import { UserProfile } from '../../models/userProfile'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
