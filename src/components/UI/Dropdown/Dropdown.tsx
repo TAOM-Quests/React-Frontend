@@ -74,6 +74,7 @@ export const Dropdown = ({
     !items.some(
       item => item.text.toLowerCase() === searchValue.trim().toLowerCase(),
     )
+
   const handleAddNewItem = () => {
     const newText = searchValue.trim()
     const newItem: DropdownItemType = {

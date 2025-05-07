@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import Login from './pages/Login/Login.tsx'
 import { Provider } from 'react-redux'
@@ -16,7 +15,7 @@ import { Header } from './layout/Header/Header.tsx'
 import { Footer } from './layout/Footer/Footer.tsx'
 import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
-import ScrollToTop from './layout/ScrollToTop.tsx'
+import { ScrollToTop } from './layout/ScrollToTop.tsx'
 
 moment.updateLocale('ru', {
   months: [
