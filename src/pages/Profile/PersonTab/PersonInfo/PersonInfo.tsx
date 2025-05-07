@@ -116,7 +116,7 @@ export default function PersonInfo({
         firstName,
         patronymic,
         phoneNumber,
-        imageId: image?.id,
+        imageId: image?.id ?? null,
         birthDate: birthDate instanceof Date ? birthDate.toISOString() : null,
       })
 
