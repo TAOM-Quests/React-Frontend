@@ -1,5 +1,6 @@
 import { Department } from './department'
 import { EventStatus } from './eventStatus'
+import { EventTag } from './eventTag'
 import { EventType } from './eventType'
 import { ServerFile } from './serverFile'
 import { Employee } from './user'
@@ -9,6 +10,7 @@ export interface Event {
   date: Date
   name: string
   type: EventType
+  tags: EventTag[]
   image: ServerFile
   description: string
   seatsNumber: number

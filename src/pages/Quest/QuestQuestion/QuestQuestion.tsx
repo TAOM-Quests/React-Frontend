@@ -13,6 +13,9 @@ import { QuestQuestionMultiple } from './QuestQuestionSingleMultiple/QuestQuesti
 import { QuestQuestionConnection } from './QuestQuestionConnection/QuestQuestionConnection'
 import { QuestQuestionBoxSorting } from './QuestQuestionBoxSorting/QuestQuestionBoxSorting'
 import { QuestQuestionFree } from './QuestQuestionFree/QuestQuestionFree'
+import './QuestQuestion.scss'
+
+export type TypeQuestQuestion = 'primary' | 'correct' | 'wrong' | 'activeAnswer'
 
 export interface QuestQuestionProps {
   question: QuestQuestionInterface
@@ -43,8 +46,8 @@ export const QuestQuestion = ({
   }
 
   return (
-    <div>
-      <h2>{question.text}</h2>
+    <div className="quest-question">
+      <p className="body_xl_sb quest-question__title">{question.text}</p>
       {question.type === 'single' && (
         <QuestQuestionSingle
           ref={questionRef}
@@ -86,13 +89,19 @@ export const QuestQuestion = ({
         />
       )}
       {!isCheckMode && (
-        <Button
-          text="Ответить"
-          onClick={() => setIsCheckMode(true)}
-          disabled={!isAnswerReady}
-        />
+        <div>
+          <Button
+            text="Ответить"
+            onClick={() => setIsCheckMode(true)}
+            disabled={!isAnswerReady}
+          />
+        </div>
       )}
-      {isCheckMode && <Button text="Далее" onClick={showNextQuestion} />}
+      {isCheckMode && (
+        <div>
+          <Button text="Далее" onClick={showNextQuestion} />
+        </div>
+      )}
     </div>
   )
 }

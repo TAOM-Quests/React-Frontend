@@ -40,7 +40,7 @@ export const Event = () => {
         const fetchedEvent = await events.getOne({ id: +eventId! })
         setEvent(fetchedEvent)
       } catch (e) {
-        console.log(e)
+        console.log(`[Event] ${e}`)
       }
     }
 

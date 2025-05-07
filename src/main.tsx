@@ -11,10 +11,11 @@ import { Event } from './pages/Event/Event.tsx'
 import moment from 'moment'
 import { EventCalendar } from './pages/EventCalendar/EventCalendar.tsx'
 import { QuestCreate } from './pages/QuestCreate/QuestCreate.tsx'
-import { Header } from './components/Header/Header.tsx'
-import { Footer } from './components/Footer/Footer.tsx'
+import { Header } from './layout/Header/Header.tsx'
+import { Footer } from './layout/Footer/Footer.tsx'
 import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
+import { ScrollToTop } from './layout/ScrollToTop.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -58,18 +59,20 @@ root.render(
       <div className="app-root">
         <main className="main-content">
           <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="event/:id" element={<Event />} />
-            <Route path="event/create" element={<EventCreate />} />
-            <Route path="event/:id/edit" element={<EventCreate />} />
-            <Route path="event/calendar" element={<EventCalendar />} />
-            <Route path="quest/:id" element={<Quest />} />
-            <Route path="quest/create" element={<QuestCreate />} />
-            <Route path="quest/:id/edit" element={<QuestCreate />} />
-          </Routes>
+          <ScrollToTop>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="event/:id" element={<Event />} />
+              <Route path="event/create" element={<EventCreate />} />
+              <Route path="event/:id/edit" element={<EventCreate />} />
+              <Route path="event/calendar" element={<EventCalendar />} />
+              <Route path="quest/:id" element={<Quest />} />
+              <Route path="quest/create" element={<QuestCreate />} />
+              <Route path="quest/:id/edit" element={<QuestCreate />} />
+            </Routes>
+          </ScrollToTop>
           <Footer />
         </main>
       </div>

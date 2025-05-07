@@ -14,6 +14,7 @@ import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
 import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
 import './Dropdown.scss'
+import { Button } from '../Button/Button'
 
 export interface DropdownItemType {
   id: number
@@ -22,6 +23,7 @@ export interface DropdownItemType {
     src: string
     description?: string
   }
+  isUserAdded?: boolean
   iconAfter?: keyof typeof ICON_MAP
   iconBefore?: keyof typeof ICON_MAP
 }
@@ -32,7 +34,8 @@ export interface DropdownProps extends InputHTMLAttributes<HTMLInputElement> {
   errorText?: string
   helperText?: string
   isMultiple?: boolean
-  selectedIds?: number[]
+  selectedItems?: DropdownItemType[]
+  isAllowAddNewItem?: boolean
   onChangeDropdown?: (
     selectedItem: DropdownItemType | DropdownItemType[] | null,
   ) => void
@@ -48,21 +51,46 @@ export const Dropdown = ({
   placeholder,
   helperText,
   errorText,
-  selectedIds: selectedIdsProp,
+  selectedItems: selectedItemsProp,
+  isAllowAddNewItem = false,
   ...props
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState(
-    !isMultiple && selectedIdsProp
-      ? (items.find(item => item.id === selectedIdsProp[0])?.text ?? '')
+    !isMultiple && selectedItemsProp?.length
+      ? (items.find(item => item.id === selectedItemsProp[0].id)?.text ?? '')
       : '',
   )
-  const [selectedIds, setSelectedIds] = useState<number[]>(
-    selectedIdsProp ?? [],
+  const [selectedItems, setSelectedItems] = useState<DropdownItemType[]>(
+    selectedItemsProp ?? [],
   )
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const showAddButton =
+    isAllowAddNewItem &&
+    searchValue.trim() !== '' &&
+    !items.some(
+      item => item.text.toLowerCase() === searchValue.trim().toLowerCase(),
+    )
+
+  const handleAddNewItem = () => {
+    const newText = searchValue.trim()
+    const newItem: DropdownItemType = {
+      id: Date.now(),
+      text: newText,
+      isUserAdded: true,
+    }
+
+    if (onChangeDropdown) {
+      onChangeDropdown([...selectedItems, newItem])
+    }
+
+    setSelectedItems(prev => [...prev, newItem])
+    setSearchValue('')
+    setIsOpen(false)
+  }
 
   const focusInput = () => {
     setTimeout(() => {
@@ -93,29 +121,24 @@ export const Dropdown = ({
   }, [])
 
   const handleSelect = useCallback(
-    (itemId: number, isRemoveAction = false) => {
+    (selectedItem: DropdownItemType, isRemoveAction = false) => {
       if (isMultiple) {
-        setSelectedIds(prev => {
-          const isSelected = prev.includes(itemId)
-          let newSelected: number[]
+        setSelectedItems(prev => {
+          const isSelected = prev.map(item => item.id).includes(selectedItem.id)
+          let newSelected: DropdownItemType[]
           if (isSelected) {
-            newSelected = prev.filter(id => id !== itemId)
+            newSelected = prev.filter(item => item.id !== selectedItem.id)
           } else {
-            newSelected = [...prev, itemId]
+            newSelected = [...prev, selectedItem]
           }
-          onChangeDropdown?.(
-            newSelected.length > 0
-              ? items.filter(item => newSelected.includes(item.id))
-              : null,
-          )
+          onChangeDropdown?.(newSelected.length > 0 ? newSelected : null)
           if (!isRemoveAction) focusInput()
           return newSelected
         })
       } else {
-        setSelectedIds([itemId])
-        const selectedItem = items.find(item => item.id === itemId) ?? null
+        setSelectedItems([selectedItem])
         onChangeDropdown?.(selectedItem)
-        setSearchValue(selectedItem?.text ?? '')
+        setSearchValue(selectedItem.text ?? '')
         setIsOpen(false)
       }
     },
@@ -124,10 +147,11 @@ export const Dropdown = ({
 
   const handleClearSelection = () => {
     if (isMultiple) {
-      setSelectedIds([])
+      setSelectedItems([])
+      setSearchValue('')
       onChangeDropdown?.(null)
     } else {
-      setSelectedIds([])
+      setSelectedItems([])
       setSearchValue('')
       onChangeDropdown?.(null)
     }
@@ -139,8 +163,7 @@ export const Dropdown = ({
 
   const renderInputValue = () => {
     if (isMultiple) return searchValue
-    const selectedId = selectedIds[0]
-    const selectedItem = items.find(item => item.id === selectedId)
+    const selectedItem = selectedItems[0]
     if (!selectedItem) return searchValue
     if (selectedItem.avatar) {
       return (
@@ -165,11 +188,13 @@ export const Dropdown = ({
   }
 
   const handleCheckboxSelectAll = () => {
-    if (selectedIds.length === items.length) {
-      setSelectedIds([])
+    if (setSelectedItems.length === items.length) {
+      setSelectedItems(selectedItems.filter(item => !item.isUserAdded))
       onChangeDropdown?.(null)
     } else {
-      setSelectedIds(items.map(item => item.id))
+      setSelectedItems(
+        items.concat(selectedItems.filter(item => item.isUserAdded)),
+      )
       onChangeDropdown?.(items)
       focusInput()
     }
@@ -177,54 +202,62 @@ export const Dropdown = ({
 
   return (
     <div ref={dropdownRef} data-dropdown-id={id} className="dropdown-container">
-      {isMultiple && selectedIds.length > 0 && (
+      {isMultiple && setSelectedItems.length > 0 && (
         <div className="selected-items">
-          {selectedIds.map(itemId => {
-            const item = items.find(item => item.id === itemId)
+          {selectedItems.map(item => {
             if (!item) return null
             return (
-              <span key={itemId} className="selected-item">
+              <span key={item.id} className="selected-item">
                 <Tag
                   text={item.text}
                   avatarSrc={item.avatar?.src}
                   description={item.avatar?.description}
                   iconBefore={item.iconBefore}
                   iconAfter={item.iconAfter}
-                  onRemove={() => handleSelect(itemId, true)}
+                  onRemove={() => handleSelect(item, true)}
                 />
               </span>
             )
           })}
         </div>
       )}
-
-      <Input
-        ref={inputRef}
-        label={label}
-        type="text"
-        iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
-        onClickIconAfter={disabled ? undefined : () => setIsOpen(!isOpen)}
-        value={renderInputValue()}
-        onChange={e => setSearchValue(e.target.value)}
-        onFocus={handleFocus}
-        onBlur={() => {
-          setTimeout(() => {
-            if (
-              dropdownRef.current &&
-              !dropdownRef.current.contains(document.activeElement) &&
-              !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
-            ) {
-              setIsOpen(false)
-            }
-          }, 200)
-        }}
-        disabled={disabled}
-        placeholder={placeholder}
-        helperText={helperText}
-        errorText={errorText}
-        onClearSelection={handleClearSelection}
-        {...props}
-      />
+      <div className="input-showAddButton">
+        <Input
+          ref={inputRef}
+          label={label}
+          type="text"
+          iconAfter={isOpen ? 'ANGLE_UP' : 'ANGLE_DOWN'}
+          onClickIconAfter={disabled ? undefined : () => setIsOpen(!isOpen)}
+          value={renderInputValue()}
+          onChange={e => setSearchValue(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={() => {
+            setTimeout(() => {
+              if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(document.activeElement) &&
+                !document.activeElement?.closest(`[data-dropdown-id="${id}"]`)
+              ) {
+                setIsOpen(false)
+              }
+            }, 200)
+          }}
+          disabled={disabled}
+          placeholder={placeholder}
+          helperText={helperText}
+          errorText={errorText}
+          onClearSelection={handleClearSelection}
+          {...props}
+        />
+        {showAddButton && (
+          <Button
+            colorType="secondary"
+            text="Добавить"
+            iconBefore="ADD"
+            onClick={handleAddNewItem}
+          />
+        )}
+      </div>
 
       {isOpen && (
         <div className="dropdown-menu">
@@ -234,7 +267,7 @@ export const Dropdown = ({
               className="dropdown-checkbox"
               label="Выбрать все"
               isSelected={
-                selectedIds.length === items.length && items.length > 0
+                setSelectedItems.length === items.length && items.length > 0
               }
               onChange={handleCheckboxSelectAll}
             />
@@ -250,10 +283,10 @@ export const Dropdown = ({
               isMultiple={isMultiple}
               isSelected={
                 isMultiple
-                  ? selectedIds.includes(item.id)
-                  : selectedIds[0] === item.id
+                  ? selectedItems.map(item => item.id).includes(item.id)
+                  : selectedItems[0].id === item.id
               }
-              onSelect={handleSelect}
+              onSelect={() => handleSelect(item)}
             />
           ))}
         </div>

@@ -1,0 +1,39 @@
+.single-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  .label {
+    color: var(--text_c_subdued);
+  }
+
+  .single-question-option {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    &__toggle,
+    &__remove {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 44px;
+    }
+
+    .inputWrapper {
+      width: 100%;
+    }
+  }
+}

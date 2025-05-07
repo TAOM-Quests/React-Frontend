@@ -5,10 +5,13 @@ import {
 } from '../../../../models/questQuestion'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { isEqual } from 'lodash'
+import './QuestQuestionBoxSorting.scss'
+import classNames from 'classnames'
+import { getOptionColorAnswerBoxSorting } from '../questQuestionUtils'
 
 export interface QuestQuestionBoxSortingProps {
-  isCheckMode: boolean
   question: QuestQuestionBoxSortingInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 
@@ -49,8 +52,6 @@ export const QuestQuestionBoxSorting = forwardRef(
     const dropHandler = (e: any) => {
       if (e.canceled) return
 
-      console.log('Event', e)
-
       setUserAnswer(
         userAnswer.map((box, boxIndex) => {
           const targetType = e.target?.id?.split('-')[0]
@@ -77,37 +78,80 @@ export const QuestQuestionBoxSorting = forwardRef(
     }
 
     return (
-      <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
-        {question.answer.correctAnswer.map((box, boxIndex) => (
-          <div key={boxIndex}>
-            <Droppable
-              id={`box-${boxIndex}`}
-              disabled={isCheckMode}
-              style={{ width: 100, height: 100, backgroundColor: 'green' }}
-            >
-              {box.name}
-              {userAnswer[boxIndex].options.map((option, optionIndex) => (
-                <Draggable key={optionIndex} id={`option-${optionIndex}`}>
-                  {question.answer.options[option]}
-                </Draggable>
-              ))}
-            </Droppable>
-          </div>
-        ))}
-        {question.answer.options.map((option, optionIndex) => {
-          if (!userAnswer.find(box => box.options.includes(optionIndex))) {
-            return (
-              <Draggable
-                key={optionIndex}
-                disabled={isCheckMode}
-                id={`option-${optionIndex}`}
+      <div className="quest-question-box-sorting">
+        <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
+          <div className="quest-question-box-sorting__boxes">
+            {question.answer.correctAnswer.map((box, boxIndex) => (
+              <div
+                key={boxIndex}
+                className={classNames(
+                  'quest-question-box-sorting__box',
+                  isCheckMode
+                    ? 'quest-question-box-sorting__box--disabled'
+                    : '',
+                )}
               >
-                {option}
-              </Draggable>
-            )
-          }
-        })}
-      </DragDropProvider>
+                <div className="quest-question-box-sorting__box--name">
+                  <p className="body_m_r">{box.name}</p>
+                </div>
+                <Droppable
+                  id={`box-${boxIndex}`}
+                  disabled={isCheckMode}
+                  className={classNames(
+                    'quest-question-box-sorting__box--droppable',
+                  )}
+                >
+                  {userAnswer[boxIndex].options.map((option, optionIndex) => {
+                    const colorType = getOptionColorAnswerBoxSorting(
+                      boxIndex,
+                      option,
+                      userAnswer,
+                      question.answer.correctAnswer,
+                      isCheckMode,
+                    )
+                    return (
+                      <Draggable
+                        key={optionIndex}
+                        id={`option-${optionIndex}`}
+                        className={classNames(
+                          'sorting-item',
+                          'sorting-item--placed',
+                          `sorting-item--${colorType}`,
+                        )}
+                      >
+                        {question.answer.options[option]}
+                      </Draggable>
+                    )
+                  })}
+                </Droppable>
+              </div>
+            ))}
+          </div>
+
+          <div className="quest-question-box-sorting__options">
+            {question.answer.options.map((option, optionIndex) => {
+              const isPlaced = !!userAnswer.find(box =>
+                box.options.includes(optionIndex),
+              )
+
+              if (!isPlaced) {
+                return (
+                  <Draggable
+                    key={optionIndex}
+                    disabled={isCheckMode}
+                    id={`option-${optionIndex}`}
+                    className={classNames('sorting-item', {
+                      'sorting-item--placed': isPlaced,
+                    })}
+                  >
+                    {option}
+                  </Draggable>
+                )
+              }
+            })}
+          </div>
+        </DragDropProvider>
+      </div>
     )
   },
 )
@@ -124,15 +168,14 @@ function Droppable({ id, children, ...props }: any) {
   )
 }
 
-export function Draggable({ id, text, children, ...props }: any) {
+export function Draggable({ id, children, className, ...props }: any) {
   const { ref } = useDraggable({
     id,
   })
 
   return (
-    <button ref={ref} {...props}>
-      {text}
-      {children}
-    </button>
+    <div className={classNames(className, 'body_m_m')} ref={ref} {...props}>
+      <p>{children}</p>
+    </div>
   )
 }

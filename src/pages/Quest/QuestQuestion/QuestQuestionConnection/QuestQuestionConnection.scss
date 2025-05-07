@@ -1,0 +1,112 @@
+.quest-question-connection {
+  // display: flex;
+  // flex-wrap: wrap;
+  // gap: 10px;
+  // justify-content: center;
+  // background-color: transparent;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+}
+
+.draggable {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 0;
+  color: var(--text_c_primary);
+  cursor: grab;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: var(--disabled_opacity);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &--correct {
+    .droppable-area,
+    .connected-child-option {
+      background-color: var(--bg_c_correct);
+    }
+  }
+
+  &--wrong {
+    .droppable-area,
+    .connected-child-option {
+      background-color: var(--bg_c_wrong);
+    }
+  }
+}
+
+.droppable {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  gap: 10px;
+
+  background-color: var(--bg_c_secondary);
+  border-radius: 8px;
+  border: var(--border_primary) var(--border_c_primary);
+  box-shadow: var(--drop_shadow);
+}
+
+.connected-child-option {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+
+  background-color: var(--bg_c_secondary);
+  border-radius: 8px;
+  border: var(--border_primary) var(--border_c_primary);
+  box-shadow: var(--drop_shadow);
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg_c_accent);
+    border-radius: 50%;
+    padding: 5px;
+    position: absolute;
+    bottom: -20px;
+    z-index: 1;
+
+    .icon {
+      color: var(--text_c_secondary);
+    }
+
+    &:hover {
+      background: var(--bg_c_accent_hover);
+    }
+  }
+}

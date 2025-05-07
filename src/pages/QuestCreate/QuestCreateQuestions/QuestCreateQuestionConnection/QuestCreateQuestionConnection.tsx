@@ -6,6 +6,7 @@ import {
 import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
+import './QuestCreateQuestionConnection.scss'
 
 export interface QuestCreateQuestionConnectionProps {
   questions: QuestQuestion[]
@@ -56,36 +57,46 @@ export const QuestCreateQuestionConnection = ({
     )
 
   return (
-    <>
-      Правильные ответы
-      {connectionQuestion.answer.options.map((option, optionIndex) => {
-        if (optionIndex % 2 === 0) {
-          return (
-            <div key={optionIndex}>
-              <Input
-                value={option}
-                onChange={e => updateOption(e.target.value, optionIndex)}
-              />
-              -
-              <Input
-                value={connectionQuestion.answer.options[optionIndex + 1]}
-                onChange={e => updateOption(e.target.value, optionIndex + 1)}
-              />
-              <Icon
-                icon="CROSS"
-                onClick={() => removeOptionPair(optionIndex)}
-              />
-            </div>
-          )
-        }
-      })}
-      <Button
-        size="small"
-        text="Добавить"
-        iconBefore="ADD"
-        onClick={addOptionPair}
-        colorType={'secondary'}
-      />
-    </>
+    <div className="connection-questions">
+      <div className="connection-questions__options">
+        <label className="label body_s_sb">Пары верных ответов</label>
+        <div className="connection-questions__options-list">
+          {connectionQuestion.answer.options.map((option, optionIndex) => {
+            if (optionIndex % 2 === 0) {
+              return (
+                <div key={optionIndex} className="connection-question-option">
+                  <Input
+                    value={option}
+                    onChange={e => updateOption(e.target.value, optionIndex)}
+                    placeholder="Элемент 1"
+                  />
+                  –
+                  <Input
+                    value={connectionQuestion.answer.options[optionIndex + 1]}
+                    onChange={e =>
+                      updateOption(e.target.value, optionIndex + 1)
+                    }
+                    placeholder="Элемент 2"
+                  />
+                  <Icon
+                    icon="CROSS"
+                    onClick={() => removeOptionPair(optionIndex)}
+                  />
+                </div>
+              )
+            }
+          })}
+        </div>
+      </div>
+      <div>
+        <Button
+          size="small"
+          text="Добавить"
+          iconBefore="ADD"
+          onClick={addOptionPair}
+          colorType={'secondary'}
+        />
+      </div>
+    </div>
   )
 }

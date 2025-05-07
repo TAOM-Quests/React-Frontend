@@ -7,6 +7,7 @@ import { Toggle } from '../../../../components/UI/Toggle/Toggle'
 import Input from '../../../../components/UI/Input/Input'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import { Button } from '../../../../components/UI/Button/Button'
+import './QuestCreateQuestionMultiple.scss'
 
 export interface QuestCreateQuestionMultipleProps {
   questions: QuestQuestion[]
@@ -51,7 +52,7 @@ export const QuestCreateQuestionMultiple = ({
   const removeCorrectAnswer = (answerIndex: number) => {
     const questionAnswer = clone(multipleQuestion.answer)
     questionAnswer.correctAnswer = questionAnswer.correctAnswer.filter(
-      (_, answerIndex) => answerIndex !== answerIndex,
+      optionIndex => optionIndex !== answerIndex,
     )
 
     updateQuestion({
@@ -75,36 +76,63 @@ export const QuestCreateQuestionMultiple = ({
     })
   }
 
-  const removeOption = (index: number) =>
-    setQuestions(
-      questions.filter((_, questionIndex) => questionIndex !== index),
+  const removeOption = (index: number) => {
+    const questionAnswer = clone(multipleQuestion.answer)
+    questionAnswer.options = questionAnswer.options.filter(
+      (_, i) => i !== index,
     )
 
+    updateQuestion({
+      ...multipleQuestion,
+      answer: questionAnswer,
+    })
+  }
+
   return (
-    <>
-      Правильные ответы
-      {multipleQuestion.answer.options.map((option, optionIndex) => (
-        <div key={optionIndex}>
-          <Input
-            value={option}
-            onChange={e => updateOption(e.target.value, optionIndex)}
-          />
-          <Toggle
-            checked={multipleQuestion.answer.correctAnswer.includes(
-              optionIndex,
-            )}
-            onChange={() => updateCorrectAnswer(optionIndex)}
-          />
-          <Icon icon="CROSS" onClick={() => removeOption(optionIndex)} />
+    <div className="multiple-questions">
+      <div className="multiple-questions__options">
+        <label className="label body_s_sb">Варианты ответов</label>
+        <div className="multiple-questions__options-list">
+          {multipleQuestion.answer.options.map((option, optionIndex) => (
+            <div key={optionIndex} className="multiple-question-option">
+              <Input
+                value={option}
+                placeholder="Введите вариант ответа"
+                onChange={e => updateOption(e.target.value, optionIndex)}
+                helperText={
+                  multipleQuestion.answer.correctAnswer.includes(optionIndex)
+                    ? 'Это верный ответ'
+                    : ''
+                }
+              />
+              <div className="multiple-question-option__toggle">
+                <Toggle
+                  checked={multipleQuestion.answer.correctAnswer.includes(
+                    optionIndex,
+                  )}
+                  onChange={() => updateCorrectAnswer(optionIndex)}
+                />
+              </div>
+              <div className="multiple-question-option__remove">
+                <Icon
+                  icon="CROSS"
+                  onClick={() => removeOption(optionIndex)}
+                  disabled={multipleQuestion.answer.options.length === 1}
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-      <Button
-        size="small"
-        text="Добавить"
-        iconBefore="ADD"
-        onClick={addOption}
-        colorType={'secondary'}
-      />
-    </>
+      </div>
+      <div>
+        <Button
+          size="small"
+          text="Добавить"
+          iconBefore="ADD"
+          onClick={addOption}
+          colorType={'secondary'}
+        />
+      </div>
+    </div>
   )
 }

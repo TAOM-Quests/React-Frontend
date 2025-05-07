@@ -1,5 +1,6 @@
-import { Badge } from '../../../components/UI/Badge/Badge'
 import { Button } from '../../../components/UI/Button/Button'
+import { Tag } from '../../../components/UI/Tag/Tag'
+import './QuestStartView.scss'
 
 export interface QuestStartViewProps {
   name: string
@@ -21,16 +22,28 @@ export const QuestStartView = ({
   onClickStartButton,
 }: QuestStartViewProps) => {
   return (
-    <>
-      {tags.map((tag, index) => (
-        <Badge key={index} text={tag} />
-      ))}
-      {difficulty && <Badge text={difficulty} />}
-      {time && <Badge text={`Время прохождения: ${time}`} />}
-      <Badge text={`Количество заданий: ${questionCount}`} />
-      <h1>{name}</h1>
-      <p>{description}</p>
-      <Button text="Пройти квест" onClick={onClickStartButton} />
-    </>
+    <div className="quest-start">
+      <div className="quest__tags">
+        {tags.map((tag, index) => (
+          <Tag key={index} text={tag} type="secondary" size="small" />
+        ))}
+
+        {difficulty && <Tag text={difficulty} type="subdued" size="small" />}
+        {time && <Tag text={`Таймер ${time}`} type="subdued" size="small" />}
+        <Tag text={`${questionCount} заданий`} type="subdued" size="small" />
+      </div>
+      <div className="quest-start__title">
+        <h1 className="heading_1">{name}</h1>
+      </div>
+      <div className="quest-start__desc">
+        <p
+          dangerouslySetInnerHTML={{ __html: description }}
+          className="body_xl_sb"
+        ></p>
+      </div>
+      <div>
+        <Button text="Пройти квест" onClick={onClickStartButton} />
+      </div>
+    </div>
   )
 }

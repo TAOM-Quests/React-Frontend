@@ -26,6 +26,7 @@ import { EventCreateManagementData } from './EventCreateManagementData/EventCrea
 import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
 import { Loading } from '../../components/Loading/Loading'
+import { EventTag } from '../../models/eventTag'
 import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
 import { EmployeeAuth } from '../../models/userAuth'
 
@@ -36,21 +37,23 @@ const additionalInfoItems: string[] = [
 const additionalInfoSeparator = '<-- Additional info ->'
 
 export const EventCreate = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const eventId = useParams().id
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth) as EmployeeAuth
 
+  const [eventTags, setEventTags] = useState<EventTag[]>([])
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
 
   const [name, setName] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
-  const [type, setType] = useState<EventType | null>(null)
-  const [executors, setExecutors] = useState<Employee[]>([])
-  const [date, setDate] = useState<Date | null>(null)
   const [time, setTime] = useState<string>('')
+  const [date, setDate] = useState<Date | null>(null)
+  const [type, setType] = useState<EventType | null>(null)
+  const [description, setDescription] = useState<string>('')
+  const [executors, setExecutors] = useState<Employee[]>([])
   const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
+  const [tags, setTags] = useState<(EventTag & { isUserAdded?: boolean })[]>([])
 
   const [address, setAddress] = useState<string>('')
   const [floor, setFloor] = useState<number | null>(null)
@@ -81,69 +84,6 @@ export const EventCreate = () => {
   }
 
   useEffect(() => {
-    const fetchCreateEventData = async () => {
-      try {
-        setEventTypes(await events.getTypes())
-        setEventExecutors(await users.getEmployees())
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    const fetchEventData = async (id: number) => {
-      try {
-        setIsLoading(true)
-
-        const event = await events.getOne({ id })
-
-        if (event.date) setDate(event.date)
-        if (event.name) setName(event.name)
-        if (event.type) setType(event.type)
-        if (event.image) setImage(event.image)
-        if (event.files) setFiles(event.files)
-        if (event.status) setSchedule(event.schedule)
-        if (event.executors) setExecutors(event.executors)
-        if (event.description)
-          setDescription(event.description.split(additionalInfoSeparator)[0])
-        if (event.description)
-          setAdditionalInfoTexts(
-            event.description
-              .split(additionalInfoSeparator)[1]
-              .split('<br>')
-              .map(item => item.trim()),
-          )
-        if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
-        if (event.date) setTime(moment(event.date).format('HH:mm'))
-
-        const offlinePlace: PlaceOffline = event.places.find(
-          place => !place.is_online,
-        ) as PlaceOffline
-        const onlinePlace: PlaceOnline = event.places.find(
-          place => place.is_online,
-        ) as PlaceOnline
-
-        if (offlinePlace) {
-          if (offlinePlace.floor) setFloor(offlinePlace.floor)
-          if (offlinePlace.address) setAddress(offlinePlace.address)
-          if (offlinePlace.office_number)
-            setOfficeNumber(offlinePlace.office_number)
-        }
-
-        if (onlinePlace) {
-          if (onlinePlace.platform) setPlatform(onlinePlace.platform)
-          if (onlinePlace.connection_link)
-            setConnectionLink(onlinePlace.connection_link)
-          if (onlinePlace.record_link) setRecordLink(onlinePlace.record_link)
-          if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
-          if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
-        }
-
-        setIsLoading(false)
-      } catch (e) {
-        console.log(`[EventCreate] ${e}`)
-      }
-    }
-
     fetchCreateEventData()
 
     if (eventId) {
@@ -156,6 +96,73 @@ export const EventCreate = () => {
       navigate('/')
     }
   }, [user])
+
+  const fetchCreateEventData = async () => {
+    try {
+      if (!user) throw new Error('User not found')
+
+      setEventTags(await events.getTags(user.departmentId))
+      setEventTypes(await events.getTypes())
+      setEventExecutors(await users.getEmployees())
+    } catch (e) {
+      console.log(`[EventCreate] ${e}`)
+    }
+  }
+
+  const fetchEventData = async (id: number) => {
+    try {
+      setIsLoading(true)
+
+      const event = await events.getOne({ id })
+
+      if (event.date) setDate(event.date)
+      if (event.name) setName(event.name)
+      if (event.type) setType(event.type)
+      if (event.tags) setTags(event.tags)
+      if (event.image) setImage(event.image)
+      if (event.files) setFiles(event.files)
+      if (event.status) setSchedule(event.schedule)
+      if (event.executors) setExecutors(event.executors)
+      if (event.description)
+        setDescription(event.description.split(additionalInfoSeparator)[0])
+      if (event.description)
+        setAdditionalInfoTexts(
+          event.description
+            .split(additionalInfoSeparator)[1]
+            .split('<br>')
+            .map(item => item.trim()),
+        )
+      if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
+      if (event.date) setTime(moment(event.date).format('HH:mm'))
+
+      const offlinePlace: PlaceOffline = event.places.find(
+        place => !place.is_online,
+      ) as PlaceOffline
+      const onlinePlace: PlaceOnline = event.places.find(
+        place => place.is_online,
+      ) as PlaceOnline
+
+      if (offlinePlace) {
+        if (offlinePlace.floor) setFloor(offlinePlace.floor)
+        if (offlinePlace.address) setAddress(offlinePlace.address)
+        if (offlinePlace.office_number)
+          setOfficeNumber(offlinePlace.office_number)
+      }
+
+      if (onlinePlace) {
+        if (onlinePlace.platform) setPlatform(onlinePlace.platform)
+        if (onlinePlace.connection_link)
+          setConnectionLink(onlinePlace.connection_link)
+        if (onlinePlace.record_link) setRecordLink(onlinePlace.record_link)
+        if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
+        if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
+      }
+
+      setIsLoading(false)
+    } catch (e) {
+      console.log(`[EventCreate] ${e}`)
+    }
+  }
 
   const saveEvent = async () => {
     try {
@@ -182,6 +189,14 @@ export const EventCreate = () => {
         executorsIds: executors.map(executor => executor.id),
         imageId: image?.id,
         filesIds: files.map(file => file.id),
+        tags: [
+          ...tags
+            .filter(tag => tag.isUserAdded)
+            .map(tag => ({ name: tag.name })),
+          ...tags
+            .filter(tag => !tag.isUserAdded)
+            .map(tag => ({ id: tag.id, name: tag.name })),
+        ],
       }
 
       if (
@@ -202,6 +217,8 @@ export const EventCreate = () => {
         }
       } else {
         await events.update(+eventId, eventUpdate)
+        fetchEventData(+eventId)
+        fetchCreateEventData()
       }
     } catch (e) {
       console.log(`[EventCreate] ${e}`)
@@ -283,6 +300,9 @@ export const EventCreate = () => {
                   name={name}
                   setName={setName}
                   eventTypes={eventTypes}
+                  tags={tags}
+                  setTags={setTags}
+                  eventTags={eventTags}
                   type={type}
                   setType={setType}
                   date={date}

@@ -1,0 +1,53 @@
+.quest-create-results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  height: fit-content;
+
+  &__title {
+    color: var(--text_c_primary);
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    &--container {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+
+    &--content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    &--inputsMini {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+
+      @media (max-width: 1330px) {
+        flex-direction: column;
+      }
+
+      @media (max-width: 1100px) {
+        flex-direction: row;
+      }
+
+      @media (max-width: 690px) {
+        flex-direction: column;
+      }
+
+      .inputWrapper,
+      .inputWrapperNumber {
+        width: 100%;
+      }
+    }
+  }
+}
