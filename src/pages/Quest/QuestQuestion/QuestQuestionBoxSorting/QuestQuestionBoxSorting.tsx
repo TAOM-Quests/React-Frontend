@@ -8,7 +8,7 @@ import { isEqual } from 'lodash'
 import './QuestQuestionBoxSorting.scss'
 
 import classNames from 'classnames'
-import { getOptionColorAnswerBoxSorting } from './OptionColorAnswerBoxSorting'
+import { getOptionColorAnswerBoxSorting } from '../questQuestionUtils'
 
 export interface QuestQuestionBoxSortingProps {
   question: QuestQuestionBoxSortingInterface

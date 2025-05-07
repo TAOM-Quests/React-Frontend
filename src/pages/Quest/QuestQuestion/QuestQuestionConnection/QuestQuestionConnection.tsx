@@ -5,7 +5,7 @@ import { useDroppable } from '@dnd-kit/react'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import { isEqual } from 'lodash'
 import './QuestQuestionConnection.scss'
-import { TypeAnswer } from '../QuestQuestion'
+import { TypeQuestQuestion } from '../QuestQuestion'
 
 export interface QuestQuestionConnectionProps {
   question: QuestQuestionConnectionInterface
@@ -74,7 +74,7 @@ export const QuestQuestionConnection = forwardRef(
       )
     }
 
-    const getAnswerType = (option: DndOption): TypeAnswer => {
+    const getAnswerType = (option: DndOption): TypeQuestQuestion => {
       const connectedOption = dndOptions.find(o => o.target === option.id)
       const pair1 = `${option.id} - ${connectedOption?.id}`
       const pair2 = `${connectedOption?.id} - ${option.id}`
@@ -86,7 +86,7 @@ export const QuestQuestionConnection = forwardRef(
         return isCorrect ? 'correct' : 'wrong'
       }
 
-      return 'secondary'
+      return 'primary'
     }
 
     const removeConnection = (optionId: number) => {

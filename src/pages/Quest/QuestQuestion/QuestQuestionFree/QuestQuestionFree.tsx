@@ -4,7 +4,7 @@ import Input from '../../../../components/UI/Input/Input'
 import { toLower } from 'lodash'
 import './QuestQuestionFree.scss'
 import classNames from 'classnames'
-import { TypeAnswer } from '../QuestQuestion'
+import { TypeQuestQuestion } from '../QuestQuestion'
 
 export interface QuestQuestionFreeProps {
   question: QuestQuestionFreeInterface
@@ -22,11 +22,11 @@ export const QuestQuestionFree = forwardRef(
     const isCorrect =
       toLower(userAnswer).trim() ===
       toLower(question.answer.correctAnswer).trim()
-    const colorType: TypeAnswer = isCheckMode
+    const colorType: TypeQuestQuestion = isCheckMode
       ? isCorrect
         ? 'correct'
         : 'wrong'
-      : 'secondary'
+      : 'primary'
 
     useImperativeHandle(
       ref,

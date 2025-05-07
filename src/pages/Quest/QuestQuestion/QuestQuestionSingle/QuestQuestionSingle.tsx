@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { QuestQuestionSingle as QuestQuestionSingleInterface } from '../../../../models/questQuestion'
-import { Button, TypeButton } from '../../../../components/UI/Button/Button'
 import './QuestQuestionSingle.scss'
+import { QuestQuestionButton } from '../QuestQuestionButton/QuestQuestionButton'
+import { getOptionColorType } from '../questQuestionUtils'
 
 export interface QuestQuestionSingleProps {
   isCheckMode: boolean
@@ -26,34 +27,21 @@ export const QuestQuestionSingle = forwardRef(
     )
     useEffect(() => setIsAnswerReady(userAnswer !== null), [userAnswer])
 
-    const getOptionColorType = (optionIndex: number): TypeButton => {
-      let colorType: TypeButton = 'secondary'
-
-      if (isCheckMode) {
-        if (optionIndex === question.answer.correctAnswer) {
-          colorType = 'correct'
-        } else if (optionIndex === userAnswer) {
-          colorType = 'wrong'
-        }
-      } else {
-        if (optionIndex === userAnswer) {
-          colorType = 'activeAnswer'
-        }
-      }
-
-      return colorType
-    }
-
     return (
       <div className="quest-question-single">
         {question.answer.options.map((option, optionIndex) => (
-          <Button
-            text={option}
+          <QuestQuestionButton
             key={optionIndex}
+            text={option}
             disabled={isCheckMode}
             size="extraLarge"
+            colorType={getOptionColorType(
+              optionIndex,
+              question.answer.correctAnswer,
+              userAnswer,
+              isCheckMode,
+            )}
             onClick={() => setUserAnswer(optionIndex)}
-            colorType={getOptionColorType(optionIndex)}
           />
         ))}
       </div>
