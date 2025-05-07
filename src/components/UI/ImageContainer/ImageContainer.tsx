@@ -55,7 +55,17 @@ export const ImageContainer = ({
         <span className="body_m_r">{placeholder}</span>
       </div>
       {selectedImages.map(image => (
-        <img key={image.id} src={image.url} />
+        <>
+          <img key={image.id} src={image.url} />
+          <Icon
+            icon="DELETE"
+            disabled={disabled}
+            style={{ zIndex: 1 }} //zIndex нужен был только для теста. При нормальном добавлении стилей убрать это
+            onClick={() =>
+              setSelectedImages(prev => prev.filter(i => i.id !== image.id))
+            }
+          />
+        </>
       ))}
       <input
         type="file"
