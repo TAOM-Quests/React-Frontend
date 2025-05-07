@@ -1,38 +1,17 @@
-import { Icon } from '../UI/Icon/Icon'
+import { Icon } from '../../components/UI/Icon/Icon'
 import './Header.scss'
 import { selectAuth } from '../../redux/auth/authSlice'
-
 import { HeaderMenu } from './HeaderMenu/HeaderMenu'
-import { Avatar } from '../UI/Avatar/Avatar'
-import { UserProfile } from '../../models/userProfile'
-import { useEffect, useState } from 'react'
+import { Avatar } from '../../components/UI/Avatar/Avatar'
 import { useNavigate } from 'react-router'
-import { users } from '../../services/api/userModule/users/users'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { useState } from 'react'
 
 export const Header = () => {
-  const [userInfo, setUserInfo] = useState<UserProfile | null>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        if (!user) {
-          throw Error('User not found')
-        }
-
-        setUserInfo(await users.getProfile({ id: user.id }))
-      } catch (e) {
-        console.log(e)
-        navigate('/login')
-      }
-    }
-
-    fetchProfile()
-  }, [])
 
   const handleNavigate = (path: string) => {
     setIsMobileMenuOpen(false)
@@ -67,13 +46,19 @@ export const Header = () => {
         <HeaderMenu onNavigate={handleNavigate} />
       </nav>
 
-      <div className="header__user" onClick={() => navigate('/profile')}>
-        <span className="body_l_sb user-name-header">
-          {userInfo?.firstName} {userInfo?.lastName}
-        </span>
-        <Avatar />
-        <Icon icon="LOGOUT" colorIcon="primary" />
-      </div>
+      {user ? (
+        <div className="header__user" onClick={() => navigate('/profile')}>
+          <span className="body_l_sb user-name-header">{user.name}</span>
+          <Avatar src={user.image?.url} />
+          <Icon icon="LOGOUT" colorIcon="primary" />
+        </div>
+      ) : (
+        <Icon
+          icon="LOGOUT"
+          colorIcon="primary"
+          onClick={() => navigate('/login')}
+        />
+      )}
       {isMobileMenuOpen && (
         <div
           className="header__overlay header__overlay--visible"

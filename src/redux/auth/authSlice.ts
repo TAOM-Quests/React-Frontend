@@ -18,17 +18,12 @@ export const authSlice = createSlice({
     setUser: (state, action: PayloadAction<UserAuth>) => {
       state.value = action.payload
     },
-    setRole: (
-      state,
-      action: PayloadAction<Pick<UserAuth, 'isAdmin' | 'isEmployee'>>,
-    ) => {
-      if (state.value) {
-        state.value = { ...state.value, ...action.payload }
-      }
+    logout: state => {
+      state.value = null
     },
   },
 })
 
-export const { setUser, setRole } = authSlice.actions
+export const { setUser } = authSlice.actions
 export const selectAuth = (state: RootState) => state.auth.value
 export default authSlice.reducer

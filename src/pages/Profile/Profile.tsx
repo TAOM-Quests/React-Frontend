@@ -4,19 +4,20 @@ import { selectAuth, setUser } from '../../redux/auth/authSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux/reduxHooks'
 import { UserProfile } from '../../models/userProfile'
 import PersonTab from './PersonTab/PersonTab'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import EventsTab from './EventsTab/EventsTab'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import './Profile.scss'
+
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
-  const [tabIndex, setTabIndex] = useState(0)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectAuth)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,7 +28,7 @@ export default function Profile() {
 
         setProfile(await users.getProfile({ id: user.id }))
       } catch (e) {
-        console.log(e)
+        console.log(`[Profile] ${e}`)
         navigate('/login')
       }
     }
@@ -40,12 +41,18 @@ export default function Profile() {
       setUser({
         ...user!,
         email: updatedProfile.email,
+        image: updatedProfile.image,
+        name: `${updatedProfile.lastName ?? ''} ${updatedProfile.firstName ?? ''}`.trim(),
       }),
     )
     setProfile(updatedProfile)
   }
 
+  const getTabIndex = () => Number(searchParams.get('tab'))
+
   const getActiveTab = () => {
+    const tabIndex = getTabIndex()
+
     switch (tabIndex) {
       case 0:
         return <PersonTab profile={profile!} updatePerson={updateProfile} />
@@ -60,8 +67,10 @@ export default function Profile() {
         <h5 className="heading_5 profile--title">Личный кабинет</h5>
         <Switcher
           options={TABS}
-          onChange={option => setTabIndex(TABS.indexOf(option))}
-          activeOption={TABS[tabIndex]}
+          onChange={option =>
+            setSearchParams({ tab: `${TABS.indexOf(option)}` })
+          }
+          activeOption={TABS[getTabIndex()]}
         />
       </div>
 

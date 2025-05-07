@@ -77,7 +77,7 @@
   --bg_color_white: 255, 255, 255;
   --bg_c_white_calendar: rgb(var(--bg_color_white));
   --bg_c_calendar_secondary: rgba(var(--bg_color_white), 0.2);
-  --bg_c_calendar_secondary: rgba(var(--bg_color_white), 0.4);
+  --bg_c_calendar_secondary_hover: rgba(var(--bg_color_white), 0.4);
 
   //Badges-background-color
   --bg_badge_primary: #18181b;
@@ -106,12 +106,14 @@
   //Border-bottom-color
   --border_bottom_c_primary: #fff;
   --border_bottom_c_secondary: #021a33;
+  --border_bottom_c_accent: #009ac1;
 
   --border_bottom_color: 116, 116, 118;
   --border_bottom_c_hover: rgba(var(--border_bottom_color), 0.8);
 
   //Border-bottom
   --border_bottom: 3px solid;
+  --border_bottom_dashed: 2px dashed;
 
   //Opacity
   --disabled_opacity: 0.5;
@@ -316,4 +318,20 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.text_ellipsis_label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.lineDash {
+  position: relative;
+  padding-bottom: 10px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='4'><rect x='0' y='0' width='10' height='2' rx='2' ry='2' fill='%23009AC1'/></svg>");
+  background-repeat: repeat-x;
+  background-position: bottom left;
+  background-size: 25px 4px;
 }

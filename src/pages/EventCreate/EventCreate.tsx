@@ -13,7 +13,6 @@ import {
   EventCreateScheduleRef,
 } from './EventCreateSchedule/EventCreateSchedule'
 import { TextEditor } from '../../components/TextEditor/TextEditor'
-import { EventCreateImage } from './EventCreateImage/EventCreateImage'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
 import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
@@ -28,6 +27,8 @@ import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
 import { Loading } from '../../components/Loading/Loading'
 import { EventTag } from '../../models/eventTag'
+import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
+import { EmployeeAuth } from '../../models/userAuth'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -39,7 +40,7 @@ export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const eventId = useParams().id
   const navigate = useNavigate()
-  const user = useAppSelector(selectAuth)
+  const user = useAppSelector(selectAuth) as EmployeeAuth
 
   const [eventTags, setEventTags] = useState<EventTag[]>([])
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
@@ -89,7 +90,6 @@ export const EventCreate = () => {
         setEventTags(await events.getTags(user.departmentId))
         setEventTypes(await events.getTypes())
         setEventExecutors(await users.getEmployees())
-        setIsLoading(false)
       } catch (e) {
         console.log(`[EventCreatePage] ${e}`)
       }
@@ -97,6 +97,8 @@ export const EventCreate = () => {
 
     const fetchEventData = async (id: number) => {
       try {
+        setIsLoading(true)
+
         const event = await events.getOne({ id })
 
         if (event.date) setDate(event.date)
@@ -140,8 +142,10 @@ export const EventCreate = () => {
           if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
           if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
         }
+
+        setIsLoading(false)
       } catch (e) {
-        console.log(e)
+        console.log(`[EventCreate] ${e}`)
       }
     }
 
@@ -160,6 +164,8 @@ export const EventCreate = () => {
 
   const saveEvent = async () => {
     try {
+      if (!user) throw new Error('User not authenticated')
+
       const eventUpdate: EventUpdateDto = {
         name,
         date: date
@@ -183,10 +189,17 @@ export const EventCreate = () => {
         filesIds: files.map(file => file.id),
       }
 
+      if (
+        eventUpdate.executorsIds &&
+        !eventUpdate.executorsIds.includes(user.id)
+      ) {
+        eventUpdate.executorsIds.push(user.id)
+      }
+
       if (!eventId) {
         const event = await events.create({
           ...eventUpdate,
-          departmentId: user!.departmentId!,
+          departmentId: user.departmentId,
         })
 
         if (!window.location.pathname.includes(`${event.id}`)) {
@@ -196,7 +209,7 @@ export const EventCreate = () => {
         await events.update(+eventId, eventUpdate)
       }
     } catch (e) {
-      console.log(e)
+      console.log(`[EventCreate] ${e}`)
     }
   }
 
@@ -238,6 +251,7 @@ export const EventCreate = () => {
         text="Назад"
         colorType="secondary"
         iconBefore="ARROW_SMALL_LEFT"
+        onClick={() => navigate(-1)}
       />
       <Button
         text="Сохранить"
@@ -263,7 +277,11 @@ export const EventCreate = () => {
         <div className="event_create">
           {renderStateButtons()}
           <ContainerBox>
-            <EventCreateImage image={image} setImage={setImage} />
+            <ImageContainer
+              selectedImages={image ? [image] : []}
+              onSelectImages={images => setImage(images[0] ?? null)}
+              placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
+            />
             <div className="event_create--container">
               <div>
                 <EventCreateManagementData

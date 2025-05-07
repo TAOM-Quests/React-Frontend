@@ -8,7 +8,7 @@
     flex-wrap: wrap;
     width: 100%;
     gap: 6px;
-    padding: 6px;
+    padding: 6px 0;
   }
 
   .selected-item {
@@ -34,5 +34,16 @@
     .dropdown-checkbox {
       padding: 6px 8px;
     }
+  }
+}
+
+.input-showAddButton {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 10px;
+
+  .inputWrapper {
+    width: 100%;
   }
 }

@@ -75,11 +75,11 @@ export default function EventMinimize({
 
   return (
     <ContainerBox
+      style={{ backgroundImage: `url(${imageUrl})` }}
       onClick={() => navigate(`/event/${id}`)}
       className="eventMinimize"
     >
       <div className="eventMinimize__image-wrapper">
-        <img className="eventMinimize__image" src={imageUrl} alt={name} />
         <div className="eventMinimize__overlay"></div>
       </div>
 

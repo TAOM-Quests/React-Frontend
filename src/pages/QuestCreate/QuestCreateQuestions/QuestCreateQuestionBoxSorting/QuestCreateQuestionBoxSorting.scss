@@ -1,0 +1,63 @@
+.boxSorting-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__box {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: end;
+
+    .inputWrapper {
+      width: 100%;
+    }
+  }
+
+  &__box-delete {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    .inputWrapper {
+      width: 100%;
+    }
+  }
+
+  .label {
+    color: var(--text_c_subdued);
+  }
+}
