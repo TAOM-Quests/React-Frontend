@@ -7,8 +7,8 @@ import classNames from 'classnames'
 import { TypeAnswer } from '../QuestQuestion'
 
 export interface QuestQuestionFreeProps {
-  isCheckMode: boolean
   question: QuestQuestionFreeInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 

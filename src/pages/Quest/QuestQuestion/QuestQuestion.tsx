@@ -93,7 +93,7 @@ export const QuestQuestion = ({
           <Button
             text="Ответить"
             onClick={() => setIsCheckMode(true)}
-            // disabled={!isAnswerReady}
+            disabled={!isAnswerReady}
           />
         </div>
       )}

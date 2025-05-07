@@ -11,8 +11,8 @@ import classNames from 'classnames'
 import { getOptionColorAnswerBoxSorting } from './OptionColorAnswerBoxSorting'
 
 export interface QuestQuestionBoxSortingProps {
-  isCheckMode: boolean
   question: QuestQuestionBoxSortingInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 

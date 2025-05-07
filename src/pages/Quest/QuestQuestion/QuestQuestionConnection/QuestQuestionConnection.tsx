@@ -8,8 +8,8 @@ import './QuestQuestionConnection.scss'
 import { TypeAnswer } from '../QuestQuestion'
 
 export interface QuestQuestionConnectionProps {
-  isCheckMode: boolean
   question: QuestQuestionConnectionInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 
@@ -101,21 +101,8 @@ export const QuestQuestionConnection = forwardRef(
     }
 
     const renderConnectedChildOption = (text: string, optionIndex: number) => (
-      <div
-        key={optionIndex}
-        className="connected-child-option"
-        // style={{
-        //   width: 100,
-        //   height: 100,
-        //   backgroundColor: 'yellow',
-        // }}
-      >
+      <div key={optionIndex} className="connected-child-option">
         <span className="body_m_sb connected-child-option__text">{text}</span>
-        {/* <Icon
-          icon="CROSS"
-          className="connected-child-option__icon"
-          onClick={() => removeConnection(optionIndex)}
-        /> */}
       </div>
     )
 
@@ -127,20 +114,9 @@ export const QuestQuestionConnection = forwardRef(
             text={option.text}
             disabled={isCheckMode}
             id={`${optionIndex}`}
-            // style={{ width: 300, height: 300, backgroundColor: 'red' }}
             className={`draggable--${getAnswerType(option)}`}
           >
-            <Droppable
-              id={optionIndex.toString()}
-              // style={{ width: 200, height: 200, backgroundColor: 'green' }}
-              className={`droppable-area`}
-            >
-              {/* {dndOptions.map(option => {
-                if (option.target === optionIndex) {
-                  return renderConnectedChildOption(option.text, option.id)
-                }
-              })} */}
-
+            <Droppable id={optionIndex.toString()} className={`droppable-area`}>
               <span className="body_m_sb droppable-area__text">
                 {option.text}
               </span>
@@ -150,25 +126,11 @@ export const QuestQuestionConnection = forwardRef(
                   <Icon
                     icon="CROSS"
                     disabled={isCheckMode}
-                    // colorIcon="subdued"
-                    // className="connected-child-option__icon"
                     onClick={() => removeConnection(option.id)}
                   />
                 </div>
               )}
             </Droppable>
-
-            {/* {(option.target !== null ||
-              dndOptions.some(o => o.target === option.id)) && (
-              <div className="connected-child-option__icon">
-                <Icon
-                  icon="CROSS"
-                  // colorIcon="subdued"
-                  // className="connected-child-option__icon"
-                  onClick={() => removeConnection(option.id)}
-                />
-              </div>
-            )} */}
 
             {dndOptions.map(option => {
               if (option.target === optionIndex) {

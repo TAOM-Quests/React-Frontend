@@ -5,8 +5,8 @@ import { isEqual } from 'lodash'
 import './QuestQuestionMultiple.scss'
 
 export interface QuestQuestionMultipleProps {
-  isCheckMode: boolean
   question: QuestQuestionMultipleInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 
