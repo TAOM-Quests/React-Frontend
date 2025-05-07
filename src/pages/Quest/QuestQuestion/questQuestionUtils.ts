@@ -49,3 +49,10 @@ export const getOptionColorAnswerBoxSorting = (
 
   return 'primary'
 }
+
+export const getColorAnswerFree = (
+  isCheckMode: boolean,
+  isCorrectAnswer: boolean,
+): TypeQuestQuestion => {
+  return isCheckMode ? (isCorrectAnswer ? 'correct' : 'wrong') : 'primary'
+}

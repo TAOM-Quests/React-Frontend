@@ -6,7 +6,6 @@ import {
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
 import { isEqual } from 'lodash'
 import './QuestQuestionBoxSorting.scss'
-
 import classNames from 'classnames'
 import { getOptionColorAnswerBoxSorting } from '../questQuestionUtils'
 

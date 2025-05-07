@@ -25,8 +25,10 @@ export const QuestQuestionButton = ({
       className={classNames(
         'body_m_r',
         'quest-question-button',
-        typeof colorType === 'string' ? `button--${colorType}` : '',
-        `button--${size}`,
+        typeof colorType === 'string'
+          ? `quest-question-button--${colorType}`
+          : '',
+        `quest-question-button--${size}`,
         props.className,
       )}
       style={

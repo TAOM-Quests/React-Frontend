@@ -5,8 +5,8 @@ import { QuestQuestionButton } from '../QuestQuestionButton/QuestQuestionButton'
 import { getOptionColorType } from '../questQuestionUtils'
 
 export interface QuestQuestionSingleProps {
-  isCheckMode: boolean
   question: QuestQuestionSingleInterface
+  isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
 }
 
