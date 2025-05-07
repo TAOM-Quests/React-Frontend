@@ -30,21 +30,29 @@
   &--extraLarge {
     width: 36px;
     height: 36px;
+    min-width: 36px;
+    min-height: 36px;
   }
 
   &--large {
     width: 30px;
     height: 30px;
+    min-width: 30px;
+    min-height: 30px;
   }
 
   &--small {
     width: 20px;
     height: 20px;
+    min-width: 20px;
+    min-height: 20px;
   }
 
   &--extraSmall {
     width: 16px;
     height: 16px;
+    min-width: 16px;
+    min-height: 16px;
   }
 
   &--click {

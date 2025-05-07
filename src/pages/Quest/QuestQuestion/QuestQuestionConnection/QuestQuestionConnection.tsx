@@ -4,6 +4,8 @@ import { DragDropProvider, useDraggable } from '@dnd-kit/react'
 import { useDroppable } from '@dnd-kit/react'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import { isEqual } from 'lodash'
+import './QuestQuestionConnection.scss'
+import { TypeAnswer } from '../QuestQuestion'
 
 export interface QuestQuestionConnectionProps {
   isCheckMode: boolean
@@ -72,10 +74,28 @@ export const QuestQuestionConnection = forwardRef(
       )
     }
 
-    const removeConnection = (optionIndex: number) => {
-      setDndOptions(
-        dndOptions.map(option =>
-          option.id === optionIndex ? { ...option, target: null } : option,
+    const getAnswerType = (option: DndOption): TypeAnswer => {
+      const connectedOption = dndOptions.find(o => o.target === option.id)
+      const pair1 = `${option.id} - ${connectedOption?.id}`
+      const pair2 = `${connectedOption?.id} - ${option.id}`
+      const correctPairs = question.answer.correctAnswer
+
+      if (isCheckMode) {
+        const isCorrect =
+          correctPairs.includes(pair1) || correctPairs.includes(pair2)
+        return isCorrect ? 'correct' : 'wrong'
+      }
+
+      return 'secondary'
+    }
+
+    const removeConnection = (optionId: number) => {
+      setDndOptions(prevOptions =>
+        prevOptions.map(option =>
+          // Если опция подключена к optionId, или сама optionId, сбрасываем target
+          option.id === optionId || option.target === optionId
+            ? { ...option, target: null }
+            : option,
         ),
       )
     }
@@ -83,14 +103,19 @@ export const QuestQuestionConnection = forwardRef(
     const renderConnectedChildOption = (text: string, optionIndex: number) => (
       <div
         key={optionIndex}
-        style={{
-          width: 100,
-          height: 100,
-          backgroundColor: 'yellow',
-        }}
+        className="connected-child-option"
+        // style={{
+        //   width: 100,
+        //   height: 100,
+        //   backgroundColor: 'yellow',
+        // }}
       >
-        {text}
-        <Icon icon="CROSS" onClick={() => removeConnection(optionIndex)} />
+        <span className="body_m_sb connected-child-option__text">{text}</span>
+        {/* <Icon
+          icon="CROSS"
+          className="connected-child-option__icon"
+          onClick={() => removeConnection(optionIndex)}
+        /> */}
       </div>
     )
 
@@ -102,18 +127,54 @@ export const QuestQuestionConnection = forwardRef(
             text={option.text}
             disabled={isCheckMode}
             id={`${optionIndex}`}
-            style={{ width: 300, height: 300, backgroundColor: 'red' }}
+            // style={{ width: 300, height: 300, backgroundColor: 'red' }}
+            className={`draggable--${getAnswerType(option)}`}
           >
             <Droppable
               id={optionIndex.toString()}
-              style={{ width: 200, height: 200, backgroundColor: 'green' }}
+              // style={{ width: 200, height: 200, backgroundColor: 'green' }}
+              className={`droppable-area`}
             >
-              {dndOptions.map(option => {
+              {/* {dndOptions.map(option => {
                 if (option.target === optionIndex) {
                   return renderConnectedChildOption(option.text, option.id)
                 }
-              })}
+              })} */}
+
+              <span className="body_m_sb droppable-area__text">
+                {option.text}
+              </span>
+              {(option.target !== null ||
+                dndOptions.some(o => o.target === option.id)) && (
+                <div className="connected-child-option__icon">
+                  <Icon
+                    icon="CROSS"
+                    disabled={isCheckMode}
+                    // colorIcon="subdued"
+                    // className="connected-child-option__icon"
+                    onClick={() => removeConnection(option.id)}
+                  />
+                </div>
+              )}
             </Droppable>
+
+            {/* {(option.target !== null ||
+              dndOptions.some(o => o.target === option.id)) && (
+              <div className="connected-child-option__icon">
+                <Icon
+                  icon="CROSS"
+                  // colorIcon="subdued"
+                  // className="connected-child-option__icon"
+                  onClick={() => removeConnection(option.id)}
+                />
+              </div>
+            )} */}
+
+            {dndOptions.map(option => {
+              if (option.target === optionIndex) {
+                return renderConnectedChildOption(option.text, option.id)
+              }
+            })}
           </Draggable>
         )
       }
@@ -121,35 +182,50 @@ export const QuestQuestionConnection = forwardRef(
 
     return (
       <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
-        {dndOptions.map((option, optionIndex) =>
-          renderOption(option, optionIndex),
-        )}
+        <div className="quest-question-connection">
+          {dndOptions.map((option, optionIndex) =>
+            renderOption(option, optionIndex),
+          )}
+        </div>
       </DragDropProvider>
     )
   },
 )
 
-function Droppable({ id, children, ...props }: any) {
+function Droppable({ id, children, className, ...props }: any) {
   const { ref } = useDroppable({
     id,
   })
 
   return (
-    <div ref={ref} {...props}>
+    <div ref={ref} className={`droppable ${className || ''}`} {...props}>
       {children}
     </div>
   )
 }
 
-export function Draggable({ id, text, children, ...props }: any) {
+export function Draggable({
+  id,
+
+  children,
+  disabled,
+  className,
+  ...props
+}: any) {
   const { ref } = useDraggable({
     id,
   })
 
   return (
-    <button ref={ref} {...props}>
-      {text}
-      {children}
-    </button>
+    <>
+      <button
+        ref={ref}
+        className={`draggable ${disabled ? 'draggable--disabled' : ''} ${className || ''}`}
+        disabled={disabled}
+        {...props}
+      >
+        {children}
+      </button>
+    </>
   )
 }
