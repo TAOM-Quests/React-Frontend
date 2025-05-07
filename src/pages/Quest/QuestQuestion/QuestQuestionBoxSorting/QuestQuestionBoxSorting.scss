@@ -1,0 +1,122 @@
+.quest-question-box-sorting {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+
+  &__boxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  &__box {
+    min-height: 150px;
+    width: 100%;
+    height: 100%;
+    background-color: aqua;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    background: var(--bg_c_secondary);
+    border: var(--border_primary) var(--border_c_primary);
+    border-radius: 8px;
+
+    &--disabled {
+      opacity: var(--disabled_opacity);
+      cursor: not-allowed;
+
+      &--droppable,
+      &--name,
+      .sorting-item {
+        cursor: not-allowed;
+      }
+    }
+
+    &--droppable {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      height: 100%;
+      padding: 4px;
+    }
+    &--name {
+      display: flex;
+      flex-direction: row;
+      border-bottom: var(--border_primary) var(--border_c_primary);
+      border-radius: 8px 8px 0 0;
+      padding: 12px;
+      // width: 300px;
+      height: 44px;
+      user-select: none;
+
+      background-color: var(--bg_c_gray_primary);
+    }
+  }
+
+  &__options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+
+    // display: flex;
+    // flex-wrap: wrap;
+    // gap: 10px;
+    // align-items: center;
+    // justify-content: center;
+  }
+}
+
+.sorting-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 12px;
+  width: 100%;
+  height: 100%;
+
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+
+  background-color: var(--bg_c_secondary);
+  border: var(--border_primary) var(--border_c_secondary);
+  border-radius: 8px;
+  color: var(--text_c_primary);
+
+  &:hover {
+    background-color: var(--bg_c_secondary_hover);
+  }
+
+  &--placed {
+    height: auto;
+  }
+
+  &--activeAnswer {
+    background-color: var(--bg_c_secondary);
+  }
+  &--correct {
+    background-color: var(--bg_c_correct);
+
+    &:hover {
+      background-color: var(--bg_c_correct);
+    }
+  }
+  &--wrong {
+    background-color: var(--bg_c_wrong);
+
+    &:hover {
+      background-color: var(--bg_c_wrong);
+    }
+  }
+}
