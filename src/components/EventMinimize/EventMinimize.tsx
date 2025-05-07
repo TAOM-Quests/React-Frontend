@@ -17,10 +17,11 @@ export interface EventMinimizeProps {
   address: string
   platform: string
   imageUrl: string
+  departmentName: string
   isEmployeeView?: boolean
 }
 
-export default function EventMinimize({
+export const EventMinimize = ({
   id,
   date,
   name,
@@ -29,8 +30,9 @@ export default function EventMinimize({
   address,
   platform,
   imageUrl,
+  departmentName,
   isEmployeeView,
-}: EventMinimizeProps) {
+}: EventMinimizeProps) => {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
   const navigate = useNavigate()

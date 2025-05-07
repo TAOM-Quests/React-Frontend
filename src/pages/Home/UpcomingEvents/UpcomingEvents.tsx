@@ -1,7 +1,7 @@
 import { events as eventsApi } from '../../../services/api/eventModule/events/events'
 import moment from 'moment'
 import { PlaceOffline, PlaceOnline } from '../../../models/event'
-import EventMinimizeComponent from '../../../components/EventMinimize/EventMinimize'
+import { EventMinimize as EventMinimizeComponent } from '../../../components/EventMinimize/EventMinimize'
 import { useEffect, useState } from 'react'
 import { EventMinimize } from '../../../models/eventMinimize'
 import { Loading } from '../../../components/Loading/Loading'
@@ -101,9 +101,10 @@ export const UpcomingEvents = () => {
                     status={event.status.name}
                     name={event.name ?? ''}
                     type={event.type?.name ?? ''}
+                    imageUrl={event.image?.url ?? ''}
                     address={offlinePlace?.address ?? ''}
                     platform={onlinePlace?.platform ?? ''}
-                    imageUrl={event.image?.url ?? ''}
+                    departmentName={event.department.name}
                   />
                 </SwiperSlide>
               )
