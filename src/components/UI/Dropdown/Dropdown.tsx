@@ -57,7 +57,7 @@ export const Dropdown = ({
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchValue, setSearchValue] = useState(
-    !isMultiple && selectedItemsProp
+    !isMultiple && selectedItemsProp?.length
       ? (items.find(item => item.id === selectedItemsProp[0].id)?.text ?? '')
       : '',
   )
