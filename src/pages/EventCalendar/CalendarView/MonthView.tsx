@@ -1,49 +1,32 @@
-import { ReactNode } from 'react'
-import moment, { Moment } from 'moment'
+import { Moment } from 'moment'
 import { EventMinimize } from '../../../models/eventMinimize'
-import { CalendarDay } from '../CalendarDay/CalendarDay'
+import { Loading } from '../../../components/Loading/Loading'
+import { MonthViewDays } from './MonthViewDays'
 
 interface MonthViewProps {
   month: Moment
   events: EventMinimize[]
+  isLoading?: boolean
 }
-
-export const MonthView = ({ month, events }: MonthViewProps): ReactNode => {
-  const daysInMonth = month.daysInMonth()
-  const firstDayOfMonth = month.clone().date(1)
-  const weekDayIndex = firstDayOfMonth.isoWeekday()
-
-  const emptyCells = []
-  for (let i = 1; i < weekDayIndex; i++) {
-    emptyCells.push(
-      <div
-        key={`empty-${i}`}
-        className="calendarPage-day calendarPage-day--empty"
-      />,
-    )
-  }
-
-  const daysComponents: JSX.Element[] = []
-  for (let i = 1; i <= daysInMonth; i++) {
-    const day = month.clone().date(i)
-    daysComponents.push(
-      <CalendarDay
-        key={day.format('YYYY-MM-DD')}
-        day={day}
-        events={events.filter(
-          event =>
-            moment(event.date).format('YYYY-MM-DD') ===
-            day.format('YYYY-MM-DD'),
-        )}
-        isToday={moment().isSame(day, 'day')}
-      />,
-    )
-  }
-
+export const MonthView = ({ month, events, isLoading }: MonthViewProps) => {
   return (
     <>
-      {emptyCells}
-      {daysComponents}
+      <div className="calendarPage__weekdays">
+        <div className="body_l_sb calendarPage__weekday">Пн</div>
+        <div className="body_l_sb calendarPage__weekday">Вт</div>
+        <div className="body_l_sb calendarPage__weekday">Ср</div>
+        <div className="body_l_sb calendarPage__weekday">Чт</div>
+        <div className="body_l_sb calendarPage__weekday">Пт</div>
+        <div className="body_l_sb calendarPage__weekday">Сб</div>
+        <div className="body_l_sb calendarPage__weekday">Вс</div>
+      </div>
+      {!isLoading ? (
+        <div className="calendarPage__days-grid">
+          <MonthViewDays month={month} events={events} />
+        </div>
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }

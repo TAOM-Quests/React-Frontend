@@ -8,8 +8,8 @@ import { CalendarFilter } from './CalendarFilter/CalendarFilter'
 import { commonEntities } from '../../services/api/commonModule/commonEntities/commonEntities'
 import { Loading } from '../../components/Loading/Loading'
 import './EventCalendar.scss'
-import { MonthView } from './CalendarView/MonthView'
 import { YearView } from './CalendarView/YearView'
+import { MonthView } from './CalendarView/MonthView'
 
 export interface EventsFilter {
   type?: number
@@ -89,24 +89,11 @@ export const EventCalendar = () => {
         </div>
         <div className="calendarPage__days-container">
           {viewMode === 'month' ? (
-            <>
-              <div className="calendarPage__weekdays">
-                <div className="body_l_sb calendarPage__weekday">Пн</div>
-                <div className="body_l_sb calendarPage__weekday">Вт</div>
-                <div className="body_l_sb calendarPage__weekday">Ср</div>
-                <div className="body_l_sb calendarPage__weekday">Чт</div>
-                <div className="body_l_sb calendarPage__weekday">Пт</div>
-                <div className="body_l_sb calendarPage__weekday">Сб</div>
-                <div className="body_l_sb calendarPage__weekday">Вс</div>
-              </div>
-              {!isLoading ? (
-                <div className="calendarPage__days-grid">
-                  <MonthView month={selectedPeriod} events={events} />
-                </div>
-              ) : (
-                <Loading />
-              )}
-            </>
+            <MonthView
+              isLoading={isLoading}
+              month={selectedPeriod}
+              events={events}
+            />
           ) : !isLoading ? (
             <YearView year={selectedPeriod} events={events} />
           ) : (
