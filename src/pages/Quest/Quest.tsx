@@ -10,8 +10,8 @@ import { SaveQuestCompleteDto } from '../../services/api/questModule/quests/ques
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import './Quest.scss'
-import designImage from '../../assets/images/design.png'
 import { Tag } from '../../components/UI/Tag/Tag'
+import { Loading } from '../../components/Loading/Loading'
 interface UserAnswer {
   answer: any
   isCorrectAnswer: boolean
@@ -19,13 +19,14 @@ interface UserAnswer {
 
 export const Quest = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [quest, setQuest] = useState<QuestInterface | null>(null)
   const [isStartView, setIsStartView] = useState<boolean>(true)
+  const [isResultView, setIsResultView] = useState<boolean>(false)
+
+  const [quest, setQuest] = useState<QuestInterface | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
     number | null
   >(null)
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
-  const [isResultView, setIsResultView] = useState<boolean>(false)
 
   const questId = useParams().id
   const navigate = useNavigate()
@@ -111,7 +112,7 @@ export const Quest = () => {
         <div
           className="quest"
           style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${designImage})`, // url(${quest.image?.url})
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${quest.image?.url})`,
           }}
         >
           {isStartView && (
@@ -163,7 +164,7 @@ export const Quest = () => {
           )}
         </div>
       ) : (
-        'Loading...'
+        <Loading />
       )}
     </>
   )
