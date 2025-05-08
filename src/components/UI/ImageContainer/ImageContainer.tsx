@@ -47,24 +47,25 @@ export const ImageContainer = ({
     <div
       className={classNames(
         'upload-area',
+        disabled && 'upload-area--disabled',
         selectedImages.length && 'upload-area--active',
       )}
     >
-      <div className="upload-text">
-        <Icon size="extraLarge" icon="ADD_IMAGE" />
-        <span className="body_m_r">{placeholder}</span>
-      </div>
       {selectedImages.map(image => (
         <>
-          <img key={image.id} src={image.url} />
-          <Icon
-            icon="DELETE"
-            disabled={disabled}
-            style={{ zIndex: 1 }} //zIndex нужен был только для теста. При нормальном добавлении стилей убрать это
-            onClick={() =>
-              setSelectedImages(prev => prev.filter(i => i.id !== image.id))
-            }
-          />
+          <img key={image.id} src={image.url} alt={image.originalName} />
+          <div className="upload-text">
+            <Icon size="extraLarge" icon="ADD_IMAGE" />
+            {placeholder && <span className="body_m_r">{placeholder}</span>}
+            <Icon
+              icon="DELETE"
+              disabled={disabled}
+              className="upload-area__delete-icon"
+              onClick={() =>
+                setSelectedImages(prev => prev.filter(i => i.id !== image.id))
+              }
+            />
+          </div>
         </>
       ))}
       <input

@@ -39,6 +39,44 @@
     }
     .upload-text * {
       color: var(--text_c_secondary);
+      z-index: 1;
+    }
+
+    .upload-area__delete-icon {
+      z-index: 1;
+    }
+  }
+
+  &__delete-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px;
+    cursor: pointer;
+    z-index: -1;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: var(--disabled_opacity);
+
+    input[type='file'] {
+      cursor: not-allowed;
+    }
+
+    &:hover {
+      background-color: transparent;
+      cursor: not-allowed;
+      img {
+        opacity: 1;
+      }
+      .upload-text * {
+        color: var(--text_c_secondary);
+        z-index: -1;
+      }
+      .upload-area__delete-icon {
+        z-index: -1;
+      }
     }
   }
 }
