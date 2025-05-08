@@ -62,7 +62,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="profile">
+    <div className="profile container_min_width">
       <div className="profile--header">
         <h5 className="heading_5 profile--title">Личный кабинет</h5>
         <Switcher

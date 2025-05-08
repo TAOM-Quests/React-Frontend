@@ -137,7 +137,6 @@ export default function EventsTab({ user }: EventsTabProps) {
       <ScrollController
         onEndScroll={fetchEvents}
         className="profile_events--events"
-        style={{ overflow: 'scroll' }}
       >
         {userEvents && userEvents.length
           ? userEvents.map(event => {

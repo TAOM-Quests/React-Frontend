@@ -221,7 +221,7 @@ export const Dropdown = ({
           })}
         </div>
       )}
-      <div className="input-showAddButton">
+      <div className={`${showAddButton ? 'input-showAddButton' : ''} `}>
         <Input
           ref={inputRef}
           label={label}

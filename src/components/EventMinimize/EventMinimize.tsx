@@ -101,14 +101,18 @@ export const EventMinimize = ({
           )}
         </div>
       </div>
-      <p className="body_xl_sb eventMinimize__name">{name}</p>
+      <p className="body_xl_sb eventMinimize__name">
+        {name ? name : 'Черновик'}
+      </p>
       <div className="eventMinimize__info">
-        <div className="eventMinimize__date">
-          <Icon colorIcon="soft-blue" icon="CALENDAR" />
-          <p className="body_l_m text_ellipsis">
-            {date ? moment.utc(date).format('D MMMM HH:mm') : ''}
-          </p>
-        </div>
+        {date && (
+          <div className="eventMinimize__date">
+            <Icon colorIcon="soft-blue" icon="CALENDAR" />
+            <p className="body_l_m text_ellipsis">
+              {date ? moment.utc(date).format('D MMMM HH:mm') : ''}
+            </p>
+          </div>
+        )}
         {address && (
           <div className="eventMinimize__address">
             <Icon colorIcon="soft-blue" icon="MARKER_MAP" />
@@ -129,6 +133,10 @@ export const EventMinimize = ({
             <p className="body_l_m text_ellipsis">{type}</p>
           </div>
         )}
+        <div className="eventMinimize__departmentName">
+          <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
+          <p className="body_l_m text_ellipsis">{departmentName}</p>
+        </div>
       </div>
     </ContainerBox>
   )
