@@ -1,8 +1,9 @@
 import { Dispatch, useEffect, useState } from 'react'
 import { UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
-import EventMinimizeComponent, {
+import {
   EventMinimizeProps,
+  EventMinimize as EventMinimizeComponent,
 } from '../../../components/EventMinimize/EventMinimize'
 import { EventMinimize } from '../../../models/eventMinimize'
 import Input from '../../../components/UI/Input/Input'
@@ -151,9 +152,10 @@ export default function EventsTab({ user }: EventsTabProps) {
                 status: event.status.name,
                 name: event.name ?? '',
                 type: event.type?.name ?? '',
+                imageUrl: event.image?.url ?? '',
                 address: offlinePlace?.address ?? '',
                 platform: onlinePlace?.platform ?? '',
-                imageUrl: event.image?.url ?? '',
+                departmentName: event.department?.name,
               }
 
               if (user.isEmployee) eventData.isEmployeeView = true

@@ -59,6 +59,7 @@ export const ImageContainer = ({
           <img key={image.id} src={image.url} />
           <Icon
             icon="DELETE"
+            key={image.id}
             disabled={disabled}
             style={{ zIndex: 1 }} //zIndex нужен был только для теста. При нормальном добавлении стилей убрать это
             onClick={() =>
