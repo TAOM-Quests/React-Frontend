@@ -11,11 +11,14 @@ import { useNavigate } from 'react-router'
 import { Participant } from '../../../models/user'
 import { EventType } from '../../../models/eventType'
 import './EventMainData.scss'
+import { EventTag } from '../../../models/eventTag'
+import { Tag } from '../../../components/UI/Tag/Tag'
 
 export interface EventMainDataProps {
   eventId: number
   department: Department
   date?: Date
+  tags?: EventTag[]
   name?: string
   type?: EventType
   image?: ServerFile
@@ -27,6 +30,7 @@ export const EventMainData = ({
   date,
   name,
   type,
+  tags,
   image,
   places,
   eventId,
@@ -105,6 +109,14 @@ export const EventMainData = ({
             <span>{department.name}</span>
           </div>
         </div>
+
+        {tags?.length ? (
+          <div className="event-banner__tags">
+            {tags?.map(tag => (
+              <Tag key={tag.id} text={tag.name} size="small"></Tag>
+            ))}
+          </div>
+        ) : null}
 
         {user &&
         participants?.map(participant => participant.id).includes(user.id) ? (

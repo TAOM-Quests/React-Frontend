@@ -179,7 +179,9 @@ export const EventCreate = () => {
         typeId: type?.id,
         description:
           description +
-          `${additionalInfoSeparator}${additionalInfoTexts.join('<br>')}
+          `
+          ${additionalInfoSeparator}
+          ${additionalInfoTexts.join('<br>')}
         `,
         seatsNumber: seatsNumber ?? undefined,
         places: getPlaces(),
