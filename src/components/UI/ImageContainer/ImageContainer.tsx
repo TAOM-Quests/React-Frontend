@@ -6,6 +6,7 @@ import './ImageContainer.scss'
 import classNames from 'classnames'
 
 export interface ImageContainerProps {
+  className?: string
   disabled?: boolean
   isMultiple?: boolean
   placeholder?: string
@@ -14,6 +15,7 @@ export interface ImageContainerProps {
 }
 
 export const ImageContainer = ({
+  className,
   disabled,
   placeholder,
   onSelectImages,
@@ -49,6 +51,7 @@ export const ImageContainer = ({
         'upload-area',
         disabled && 'upload-area--disabled',
         selectedImages.length && 'upload-area--active',
+        className,
       )}
     >
       {selectedImages.map(image => (
