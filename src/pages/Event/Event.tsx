@@ -54,7 +54,7 @@ export const Event = () => {
           <EventMainData eventId={+eventId!} {...event} />
           <div className="event-details">
             <div className="event-details__left">
-              {event.description && (
+              {event.description ? (
                 <FadeInWrapper>
                   <ContainerBox>
                     <div
@@ -63,7 +63,7 @@ export const Event = () => {
                     />
                   </ContainerBox>
                 </FadeInWrapper>
-              )}
+              ) : null}
 
               {event.files.length ? (
                 <FadeInWrapper>

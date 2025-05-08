@@ -180,7 +180,7 @@ export const EventCreate = () => {
         description:
           description +
           `
-          <br>
+          ${additionalInfoSeparator}
           ${additionalInfoTexts.join('<br>')}
         `,
         seatsNumber: seatsNumber ?? undefined,
