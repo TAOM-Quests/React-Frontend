@@ -7,6 +7,7 @@ import { Badge, TypeBadge } from '../UI/Badge/Badge'
 import { OptionProps } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { useState } from 'react'
+import { events } from '../../services/api/eventModule/events/events'
 
 export interface EventMinimizeProps {
   id: number
@@ -17,6 +18,7 @@ export interface EventMinimizeProps {
   address: string
   platform: string
   imageUrl: string
+  onDelete?: () => void
   isEmployeeView?: boolean
 }
 
@@ -29,6 +31,7 @@ export default function EventMinimize({
   address,
   platform,
   imageUrl,
+  onDelete,
   isEmployeeView,
 }: EventMinimizeProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
@@ -46,8 +49,9 @@ export default function EventMinimize({
     {
       id: 2,
       text: 'Удалить',
-      onSelect: () => {
-        alert(`Удалить событие с id ${id}`)
+      onSelect: async () => {
+        await events.delete(id)
+        onDelete?.()
       },
     },
   ]

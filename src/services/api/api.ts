@@ -46,5 +46,7 @@ function fetchData<TParameters>(
         )
       : fetch(path)
 
-  return request.then(response => response.json())
+  return request.then(response =>
+    response.json().catch(() => ({ statusCode: response.status })),
+  )
 }

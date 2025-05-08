@@ -187,7 +187,7 @@ export const EventCreate = () => {
         places: getPlaces(),
         schedule,
         executorsIds: executors.map(executor => executor.id),
-        imageId: image?.id,
+        imageId: image?.id ?? null,
         filesIds: files.map(file => file.id),
         tags: [
           ...tags

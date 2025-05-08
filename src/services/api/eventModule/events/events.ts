@@ -36,6 +36,9 @@ export const events = {
   update: (id: number, params: EventUpdateDto): Promise<Event> =>
     eventModule<Event, EventUpdateDto>(`events/${id}`, params),
 
+  delete: (id: number): Promise<void> =>
+    eventModule<void, null>(`events/${id}`, null, { method: 'DELETE' }),
+
   getTypes: (): Promise<EventType[]> => eventModule<EventType[], null>('types'),
 
   getStatuses: (): Promise<EventStatus[]> =>

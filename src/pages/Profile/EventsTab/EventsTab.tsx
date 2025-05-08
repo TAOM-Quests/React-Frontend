@@ -156,7 +156,11 @@ export default function EventsTab({ user }: EventsTabProps) {
                 imageUrl: event.image?.url ?? '',
               }
 
-              if (user.isEmployee) eventData.isEmployeeView = true
+              if (user.isEmployee) {
+                eventData.isEmployeeView = true
+                eventData.onDelete = () =>
+                  setEvents(userEvents.filter(e => e.id !== event.id))
+              }
 
               return <EventMinimizeComponent key={event.id} {...eventData} />
             })
