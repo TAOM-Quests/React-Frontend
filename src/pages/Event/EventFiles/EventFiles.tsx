@@ -1,4 +1,4 @@
-import { CardFile } from '../../../components/CardFile/CardFile'
+import { CardFile } from '../../../components/Cards/CardFile/CardFile'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { ServerFile } from '../../../models/serverFile'
 import './EventFiles.scss'

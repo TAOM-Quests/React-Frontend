@@ -32,6 +32,13 @@
     cursor: pointer;
   }
 
+  &--empty {
+    .upload-text * {
+      // color: var(--text_c_secondary);
+      z-index: 1;
+    }
+  }
+
   &--active:hover {
     background-color: rgba(0, 0, 0, 0.8);
     img {
@@ -81,7 +88,8 @@
   }
 }
 
-.upload-text {
+.upload-text,
+.preview {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -98,5 +106,20 @@
     @media (max-width: 400px) {
       font-size: 12px;
     }
+  }
+}
+
+.cardsImages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  max-height: 310px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @media (max-width: 845px) {
+    flex-direction: column;
+    flex-wrap: nowrap;
   }
 }

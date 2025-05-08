@@ -4,6 +4,7 @@ import { serverFiles } from '../../../services/api/commonModule/serverFiles/serv
 import { Icon } from '../Icon/Icon'
 import './ImageContainer.scss'
 import classNames from 'classnames'
+import { CardImage } from '../../Cards/CardImage/CardImage'
 
 export interface ImageContainerProps {
   className?: string
@@ -45,41 +46,73 @@ export const ImageContainer = ({
     }
   }
 
+  const renderPlaceholder = () => {
+    return (
+      <>
+        <Icon size="extraLarge" icon="ADD_IMAGE" />
+        {placeholder && <span className="body_m_r">{placeholder}</span>}
+      </>
+    )
+  }
+
   return (
-    <div
-      className={classNames(
-        'upload-area',
-        disabled && 'upload-area--disabled',
-        selectedImages.length && 'upload-area--active',
-        className,
-      )}
-    >
-      {selectedImages.map(image => (
-        <>
-          <img key={image.id} src={image.url} alt={image.originalName} />
-          <div className="upload-text">
-            <Icon size="extraLarge" icon="ADD_IMAGE" />
-            {placeholder && <span className="body_m_r">{placeholder}</span>}
-            <Icon
-              icon="DELETE"
-              disabled={disabled}
-              className="upload-area__delete-icon"
-              onClick={() =>
+    <>
+      <div
+        className={classNames(
+          'upload-area',
+          disabled && 'upload-area--disabled',
+          selectedImages.length && 'upload-area--active',
+          className,
+        )}
+      >
+        {selectedImages.map(image => (
+          <>
+            <img key={image.id} src={image.url} alt={image.originalName} />
+            <div className="upload-text">
+              {renderPlaceholder()}
+              <Icon
+                icon="DELETE"
+                disabled={disabled}
+                className="upload-area__delete-icon"
+                onClick={() =>
+                  setSelectedImages(prev => prev.filter(i => i.id !== image.id))
+                }
+              />
+            </div>
+          </>
+        ))}
+        <input
+          type="file"
+          disabled={disabled}
+          multiple={isMultiple}
+          onChange={e => uploadImage(e)}
+          accept=".png, .jpg, .jpeg, .svg"
+          placeholder="Загрузить картинку"
+        />
+        {selectedImages.length === 0 && (
+          <div className="preview" id="preview">
+            {renderPlaceholder()}
+          </div>
+        )}
+      </div>
+
+      {selectedImages.length > 1 && (
+        <div className="cardsImages">
+          {selectedImages.map(image => (
+            <CardImage
+              key={image.id}
+              id={image.id}
+              url={image.url}
+              size={image.size}
+              imageName={image.originalName}
+              extension={image.extension}
+              onRemove={() =>
                 setSelectedImages(prev => prev.filter(i => i.id !== image.id))
               }
             />
-          </div>
-        </>
-      ))}
-      <input
-        type="file"
-        disabled={disabled}
-        multiple={isMultiple}
-        onChange={e => uploadImage(e)}
-        accept=".png, .jpg, .jpeg, .svg"
-        placeholder="Загрузить картинку"
-      />
-      <div className="preview" id="preview"></div>
-    </div>
+          ))}
+        </div>
+      )}
+    </>
   )
 }
