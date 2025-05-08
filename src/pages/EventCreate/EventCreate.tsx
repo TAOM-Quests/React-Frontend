@@ -295,7 +295,7 @@ export const EventCreate = () => {
               placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
             />
             <div className="event_create--container">
-              <div>
+              <div className="event_create--content__left">
                 <EventCreateManagementData
                   name={name}
                   setName={setName}
@@ -348,7 +348,7 @@ export const EventCreate = () => {
                   onErrorsChange={setHasScheduleErrors}
                 />
               </div>
-              <div>
+              <div className="event_create--content__right">
                 <EventCreateFiles files={files} setFiles={setFiles} />
                 <div className="additional-info">
                   <label className="body_s_sb label">
