@@ -20,6 +20,12 @@
     width: auto;
   }
 
+  &__menu {
+    .context-menu {
+      right: 0;
+    }
+  }
+
   &__image-wrapper {
     position: absolute;
     top: 0;

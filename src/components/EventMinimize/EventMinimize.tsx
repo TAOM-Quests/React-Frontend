@@ -90,13 +90,15 @@ export const EventMinimize = ({
           {isEmployeeView && (
             <>
               <Badge type={getStatusColor(status)} text={status} />
-              <ContextMenu
-                isVisible={openMenuId === id}
-                onToggle={toggleMenu}
-                options={eventOptionsContextMenu}
-              >
-                <Icon colorIcon="primary" icon="MENU_DOTS" />
-              </ContextMenu>
+              <div className="eventMinimize__menu">
+                <ContextMenu
+                  isVisible={openMenuId === id}
+                  onToggle={toggleMenu}
+                  options={eventOptionsContextMenu}
+                >
+                  <Icon colorIcon="primary" icon="MENU_DOTS" />
+                </ContextMenu>
+              </div>
             </>
           )}
         </div>
