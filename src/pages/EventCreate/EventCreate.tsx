@@ -31,8 +31,8 @@ import { ImageContainer } from '../../components/UI/ImageContainer/ImageContaine
 import { EmployeeAuth } from '../../models/userAuth'
 
 const additionalInfoItems: string[] = [
-  'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
-  'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
+  '<p>Доставка в Академию и обратно осуществляется корпоративными автобусами (<a target="_blank" rel="noopener noreferrer nofollow" href="https://taom.academy/schedule">График</a>).</p>',
+  '<p>Следите за новостями на <a target="_blank" rel="noopener noreferrer nofollow" href="https://taom.academy">сайте Академии</a> и в социальных сетях <a target="_blank" rel="noopener noreferrer nofollow" href="https://vk.com/taom_ru">https://vk.com/taom_ru</a>, <a target="_blank" rel="noopener noreferrer nofollow" href="https://dzen.ru/taom">https://dzen.ru/taom</a> и <a target="_blank" rel="noopener noreferrer nofollow" href="https://t.me/taomacademyabitur">https://t.me/taomacademyabitur</a>.</p>',
 ]
 const additionalInfoSeparator = '<-- Additional info ->'
 
@@ -180,7 +180,7 @@ export const EventCreate = () => {
         description:
           description +
           `
-          ${additionalInfoSeparator}
+          <br>
           ${additionalInfoTexts.join('<br>')}
         `,
         seatsNumber: seatsNumber ?? undefined,
@@ -360,7 +360,9 @@ export const EventCreate = () => {
                         key={index}
                         isSelected={additionalInfoTexts.includes(text)}
                         onChange={() => handleChange(text)}
-                        label={text}
+                        label={
+                          <span dangerouslySetInnerHTML={{ __html: text }} />
+                        }
                       />
                     ))}
                   </div>

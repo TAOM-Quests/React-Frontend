@@ -65,11 +65,11 @@ export const Event = () => {
                 </FadeInWrapper>
               )}
 
-              {event.files && (
+              {event.files.length ? (
                 <FadeInWrapper>
                   <EventFiles files={event.files} />
                 </FadeInWrapper>
-              )}
+              ) : null}
             </div>
 
             <div className="event-details__right">
@@ -79,17 +79,17 @@ export const Event = () => {
                 </FadeInWrapper>
               )}
 
-              {event.schedule.length && (
+              {event.schedule.length ? (
                 <FadeInWrapper>
                   <EventSchedule schedule={event.schedule} />
                 </FadeInWrapper>
-              )}
+              ) : null}
 
-              {event.executors.length && (
+              {event.executors.length ? (
                 <FadeInWrapper>
                   <EventExecutors executors={event.executors} />
                 </FadeInWrapper>
-              )}
+              ) : null}
 
               {placeOnline && (
                 <FadeInWrapper>

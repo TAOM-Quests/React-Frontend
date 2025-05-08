@@ -68,15 +68,18 @@ export const EventMainData = ({
         </h3>
 
         <div className="event-banner__info-rows">
-          <div className="body_xl_m event-banner__info-row">
-            <Icon icon="CALENDAR" colorIcon="subdued" />
-            <span>{moment(date).format('DD MMMM YYYY год')}</span>
-          </div>
-
-          <div className="body_xl_m event-banner__info-row">
-            <Icon icon="TIME" colorIcon="subdued" />
-            <span>{moment(date).format('HH:mm')}</span>
-          </div>
+          {date && (
+            <div className="body_xl_m event-banner__info-row">
+              <Icon icon="CALENDAR" colorIcon="subdued" />
+              <span>{moment(date).format('DD MMMM YYYY год')}</span>
+            </div>
+          )}
+          {date && (
+            <div className="body_xl_m event-banner__info-row">
+              <Icon icon="TIME" colorIcon="subdued" />
+              <span>{moment(date).format('HH:mm')}</span>
+            </div>
+          )}
 
           {placeOffline?.address && (
             <div className="body_xl_m event-banner__info-row">
@@ -91,15 +94,15 @@ export const EventMainData = ({
               <span>{placeOnline?.platform}</span>
             </div>
           )}
-
+          {type?.name && (
+            <div className="body_xl_m event-banner__info-row">
+              <Icon icon="GRADUATION_CAP" colorIcon="subdued" />
+              <span>{type?.name}</span>
+            </div>
+          )}
           <div className="body_xl_m event-banner__info-row">
             <Icon icon="DEPARTMENT" colorIcon="subdued" />
             <span>{department.name}</span>
-          </div>
-
-          <div className="body_xl_m event-banner__info-row">
-            <Icon icon="GRADUATION_CAP" colorIcon="subdued" />
-            <span>{type?.name}</span>
           </div>
         </div>
 
