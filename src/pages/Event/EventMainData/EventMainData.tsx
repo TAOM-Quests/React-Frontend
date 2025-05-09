@@ -74,38 +74,45 @@ export const EventMainData = ({
         <div className="event-banner__info-rows">
           {date && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="CALENDAR" colorIcon="subdued" />
+              <Icon icon="CALENDAR" size={'large'} colorIcon="subdued" />
               <span>{moment(date).format('DD MMMM YYYY год')}</span>
             </div>
           )}
           {date && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="TIME" colorIcon="subdued" />
+              <Icon icon="TIME" size={'large'} colorIcon="subdued" />
               <span>{moment(date).format('HH:mm')}</span>
             </div>
           )}
 
           {placeOffline?.address && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="MARKER_MAP" colorIcon="subdued" />
+              <div className="event-banner__info-row-icon">
+                <Icon icon="MARKER_MAP" size={'large'} colorIcon="subdued" />
+              </div>
+
               <span>{placeOffline?.address}</span>
             </div>
           )}
 
           {placeOnline?.platform && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="PLATFORM" colorIcon="subdued" />
+              <div className="event-banner__info-row-icon">
+                <Icon icon="PLATFORM" size={'large'} colorIcon="subdued" />
+              </div>
               <span>{placeOnline?.platform}</span>
             </div>
           )}
           {type?.name && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="GRADUATION_CAP" colorIcon="subdued" />
+              <Icon icon="GRADUATION_CAP" size={'large'} colorIcon="subdued" />
               <span>{type?.name}</span>
             </div>
           )}
           <div className="body_xl_m event-banner__info-row">
-            <Icon icon="DEPARTMENT" colorIcon="subdued" />
+            <div className="event-banner__info-row-icon">
+              <Icon icon="DEPARTMENT" size={'large'} colorIcon="subdued" />
+            </div>
             <span>{department.name}</span>
           </div>
         </div>
