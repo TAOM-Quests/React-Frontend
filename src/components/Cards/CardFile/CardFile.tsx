@@ -1,4 +1,5 @@
-import { Icon } from '../UI/Icon/Icon'
+import { Icon } from '../../UI/Icon/Icon'
+import { formatFileSize } from '../formatFileSize'
 import './CardFile.scss'
 
 interface CardFileProps {
@@ -7,14 +8,6 @@ interface CardFileProps {
   fileName: string
   extension: string
   onRemove?: () => void
-}
-
-const formatFileSize = (size: number): string => {
-  if (size < 1024) return `${size} Б`
-  if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} КБ`
-  if (size < 1024 * 1024 * 1024)
-    return `${(size / (1024 * 1024)).toFixed(1)} МБ`
-  return `${(size / (1024 * 1024 * 1024)).toFixed(2)} ГБ`
 }
 
 export const CardFile = ({

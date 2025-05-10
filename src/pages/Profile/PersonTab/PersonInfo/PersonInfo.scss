@@ -23,11 +23,8 @@
       }
     }
   }
-
-  
 }
 // 1742
-
 
 .personInfo {
   display: flex;
@@ -52,7 +49,14 @@
       flex-direction: column;
       gap: 10px;
     }
+
+    &__imageContainer {
+      min-width: 152px;
+      min-height: 152px;
+      border-radius: 20px !important;
+    }
   }
+
   &--personFields {
     display: flex;
     flex-direction: column;
