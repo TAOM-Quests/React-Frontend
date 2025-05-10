@@ -12,7 +12,6 @@ import {
   Dropdown,
   DropdownItemType,
 } from '../../../../components/UI/Dropdown/Dropdown'
-
 import { MaskedInput } from '../../../../components/MaskedInput/MaskedInput'
 import { validateName } from '../../../../validation/validateName'
 import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
@@ -21,9 +20,9 @@ import { validatePhone } from '../../../../validation/validatePhone'
 import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
 import { ContextMenu } from '../../../../components/ContextMenu/ContextMenu'
 import { OptionProps } from '../../../../components/UI/Option/Option'
-import { Modal } from '../../../../components/UI/Modal/Modal'
 import { NotificationsModal } from './NotificationsModal/NotificationsModal'
 import { NotificationSettings } from './NotificationsModal/notificationSettingsConfig'
+import { ChangePasswordModal } from './ChangePasswordModal/ChangePasswordModal'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -169,6 +168,11 @@ export default function PersonInfo({
     setOpenMenu(!openMenu)
   }
 
+  const handlePasswordChangeSuccess = () => {
+    alert('Пароль успешно изменён')
+    // Можно добавить дополнительную логику, например, разлогинить пользователя
+  }
+
   return (
     <div className="personInfo">
       <div className="personInfo--header">
@@ -285,21 +289,11 @@ export default function PersonInfo({
       )}
 
       {isChangePasswordModalOpen && (
-        <Modal
+        <ChangePasswordModal
           isOpen={isChangePasswordModalOpen}
           onClose={() => setChangePasswordModalOpen(false)}
-          title="Сменить пароль"
-        >
-          <Input label="Старый пароль" type="password" />
-          <Input label="Новый пароль" type="password" />
-          <Input label="Повторите новый пароль" type="password" />
-          <Button text="Сохранить" colorType="primary" />
-          <Button
-            text="Отмена"
-            colorType="secondary"
-            onClick={() => setChangePasswordModalOpen(false)}
-          />
-        </Modal>
+          onSuccess={handlePasswordChangeSuccess}
+        />
       )}
     </div>
   )

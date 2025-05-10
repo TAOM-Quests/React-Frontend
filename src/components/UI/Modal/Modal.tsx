@@ -9,6 +9,7 @@ interface ModalProps {
   onClose: () => void
   children: ReactNode
   onSave?: () => void
+  className?: string
   isShowFooter?: boolean
   textButtonSave?: string
 }
@@ -19,6 +20,7 @@ export const Modal = ({
   title,
   children,
   onSave,
+  className,
   isShowFooter = false,
   textButtonSave = 'Сохранить',
 }: ModalProps) => {
@@ -36,7 +38,7 @@ export const Modal = ({
   if (!isOpen) return null
 
   return (
-    <div className="modal" onClick={onClose}>
+    <div className={`modal ${className}`} onClick={onClose}>
       <div className="modal--container" onClick={e => e.stopPropagation()}>
         <div className="modal--header">
           <h2 className="heading_5 modal--title">{title}</h2>
