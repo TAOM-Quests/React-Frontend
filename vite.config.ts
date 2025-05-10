@@ -10,5 +10,12 @@ export default defineConfig({
   test: {
     testTimeout: 500_000,
     hookTimeout: 1000_000
+  },
+  css:{
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler'
+      }
+    }
   }
 })
