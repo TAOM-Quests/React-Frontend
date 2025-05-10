@@ -58,6 +58,8 @@ export default function Profile() {
         return <PersonTab profile={profile!} updatePerson={updateProfile} />
       case 1:
         return <EventsTab user={user!} />
+      // case 2:
+      //   return <QuestsTab user={user!} />
     }
   }
 
