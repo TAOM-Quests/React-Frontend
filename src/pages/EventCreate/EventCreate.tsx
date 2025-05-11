@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
 import { EventType } from '../../models/eventType'
 import { Employee } from '../../models/user'
 import { Button } from '../../components/UI/Button/Button'
@@ -29,6 +29,8 @@ import { Loading } from '../../components/Loading/Loading'
 import { EventTag } from '../../models/eventTag'
 import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
 import { EmployeeAuth } from '../../models/userAuth'
+import { Switcher } from '../../components/UI/Switcher/Switcher'
+import { EventCreateFeedbackTab } from './EventCreateFeedbackTab/EventCreateFeedbackTab'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -36,7 +38,10 @@ const additionalInfoItems: string[] = [
 ]
 const additionalInfoSeparator = '<-- Additional info ->'
 
+const TABS = ['Мероприятие', 'Обратная связь']
+
 export const EventCreate = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const eventId = useParams().id
   const navigate = useNavigate()
@@ -257,6 +262,18 @@ export const EventCreate = () => {
     return places
   }
 
+  const getTabIndex = () => Number(searchParams.get('tab'))
+  const getActiveTab = () => {
+    const tabIndex = getTabIndex()
+
+    switch (tabIndex) {
+      case 0:
+        return renderEventTab()
+      case 1:
+        return <EventCreateFeedbackTab />
+    }
+  }
+
   const renderStateButtons = () => (
     <div className="event_create--header">
       <Button
@@ -265,22 +282,114 @@ export const EventCreate = () => {
         iconBefore="ARROW_SMALL_LEFT"
         onClick={() => navigate(-1)}
       />
-      <Button
-        text="Сохранить"
-        disabled={
-          !dateValidator.isValid || !timeValidator.isValid || hasScheduleErrors
-        }
-        onClick={() => {
-          if (
-            dateValidator.isValid &&
-            timeValidator.isValid &&
-            !hasScheduleErrors
-          ) {
-            saveEvent()
+      <div className="event_create--header__buttons">
+        <Switcher
+          options={TABS}
+          onChange={option =>
+            setSearchParams({ tab: `${TABS.indexOf(option)}` })
           }
-        }}
-      />
+          activeOption={TABS[getTabIndex()]}
+        />
+        <Button
+          text="Сохранить"
+          disabled={
+            !dateValidator.isValid ||
+            !timeValidator.isValid ||
+            hasScheduleErrors
+          }
+          onClick={() => {
+            if (
+              dateValidator.isValid &&
+              timeValidator.isValid &&
+              !hasScheduleErrors
+            ) {
+              saveEvent()
+            }
+          }}
+        />
+      </div>
     </div>
+  )
+
+  const renderEventTab = () => (
+    <ContainerBox>
+      <ImageContainer
+        selectedImages={image ? [image] : []}
+        onSelectImages={images => setImage(images[0] ?? null)}
+        placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
+      />
+      <div className="event_create--container">
+        <div>
+          <EventCreateManagementData
+            name={name}
+            setName={setName}
+            eventTypes={eventTypes}
+            tags={tags}
+            setTags={setTags}
+            eventTags={eventTags}
+            type={type}
+            setType={setType}
+            date={date}
+            setDate={setDate}
+            dateValidator={dateValidator}
+            time={time}
+            setTime={setTime}
+            timeValidator={timeValidator}
+            seatsNumber={seatsNumber}
+            setSeatsNumber={setSeatsNumber}
+            eventExecutors={eventExecutors}
+            executors={executors}
+            setExecutors={setExecutors}
+          />
+          <TextEditor
+            value={description ?? ''}
+            label="Описание мероприятия"
+            placeholder="Описание мероприятия"
+            onChange={e => setDescription(e.editor.getHTML())}
+          />
+          <EventCreatePlace
+            address={address}
+            setAddress={setAddress}
+            floor={floor}
+            setFloor={setFloor}
+            officeNumber={officeNumber}
+            setOfficeNumber={setOfficeNumber}
+            platform={platform}
+            setPlatform={setPlatform}
+            connectionLink={connectionLink}
+            setConnectionLink={setConnectionLink}
+            recordLink={recordLink}
+            setRecordLink={setRecordLink}
+            identifier={identifier}
+            setIdentifier={setIdentifier}
+            accessCode={accessCode}
+            setAccessCode={setAccessCode}
+          />
+          <EventCreateSchedule
+            ref={scheduleRef}
+            schedule={schedule}
+            setSchedule={setSchedule}
+            onErrorsChange={setHasScheduleErrors}
+          />
+        </div>
+        <div>
+          <EventCreateFiles files={files} setFiles={setFiles} />
+          <div className="additional-info">
+            <label className="body_s_sb label">Дополнительная информация</label>
+            <div className="additional-info_checkboxes">
+              {additionalInfoItems.map((text, index) => (
+                <Checkbox
+                  key={index}
+                  isSelected={additionalInfoTexts.includes(text)}
+                  onChange={() => handleChange(text)}
+                  label={text}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </ContainerBox>
   )
 
   return (
@@ -288,86 +397,8 @@ export const EventCreate = () => {
       {!isLoading ? (
         <div className="event_create">
           {renderStateButtons()}
-          <ContainerBox>
-            <ImageContainer
-              selectedImages={image ? [image] : []}
-              onSelectImages={images => setImage(images[0] ?? null)}
-              placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
-            />
-            <div className="event_create--container">
-              <div>
-                <EventCreateManagementData
-                  name={name}
-                  setName={setName}
-                  eventTypes={eventTypes}
-                  tags={tags}
-                  setTags={setTags}
-                  eventTags={eventTags}
-                  type={type}
-                  setType={setType}
-                  date={date}
-                  setDate={setDate}
-                  dateValidator={dateValidator}
-                  time={time}
-                  setTime={setTime}
-                  timeValidator={timeValidator}
-                  seatsNumber={seatsNumber}
-                  setSeatsNumber={setSeatsNumber}
-                  eventExecutors={eventExecutors}
-                  executors={executors}
-                  setExecutors={setExecutors}
-                />
-                <TextEditor
-                  value={description ?? ''}
-                  label="Описание мероприятия"
-                  placeholder="Описание мероприятия"
-                  onChange={e => setDescription(e.editor.getHTML())}
-                />
-                <EventCreatePlace
-                  address={address}
-                  setAddress={setAddress}
-                  floor={floor}
-                  setFloor={setFloor}
-                  officeNumber={officeNumber}
-                  setOfficeNumber={setOfficeNumber}
-                  platform={platform}
-                  setPlatform={setPlatform}
-                  connectionLink={connectionLink}
-                  setConnectionLink={setConnectionLink}
-                  recordLink={recordLink}
-                  setRecordLink={setRecordLink}
-                  identifier={identifier}
-                  setIdentifier={setIdentifier}
-                  accessCode={accessCode}
-                  setAccessCode={setAccessCode}
-                />
-                <EventCreateSchedule
-                  ref={scheduleRef}
-                  schedule={schedule}
-                  setSchedule={setSchedule}
-                  onErrorsChange={setHasScheduleErrors}
-                />
-              </div>
-              <div>
-                <EventCreateFiles files={files} setFiles={setFiles} />
-                <div className="additional-info">
-                  <label className="body_s_sb label">
-                    Дополнительная информация
-                  </label>
-                  <div className="additional-info_checkboxes">
-                    {additionalInfoItems.map((text, index) => (
-                      <Checkbox
-                        key={index}
-                        isSelected={additionalInfoTexts.includes(text)}
-                        onChange={() => handleChange(text)}
-                        label={text}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ContainerBox>
+
+          {getActiveTab()}
         </div>
       ) : (
         <Loading />
