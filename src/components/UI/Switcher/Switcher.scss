@@ -16,7 +16,7 @@
     flex: 1;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     font-weight: var(--semi_bold);
     font-size: var(--fs_l);
     line-height: var(--lh_xl_l);
@@ -26,6 +26,7 @@
     &:hover {
       background-color: var(--bg_c_secondary) !important;
       border-bottom: var(--border_bottom) var(--border_bottom_c_hover);
+      border-radius: 0;
     }
 
     &:hover p {
@@ -35,6 +36,7 @@
     &--active {
       border-bottom: var(--border_bottom) var(--border_bottom_c_secondary);
       margin: 0 0 3px 0;
+      border-radius: 0;
     }
 
     &--active p {
