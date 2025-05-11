@@ -284,7 +284,7 @@ export const Dropdown = ({
               isSelected={
                 isMultiple
                   ? selectedItems.map(item => item.id).includes(item.id)
-                  : selectedItems[0].id === item.id
+                  : selectedItems[0]?.id === item.id
               }
               onSelect={() => handleSelect(item)}
             />
