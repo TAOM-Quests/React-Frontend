@@ -6,8 +6,7 @@ import { EventType } from '../../models/eventType'
 import { Employee } from '../../models/user'
 import { Button } from '../../components/UI/Button/Button'
 import { events } from '../../services/api/eventModule/events/events'
-import { users } from '../../services/api/userModule/users/users'
-import { PlaceOffline, PlaceOnline, ScheduleItem } from '../../models/event'
+import { ScheduleItem } from '../../models/event'
 import {
   EventCreateSchedule,
   EventCreateScheduleRef,
@@ -15,26 +14,28 @@ import {
 import { TextEditor } from '../../components/TextEditor/TextEditor'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
 import { ServerFile } from '../../models/serverFile'
-import { EventUpdateDto } from '../../services/api/eventModule/events/eventsDto'
 import './EventCreate.scss'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
-import moment from 'moment'
 
 import { Checkbox } from '../../components/UI/Checkbox/Checkbox'
 import { EventCreatePlace } from './EventCreatePlace/EventCreatePlace'
 import { EventCreateManagementData } from './EventCreateManagementData/EventCreateManagementData'
 import { validateDate } from '../../validation/validateDate'
 import { validateTime } from '../../validation/validateTime'
-import { Loading } from '../../components/Loading/Loading'
 import { EventTag } from '../../models/eventTag'
 import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
 import { EmployeeAuth } from '../../models/userAuth'
+import { fetchEventData } from './utils/fetchEventData'
+import { fetchCreateEventData } from './utils/fetchCreateEventData'
+import { Loading } from '../../components/Loading/Loading'
+import { saveEvent } from './utils/saveEvent'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
   'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
 ]
-const additionalInfoSeparator = '<-- Additional info ->'
+const ADDITIONAL_INFO_SEPARATOR = '<-- Additional info ->'
+const STATUS_ID_ON_INSPECTION = 2
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -75,20 +76,47 @@ export const EventCreate = () => {
   const dateValidator = useMemo(() => validateDate(date, !!time), [date, time])
   const timeValidator = useMemo(() => validateTime(time, !!date), [time, date])
 
-  const handleChange = (text: string) => {
-    setAdditionalInfoTexts(prev =>
-      prev.includes(text)
-        ? prev.filter(item => item !== text)
-        : [...prev, text],
-    )
+  const setCreateEventState = {
+    setEventTags,
+    setEventTypes,
+    setEventExecutors,
   }
 
-  useEffect(() => {
-    fetchCreateEventData()
+  const setEventState = {
+    setDate,
+    setName,
+    setTags,
+    setTime,
+    setType,
+    setFiles,
+    setFloor,
+    setImage,
+    setAddress,
+    setPlatform,
+    setSchedule,
+    setExecutors,
+    setAccessCode,
+    setIdentifier,
+    setRecordLink,
+    setDescription,
+    setSeatsNumber,
+    setOfficeNumber,
+    setConnectionLink,
+    setAdditionalInfoTexts,
+  }
 
+  const saveValidate: boolean =
+    !dateValidator.isValid || !timeValidator.isValid || hasScheduleErrors
+
+  useEffect(() => {
+    setIsLoading(true)
+
+    fetchCreateEventData(user.departmentId, setCreateEventState)
     if (eventId) {
-      fetchEventData(+eventId)
+      fetchEventData(+eventId, ADDITIONAL_INFO_SEPARATOR, setEventState)
     }
+
+    setIsLoading(false)
   }, [])
 
   useEffect(() => {
@@ -97,164 +125,58 @@ export const EventCreate = () => {
     }
   }, [user])
 
-  const fetchCreateEventData = async () => {
-    try {
-      if (!user) throw new Error('User not found')
-
-      setEventTags(await events.getTags(user.departmentId))
-      setEventTypes(await events.getTypes())
-      setEventExecutors(await users.getEmployees())
-    } catch (e) {
-      console.log(`[EventCreate] ${e}`)
-    }
+  const handleChange = (text: string) => {
+    setAdditionalInfoTexts(prev =>
+      prev.includes(text)
+        ? prev.filter(item => item !== text)
+        : [...prev, text],
+    )
+  }
+  const saveEventHandler = async () => {
+    setIsLoading(true)
+    await saveEvent(
+      eventId ? +eventId : undefined,
+      user.departmentId,
+      ADDITIONAL_INFO_SEPARATOR,
+      setEventState,
+      setCreateEventState,
+      {
+        date,
+        name,
+        tags,
+        time,
+        type,
+        files,
+        floor,
+        image,
+        address,
+        platform,
+        schedule,
+        executors,
+        accessCode,
+        identifier,
+        recordLink,
+        description,
+        seatsNumber,
+        officeNumber,
+        connectionLink,
+        additionalInfoTexts,
+      },
+    )
+    setIsLoading(false)
   }
 
-  const fetchEventData = async (id: number) => {
-    try {
-      setIsLoading(true)
-
-      const event = await events.getOne({ id })
-
-      if (event.date) setDate(event.date)
-      if (event.name) setName(event.name)
-      if (event.type) setType(event.type)
-      if (event.tags) setTags(event.tags)
-      if (event.image) setImage(event.image)
-      if (event.files) setFiles(event.files)
-      if (event.status) setSchedule(event.schedule)
-      if (event.executors) setExecutors(event.executors)
-      if (event.description)
-        setDescription(event.description.split(additionalInfoSeparator)[0])
-      if (event.description)
-        setAdditionalInfoTexts(
-          event.description
-            .split(additionalInfoSeparator)[1]
-            .split('<br>')
-            .map(item => item.trim()),
-        )
-      if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
-      if (event.date) setTime(moment(event.date).format('HH:mm'))
-
-      const offlinePlace: PlaceOffline = event.places.find(
-        place => !place.is_online,
-      ) as PlaceOffline
-      const onlinePlace: PlaceOnline = event.places.find(
-        place => place.is_online,
-      ) as PlaceOnline
-
-      if (offlinePlace) {
-        if (offlinePlace.floor) setFloor(offlinePlace.floor)
-        if (offlinePlace.address) setAddress(offlinePlace.address)
-        if (offlinePlace.office_number)
-          setOfficeNumber(offlinePlace.office_number)
-      }
-
-      if (onlinePlace) {
-        if (onlinePlace.platform) setPlatform(onlinePlace.platform)
-        if (onlinePlace.connection_link)
-          setConnectionLink(onlinePlace.connection_link)
-        if (onlinePlace.record_link) setRecordLink(onlinePlace.record_link)
-        if (onlinePlace.identifier) setIdentifier(onlinePlace.identifier)
-        if (onlinePlace.access_code) setAccessCode(onlinePlace.access_code)
-      }
-
-      setIsLoading(false)
-    } catch (e) {
-      console.log(`[EventCreate] ${e}`)
-    }
-  }
-
-  const saveEvent = async () => {
+  const sendToInspector = () => {
     try {
       if (!user) throw new Error('User not authenticated')
+      if (!eventId) throw new Error('Event not found')
 
-      const eventUpdate: EventUpdateDto = {
-        name,
-        date: date
-          ? moment(date)
-              .set('hour', +time.split(':')[0])
-              .set('minute', +time.split(':')[1])
-              .toDate()
-          : undefined,
-        typeId: type?.id,
-        description:
-          description +
-          `
-          ${additionalInfoSeparator}
-          ${additionalInfoTexts.join('<br>')}
-        `,
-        seatsNumber: seatsNumber ?? undefined,
-        places: getPlaces(),
-        schedule,
-        executorsIds: executors.map(executor => executor.id),
-        imageId: image?.id ?? null,
-        filesIds: files.map(file => file.id),
-        tags: [
-          ...tags
-            .filter(tag => tag.isUserAdded)
-            .map(tag => ({ name: tag.name })),
-          ...tags
-            .filter(tag => !tag.isUserAdded)
-            .map(tag => ({ id: tag.id, name: tag.name })),
-        ],
-      }
-
-      if (
-        eventUpdate.executorsIds &&
-        !eventUpdate.executorsIds.includes(user.id)
-      ) {
-        eventUpdate.executorsIds.push(user.id)
-      }
-
-      if (!eventId) {
-        const event = await events.create({
-          ...eventUpdate,
-          departmentId: user.departmentId,
-        })
-
-        if (!window.location.pathname.includes(`${event.id}`)) {
-          navigate(`/event/${event.id}/edit`)
-        }
-      } else {
-        await events.update(+eventId, eventUpdate)
-        fetchEventData(+eventId)
-        fetchCreateEventData()
-      }
+      events.update(+eventId, {
+        statusId: STATUS_ID_ON_INSPECTION,
+      })
     } catch (e) {
       console.log(`[EventCreate] ${e}`)
     }
-  }
-
-  const getPlaces = (): (PlaceOnline | PlaceOffline)[] => {
-    const places: (PlaceOnline | PlaceOffline)[] = []
-
-    if (address || floor || officeNumber) {
-      const offlinePlace: PlaceOffline = {
-        is_online: false,
-      }
-
-      if (address) offlinePlace.address = address
-      if (floor) offlinePlace.floor = floor
-      if (officeNumber) offlinePlace.office_number = officeNumber
-
-      places.push(offlinePlace)
-    }
-
-    if (platform || connectionLink || recordLink || identifier || accessCode) {
-      const onlinePlace: PlaceOnline = {
-        is_online: true,
-      }
-
-      if (platform) onlinePlace.platform = platform
-      if (connectionLink) onlinePlace.connection_link = connectionLink
-      if (recordLink) onlinePlace.record_link = recordLink
-      if (identifier) onlinePlace.identifier = identifier
-      if (accessCode) onlinePlace.access_code = accessCode
-
-      places.push(onlinePlace)
-    }
-
-    return places
   }
 
   const renderStateButtons = () => (
@@ -265,20 +187,17 @@ export const EventCreate = () => {
         iconBefore="ARROW_SMALL_LEFT"
         onClick={() => navigate(-1)}
       />
+      {eventId && (
+        <Button
+          text="На проверку"
+          disabled={saveValidate}
+          onClick={sendToInspector}
+        />
+      )}
       <Button
         text="Сохранить"
-        disabled={
-          !dateValidator.isValid || !timeValidator.isValid || hasScheduleErrors
-        }
-        onClick={() => {
-          if (
-            dateValidator.isValid &&
-            timeValidator.isValid &&
-            !hasScheduleErrors
-          ) {
-            saveEvent()
-          }
-        }}
+        disabled={saveValidate}
+        onClick={saveEventHandler}
       />
     </div>
   )
