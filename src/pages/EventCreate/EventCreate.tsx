@@ -31,13 +31,20 @@ import { Loading } from '../../components/Loading/Loading'
 import { saveEvent } from './utils/saveEvent'
 import { EventsCreateInspectorComments } from './EventsCreateInspectorComments/EventsCreateInspectorComments'
 import { Comment } from '../../models/comment'
+import { EventStatus } from '../../models/eventStatus'
+import { Badge } from '../../components/UI/Badge/Badge'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
   'Следите за новостями на сайте Академии https://taom.academy и в социальных сетях https://vk.com/taom_ru, https://dzen.ru/taom и https://t.me/taomacademyabitur.',
 ]
 const ADDITIONAL_INFO_SEPARATOR = '<-- Additional info ->'
-const STATUS_ID_ON_INSPECTION = 2
+const STATUS_ID_DRAFT = 1
+const STATUS_ID_WAIT_INSPECTION = 2
+const STATUS_ID_ON_INSPECTION = 3
+const STATUS_ID_REWORK = 4
+const STATUS_ID_ACCEPTED = 5
+const ROLE_ID_INSPECTOR = 2
 
 export const EventCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -48,6 +55,8 @@ export const EventCreate = () => {
   const [eventTags, setEventTags] = useState<EventTag[]>([])
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
+
+  const [status, setStatus] = useState<EventStatus>({ id: 1, name: 'Черновик' })
 
   const [name, setName] = useState<string>('')
   const [time, setTime] = useState<string>('')
@@ -94,7 +103,9 @@ export const EventCreate = () => {
     setFiles,
     setFloor,
     setImage,
+    setStatus,
     setAddress,
+    setComments,
     setPlatform,
     setSchedule,
     setExecutors,
@@ -183,16 +194,25 @@ export const EventCreate = () => {
 
   const navigateBack = () => navigate(-1)
 
-  const sendToInspector = async () => {
+  const changeEventStatus = async (statusId: number) => {
     try {
       if (!user) throw new Error('User not authenticated')
       if (!eventId) throw new Error('Event not found')
 
       await events.update(+eventId, {
-        statusId: STATUS_ID_ON_INSPECTION,
+        statusId,
+        inspectorComments: comments.map(comment => ({
+          ...comment,
+          userId: comment.user.id,
+        })),
       })
 
-      navigateBack()
+      if (
+        statusId === STATUS_ID_WAIT_INSPECTION ||
+        statusId === STATUS_ID_ACCEPTED
+      ) {
+        navigateBack()
+      }
     } catch (e) {
       console.log(`[EventCreate] ${e}`)
     }
@@ -206,13 +226,26 @@ export const EventCreate = () => {
         iconBefore="ARROW_SMALL_LEFT"
         onClick={navigateBack}
       />
-      {eventId && (
+      {eventId &&
+        user.roleId === ROLE_ID_INSPECTOR &&
+        status?.id === STATUS_ID_ON_INSPECTION && (
+          <>
+            <Button
+              text="Отклонить"
+              onClick={() => changeEventStatus(STATUS_ID_REWORK)}
+              disabled={comments.filter(comment => !comment.id).length <= 0}
+            />
+            <Button
+              text="Утвердить"
+              onClick={() => changeEventStatus(STATUS_ID_ACCEPTED)}
+            />
+          </>
+        )}
+      {eventId && status?.id === STATUS_ID_DRAFT && (
         <Button
           text="На проверку"
-          disabled={
-            saveValidate && comments.filter(comment => !comment.id).length <= 0
-          }
-          onClick={sendToInspector}
+          disabled={saveValidate}
+          onClick={() => changeEventStatus(STATUS_ID_WAIT_INSPECTION)}
         />
       )}
       <Button
@@ -227,8 +260,9 @@ export const EventCreate = () => {
     <>
       {!isLoading ? (
         <div className="event_create">
+          <Badge text={status?.name ?? ''} />
           {renderStateButtons()}
-          {comments.length > 0 && (
+          {(comments.length > 0 || user.roleId === ROLE_ID_INSPECTOR) && (
             <EventsCreateInspectorComments
               comments={comments}
               setComments={setComments}

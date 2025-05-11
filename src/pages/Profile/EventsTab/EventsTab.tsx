@@ -1,5 +1,5 @@
 import { Dispatch, useEffect, useState } from 'react'
-import { UserAuth } from '../../../models/userAuth'
+import { EmployeeAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import EventMinimizeComponent, {
   EventMinimizeProps,
@@ -15,18 +15,29 @@ import './EventsTab.scss'
 import { Button } from '../../../components/UI/Button/Button'
 import { useNavigate } from 'react-router'
 import { ScrollController } from '../../../components/ScrollController/ScrollController'
+import { Switcher } from '../../../components/UI/Switcher/Switcher'
+
+const TABS = ['Мероприятия', 'Проверка мероприятий']
+const STATUS_ID_WAIT_INSPECTION = 2
+const ROLE_ID_INSPECTOR = 2
+
 interface EventsFilter {
   name?: string
   type?: number
   status?: number
+  executor?: number
+  participant?: number
 }
 
 export interface EventsTabProps {
-  user: UserAuth
+  user: EmployeeAuth
 }
 
 export default function EventsTab({ user }: EventsTabProps) {
-  const [filter, setFilter] = useState<EventsFilter>({})
+  const [tab, setTab] = useState<string>('Мероприятия')
+  const [filter, setFilter] = useState<EventsFilter>(
+    user.isEmployee ? { executor: user.id } : { participant: user.id },
+  )
   const [userEvents, setEvents] = useState<EventMinimize[]>([])
 
   const navigate = useNavigate()
@@ -36,17 +47,10 @@ export default function EventsTab({ user }: EventsTabProps) {
   }, [filter])
 
   const fetchEvents = async () => {
-    const fetchedEvents = user.isEmployee
-      ? await events.getManyByParams({
-          executor: user.id,
-          offset: userEvents?.length,
-          ...filter,
-        })
-      : await events.getManyByParams({
-          participant: user.id,
-          offset: userEvents?.length,
-          ...filter,
-        })
+    const fetchedEvents = await events.getManyByParams({
+      offset: userEvents?.length,
+      ...filter,
+    })
 
     setEvents([...(userEvents ?? []), ...fetchedEvents])
   }
@@ -98,8 +102,28 @@ export default function EventsTab({ user }: EventsTabProps) {
       }
     }
 
+  const changeTab = (option: string) => {
+    setTab(option)
+
+    if (option === 'Мероприятия') {
+      setFilter(({ status, ...prev }) => ({ ...prev, executor: user.id }))
+    } else if (option === 'Проверка мероприятий') {
+      setFilter(({ executor, ...prev }) => ({
+        ...prev,
+        status: STATUS_ID_WAIT_INSPECTION,
+      }))
+    }
+  }
+
   return (
     <div className="profile_events">
+      {user.roleId === ROLE_ID_INSPECTOR && (
+        <Switcher
+          options={TABS}
+          activeOption={tab}
+          onChange={option => changeTab(option)}
+        />
+      )}
       <div className="profile_events--filters">
         <Input
           value={filter.name}
@@ -123,6 +147,7 @@ export default function EventsTab({ user }: EventsTabProps) {
                 'status',
                 setFilter,
               )}
+              selectedItems={filter.status ? [dropdownStatuses[0]] : []}
             />
 
             <Button

@@ -20,7 +20,8 @@ export const EventsCreateInspectorComments = ({
   const [currentCommentText, setCurrentCommentText] = useState<string>('')
   const user = useAppSelector(selectAuth) as EmployeeAuth
 
-  const addComment = () =>
+  const addComment = () => {
+    setCurrentCommentText('')
     setComments(prev => [
       ...prev,
       {
@@ -28,6 +29,7 @@ export const EventsCreateInspectorComments = ({
         user,
       },
     ])
+  }
 
   return (
     <ContainerBox>

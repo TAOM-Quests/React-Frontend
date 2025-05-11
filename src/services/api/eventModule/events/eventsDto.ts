@@ -54,4 +54,5 @@ export interface EventUpdateDto {
   schedule?: ScheduleItem[]
   tags?: { id?: number; name: string }[]
   places?: (PlaceOnline | PlaceOffline)[]
+  inspectorComments: { userId: number; text: string; id?: number }[]
 }

@@ -6,6 +6,8 @@ import { EventTag } from '../../../models/eventTag'
 import { EventType } from '../../../models/eventType'
 import { ServerFile } from '../../../models/serverFile'
 import { Employee } from '../../../models/user'
+import { EventStatus } from '../../../models/eventStatus'
+import { Comment } from '../../../models/comment'
 
 export interface FetchEventProps {
   setName: Dispatch<React.SetStateAction<string>>
@@ -17,8 +19,10 @@ export interface FetchEventProps {
   setAccessCode: Dispatch<React.SetStateAction<string>>
   setIdentifier: Dispatch<React.SetStateAction<string>>
   setRecordLink: Dispatch<React.SetStateAction<string>>
-  setFiles: Dispatch<React.SetStateAction<ServerFile[]>>
+  setStatus: Dispatch<React.SetStateAction<EventStatus>>
+  setComments: Dispatch<React.SetStateAction<Comment[]>>
   setDescription: Dispatch<React.SetStateAction<string>>
+  setFiles: Dispatch<React.SetStateAction<ServerFile[]>>
   setFloor: Dispatch<React.SetStateAction<number | null>>
   setOfficeNumber: Dispatch<React.SetStateAction<string>>
   setExecutors: Dispatch<React.SetStateAction<Employee[]>>
@@ -42,7 +46,9 @@ export const fetchEventData = async (
     setFiles,
     setFloor,
     setImage,
+    setStatus,
     setAddress,
+    setComments,
     setPlatform,
     setSchedule,
     setExecutors,
@@ -59,6 +65,8 @@ export const fetchEventData = async (
   try {
     const event = await events.getOne({ id })
 
+    setStatus(event.status)
+
     if (event.date) setDate(event.date)
     if (event.name) setName(event.name)
     if (event.type) setType(event.type)
@@ -67,6 +75,7 @@ export const fetchEventData = async (
     if (event.files) setFiles(event.files)
     if (event.status) setSchedule(event.schedule)
     if (event.executors) setExecutors(event.executors)
+    if (event.inspectorComments) setComments(event.inspectorComments)
     if (event.description)
       setDescription(event.description.split(ADDITIONAL_INFO_SEPARATOR)[0])
     if (event.description)
