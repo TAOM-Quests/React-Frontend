@@ -2,7 +2,7 @@ import { last } from 'lodash'
 import { EventMinimize } from '../../../models/eventMinimize'
 import moment, { Moment } from 'moment'
 import { Tag } from '../../../components/UI/Tag/Tag'
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Modal } from '../../../components/UI/Modal/Modal'
 import { useNavigate } from 'react-router'
 import EventMinimizeComponent from '../../../components/EventMinimize/EventMinimize'
@@ -49,7 +49,7 @@ export const CalendarDay = ({ events, isToday, day }: CalendarDayProps) => {
     </div>
   )
 
-  const renderFewEvents = (events: EventMinimize[]): JSX.Element => (
+  const renderFewEvents = (events: EventMinimize[]): ReactNode => (
     <div className="calendarPage-day__multiple-events">
       {events.slice(0, 2).map(event => (
         <div

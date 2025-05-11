@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { renderWithProviders } from '../../../mocks/redux/utils'
-import EventCreate from '../EventCreate'
+import { EventCreate } from '../EventCreate'
 import { userEvent } from '@vitest/browser/context'
 import { events } from '../../../services/api/eventModule/events/events'
 

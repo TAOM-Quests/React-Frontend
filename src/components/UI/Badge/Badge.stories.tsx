@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ICON_MAP } from '../../../assets/icons'
 import { Badge } from './Badge'
 import './Badge.scss'
 

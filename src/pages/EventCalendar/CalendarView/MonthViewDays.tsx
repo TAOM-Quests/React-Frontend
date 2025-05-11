@@ -26,7 +26,7 @@ export const MonthViewDays = ({
     )
   }
 
-  const daysComponents: JSX.Element[] = []
+  const daysComponents: ReactNode[] = []
   for (let i = 1; i <= daysInMonth; i++) {
     const day = month.clone().date(i)
     daysComponents.push(
