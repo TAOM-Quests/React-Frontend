@@ -155,6 +155,7 @@ export default function EventsTab({ user }: EventsTabProps) {
                 address: offlinePlace?.address ?? '',
                 platform: onlinePlace?.platform ?? '',
                 departmentName: event.department?.name,
+                participantsCount: event.participantsCount,
               }
 
               if (user.isEmployee) eventData.isEmployeeView = true

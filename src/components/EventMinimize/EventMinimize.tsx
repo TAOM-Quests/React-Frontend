@@ -19,6 +19,7 @@ export interface EventMinimizeProps {
   imageUrl: string
   departmentName: string
   isEmployeeView?: boolean
+  participantsCount?: number
 }
 
 export const EventMinimize = ({
@@ -32,6 +33,7 @@ export const EventMinimize = ({
   imageUrl,
   departmentName,
   isEmployeeView,
+  participantsCount,
 }: EventMinimizeProps) => {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
