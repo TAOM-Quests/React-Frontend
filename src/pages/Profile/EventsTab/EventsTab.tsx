@@ -116,86 +116,91 @@ export default function EventsTab({ user }: EventsTabProps) {
   }
 
   return (
-    <div className="profile_events">
-      {user.roleId === ROLE_ID_INSPECTOR && (
-        <Switcher
-          options={TABS}
-          activeOption={tab}
-          onChange={option => changeTab(option)}
-        />
-      )}
-      <div className="profile_events--filters">
-        <Input
-          value={filter.name}
-          iconBefore="SEARCH"
-          placeholder="Поиск по названию"
-          onChange={e =>
-            setFilter(state => ({ ...state, name: e.target.value }))
-          }
-        />
-        <Dropdown
-          items={dropdownTypes}
-          placeholder="Тип мероприятия"
-          onChangeDropdown={createDropdownChangeHandler('type', setFilter)}
-        />
-        {user.isEmployee && (
-          <>
-            <Dropdown
-              items={dropdownStatuses}
-              placeholder="Статус"
-              onChangeDropdown={createDropdownChangeHandler(
-                'status',
-                setFilter,
-              )}
-              selectedItems={filter.status ? [dropdownStatuses[0]] : []}
-            />
-
-            <Button
-              onClick={() => navigate('/event/create')}
-              text="Создать мероприятие"
-              colorType="primary"
-            />
-          </>
+    <>
+      <div className="profile_events--tabs">
+        {user.roleId === ROLE_ID_INSPECTOR && (
+          <Switcher
+            options={TABS}
+            activeOption={tab}
+            onChange={option => changeTab(option)}
+          />
         )}
       </div>
-      <ScrollController
-        onEndScroll={fetchEvents}
-        className="profile_events--events"
-        style={{ overflow: 'scroll' }}
-      >
-        {userEvents && userEvents.length
-          ? userEvents.map(event => {
-              const onlinePlace: PlaceOnline | null =
-                event.places?.find(place => place.is_online) ?? null
-              const offlinePlace: PlaceOffline | null =
-                event.places?.find(place => !place.is_online) ?? null
 
-              const eventData: EventMinimizeProps = {
-                id: event.id,
-                date: event.date ?? null,
-                status: event.status.name,
-                name: event.name ?? '',
-                type: event.type?.name ?? '',
-                address: offlinePlace?.address ?? '',
-                platform: onlinePlace?.platform ?? '',
-                imageUrl: event.image?.url ?? '',
-              }
+      <div className="profile_events">
+        <div className="profile_events--filters">
+          <Input
+            value={filter.name}
+            iconBefore="SEARCH"
+            placeholder="Поиск по названию"
+            onChange={e =>
+              setFilter(state => ({ ...state, name: e.target.value }))
+            }
+          />
+          <Dropdown
+            items={dropdownTypes}
+            placeholder="Тип мероприятия"
+            onChangeDropdown={createDropdownChangeHandler('type', setFilter)}
+          />
+          {user.isEmployee && (
+            <>
+              <Dropdown
+                items={dropdownStatuses}
+                placeholder="Статус"
+                onChangeDropdown={createDropdownChangeHandler(
+                  'status',
+                  setFilter,
+                )}
+                selectedItems={filter.status ? [dropdownStatuses[0]] : []}
+              />
 
-              if (
-                event.status.id === STATUS_ID_WAIT_INSPECTION &&
-                user.roleId === ROLE_ID_INSPECTOR
-              ) {
-                eventData.isInspectorView = true
-              } else if (user.isEmployee) {
-                eventData.isEmployeeView = true
-                eventData.onDelete = () =>
-                  setEvents(userEvents.filter(e => e.id !== event.id))
-              }
+              <Button
+                onClick={() => navigate('/event/create')}
+                text="Создать мероприятие"
+                colorType="primary"
+              />
+            </>
+          )}
+        </div>
+        <ScrollController
+          onEndScroll={fetchEvents}
+          className="profile_events--events"
+          style={{ overflow: 'scroll' }}
+        >
+          {userEvents && userEvents.length
+            ? userEvents.map(event => {
+                const onlinePlace: PlaceOnline | null =
+                  event.places?.find(place => place.is_online) ?? null
+                const offlinePlace: PlaceOffline | null =
+                  event.places?.find(place => !place.is_online) ?? null
 
-              return <EventMinimizeComponent key={event.id} {...eventData} />
-            })
-          : 'Мероприятий нет'}
-      </ScrollController>
-    </div>
+                const eventData: EventMinimizeProps = {
+                  id: event.id,
+                  date: event.date ?? null,
+                  status: event.status.name,
+                  name: event.name ?? '',
+                  type: event.type?.name ?? '',
+                  address: offlinePlace?.address ?? '',
+                  platform: onlinePlace?.platform ?? '',
+                  imageUrl: event.image?.url ?? '',
+                }
+
+                if (
+                  event.status.id === STATUS_ID_WAIT_INSPECTION &&
+                  user.roleId === ROLE_ID_INSPECTOR
+                ) {
+                  eventData.isInspectorView = true
+                } else if (user.isEmployee) {
+                  eventData.isEmployeeView = true
+                  eventData.onDelete = () =>
+                    setEvents(userEvents.filter(e => e.id !== event.id))
+                }
+
+                return <EventMinimizeComponent key={event.id} {...eventData} />
+              })
+            : 'Мероприятий нет'}
+        </ScrollController>
+      </div>
+    </>
   )
 }
