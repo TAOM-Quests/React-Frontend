@@ -181,7 +181,12 @@ export default function EventsTab({ user }: EventsTabProps) {
                 imageUrl: event.image?.url ?? '',
               }
 
-              if (user.isEmployee) {
+              if (
+                event.status.id === STATUS_ID_WAIT_INSPECTION &&
+                user.roleId === ROLE_ID_INSPECTOR
+              ) {
+                eventData.isInspectorView = true
+              } else if (user.isEmployee) {
                 eventData.isEmployeeView = true
                 eventData.onDelete = () =>
                   setEvents(userEvents.filter(e => e.id !== event.id))
