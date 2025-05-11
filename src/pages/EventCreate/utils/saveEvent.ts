@@ -2,17 +2,10 @@ import moment from 'moment'
 import { PlaceOnline, PlaceOffline, ScheduleItem } from '../../../models/event'
 import { events } from '../../../services/api/eventModule/events/events'
 import { EventUpdateDto } from '../../../services/api/eventModule/events/eventsDto'
-import { user } from '../../Profile/EventsTab/test/eventsTabEnvironment'
-import {
-  fetchCreateEventData,
-  FetchCreateEventDataProps,
-} from './fetchCreateEventData'
-import { fetchEventData, FetchEventProps } from './fetchEventData'
 import { EventTag } from '../../../models/eventTag'
 import { EventType } from '../../../models/eventType'
 import { ServerFile } from '../../../models/serverFile'
 import { Employee } from '../../../models/user'
-import { useNavigate } from 'react-router'
 
 export interface SaveEventProps {
   name: string
@@ -41,8 +34,7 @@ export const saveEvent = async (
   eventId: number | undefined,
   departmentId: number,
   ADDITIONAL_INFO_SEPARATOR: string,
-  setEventState: FetchEventProps,
-  setCreateEventState: FetchCreateEventDataProps,
+  userId: number,
   {
     date,
     name,
@@ -66,72 +58,55 @@ export const saveEvent = async (
     additionalInfoTexts,
   }: SaveEventProps,
 ) => {
-  try {
-    if (!user) throw new Error('User not authenticated')
-
-    const navigate = useNavigate()
-
-    const eventUpdate: EventUpdateDto = {
-      name,
-      date: date
-        ? moment(date)
-            .set('hour', +time.split(':')[0])
-            .set('minute', +time.split(':')[1])
-            .toDate()
-        : undefined,
-      typeId: type?.id,
-      description:
-        description +
-        `
+  const eventUpdate: EventUpdateDto = {
+    name,
+    date: date
+      ? moment(date)
+          .set('hour', +time.split(':')[0])
+          .set('minute', +time.split(':')[1])
+          .toDate()
+      : undefined,
+    typeId: type?.id,
+    description:
+      description +
+      `
           ${ADDITIONAL_INFO_SEPARATOR}
           ${additionalInfoTexts.join('<br>')}
         `,
-      seatsNumber: seatsNumber ?? undefined,
-      places: getPlaces({
-        address,
-        floor,
-        officeNumber,
-        platform,
-        connectionLink,
-        recordLink,
-        identifier,
-        accessCode,
-      } as SaveEventProps),
-      schedule,
-      executorsIds: executors.map(executor => executor.id),
-      imageId: image?.id ?? null,
-      filesIds: files.map(file => file.id),
-      tags: [
-        ...tags.filter(tag => tag.isUserAdded).map(tag => ({ name: tag.name })),
-        ...tags
-          .filter(tag => !tag.isUserAdded)
-          .map(tag => ({ id: tag.id, name: tag.name })),
-      ],
-    }
+    seatsNumber: seatsNumber ?? undefined,
+    places: getPlaces({
+      address,
+      floor,
+      officeNumber,
+      platform,
+      connectionLink,
+      recordLink,
+      identifier,
+      accessCode,
+    } as SaveEventProps),
+    schedule,
+    executorsIds: executors.map(executor => executor.id),
+    imageId: image?.id ?? null,
+    filesIds: files.map(file => file.id),
+    tags: [
+      ...tags.filter(tag => tag.isUserAdded).map(tag => ({ name: tag.name })),
+      ...tags
+        .filter(tag => !tag.isUserAdded)
+        .map(tag => ({ id: tag.id, name: tag.name })),
+    ],
+  }
 
-    if (
-      eventUpdate.executorsIds &&
-      !eventUpdate.executorsIds.includes(user.id)
-    ) {
-      eventUpdate.executorsIds.push(user.id)
-    }
+  if (eventUpdate.executorsIds && !eventUpdate.executorsIds.includes(userId)) {
+    eventUpdate.executorsIds.push(userId)
+  }
 
-    if (!eventId) {
-      const event = await events.create({
-        ...eventUpdate,
-        departmentId,
-      })
-
-      if (!window.location.pathname.includes(`${event.id}`)) {
-        navigate(`/event/${event.id}/edit`)
-      }
-    } else {
-      await events.update(+eventId, eventUpdate)
-      await fetchCreateEventData(departmentId, setCreateEventState)
-      await fetchEventData(+eventId, ADDITIONAL_INFO_SEPARATOR, setEventState)
-    }
-  } catch (e) {
-    console.log(`[EventCreate - saveEvent] ${e}`)
+  if (!eventId) {
+    return await events.create({
+      ...eventUpdate,
+      departmentId,
+    })
+  } else {
+    return await events.update(+eventId, eventUpdate)
   }
 }
 

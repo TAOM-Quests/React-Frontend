@@ -29,6 +29,8 @@ import { fetchEventData } from './utils/fetchEventData'
 import { fetchCreateEventData } from './utils/fetchCreateEventData'
 import { Loading } from '../../components/Loading/Loading'
 import { saveEvent } from './utils/saveEvent'
+import { EventsCreateInspectorComments } from './EventsCreateInspectorComments/EventsCreateInspectorComments'
+import { Comment } from '../../models/comment'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -50,6 +52,7 @@ export const EventCreate = () => {
   const [name, setName] = useState<string>('')
   const [time, setTime] = useState<string>('')
   const [date, setDate] = useState<Date | null>(null)
+  const [comments, setComments] = useState<Comment[]>([])
   const [type, setType] = useState<EventType | null>(null)
   const [description, setDescription] = useState<string>('')
   const [executors, setExecutors] = useState<Employee[]>([])
@@ -134,46 +137,62 @@ export const EventCreate = () => {
   }
   const saveEventHandler = async () => {
     setIsLoading(true)
-    await saveEvent(
-      eventId ? +eventId : undefined,
-      user.departmentId,
-      ADDITIONAL_INFO_SEPARATOR,
-      setEventState,
-      setCreateEventState,
-      {
-        date,
-        name,
-        tags,
-        time,
-        type,
-        files,
-        floor,
-        image,
-        address,
-        platform,
-        schedule,
-        executors,
-        accessCode,
-        identifier,
-        recordLink,
-        description,
-        seatsNumber,
-        officeNumber,
-        connectionLink,
-        additionalInfoTexts,
-      },
-    )
+    try {
+      const savedEvent = await saveEvent(
+        eventId ? +eventId : undefined,
+        user.departmentId,
+        ADDITIONAL_INFO_SEPARATOR,
+        user.id,
+        {
+          date,
+          name,
+          tags,
+          time,
+          type,
+          files,
+          floor,
+          image,
+          address,
+          platform,
+          schedule,
+          executors,
+          accessCode,
+          identifier,
+          recordLink,
+          description,
+          seatsNumber,
+          officeNumber,
+          connectionLink,
+          additionalInfoTexts,
+        },
+      )
+
+      if (eventId) {
+        await fetchCreateEventData(user.departmentId, setCreateEventState)
+        await fetchEventData(+eventId, ADDITIONAL_INFO_SEPARATOR, setEventState)
+      } else {
+        if (!window.location.pathname.includes(`${savedEvent.id}`)) {
+          navigate(`/event/${savedEvent.id}/edit`)
+        }
+      }
+    } catch (e) {
+      console.log(`[EventCreate] ${e}`)
+    }
     setIsLoading(false)
   }
 
-  const sendToInspector = () => {
+  const navigateBack = () => navigate(-1)
+
+  const sendToInspector = async () => {
     try {
       if (!user) throw new Error('User not authenticated')
       if (!eventId) throw new Error('Event not found')
 
-      events.update(+eventId, {
+      await events.update(+eventId, {
         statusId: STATUS_ID_ON_INSPECTION,
       })
+
+      navigateBack()
     } catch (e) {
       console.log(`[EventCreate] ${e}`)
     }
@@ -185,12 +204,14 @@ export const EventCreate = () => {
         text="Назад"
         colorType="secondary"
         iconBefore="ARROW_SMALL_LEFT"
-        onClick={() => navigate(-1)}
+        onClick={navigateBack}
       />
       {eventId && (
         <Button
           text="На проверку"
-          disabled={saveValidate}
+          disabled={
+            saveValidate && comments.filter(comment => !comment.id).length <= 0
+          }
           onClick={sendToInspector}
         />
       )}
@@ -207,6 +228,12 @@ export const EventCreate = () => {
       {!isLoading ? (
         <div className="event_create">
           {renderStateButtons()}
+          {comments.length > 0 && (
+            <EventsCreateInspectorComments
+              comments={comments}
+              setComments={setComments}
+            />
+          )}
           <ContainerBox>
             <ImageContainer
               selectedImages={image ? [image] : []}
