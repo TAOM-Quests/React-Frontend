@@ -97,18 +97,18 @@ export default function QuestMinimize({
           </div>
         </div>
         <div className="questMinimize__header--right">
-          {/* {isEmployeeView && ( */}
-          <>
-            <ContextMenu
-              isVisible={openMenuId === id}
-              onToggle={toggleMenu}
-              options={questOptionsContextMenu}
-              className="questMinimize__header--menu"
-            >
-              <Icon colorIcon="primary" icon="MENU_DOTS" />
-            </ContextMenu>
-          </>
-          {/* )} */}
+          {isEmployeeView && (
+            <>
+              <ContextMenu
+                isVisible={openMenuId === id}
+                onToggle={toggleMenu}
+                options={questOptionsContextMenu}
+                className="questMinimize__header--menu"
+              >
+                <Icon colorIcon="primary" icon="MENU_DOTS" />
+              </ContextMenu>
+            </>
+          )}
         </div>
       </div>
       <div className="questMinimize__name-wrapper">
@@ -120,10 +120,12 @@ export default function QuestMinimize({
         <p className="body_xl_sb questMinimize__name">{name}</p>
       </div>
 
-      <div className="questMinimize__info">
-        <p className="body_m_m">{participantsCount || 0}</p>
-        <Icon icon="USER" colorIcon="primary" />
-      </div>
+      {isEmployeeView && (
+        <div className="questMinimize__info">
+          <p className="body_m_m">{participantsCount || 0}</p>
+          <Icon icon="USER" colorIcon="primary" />
+        </div>
+      )}
     </ContainerBox>
   )
 }
