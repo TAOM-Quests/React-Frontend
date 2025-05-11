@@ -124,13 +124,15 @@ export const EventCreate = () => {
       if (event.status) setSchedule(event.schedule)
       if (event.executors) setExecutors(event.executors)
       if (event.description)
-        setDescription(event.description.split(additionalInfoSeparator)[0])
+        setDescription(
+          event.description?.split(additionalInfoSeparator)[0] ?? '',
+        )
       if (event.description)
         setAdditionalInfoTexts(
           event.description
-            .split(additionalInfoSeparator)[1]
-            .split('<br>')
-            .map(item => item.trim()),
+            ?.split(additionalInfoSeparator)[1]
+            ?.split('<br>')
+            .map(item => item.trim()) ?? [],
         )
       if (event.seatsNumber) setSeatsNumber(event.seatsNumber)
       if (event.date) setTime(moment(event.date).format('HH:mm'))

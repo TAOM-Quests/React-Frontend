@@ -11,15 +11,15 @@ import { events } from '../../services/api/eventModule/events/events'
 
 export interface EventMinimizeProps {
   id: number
-  date: Date | null
   name: string
   type: string
   status: string
   address: string
   platform: string
   imageUrl: string
-  onDelete?: () => void
+  date: Date | null
   departmentName: string
+  onDelete?: () => void
   isEmployeeView?: boolean
   participantsCount?: number
 }
