@@ -56,7 +56,7 @@ export const EventCreate = () => {
   const [eventTypes, setEventTypes] = useState<EventType[]>([])
   const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
 
-  const [status, setStatus] = useState<EventStatus>({ id: 1, name: 'Черновик' })
+  const [status, setStatus] = useState<EventStatus | null>(null)
 
   const [name, setName] = useState<string>('')
   const [time, setTime] = useState<string>('')
@@ -260,7 +260,7 @@ export const EventCreate = () => {
     <>
       {!isLoading ? (
         <div className="event_create">
-          <Badge text={status?.name ?? ''} />
+          {status && <Badge text={`Статус: ${status.name}`} />}
           {renderStateButtons()}
           {(comments.length > 0 || user.roleId === ROLE_ID_INSPECTOR) && (
             <EventsCreateInspectorComments

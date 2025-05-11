@@ -19,7 +19,6 @@ export interface FetchEventProps {
   setAccessCode: Dispatch<React.SetStateAction<string>>
   setIdentifier: Dispatch<React.SetStateAction<string>>
   setRecordLink: Dispatch<React.SetStateAction<string>>
-  setStatus: Dispatch<React.SetStateAction<EventStatus>>
   setComments: Dispatch<React.SetStateAction<Comment[]>>
   setDescription: Dispatch<React.SetStateAction<string>>
   setFiles: Dispatch<React.SetStateAction<ServerFile[]>>
@@ -31,6 +30,7 @@ export interface FetchEventProps {
   setImage: Dispatch<React.SetStateAction<ServerFile | null>>
   setSchedule: Dispatch<React.SetStateAction<ScheduleItem[]>>
   setSeatsNumber: Dispatch<React.SetStateAction<number | null>>
+  setStatus: Dispatch<React.SetStateAction<EventStatus | null>>
   setAdditionalInfoTexts: Dispatch<React.SetStateAction<string[]>>
 }
 
