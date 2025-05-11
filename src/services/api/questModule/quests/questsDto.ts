@@ -1,6 +1,17 @@
 import { QuestQuestion } from '../../../../models/questQuestion'
 import { QuestResult } from '../../../../models/questResult'
 
+export interface QuestsGetDto {
+  id: number
+  name?: string
+  limit?: number
+  offset?: number
+  executor?: number
+  department?: number
+  participant?: number
+  // Нужны ещё tags
+}
+
 export interface SaveQuestDto {
   executorId: number
   departmentId: number

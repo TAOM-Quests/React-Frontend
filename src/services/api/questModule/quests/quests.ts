@@ -1,15 +1,21 @@
 import { Quest } from '../../../../models/quest'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
+import { QuestMinimize } from '../../../../models/questMinimize'
 import { questModule } from '../questModule'
 import {
   QuestGroupsGetDto,
+  QuestsGetDto,
   QuestTagsGetDto,
   SaveQuestCompleteDto,
   SaveQuestDto,
 } from './questsDto'
 
 export const quests = {
+  //Сделать получение квестов пользователя
+  // getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
+  // },
+
   getById: (id: number): Promise<Quest> =>
     questModule<Quest, null>(`quests/${id}`),
 

@@ -8,4 +8,5 @@ export interface QuestMinimize {
   group: QuestGroup
   tags: QuestTag[]
   difficult: QuestDifficult
+  //imageUrl?: string
 }

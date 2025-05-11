@@ -8,6 +8,8 @@ import { OptionProps } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { useState } from 'react'
 import { events } from '../../services/api/eventModule/events/events'
+import { getTwoShortestTags } from '../../utils/getTwoShortestTags'
+import { Tag } from '../UI/Tag/Tag'
 
 export interface EventMinimizeProps {
   id: number
@@ -19,6 +21,7 @@ export interface EventMinimizeProps {
   platform: string
   imageUrl: string
   onDelete?: () => void
+  tags?: string[]
   isEmployeeView?: boolean
 }
 
@@ -27,6 +30,7 @@ export default function EventMinimize({
   date,
   name,
   type,
+  tags,
   status,
   address,
   platform,
@@ -37,6 +41,8 @@ export default function EventMinimize({
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
   const navigate = useNavigate()
+
+  const shortestTags = tags ? getTwoShortestTags(tags) : []
 
   const eventOptionsContextMenu: OptionProps[] = [
     {
@@ -88,6 +94,13 @@ export default function EventMinimize({
       </div>
 
       <div className="eventMinimize__header">
+        <div className="eventMinimize__header--left">
+          <div className="eventMinimize__header--tags">
+            {shortestTags.map((tag, index) => (
+              <Tag key={index} text={tag} type="secondary" size="small" />
+            ))}
+          </div>
+        </div>
         <div className="eventMinimize__header--right">
           {isEmployeeView && (
             <>

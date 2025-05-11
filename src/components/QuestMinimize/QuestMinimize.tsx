@@ -1,27 +1,41 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { OptionProps } from '../UI/Option/Option'
+import { ContainerBox } from '../ContainerBox/ContainerBox'
+import { ContextMenu } from '../ContextMenu/ContextMenu'
+import { Icon } from '../UI/Icon/Icon'
+import './QuestMinimize.scss'
+import { Tag } from '../UI/Tag/Tag'
+import { getTwoShortestTags } from '../../utils/getTwoShortestTags'
 
 export interface QuestMinimizeProps {
   id: number
   name: string
-  imageUrl: string
+  tags?: string[]
+  imageUrl?: string
   onDelete?: () => void
+  difficulty?: string
   isEmployeeView?: boolean
+  participantsCount?: number
 }
 
-export default function EventMinimize({
+export default function QuestMinimize({
   id,
   name,
+  tags,
   imageUrl,
   onDelete,
+  difficulty,
   isEmployeeView,
+  participantsCount,
 }: QuestMinimizeProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
   const navigate = useNavigate()
 
-  const eventOptionsContextMenu: OptionProps[] = [
+  const shortestTags = tags ? getTwoShortestTags(tags) : []
+
+  const questOptionsContextMenu: OptionProps[] = [
     {
       id: 1,
       text: 'Редактировать',
@@ -40,19 +54,6 @@ export default function EventMinimize({
     },
   ]
 
-  const statusColor: { [key: string]: TypeBadge } = {
-    Черновик: 'neutral',
-    Утверждено: 'success',
-    Отклонено: 'critical',
-    'На утверждении': 'caution',
-    'В работе': 'info',
-    Архив: 'neutral',
-  }
-
-  const getStatusColor = (status: string): TypeBadge => {
-    return statusColor[status] ?? 'neutral'
-  }
-
   const toggleMenu = () => {
     if (openMenuId === id) {
       setOpenMenuId(null)
@@ -64,57 +65,64 @@ export default function EventMinimize({
   return (
     <ContainerBox
       style={{ backgroundImage: `url(${imageUrl})` }}
-      onClick={() => navigate(`/event/${id}`)}
-      className="eventMinimize"
+      onClick={() => navigate(`/quest/${id}`)}
+      className="questMinimize"
     >
-      <div className="eventMinimize__image-wrapper">
-        <div className="eventMinimize__overlay"></div>
+      <div className="questMinimize__image-wrapper">
+        <div className="questMinimize__overlay"></div>
       </div>
 
-      <div className="eventMinimize__header">
-        <div className="eventMinimize__header--right">
-          {isEmployeeView && (
-            <>
-              <Badge type={getStatusColor(status)} text={status} />
-              <ContextMenu
-                isVisible={openMenuId === id}
-                onToggle={toggleMenu}
-                options={eventOptionsContextMenu}
-              >
-                <Icon colorIcon="primary" icon="MENU_DOTS" />
-              </ContextMenu>
-            </>
-          )}
+      <div className="questMinimize__header">
+        <div className="questMinimize__header--left">
+          <div className="questMinimize__header--tags">
+            {difficulty ? (
+              <>
+                <Tag text={difficulty} type="subdued" size="small" />
+                {shortestTags.length > 0 && (
+                  <Tag
+                    key={0}
+                    text={shortestTags[0]}
+                    type="secondary"
+                    size="small"
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                {shortestTags.map((tag, index) => (
+                  <Tag key={index} text={tag} type="secondary" size="small" />
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+        <div className="questMinimize__header--right">
+          {/* {isEmployeeView && ( */}
+          <>
+            <ContextMenu
+              isVisible={openMenuId === id}
+              onToggle={toggleMenu}
+              options={questOptionsContextMenu}
+              className="questMinimize__header--menu"
+            >
+              <Icon colorIcon="primary" icon="MENU_DOTS" />
+            </ContextMenu>
+          </>
+          {/* )} */}
         </div>
       </div>
-      <p className="body_xl_sb eventMinimize__name">{name}</p>
-      <div className="eventMinimize__info">
-        <div className="eventMinimize__date">
-          <Icon colorIcon="soft-blue" icon="CALENDAR" />
-          <p className="body_l_m text_ellipsis">
-            {date ? moment.utc(date).format('D MMMM HH:mm') : ''}
-          </p>
+      <div className="questMinimize__name-wrapper">
+        <div className="questMinimize__logo">
+          <div className="questMinimize__logo--line"></div>
+          <Icon icon="TAOM" colorIcon="primary" size="large" />
+          <div className="questMinimize__logo--line"></div>
         </div>
-        {address && (
-          <div className="eventMinimize__address">
-            <Icon colorIcon="soft-blue" icon="MARKER_MAP" />
-            <p className="body_l_m text_ellipsis eventMinimize__address">
-              {address}
-            </p>
-          </div>
-        )}
-        {platform && (
-          <div className="eventMinimize__onlineMeeting">
-            <Icon colorIcon="soft-blue" icon="PLATFORM" />
-            <p className="body_l_m text_ellipsis">{platform}</p>
-          </div>
-        )}
-        {type && (
-          <div className="eventMinimize__type">
-            <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
-            <p className="body_l_m text_ellipsis">{type}</p>
-          </div>
-        )}
+        <p className="body_xl_sb questMinimize__name">{name}</p>
+      </div>
+
+      <div className="questMinimize__info">
+        <p className="body_m_m">{participantsCount || 0}</p>
+        <Icon icon="USER" colorIcon="primary" />
       </div>
     </ContainerBox>
   )
