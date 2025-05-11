@@ -5,6 +5,7 @@ import {
   ChangeEvent,
   KeyboardEvent,
   InputHTMLAttributes,
+  ReactNode,
 } from 'react'
 import './DateInput.scss'
 import { ButtonCalendar } from '../ButtonCalendar/ButtonCalendar'
@@ -172,7 +173,7 @@ export const DateInput = ({
       )
     }
 
-    const days: JSX.Element[] = []
+    const days: ReactNode[] = []
     for (
       let i = 0;
       i < (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
@@ -269,7 +270,7 @@ export const DateInput = ({
     setErrorFocus(false)
   }
 
-  let calendarContent: JSX.Element = <></>
+  let calendarContent: ReactNode = <></>
   if (isOpen) {
     calendarContent = (
       <div className="calendar" ref={calendarRef}>

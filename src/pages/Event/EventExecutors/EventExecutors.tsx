@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { Avatar } from '../../../components/UI/Avatar/Avatar'
 import { Employee } from '../../../models/user'
@@ -13,6 +13,12 @@ export const EventExecutors = ({ executors }: EventExecutorsProps) => {
   const [activeId, setActiveId] = useState<number | null>(null)
 
   const avatarRefs = useRef<(HTMLDivElement | null)[]>([])
+  const setAvatarRef = useCallback(
+    (el: HTMLDivElement | null, idx: number) => {
+      avatarRefs.current[idx] = el
+    },
+    [avatarRefs],
+  )
 
   return (
     <ContainerBox className="event-executors">
@@ -22,7 +28,7 @@ export const EventExecutors = ({ executors }: EventExecutorsProps) => {
           <div key={executor.id}>
             <div
               className="event-executors__avatar-wrap"
-              ref={el => (avatarRefs.current[idx] = el)}
+              ref={el => setAvatarRef(el, idx)}
               onMouseEnter={() => setActiveId(executor.id)}
               onMouseLeave={() => setActiveId(null)}
             >

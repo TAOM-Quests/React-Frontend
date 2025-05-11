@@ -1,6 +1,6 @@
 import { api } from '../api'
 
-export const COMMON_MODULE_API_URL = 'commonModule/'
+const COMMON_MODULE_API_URL = 'commonModule/'
 
 export const commonModule = <TResult, TParameters = null>(
   path: string,

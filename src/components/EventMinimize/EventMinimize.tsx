@@ -7,6 +7,7 @@ import { Badge, TypeBadge } from '../UI/Badge/Badge'
 import { OptionProps } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { useState } from 'react'
+import { events } from '../../services/api/eventModule/events/events'
 
 export interface EventMinimizeProps {
   id: number
@@ -17,6 +18,7 @@ export interface EventMinimizeProps {
   address: string
   platform: string
   imageUrl: string
+  onDelete?: () => void
   departmentName: string
   isEmployeeView?: boolean
   participantsCount?: number
@@ -31,6 +33,7 @@ export const EventMinimize = ({
   address,
   platform,
   imageUrl,
+  onDelete,
   departmentName,
   isEmployeeView,
   participantsCount,
@@ -50,8 +53,9 @@ export const EventMinimize = ({
     {
       id: 2,
       text: 'Удалить',
-      onSelect: () => {
-        alert(`Удалить событие с id ${id}`)
+      onSelect: async () => {
+        await events.delete(id)
+        onDelete?.()
       },
     },
   ]

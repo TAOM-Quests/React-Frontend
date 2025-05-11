@@ -3,7 +3,6 @@ import {
   PlaceOnline,
   ScheduleItem,
 } from '../../../../models/event'
-import { EventTag } from '../../../../models/eventTag'
 
 export interface EventsGetDto {
   type?: number
@@ -24,13 +23,13 @@ export interface EventCreateDto {
   departmentId: number
   date?: Date
   name?: string
-  typeId?: number
-  imageId?: number
   statusId?: number
   filesIds?: number[]
   description?: string
   inspectorId?: number
   seatsNumber?: number
+  typeId?: number | null
+  imageId?: number | null
   executorsIds?: number[]
   schedule?: ScheduleItem[]
   places?: (PlaceOnline | PlaceOffline)[]
@@ -44,13 +43,13 @@ export interface changeParticipantDto {
 export interface EventUpdateDto {
   date?: Date
   name?: string
-  typeId?: number
-  imageId?: number
   statusId?: number
   filesIds?: number[]
   description?: string
   inspectorId?: number
   seatsNumber?: number
+  typeId?: number | null
+  imageId?: number | null
   executorsIds?: number[]
   schedule?: ScheduleItem[]
   tags?: { id?: number; name: string }[]

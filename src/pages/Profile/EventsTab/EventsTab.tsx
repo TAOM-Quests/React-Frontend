@@ -158,7 +158,11 @@ export default function EventsTab({ user }: EventsTabProps) {
                 participantsCount: event.participantsCount,
               }
 
-              if (user.isEmployee) eventData.isEmployeeView = true
+              if (user.isEmployee) {
+                eventData.isEmployeeView = true
+                eventData.onDelete = () =>
+                  setEvents(userEvents.filter(e => e.id !== event.id))
+              }
 
               return <EventMinimizeComponent key={event.id} {...eventData} />
             })

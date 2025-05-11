@@ -13,6 +13,14 @@ export const userProfile: UserProfile = {
   sex: 'Female',
   phoneNumber: '898-888-88-88',
   completedQuests: [],
+  image: {
+    id: 1,
+    url: 'testUrl',
+    originalName: 'testName',
+    size: 0,
+    extension: 'jpg',
+    name: 'testName',
+  },
 }
 
 export const employeeProfile: UserProfileEmployee = {
@@ -27,4 +35,12 @@ export const employeeProfile: UserProfileEmployee = {
   department: { id: 1, name: 'ПИ' },
   completedQuests: [],
   position: { id: 1, name: 'Преподаватель' },
+  image: {
+    id: 1,
+    url: 'testUrl',
+    originalName: 'testName',
+    size: 0,
+    extension: 'jpg',
+    name: 'testName',
+  },
 }

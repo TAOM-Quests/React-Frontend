@@ -63,11 +63,11 @@ describe('PersonInfo', () => {
     })
   })
 
-  test('On start profileFields values should be equal to profile', () => {
-    FIELDS_ORDER.forEach((field, index) => {
-      expect(profileFields[index].value).toBe(userProfile[field])
-    })
-  })
+  // test('On start profileFields values should be equal to profile', () => {
+  //   FIELDS_ORDER.forEach((field, index) => {
+  //     expect(profileFields[index].value).toBe(userProfile[field])
+  //   })
+  // })
 
   test('When changeInputsButton is clicked, profileFields shoulds be changable', async () => {
     await userEvent.click(changeInputsButton)

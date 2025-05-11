@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import { renderWithProviders } from '../../../../redux/test/utils'
 import { Dropdown } from '../Dropdown'
 import { itemsString } from './dropdownFixture'
 import { userEvent } from '@vitest/browser/context'
+import { renderWithProviders } from '../../../../mocks/redux/utils'
 
 describe('Dropdown', () => {
   describe('When dropdown is not multiple', () => {
