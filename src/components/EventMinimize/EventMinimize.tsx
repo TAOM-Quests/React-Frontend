@@ -23,6 +23,7 @@ export interface EventMinimizeProps {
   onDelete?: () => void
   tags?: string[]
   isEmployeeView?: boolean
+  participantsCount?: number
 }
 
 export default function EventMinimize({
@@ -37,6 +38,7 @@ export default function EventMinimize({
   imageUrl,
   onDelete,
   isEmployeeView,
+  participantsCount,
 }: EventMinimizeProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
@@ -121,7 +123,7 @@ export default function EventMinimize({
         <div className="eventMinimize__date">
           <Icon colorIcon="soft-blue" icon="CALENDAR" />
           <p className="body_l_m text_ellipsis">
-            {date ? moment.utc(date).format('D MMMM HH:mm') : ''}
+            g{date ? moment.utc(date).format('D MMMM HH:mm') : ''}
           </p>
         </div>
         {address && (
@@ -142,6 +144,12 @@ export default function EventMinimize({
           <div className="eventMinimize__type">
             <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
             <p className="body_l_m text_ellipsis">{type}</p>
+          </div>
+        )}{' '}
+        {isEmployeeView && (
+          <div className="eventMinimize__participantsCount">
+            <Icon icon="USER" colorIcon="soft-blue" />
+            <p className="body_l_m">{participantsCount || 0}</p>
           </div>
         )}
       </div>
