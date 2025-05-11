@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
-import {
-  Dropdown,
-  DropdownItemType,
-} from '../../../components/UI/Dropdown/Dropdown'
+import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
 import Input from '../../../components/UI/Input/Input'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { QuestDifficult } from '../../../models/questDifficult'
@@ -16,6 +13,7 @@ import { isArray } from 'lodash'
 import { TextEditor } from '../../../components/TextEditor/TextEditor'
 import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
 import './QuestCreateMainData.scss'
+import { EmployeeAuth } from '../../../models/userAuth'
 
 export interface QuestCreateMainDataProps {
   name: string
@@ -38,12 +36,10 @@ export const QuestCreateMainData = ({
   name,
   time,
   tags,
-  image,
   group,
   setName,
   setTime,
   setTags,
-  setImage,
   setGroup,
   difficulty,
   description,
@@ -56,16 +52,18 @@ export const QuestCreateMainData = ({
     [],
   )
 
-  const user = useAppSelector(selectAuth)
+  const user = useAppSelector(selectAuth) as EmployeeAuth
 
   useEffect(() => {
     const fetchCreateQuestData = async () => {
+      if (!user) return
+
       try {
         const questTags = await quests.getTags({
-          departmentId: user!.departmentId,
+          departmentId: user.departmentId,
         })
         const questGroups = await quests.getGroups({
-          departmentId: user!.departmentId,
+          departmentId: user.departmentId,
         })
         const questDifficulties = await quests.getDifficulties()
 

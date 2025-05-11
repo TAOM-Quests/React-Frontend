@@ -63,7 +63,7 @@ export const CalendarFilter = ({
               text: type.name,
             }))}
             placeholder="Тип мероприятия"
-            selectedIds={selectedType ? [selectedType] : []}
+            selectedItems={selectedType ? [{ id: selectedType, text: '' }] : []}
             onChangeDropdown={selected =>
               setFilter({
                 type: selected && !isArray(selected) ? +selected.id : undefined,
@@ -78,7 +78,9 @@ export const CalendarFilter = ({
               text: department.name,
             }))}
             placeholder="Кафедра"
-            selectedIds={selectedDepartment ? [selectedDepartment] : []}
+            selectedItems={
+              selectedDepartment ? [{ id: selectedDepartment, text: '' }] : []
+            }
             onChangeDropdown={selected =>
               setFilter({
                 department:

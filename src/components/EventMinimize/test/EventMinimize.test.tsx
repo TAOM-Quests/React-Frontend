@@ -59,10 +59,8 @@ describe('EventMinimize', () => {
       expect(addressParagraph.textContent).toBe(eventFullData.address)
     })
 
-    test('Should render onlineMeeting', () => {
-      expect(onlineMeetingParagraph.textContent).toBe(
-        eventFullData.onlineMeeting,
-      )
+    test('Should render platform', () => {
+      expect(onlineMeetingParagraph.textContent).toBe(eventFullData.platform)
     })
 
     test('Should render type', () => {
