@@ -82,7 +82,6 @@ export const QuestQuestionBoxSorting = forwardRef(
 
     return (
       <div className="quest-question-box-sorting">
-        {JSON.stringify(userAnswer)}
         <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
           <div className="quest-question-box-sorting__boxes">
             {question.answer.correctAnswer.map((box, boxIndex) => (
