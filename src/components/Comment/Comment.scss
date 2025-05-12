@@ -1,0 +1,23 @@
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    word-break: break-all;
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: var(--bg_c_gray_primary);
+
+    a {
+      color: var(--text_c_accent);
+    }
+  }
+
+  &__date {
+    color: var(--text_c_subdued);
+  }
+}

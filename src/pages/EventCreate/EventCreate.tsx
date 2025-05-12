@@ -32,7 +32,7 @@ import { saveEvent } from './utils/saveEvent'
 import { EventsCreateInspectorComments } from './EventsCreateInspectorComments/EventsCreateInspectorComments'
 import { Comment } from '../../models/comment'
 import { EventStatus } from '../../models/eventStatus'
-import { Badge } from '../../components/UI/Badge/Badge'
+import { Badge, TypeBadge } from '../../components/UI/Badge/Badge'
 
 const additionalInfoItems: string[] = [
   'Доставка в Академию и обратно осуществляется корпоративными автобусами (график по ссылке https://taom.academy/schedule).',
@@ -218,6 +218,19 @@ export const EventCreate = () => {
     }
   }
 
+  const statusColor: { [key: number]: TypeBadge } = {
+    1: 'neutral',
+    5: 'success',
+    4: 'critical',
+    3: 'caution',
+    2: 'info',
+    6: 'neutral',
+  }
+
+  const getStatusColor = (statusId: number): TypeBadge => {
+    return statusColor[statusId] ?? 'neutral'
+  }
+
   const renderStateButtons = () => (
     <div className="event_create--header">
       <Button
@@ -226,33 +239,40 @@ export const EventCreate = () => {
         iconBefore="ARROW_SMALL_LEFT"
         onClick={navigateBack}
       />
-      {eventId &&
-        user.roleId === ROLE_ID_INSPECTOR &&
-        status?.id === STATUS_ID_ON_INSPECTION && (
-          <>
-            <Button
-              text="Отклонить"
-              onClick={() => changeEventStatus(STATUS_ID_REWORK)}
-              disabled={comments.filter(comment => !comment.id).length <= 0}
-            />
-            <Button
-              text="Утвердить"
-              onClick={() => changeEventStatus(STATUS_ID_ACCEPTED)}
-            />
-          </>
+
+      <div className="event_create--header__buttons">
+        {status && (
+          <Badge type={getStatusColor(status.id)} text={`${status.name}`} />
         )}
-      {eventId && status?.id === STATUS_ID_DRAFT && (
+        {eventId && status?.id === STATUS_ID_DRAFT && (
+          <Button
+            text="На проверку"
+            disabled={saveValidate}
+            onClick={() => changeEventStatus(STATUS_ID_WAIT_INSPECTION)}
+          />
+        )}
+        {eventId &&
+          user.roleId === ROLE_ID_INSPECTOR &&
+          status?.id === STATUS_ID_ON_INSPECTION && (
+            <>
+              <Button
+                text="Отклонить"
+                onClick={() => changeEventStatus(STATUS_ID_REWORK)}
+                disabled={comments.filter(comment => !comment.id).length <= 0}
+              />
+              <Button
+                text="Утвердить"
+                onClick={() => changeEventStatus(STATUS_ID_ACCEPTED)}
+              />
+            </>
+          )}
         <Button
-          text="На проверку"
+          text="Сохранить"
+          colorType="secondary"
           disabled={saveValidate}
-          onClick={() => changeEventStatus(STATUS_ID_WAIT_INSPECTION)}
+          onClick={saveEventHandler}
         />
-      )}
-      <Button
-        text="Сохранить"
-        disabled={saveValidate}
-        onClick={saveEventHandler}
-      />
+      </div>
     </div>
   )
 
@@ -260,9 +280,10 @@ export const EventCreate = () => {
     <>
       {!isLoading ? (
         <div className="event_create">
-          {status && <Badge text={`Статус: ${status.name}`} />}
           {renderStateButtons()}
-          {(comments.length > 0 || user.roleId === ROLE_ID_INSPECTOR) && (
+          {(comments.length > 0 ||
+            (user.roleId === ROLE_ID_INSPECTOR &&
+              status?.id === STATUS_ID_ON_INSPECTION)) && (
             <EventsCreateInspectorComments
               comments={comments}
               setComments={setComments}

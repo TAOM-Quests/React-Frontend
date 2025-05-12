@@ -1,6 +1,7 @@
 import moment from 'moment'
 import { Employee } from '../../models/user'
 import { OptionAvatar } from '../User/OptionAvatar/OptionAvatar'
+import './Comment.scss'
 
 export interface CommentProps {
   text: string
@@ -10,14 +11,27 @@ export interface CommentProps {
 
 export const Comment = ({ text, user, createdAt }: CommentProps) => {
   return (
-    <div>
+    <div className="comment">
+      {user.position}
       <OptionAvatar
         text={user.name}
+        size="extraSmall"
         description={user.position}
         avatarSrc={user.image?.url}
       />
-      {text}
-      {createdAt && moment(createdAt).format('DD MMMM YYYY HH:mm')}
+      {text && (
+        <div className="comment__content">
+          <div
+            className="body_m_r"
+            dangerouslySetInnerHTML={{ __html: text }}
+          />
+          {createdAt && (
+            <p className="body_xs_r comment__date">
+              {moment(createdAt).format('DD MMMM YYYY HH:mm')}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
