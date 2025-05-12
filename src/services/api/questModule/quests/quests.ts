@@ -13,11 +13,21 @@ import {
 
 export const quests = {
   //Сделать получение квестов пользователя
-  // getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
-  // },
+  getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
+    let queryString = Object.entries(params)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')
+
+    return questModule<QuestMinimize[], null>(
+      `quests${queryString ? `?${queryString}` : ''}`,
+    )
+  },
 
   getById: (id: number): Promise<Quest> =>
     questModule<Quest, null>(`quests/${id}`),
+
+  getCompletedById: (completeId: number): Promise<Quest> =>
+    questModule<Quest, null>(`quests/complete/${completeId}`),
 
   create: (params: SaveQuestDto): Promise<Quest> =>
     questModule<Quest, SaveQuestDto>('quests', params),

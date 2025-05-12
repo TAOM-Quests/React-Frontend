@@ -4,6 +4,8 @@ export interface QuestQuestion {
   id?: number
   imageId?: number
   questId?: number
+  //Используется только для пройденных квестов
+  answer?: any
 }
 
 type QuestionType = 'single' | 'multiple' | 'connection' | 'boxSorting' | 'free'

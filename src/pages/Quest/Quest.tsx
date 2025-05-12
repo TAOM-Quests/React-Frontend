@@ -29,29 +29,28 @@ export const Quest = () => {
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
 
   const questId = useParams().id
+  const completedId = useParams().completeId
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
 
   useEffect(() => {
     const fetchQuestData = async () => {
       try {
+        if (!questId && !completedId) throw new Error('No quest id')
         setIsLoading(true)
 
-        const fetchedQuest = await quests.getById(+questId!)
+        const fetchedQuest = completedId
+          ? await quests.getCompletedById(+completedId!)
+          : await quests.getById(+questId!)
         setQuest(fetchedQuest)
 
         setIsLoading(false)
       } catch (e) {
-        console.error(e)
+        console.error(`[Quest] ${e}`)
       }
     }
 
-    if (questId) {
-      fetchQuestData()
-    } else {
-      console.error('[QuestPage] Quest have no id')
-      navigate('/')
-    }
+    fetchQuestData()
   }, [])
 
   useEffect(() => {
@@ -86,12 +85,12 @@ export const Quest = () => {
           description: currentResult?.description ?? '',
           imageId: currentResult?.imageId,
         },
-        questions: userAnswers.map((answer, index) => ({
-          answer: answer.answer,
-          text: quest.questions![index].text,
-          type: quest.questions![index].type,
-          isCorrectAnswer: answer.isCorrectAnswer,
-          imageId: quest.questions![index].imageId,
+        questions: quest.questions!.map((question, index) => ({
+          ...question,
+          answer: {
+            ...question.answer,
+            userAnswer: userAnswers[index].answer,
+          },
         })),
       }
 
@@ -104,7 +103,7 @@ export const Quest = () => {
 
       await quests.saveComplete(+questId!, user!.id, saveQuestComplete)
     } catch (e) {
-      console.error(`[QuestPage] ${e}`)
+      console.error(`[Quest] ${e}`)
     }
   }
 
@@ -119,12 +118,14 @@ export const Quest = () => {
         >
           {isStartView && (
             <QuestStartView
-              name={quest.name ?? ''}
               time={quest.time}
-              tags={quest.tags?.map(tag => tag.name) ?? []}
+              name={quest.name ?? ''}
+              isCompleted={!!completedId}
               difficulty={quest.difficult?.name}
               description={quest.description ?? ''}
+              tags={quest.tags?.map(tag => tag.name) ?? []}
               questionCount={quest.questions?.length ?? 0}
+              onClickRestartButton={() => navigate(`/quest/${quest.id}`)}
               onClickStartButton={() => {
                 setIsStartView(false)
                 quest.questions?.length
@@ -140,15 +141,15 @@ export const Quest = () => {
                   <Tag text={quest.time} type="subdued" size="small" />
                 )}
                 <Tag
-                  text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
-                  type="subdued"
                   size="small"
+                  type="subdued"
+                  text={`${currentQuestionIndex + 1} из ${quest.questions?.length}`}
                 />
               </div>
-
               <QuestQuestion
-                question={quest.questions![currentQuestionIndex]}
+                isCompleted={!!completedId}
                 setNextQuestion={setNextQuestion}
+                question={quest.questions![currentQuestionIndex]}
               />
             </ContainerBox>
           )}

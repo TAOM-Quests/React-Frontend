@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { UserAuth } from '../../../models/userAuth'
 import './QuestsTab.scss'
 import { QuestMinimize } from '../../../models/questMinimize'
@@ -12,6 +12,7 @@ import { quests } from '../../../services/api/questModule/quests/quests'
 
 interface QuestsFilter {
   name?: string
+  department?: number[]
 }
 
 export interface QuestsTabProps {
@@ -24,26 +25,26 @@ export default function QuestsTab({ user }: QuestsTabProps) {
 
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   fetchQuests()
-  // }, [filter])
+  useEffect(() => {
+    fetchQuests()
+  }, [filter])
 
-  //TODO: Добавить метод получения всех квестов пользователя
-  // const fetchQuests = async () => {
-  //   const fetchedQuests = user.isEmployee
-  //     ? await quests.getManyByParams({
-  //         executor: user.id,
-  //         offset: userQuests?.length,
-  //         ...filter,
-  //       })
-  //     : await quests.getManyByParams({
-  //         participant: user.id,
-  //         offset: userQuests?.length,
-  //         ...filter,
-  //       })
+  const fetchQuests = async () => {
+    const fetchedQuests = user.isEmployee
+      ? await quests.getManyByParams({
+          executor: [user.id],
+          offset: userQuests?.length,
+          ...filter,
+        })
+      : await quests.getManyByParams({
+          completeBy: user.id,
+          offset: userQuests?.length,
+          isCompleted: true,
+          ...filter,
+        })
 
-  //   setQuests([...(userQuests ?? []), ...fetchedQuests])
-  // }
+    setQuests([...(userQuests ?? []), ...fetchedQuests])
+  }
 
   return (
     <div className="profile_quests">
@@ -68,13 +69,7 @@ export default function QuestsTab({ user }: QuestsTabProps) {
         )}
       </div>
       <div className="profile_quests--quests">
-        <QuestMinimizeComponent key={0} id={0} name="Ghbdtn" />
-        <QuestMinimizeComponent key={1} id={1} name="Ghbdtn" />
-        <QuestMinimizeComponent key={2} id={2} name="Ghbdtn" />
-        <QuestMinimizeComponent key={3} id={3} name="Ghbdtn" />
-        <QuestMinimizeComponent key={4} id={4} name="Ghbdtn" />
-
-        {/* {userQuests && userQuests.length
+        {userQuests?.length
           ? userQuests.map(quest => {
               const questData: QuestMinimizeProps = {
                 id: quest.id,
@@ -90,7 +85,7 @@ export default function QuestsTab({ user }: QuestsTabProps) {
 
               return <QuestMinimizeComponent key={quest.id} {...questData} />
             })
-          : 'Квестов нет'} */}
+          : 'Квестов нет'}
       </div>
     </div>
   )

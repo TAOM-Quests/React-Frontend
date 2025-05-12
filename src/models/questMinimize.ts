@@ -4,9 +4,8 @@ import { QuestTag } from './questTag'
 
 export interface QuestMinimize {
   id: number
-  name: string
-  group: QuestGroup
   tags: QuestTag[]
-  difficult: QuestDifficult
-  //imageUrl?: string
+  name?: string
+  group?: QuestGroup
+  difficult?: QuestDifficult
 }

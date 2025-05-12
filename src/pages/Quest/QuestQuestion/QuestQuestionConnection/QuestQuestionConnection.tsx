@@ -11,6 +11,7 @@ export interface QuestQuestionConnectionProps {
   question: QuestQuestionConnectionInterface
   isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
+  userAnswer?: string[]
 }
 
 interface DndOption {
@@ -21,10 +22,15 @@ interface DndOption {
 
 export const QuestQuestionConnection = forwardRef(
   (
-    { question, isCheckMode, setIsAnswerReady }: QuestQuestionConnectionProps,
+    {
+      question,
+      isCheckMode,
+      setIsAnswerReady,
+      userAnswer: userAnswerProp,
+    }: QuestQuestionConnectionProps,
     ref,
   ) => {
-    const [userAnswer, setUserAnswer] = useState<string[]>([])
+    const [userAnswer, setUserAnswer] = useState<string[]>(userAnswerProp ?? [])
     const [dndOptions, setDndOptions] = useState<DndOption[]>(
       question.answer.options.map((option, optionIndex) => ({
         id: optionIndex,

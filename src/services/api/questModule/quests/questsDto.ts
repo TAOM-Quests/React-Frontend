@@ -2,14 +2,13 @@ import { QuestQuestion } from '../../../../models/questQuestion'
 import { QuestResult } from '../../../../models/questResult'
 
 export interface QuestsGetDto {
-  id: number
-  name?: string
   limit?: number
   offset?: number
-  executor?: number
-  department?: number
-  participant?: number
-  // Нужны ещё tags
+  tags?: number[]
+  completeBy?: number
+  executor?: number[]
+  department?: number[]
+  isCompleted?: boolean
 }
 
 export interface SaveQuestDto {
@@ -59,7 +58,6 @@ interface SaveQuestionComplete {
   type: string
   answer: {
     userAnswer: any
-    isCorrect: boolean
     options?: string[]
   }
   imageId?: number
