@@ -26,7 +26,7 @@ export const MiniMonthViewDays = ({
     )
   }
 
-  const daysComponents: JSX.Element[] = []
+  const daysComponents: ReactNode[] = []
   for (let i = 1; i <= daysInMonth; i++) {
     const day = month.clone().date(i)
     const dayEvents = events.filter(event =>

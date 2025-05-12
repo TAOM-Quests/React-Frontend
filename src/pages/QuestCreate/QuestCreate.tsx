@@ -16,6 +16,7 @@ import { quests } from '../../services/api/questModule/quests/quests'
 import { Button } from '../../components/UI/Button/Button'
 import { Loading } from '../../components/Loading/Loading'
 import './QuestCreate.scss'
+import { EmployeeAuth } from '../../models/userAuth'
 
 export const QuestCreate = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -36,7 +37,7 @@ export const QuestCreate = () => {
 
   const questId = useParams().id
   const navigate = useNavigate()
-  const user = useAppSelector(selectAuth)
+  const user = useAppSelector(selectAuth) as EmployeeAuth
 
   useEffect(() => {
     if (!user || !user.isEmployee) {
@@ -73,11 +74,21 @@ export const QuestCreate = () => {
   }, [])
 
   const saveQuest = async () => {
+    if (!user) return
+
     setIsLoading(true)
 
     const saveQuest: SaveQuestDto = {
-      executorId: user!.id,
-      departmentId: user!.departmentId!,
+      executorId: user.id,
+      departmentId: user.departmentId,
+      questions: questions.map(question => ({
+        ...question,
+        questId: +questId!,
+      })),
+      results: results.map(result => ({
+        ...result,
+        questId: +questId!,
+      })),
     }
 
     if (name) saveQuest.name = name
@@ -87,16 +98,6 @@ export const QuestCreate = () => {
     if (description) saveQuest.description = description
     if (difficulty) saveQuest.difficultId = difficulty.id
     if (tags.length) saveQuest.tagsIds = tags.map(tag => tag.id)
-    if (questions.length)
-      saveQuest.questions = questions.map(question => ({
-        ...question,
-        questId: +questId!,
-      }))
-    if (results.length)
-      saveQuest.results = results.map(result => ({
-        ...result,
-        questId: +questId!,
-      }))
 
     const { id } = questId
       ? await quests.update(+questId, saveQuest)

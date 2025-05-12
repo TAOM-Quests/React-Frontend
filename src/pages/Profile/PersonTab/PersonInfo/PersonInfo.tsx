@@ -208,6 +208,7 @@ export default function PersonInfo({
         <ContainerBox>
           <div className="personInfo--info">
             <ImageContainer
+              className="personInfo--info__imageContainer"
               disabled={!changingMode}
               selectedImages={profile.image ? [profile.image] : []}
               onSelectImages={selectedImages => {

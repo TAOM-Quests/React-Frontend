@@ -1,14 +1,14 @@
 import { Response, ResponseError } from './common/interface/Response'
 
-export const DEV_SERVER_URL = 'http://localhost:3000/'
-export const BASE_API_URL = 'api/v1/'
+const SERVER_URL = import.meta.env.VITE_API_URL
+const BASE_API_URL = 'api/v1/'
 
 export const api = async <TResult, TParameters>(
   path: string,
   parameters?: TParameters,
   fetchOptions?: RequestInit,
 ): Promise<TResult | string> => {
-  path = `${DEV_SERVER_URL}${BASE_API_URL}${path}`
+  path = `${SERVER_URL}${BASE_API_URL}${path}`
 
   const response = (await fetchData<TParameters>(
     path,

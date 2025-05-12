@@ -1,11 +1,14 @@
-import { UserAuth } from "../../../../../models/userAuth";
-import { UserProfile, UserProfileUpdated } from "../../../../../models/userProfile";
-import { ProfileUpdateDto } from "../../../../../services/api/userModule/users/usersDto";
+import { UserAuth } from '../../../../../models/userAuth'
+import {
+  UserProfile,
+  UserProfileUpdated,
+} from '../../../../../models/userProfile'
+import { ProfileUpdateDto } from '../../../../../services/api/userModule/users/usersDto'
 
 export const user: UserAuth = {
   id: 2,
   email: 'marika.meidra@gmail.com',
-  token: 'testToken'
+  token: 'testToken',
 }
 
 export const userProfile: UserProfile = {
@@ -17,7 +20,15 @@ export const userProfile: UserProfile = {
   birthDate: new Date('07-08-2003'),
   sex: 'Female',
   phoneNumber: '898-888-88-88',
-  completedQuests: []
+  completedQuests: [],
+  image: {
+    id: 2,
+    url: 'testUrl',
+    originalName: 'testName',
+    size: 0,
+    extension: 'jpg',
+    name: 'testName',
+  },
 }
 
 export const typePersonFields: ProfileUpdateDto = {
@@ -28,7 +39,7 @@ export const typePersonFields: ProfileUpdateDto = {
   patronymic: 'Олегович',
   birthDate: '28-06-2003',
   sex: 'Мужской',
-  phoneNumber: '8-927-777-77-77'
+  phoneNumber: '8-927-777-77-77',
 }
 
 export const updatedProfile: UserProfileUpdated = {
