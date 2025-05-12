@@ -52,13 +52,16 @@ export const QuestQuestionBoxSorting = forwardRef(
     const dropHandler = (e: any) => {
       if (e.canceled) return
 
+      const targetType = e.target?.id?.split('-')[0]
+      const targetIndex = +e.target?.id?.split('-')[1]
+      const sourceType = e.source?.id?.split('-')[0]
+      const sourceIndex = +e.source?.id?.split('-')[1]
+
       setUserAnswer(
         userAnswer.map((box, boxIndex) => {
-          const targetType = e.target?.id?.split('-')[0]
-          const targetIndex = +e.target?.id?.split('-')[1]
-          const sourceType = e.source?.id?.split('-')[0]
-          const sourceIndex = +e.source?.id?.split('-')[1]
           if (targetType !== 'box' || sourceType !== 'option') return box
+          if (box.options.includes(sourceIndex) && targetIndex === boxIndex)
+            return box
 
           if (boxIndex === targetIndex) {
             return {
@@ -79,6 +82,7 @@ export const QuestQuestionBoxSorting = forwardRef(
 
     return (
       <div className="quest-question-box-sorting">
+        {JSON.stringify(userAnswer)}
         <DragDropProvider onDragEnd={e => dropHandler(e.operation)}>
           <div className="quest-question-box-sorting__boxes">
             {question.answer.correctAnswer.map((box, boxIndex) => (
@@ -101,7 +105,7 @@ export const QuestQuestionBoxSorting = forwardRef(
                     'quest-question-box-sorting__box--droppable',
                   )}
                 >
-                  {userAnswer[boxIndex].options.map((option, optionIndex) => {
+                  {userAnswer[boxIndex].options.map(option => {
                     const colorType = getOptionColorAnswerBoxSorting(
                       boxIndex,
                       option,
@@ -111,8 +115,8 @@ export const QuestQuestionBoxSorting = forwardRef(
                     )
                     return (
                       <Draggable
-                        key={optionIndex}
-                        id={`option-${optionIndex}`}
+                        key={option}
+                        id={`option-${option}`}
                         className={classNames(
                           'sorting-item',
                           'sorting-item--placed',
