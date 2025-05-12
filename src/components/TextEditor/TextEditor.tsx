@@ -6,6 +6,7 @@ import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import './TextEditor.scss'
+import { useEffect } from 'react'
 
 export interface TextEditorProps {
   value: string
@@ -34,6 +35,13 @@ export const TextEditor = ({
     content: value,
     onUpdate: onChange,
   })
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value)
+    }
+  }, [value, editor])
+
   return (
     editor && (
       <div className="editor">
