@@ -18,6 +18,9 @@
   }
 
   &__date {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
     color: var(--text_c_subdued);
   }
 }

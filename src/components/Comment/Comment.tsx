@@ -12,7 +12,6 @@ export interface CommentProps {
 export const Comment = ({ text, user, createdAt }: CommentProps) => {
   return (
     <div className="comment">
-      {user.position}
       <OptionAvatar
         text={user.name}
         size="extraSmall"

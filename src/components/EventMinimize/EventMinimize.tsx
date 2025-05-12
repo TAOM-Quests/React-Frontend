@@ -150,7 +150,9 @@ export default function EventMinimize({
           </div>
         )}
         {isInspectorView && (
-          <Button text="Взять в работу" onClick={inspectorHandler} />
+          <div>
+            <Button text="Взять в работу" onClick={inspectorHandler} />
+          </div>
         )}
       </div>
     </ContainerBox>

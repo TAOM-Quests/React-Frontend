@@ -1,4 +1,4 @@
-import { Dispatch, useState } from 'react'
+import { Dispatch, useEffect, useState } from 'react'
 import { Comment as CommentModel } from '../../../models/comment'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { Comment } from '../../../components/Comment/Comment'
@@ -7,6 +7,7 @@ import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { Button } from '../../../components/UI/Button/Button'
 import { EmployeeAuth } from '../../../models/userAuth'
+import './EventsCreateInspectorComments.scss'
 
 export interface EventsCreateInspectorCommentsProps {
   comments: CommentModel[]
@@ -30,20 +31,28 @@ export const EventsCreateInspectorComments = ({
       },
     ])
   }
+  useEffect(() => {}, [currentCommentText])
 
   return (
-    <ContainerBox>
-      <div>
-        {comments.map(comment => (
-          <Comment key={comment.id} {...comment} />
-        ))}
+    <ContainerBox className="events-create-inspector-comments">
+      <div className="comments-box">
+        <div className="body_l_sb comments__title">Предыдущие комментарии</div>
+        <div className="comments">
+          {comments.length !== 0 ? (
+            comments.map(comment => <Comment key={comment.id} {...comment} />)
+          ) : (
+            <div className="no-comments">Нет комментариев</div>
+          )}
+        </div>
       </div>
-      <div>
+
+      <div className="add-comment">
         <TextEditor
+          label="Комментарий"
           value={currentCommentText}
           onChange={editor => setCurrentCommentText(editor.editor.getHTML())}
         />
-        <Button text="Добавить комментарий" onClick={addComment} />
+        <Button text="Добавить комментарий" size="small" onClick={addComment} />
       </div>
     </ContainerBox>
   )
