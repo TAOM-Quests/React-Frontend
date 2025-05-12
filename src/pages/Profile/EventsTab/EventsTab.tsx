@@ -15,6 +15,11 @@ import './EventsTab.scss'
 import { Button } from '../../../components/UI/Button/Button'
 import { useNavigate } from 'react-router'
 import { ScrollController } from '../../../components/ScrollController/ScrollController'
+import { EventType } from '../../../models/eventType'
+import { EventStatus } from '../../../models/eventStatus'
+import { isArray } from 'lodash'
+import { Loading } from '../../../components/Loading/Loading'
+
 import { Switcher } from '../../../components/UI/Switcher/Switcher'
 
 const TABS = ['Мероприятия', 'Проверка мероприятий']
@@ -34,6 +39,10 @@ export interface EventsTabProps {
 }
 
 export default function EventsTab({ user }: EventsTabProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [eventTypes, setEventTypes] = useState<EventType[]>([])
+  const [eventStatuses, setEventStatuses] = useState<EventStatus[]>([])
+
   const [tab, setTab] = useState<string>('Мероприятия')
   const [filter, setFilter] = useState<EventsFilter>(
     user.isEmployee ? { executor: user.id } : { participant: user.id },
@@ -43,8 +52,26 @@ export default function EventsTab({ user }: EventsTabProps) {
   const navigate = useNavigate()
 
   useEffect(() => {
+    setIsLoading(true)
+    fetchFilterData()
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    setIsLoading(true)
+    setEvents([])
     fetchEvents()
+    setIsLoading(false)
   }, [filter])
+
+  const fetchFilterData = async () => {
+    try {
+      setEventTypes(await events.getTypes())
+      setEventStatuses(await events.getStatuses())
+    } catch (e) {
+      console.log(`[EventsTab] ${e}`)
+    }
+  }
 
   const fetchEvents = async () => {
     const fetchedEvents = await events.getManyByParams({
@@ -117,90 +144,101 @@ export default function EventsTab({ user }: EventsTabProps) {
 
   return (
     <>
-      <div className="profile_events--tabs">
-        {user.roleId === ROLE_ID_INSPECTOR && (
-          <Switcher
-            options={TABS}
-            activeOption={tab}
-            onChange={option => changeTab(option)}
-          />
-        )}
-      </div>
+      {!isLoading ? (
+        <>
+          <div className="profile_events--tabs">
+            {user.roleId === ROLE_ID_INSPECTOR && (
+              <Switcher
+                options={TABS}
+                activeOption={tab}
+                onChange={option => changeTab(option)}
+              />
+            )}
+          </div>
 
-      <div className="profile_events">
-        <div className="profile_events--filters">
-          <Input
-            value={filter.name}
-            iconBefore="SEARCH"
-            placeholder="Поиск по названию"
-            onChange={e =>
-              setFilter(state => ({ ...state, name: e.target.value }))
-            }
-          />
-          <Dropdown
-            items={dropdownTypes}
-            placeholder="Тип мероприятия"
-            onChangeDropdown={createDropdownChangeHandler('type', setFilter)}
-          />
-          {user.isEmployee && (
-            <>
+          <div className="profile_events">
+            <div className="profile_events--filters">
+              <Input
+                value={filter.name}
+                iconBefore="SEARCH"
+                placeholder="Поиск по названию"
+                onChange={e =>
+                  setFilter(state => ({ ...state, name: e.target.value }))
+                }
+              />
               <Dropdown
-                items={dropdownStatuses}
-                placeholder="Статус"
+                items={dropdownTypes}
+                placeholder="Тип мероприятия"
                 onChangeDropdown={createDropdownChangeHandler(
-                  'status',
+                  'type',
                   setFilter,
                 )}
-                selectedItems={filter.status ? [dropdownStatuses[0]] : []}
               />
+              {user.isEmployee && (
+                <>
+                  <Dropdown
+                    items={dropdownStatuses}
+                    placeholder="Статус"
+                    onChangeDropdown={createDropdownChangeHandler(
+                      'status',
+                      setFilter,
+                    )}
+                    selectedItems={filter.status ? [dropdownStatuses[0]] : []}
+                  />
 
-              <Button
-                onClick={() => navigate('/event/create')}
-                text="Создать мероприятие"
-                colorType="primary"
-              />
-            </>
-          )}
-        </div>
-        <ScrollController
-          onEndScroll={fetchEvents}
-          className="profile_events--events"
-          style={{ overflow: 'scroll' }}
-        >
-          {userEvents && userEvents.length
-            ? userEvents.map(event => {
-                const onlinePlace: PlaceOnline | null =
-                  event.places?.find(place => place.is_online) ?? null
-                const offlinePlace: PlaceOffline | null =
-                  event.places?.find(place => !place.is_online) ?? null
+                  <Button
+                    onClick={() => navigate('/event/create')}
+                    text="Создать мероприятие"
+                    colorType="primary"
+                  />
+                </>
+              )}
+            </div>
+            <ScrollController
+              onEndScroll={fetchEvents}
+              className="profile_events--events"
+              style={{ overflow: 'scroll' }}
+            >
+              {userEvents && userEvents.length
+                ? userEvents.map(event => {
+                    const onlinePlace: PlaceOnline | null =
+                      event.places?.find(place => place.is_online) ?? null
+                    const offlinePlace: PlaceOffline | null =
+                      event.places?.find(place => !place.is_online) ?? null
 
-                const eventData: EventMinimizeProps = {
-                  id: event.id,
-                  date: event.date ?? null,
-                  status: event.status.name,
-                  name: event.name ?? '',
-                  type: event.type?.name ?? '',
-                  address: offlinePlace?.address ?? '',
-                  platform: onlinePlace?.platform ?? '',
-                  imageUrl: event.image?.url ?? '',
-                }
+                    const eventData: EventMinimizeProps = {
+                      id: event.id,
+                      date: event.date ?? null,
+                      status: event.status.name,
+                      name: event.name ?? '',
+                      type: event.type?.name ?? '',
+                      address: offlinePlace?.address ?? '',
+                      platform: onlinePlace?.platform ?? '',
+                      imageUrl: event.image?.url ?? '',
+                    }
 
-                if (
-                  event.status.id === STATUS_ID_WAIT_INSPECTION &&
-                  user.roleId === ROLE_ID_INSPECTOR
-                ) {
-                  eventData.isInspectorView = true
-                } else if (user.isEmployee) {
-                  eventData.isEmployeeView = true
-                  eventData.onDelete = () =>
-                    setEvents(userEvents.filter(e => e.id !== event.id))
-                }
+                    if (
+                      event.status.id === STATUS_ID_WAIT_INSPECTION &&
+                      user.roleId === ROLE_ID_INSPECTOR
+                    ) {
+                      eventData.isInspectorView = true
+                    } else if (user.isEmployee) {
+                      eventData.isEmployeeView = true
+                      eventData.onDelete = () =>
+                        setEvents(userEvents.filter(e => e.id !== event.id))
+                    }
 
-                return <EventMinimizeComponent key={event.id} {...eventData} />
-              })
-            : 'Мероприятий нет'}
-        </ScrollController>
-      </div>
+                    return (
+                      <EventMinimizeComponent key={event.id} {...eventData} />
+                    )
+                  })
+                : 'Мероприятий нет'}
+            </ScrollController>
+          </div>
+        </>
+      ) : (
+        <Loading />
+      )}
     </>
   )
 }

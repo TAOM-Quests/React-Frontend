@@ -4,6 +4,8 @@ import { QuestResult } from '../../../../models/questResult'
 export interface SaveQuestDto {
   executorId: number
   departmentId: number
+  results: (QuestResult & { questId: number })[]
+  questions: (QuestQuestion & { questId: number })[]
   id?: number
   name?: string
   time?: string
@@ -12,8 +14,6 @@ export interface SaveQuestDto {
   tagsIds?: number[]
   description?: string
   difficultId?: number
-  results?: (QuestResult & { questId: number })[]
-  questions?: (QuestQuestion & { questId: number })[]
 }
 
 export interface SaveQuestCompleteDto {
