@@ -1,5 +1,5 @@
-import { Dispatch, useEffect, useState } from 'react'
-import { EmployeeAuth } from '../../../models/userAuth'
+import { useEffect, useState } from 'react'
+import { EmployeeAuth, UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import EventMinimizeComponent, {
   EventMinimizeProps,
@@ -7,20 +7,17 @@ import EventMinimizeComponent, {
 import { EventMinimize } from '../../../models/eventMinimize'
 import Input from '../../../components/UI/Input/Input'
 import { PlaceOffline, PlaceOnline } from '../../../models/event'
-import {
-  Dropdown,
-  DropdownItemType,
-} from '../../../components/UI/Dropdown/Dropdown'
+import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
 import './EventsTab.scss'
 import { Button } from '../../../components/UI/Button/Button'
 import { useNavigate } from 'react-router'
 import { ScrollController } from '../../../components/ScrollController/ScrollController'
 import { EventType } from '../../../models/eventType'
 import { EventStatus } from '../../../models/eventStatus'
-import { isArray } from 'lodash'
 import { Loading } from '../../../components/Loading/Loading'
 
 import { Switcher } from '../../../components/UI/Switcher/Switcher'
+import { isArray } from 'lodash'
 
 const TABS = ['Мероприятия', 'Проверка мероприятий']
 const STATUS_ID_WAIT_INSPECTION = 2
@@ -35,7 +32,7 @@ interface EventsFilter {
 }
 
 export interface EventsTabProps {
-  user: EmployeeAuth
+  user: UserAuth
 }
 
 export default function EventsTab({ user }: EventsTabProps) {
@@ -82,53 +79,6 @@ export default function EventsTab({ user }: EventsTabProps) {
     setEvents([...(userEvents ?? []), ...fetchedEvents])
   }
 
-  const getUniqueDropdownItems = (
-    events: EventMinimize[] | null,
-    selector: (
-      event: EventMinimize,
-    ) => { id: number; name: string } | undefined,
-  ): DropdownItemType[] => {
-    if (!events) return []
-
-    const uniqueMap = new Map<number, { id: number; name: string }>()
-
-    events
-      .filter(event => {
-        const item = selector(event)
-        return !!item && !!item.name
-      })
-      .forEach(event => {
-        const item = selector(event)!
-        if (!uniqueMap.has(item.id)) {
-          uniqueMap.set(item.id, item)
-        }
-      })
-
-    return Array.from(uniqueMap.values()).map(({ id, name }) => ({
-      id,
-      text: name,
-    }))
-  }
-
-  const dropdownTypes = getUniqueDropdownItems(userEvents, e => e.type)
-  const dropdownStatuses = getUniqueDropdownItems(userEvents, e => e.status)
-
-  const createDropdownChangeHandler =
-    (key: string, setFilter: Dispatch<React.SetStateAction<EventsFilter>>) =>
-    (selectedItem: DropdownItemType | DropdownItemType[] | null) => {
-      if (selectedItem === null) {
-        setFilter(state => ({ ...state, [key]: undefined }))
-        return
-      }
-
-      if (Array.isArray(selectedItem)) {
-        const first = selectedItem[0]
-        setFilter(state => ({ ...state, [key]: first?.id ?? undefined }))
-      } else {
-        setFilter(state => ({ ...state, [key]: selectedItem.id }))
-      }
-    }
-
   const changeTab = (option: string) => {
     setTab(option)
 
@@ -147,7 +97,7 @@ export default function EventsTab({ user }: EventsTabProps) {
       {!isLoading ? (
         <>
           <div className="profile_events--tabs">
-            {user.roleId === ROLE_ID_INSPECTOR && (
+            {(user as EmployeeAuth).roleId === ROLE_ID_INSPECTOR && (
               <Switcher
                 options={TABS}
                 activeOption={tab}
@@ -167,25 +117,35 @@ export default function EventsTab({ user }: EventsTabProps) {
                 }
               />
               <Dropdown
-                items={dropdownTypes}
+                items={eventTypes.map(type => ({
+                  id: type.id,
+                  text: type.name,
+                }))}
                 placeholder="Тип мероприятия"
-                onChangeDropdown={createDropdownChangeHandler(
-                  'type',
-                  setFilter,
-                )}
+                onChangeDropdown={selected =>
+                  setFilter(state =>
+                    !isArray(selected) && selected
+                      ? { ...state, type: selected.id }
+                      : state,
+                  )
+                }
               />
               {user.isEmployee && (
                 <>
                   <Dropdown
-                    items={dropdownStatuses}
+                    items={eventStatuses.map(status => ({
+                      id: status.id,
+                      text: status.name,
+                    }))}
                     placeholder="Статус"
-                    onChangeDropdown={createDropdownChangeHandler(
-                      'status',
-                      setFilter,
-                    )}
-                    selectedItems={filter.status ? [dropdownStatuses[0]] : []}
+                    onChangeDropdown={selected =>
+                      setFilter(state =>
+                        !isArray(selected) && selected
+                          ? { ...state, status: selected.id }
+                          : state,
+                      )
+                    }
                   />
-
                   <Button
                     onClick={() => navigate('/event/create')}
                     text="Создать мероприятие"
@@ -219,7 +179,7 @@ export default function EventsTab({ user }: EventsTabProps) {
 
                     if (
                       event.status.id === STATUS_ID_WAIT_INSPECTION &&
-                      user.roleId === ROLE_ID_INSPECTOR
+                      (user as EmployeeAuth).roleId === ROLE_ID_INSPECTOR
                     ) {
                       eventData.isInspectorView = true
                     } else if (user.isEmployee) {

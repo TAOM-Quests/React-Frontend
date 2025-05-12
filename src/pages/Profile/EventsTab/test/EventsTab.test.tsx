@@ -4,6 +4,7 @@ import EventsTab from '../EventsTab'
 import { employee, user } from './eventsTabEnvironment'
 import { events } from '../../../../services/api/eventModule/events/events'
 import { userEvent } from '@vitest/browser/context'
+import { EmployeeAuth } from '../../../../models/userAuth'
 
 describe('EventsTab', () => {
   let usersApiMock: MockInstance
@@ -15,7 +16,7 @@ describe('EventsTab', () => {
     beforeEach(() => {
       usersApiMock = vi.spyOn(events, 'getManyByParams')
 
-      renderWithProviders(<EventsTab user={user} />)
+      renderWithProviders(<EventsTab user={user as EmployeeAuth} />)
 
       eventsNameInput = document.querySelector(
         'input[placeholder="Поиск по названию"]',
