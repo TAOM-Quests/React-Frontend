@@ -7,6 +7,7 @@ import { Icon } from '../UI/Icon/Icon'
 import './QuestMinimize.scss'
 import { Tag } from '../UI/Tag/Tag'
 import { getTwoShortestTags } from '../../utils/getTwoShortestTags'
+import { quests } from '../../services/api/questModule/quests/quests'
 
 export interface QuestMinimizeProps {
   id: number
@@ -47,9 +48,8 @@ export default function QuestMinimize({
       id: 2,
       text: 'Удалить',
       onSelect: async () => {
-        // Добавить метод удаления квеста
-        // await quests.delete(id)
-        // onDelete?.()
+        await quests.delete(id)
+        onDelete?.()
       },
     },
   ]

@@ -44,9 +44,8 @@ export const quests = {
     return questModule<Quest, SaveQuestDto>(`quests/${id}`, { ...params, id })
   },
 
-  //Добавить метод удаления квеста
-  // delete: (id: number): Promise<void> =>
-  //   questModule<void, null>(`quests/${id}`, null, { method: 'DELETE' }),
+  delete: (id: number): Promise<void> =>
+    questModule<void, null>(`quests/${id}`, null, { method: 'DELETE' }),
 
   saveComplete: (
     questId: number,
