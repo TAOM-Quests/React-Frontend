@@ -1,31 +1,52 @@
-import { useState } from 'react'
 import { Notification } from '../../models/notification'
+import { toast, ToastContainer } from 'react-toastify'
+import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
+import './NotificationToaster.scss'
+import classNames from 'classnames'
 
 const NOTIFICATIONS_WEB_SOCKET_URL = 'ws://localhost:8080/ws/notifications'
 
-export const NotificationToaster = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+const CustomNotification = ({
+  name,
+  type = 'quests',
+  imageUrl,
+  description,
+}: Notification) => (
+  <ContainerBox
+    className={classNames(
+      'notification-content',
+      `notification-content--${type}`,
+    )}
+  >
+    <div className="notification-content__image">
+      <img src={imageUrl} alt={name} />
+    </div>
+    <div style={{ flex: 1 }}>
+      <div className="heading_6">{name}</div>
+      <div className="body_l_m">{description}</div>
+    </div>
+  </ContainerBox>
+)
 
+export const NotificationToaster = () => {
   const socket = new WebSocket(NOTIFICATIONS_WEB_SOCKET_URL)
 
   socket.onmessage = event => {
     const notification = JSON.parse(event.data)
-    setNotifications(prevNotifications => [...prevNotifications, notification])
+    toast(<CustomNotification {...notification} />)
   }
 
   return (
-    <div>
-      {notifications.map(notification => (
-        <div className="notification-content">
-          <div className="notification-content__image">
-            <img src={notification.imageUrl} alt={notification.name} />
-          </div>
-          <div className="flex:1;">
-            <div className="heading_6">${notification.name}</div>
-            <div className="body_l_m">${notification.description}</div>
-          </div>
-        </div>
-      ))}
-    </div>
+    <ToastContainer
+      position="bottom-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
   )
 }
