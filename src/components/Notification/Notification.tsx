@@ -1,4 +1,3 @@
-// Notification.tsx
 import { useEffect } from 'react'
 import ToasterUi, { ToastType } from 'toaster-ui'
 import './Notification.scss'
@@ -6,11 +5,11 @@ import './Notification.scss'
 const toaster = new ToasterUi()
 
 export interface NotificationProps {
-  type?: ToastType
   title: string
   description: string
-  imageUrl?: string
+  type?: ToastType
   duration?: number
+  imageUrl?: string
 }
 
 export const Notification = ({
