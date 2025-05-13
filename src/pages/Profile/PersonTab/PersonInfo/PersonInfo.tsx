@@ -24,11 +24,13 @@ import { UserLevel } from '../../UserLevel/UserLevel'
 export interface PersonInfoProps {
   profile: UserProfile
   updateProfile: (profile: UserProfile) => void
+  isEmployee?: boolean
 }
 
 export default function PersonInfo({
   profile,
   updateProfile,
+  isEmployee,
 }: PersonInfoProps) {
   const [image, setImage] = useState(profile.image)
   const [lastName, setLastName] = useState(profile.lastName)
@@ -168,10 +170,13 @@ export default function PersonInfo({
               }}
             />
             <div className="personInfo--personFields">
-              <UserLevel
-                level={1} //Уровень пользователя -- profile.level
-                experience={100} //Опыт пользователя на данном уровне -- profile.experience
-              />
+              {!isEmployee && (
+                <UserLevel
+                  level={1} //Уровень пользователя -- profile.level
+                  experience={100} //Опыт пользователя на данном уровне -- profile.experience
+                />
+              )}
+
               <div className="personInfo--personFieldsNames">
                 {personFieldsNames.map(field => (
                   <Input
