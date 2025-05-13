@@ -13,10 +13,10 @@ export interface QuestMinimizeProps {
   name: string
   tags?: string[]
   imageUrl?: string
-  onDelete?: () => void
   difficulty?: string
+  onDelete?: () => void
+  completedCount?: number
   isEmployeeView?: boolean
-  participantsCount?: number
 }
 
 export default function QuestMinimize({
@@ -26,8 +26,8 @@ export default function QuestMinimize({
   imageUrl,
   onDelete,
   difficulty,
+  completedCount,
   isEmployeeView,
-  participantsCount,
 }: QuestMinimizeProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
@@ -65,7 +65,7 @@ export default function QuestMinimize({
   return (
     <ContainerBox
       style={{ backgroundImage: `url(${imageUrl})` }}
-      onClick={() => navigate(`/quest/${id}?completed`)}
+      onClick={() => navigate(`/quest/complete/${id}`)}
       className="questMinimize"
     >
       <div className="questMinimize__image-wrapper">
@@ -122,7 +122,7 @@ export default function QuestMinimize({
 
       {isEmployeeView && (
         <div className="questMinimize__info">
-          <p className="body_m_m">{participantsCount || 0}</p>
+          <p className="body_m_m">{completedCount ?? 0}</p>
           <Icon icon="USER" colorIcon="primary" />
         </div>
       )}

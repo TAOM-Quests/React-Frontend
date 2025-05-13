@@ -71,10 +71,15 @@ export default function QuestsTab({ user }: QuestsTabProps) {
       <div className="profile_quests--quests">
         {userQuests?.length
           ? userQuests.map(quest => {
+              console.log('Quest', quest)
+
               const questData: QuestMinimizeProps = {
                 id: quest.id,
                 name: quest.name ?? '',
-                // imageUrl: quest.image?.url ?? '',
+                imageUrl: quest.image?.url ?? '',
+                completedCount: quest.completedCount,
+                difficulty: quest.difficult?.name ?? '',
+                tags: quest.tags.map(tag => tag.name) ?? [],
               }
 
               if (user.isEmployee) {
