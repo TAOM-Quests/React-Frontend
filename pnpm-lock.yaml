@@ -77,6 +77,9 @@ importers:
       swiper:
         specifier: ^11.2.6
         version: 11.2.6
+      toaster-ui:
+        specifier: ^1.1.5
+        version: 1.1.5
     devDependencies:
       '@chromatic-com/storybook':
         specifier: '3'
@@ -3853,6 +3856,9 @@ packages:
   to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
+
+  toaster-ui@1.1.5:
+    resolution: {integrity: sha512-gyZtP9sxpo10+sdd5bP9CiK1e+nmq2PmmbWIKWpT0vTBBsSZ7IB4b77Snu3XDw8PI7ymcVRp1lCFX1wKhg/XkA==}
 
   totalist@3.0.1:
     resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
@@ -8014,6 +8020,8 @@ snapshots:
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
+
+  toaster-ui@1.1.5: {}
 
   totalist@3.0.1: {}
 
