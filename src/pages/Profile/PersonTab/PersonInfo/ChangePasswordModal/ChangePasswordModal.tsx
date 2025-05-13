@@ -7,7 +7,7 @@ import './ChangePasswordModal.scss'
 interface ChangePasswordModalProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: () => void // колбек при успешной смене пароля
+  onSuccess?: () => void // колбек при успешной смене пароля если нужен
 }
 
 export const ChangePasswordModal = ({
@@ -72,17 +72,14 @@ export const ChangePasswordModal = ({
     if (!validate()) return
 
     try {
-      // добавить метод смены пароля в API
       await users.changePassword({
         oldPassword,
         newPassword,
       })
 
-      // При успешной смене пароля
       onSuccess?.()
       onClose()
     } catch (e) {
-      // Обработка ошибок
       console.error(e)
     }
   }
