@@ -5,10 +5,9 @@
   padding: 80px 15%;
   gap: 20px;
   background-color: var(--bg_body_primary);
-  height: 100vh;
 
-  @media (max-width: 1000px) {
-    height: 100%;
+  @media (min-width: 1350px) {
+    min-height: 860px;
   }
 
   &--header {

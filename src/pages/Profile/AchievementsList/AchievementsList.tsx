@@ -10,6 +10,7 @@ export const allAchievements = [
     experience: 100,
     imageUrl:
       'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
+    isReceived: true,
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ export const allAchievements = [
     experience: 1500,
     imageUrl:
       'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
+    isReceived: false,
   },
   {
     id: 3,
@@ -26,6 +28,7 @@ export const allAchievements = [
     experience: 3000,
     imageUrl:
       'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
+    isReceived: true,
   },
 ]
 
@@ -35,27 +38,23 @@ interface Achievement {
   description: string
   experience: number
   imageUrl: string
+  isReceived?: boolean
 }
 
 interface AchievementsListProps {
-  allAchievements: Achievement[]
-  userAchievementIds: number[]
+  achievements: Achievement[]
 }
 
-export const AchievementsList = ({
-  allAchievements,
-  userAchievementIds,
-}: AchievementsListProps) => {
+export const AchievementsList = ({ achievements }: AchievementsListProps) => {
   return (
     <ContainerBox className="achievements">
       <div className="heading_6 achievements__title">Достижения</div>
       <div className="achievements__list">
-        {allAchievements.map((ach, index) => {
-          const unlocked = userAchievementIds.includes(ach.id)
+        {achievements.map((ach, index) => {
           return (
             <div
               key={index}
-              className={`achievements__item ${unlocked ? ' achievements__item--unlocked' : ''}`}
+              className={`achievements__item ${ach.isReceived ? ' achievements__item--unlocked' : ''}`}
             >
               <div className="achievements__image-wrapper">
                 <img
@@ -69,7 +68,7 @@ export const AchievementsList = ({
                 {ach.experience}
                 <Icon
                   icon="TAOM"
-                  colorIcon={unlocked ? 'subdued' : 'secondary'}
+                  colorIcon={ach.isReceived ? 'subdued' : 'secondary'}
                 />
               </div>
             </div>

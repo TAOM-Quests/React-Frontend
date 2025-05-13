@@ -14,7 +14,6 @@ interface PersonTabProps {
 
 export default function PersonTab({ profile, updatePerson }: PersonTabProps) {
   const isEmployee = 'position' in profile
-  const userAchievementIds = [1, 3, 6]
 
   return (
     <div className="personTab">
@@ -24,12 +23,7 @@ export default function PersonTab({ profile, updatePerson }: PersonTabProps) {
         isEmployee={isEmployee}
       />
       {isEmployee && <EmployeeInfo {...profile} />}
-      {!isEmployee && (
-        <AchievementsList
-          allAchievements={allAchievements}
-          userAchievementIds={userAchievementIds} //из профиля
-        />
-      )}
+      {!isEmployee && <AchievementsList achievements={allAchievements} />}
     </div>
   )
 }
