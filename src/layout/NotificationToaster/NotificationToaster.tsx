@@ -4,12 +4,18 @@ import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
 import './NotificationToaster.scss'
 import { io } from 'socket.io-client'
 import classNames from 'classnames'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../redux/auth/authSlice'
 
 export const NotificationToaster = () => {
+  const user = useAppSelector(selectAuth)
+
   const socket = io(import.meta.env.VITE_NOTIFICATIONS_WEB_SOCKET_URL)
 
-  socket.on('notification', notification => {
-    toast(<CustomNotification {...notification} />)
+  socket.on('notification', (notification: Notification) => {
+    if (notification.userId === user?.id) {
+      toast(<CustomNotification {...notification} />)
+    }
   })
 
   return (
