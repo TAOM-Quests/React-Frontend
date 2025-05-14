@@ -14,6 +14,7 @@ export interface QuestMinimizeProps {
   name: string
   tags?: string[]
   imageUrl?: string
+  completeId?: number
   difficulty?: string
   onDelete?: () => void
   completedCount?: number
@@ -26,6 +27,7 @@ export default function QuestMinimize({
   tags,
   imageUrl,
   onDelete,
+  completeId,
   difficulty,
   completedCount,
   isEmployeeView,
@@ -68,7 +70,7 @@ export default function QuestMinimize({
       onClick={() =>
         isEmployeeView
           ? navigate(`/quest/${id}`)
-          : navigate(`/quest/complete/${id}`)
+          : navigate(`/quest/complete/${completeId}`)
       }
       className="questMinimize"
     >

@@ -71,8 +71,6 @@ export default function QuestsTab({ user }: QuestsTabProps) {
       <div className="profile_quests--quests">
         {userQuests?.length
           ? userQuests.map(quest => {
-              console.log('Quest', quest)
-
               const questData: QuestMinimizeProps = {
                 id: quest.id,
                 name: quest.name ?? '',
@@ -86,6 +84,8 @@ export default function QuestsTab({ user }: QuestsTabProps) {
                 questData.isEmployeeView = true
                 questData.onDelete = () =>
                   setQuests(userQuests.filter(e => e.id !== quest.id))
+              } else {
+                questData.completeId = quest.completeId
               }
 
               return <QuestMinimizeComponent key={quest.id} {...questData} />

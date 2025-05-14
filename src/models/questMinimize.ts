@@ -10,6 +10,7 @@ export interface QuestMinimize {
   time?: string
   group?: QuestGroup
   image?: ServerFile
+  completeId?: number
   description?: string
   completedCount?: number
   difficult?: QuestDifficult

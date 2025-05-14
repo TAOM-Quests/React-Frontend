@@ -51,7 +51,7 @@ export const Quest = () => {
     }
 
     fetchQuestData()
-  }, [])
+  }, [questId, completedId])
 
   useEffect(() => {
     if (isResultView && !completedId) saveComplete()
