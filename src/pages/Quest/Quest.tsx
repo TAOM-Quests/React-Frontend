@@ -54,7 +54,7 @@ export const Quest = () => {
   }, [])
 
   useEffect(() => {
-    if (isResultView) saveComplete()
+    if (isResultView && !completedId) saveComplete()
   }, [isResultView])
 
   const setNextQuestion = (userAnswer: any, isCorrectAnswer: boolean) => {
