@@ -1,6 +1,6 @@
 import { Icon } from '../../components/UI/Icon/Icon'
 import './Header.scss'
-import { selectAuth } from '../../redux/auth/authSlice'
+import { logout, selectAuth } from '../../redux/auth/authSlice'
 import { HeaderMenu } from './HeaderMenu/HeaderMenu'
 import { Avatar } from '../../components/UI/Avatar/Avatar'
 import { useNavigate } from 'react-router'
@@ -56,7 +56,10 @@ export const Header = () => {
         <Icon
           icon="LOGOUT"
           colorIcon="primary"
-          onClick={() => navigate('/login')}
+          onClick={() => {
+            logout()
+            navigate('/')
+          }}
         />
       )}
       {isMobileMenuOpen && (

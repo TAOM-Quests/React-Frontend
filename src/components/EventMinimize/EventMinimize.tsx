@@ -10,6 +10,11 @@ import { useState } from 'react'
 import { events } from '../../services/api/eventModule/events/events'
 import { getTwoShortestTags } from '../../utils/getTwoShortestTags'
 import { Tag } from '../UI/Tag/Tag'
+import { Button } from '../UI/Button/Button'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+
+const STATUS_ID_ON_INSPECTION = 3
 
 export interface EventMinimizeProps {
   id: number
@@ -23,6 +28,7 @@ export interface EventMinimizeProps {
   onDelete?: () => void
   tags?: string[]
   isEmployeeView?: boolean
+  isInspectorView?: boolean
   participantsCount?: number
 }
 
@@ -38,12 +44,13 @@ export default function EventMinimize({
   imageUrl,
   onDelete,
   isEmployeeView,
+  isInspectorView,
   participantsCount,
 }: EventMinimizeProps) {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
   const navigate = useNavigate()
-
+  const user = useAppSelector(selectAuth)
   const shortestTags = tags ? getTwoShortestTags(tags) : []
 
   const eventOptionsContextMenu: OptionProps[] = [
@@ -83,6 +90,16 @@ export default function EventMinimize({
     } else {
       setOpenMenuId(id)
     }
+  }
+
+  const inspectorHandler = async () => {
+    if (!user) return
+
+    await events.update(id, {
+      inspectorId: user.id,
+      statusId: STATUS_ID_ON_INSPECTION,
+    })
+    navigate(`/event/${id}/edit`)
   }
 
   return (
@@ -150,6 +167,11 @@ export default function EventMinimize({
           <div className="eventMinimize__participantsCount">
             <Icon icon="USER" colorIcon="soft-blue" />
             <p className="body_l_m">{participantsCount || 0}</p>
+          </div>
+        )}
+        {isInspectorView && (
+          <div>
+            <Button text="Взять в работу" onClick={inspectorHandler} />
           </div>
         )}
       </div>

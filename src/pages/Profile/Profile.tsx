@@ -9,6 +9,7 @@ import EventsTab from './EventsTab/EventsTab'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import './Profile.scss'
 import QuestsTab from './QuestsTab/QuestsTab'
+import { EmployeeAuth } from '../../models/userAuth'
 
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
