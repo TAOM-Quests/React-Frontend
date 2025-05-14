@@ -19,7 +19,7 @@ import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../../validation/validateEmail'
 import { validatePhone } from '../../../../validation/validatePhone'
 import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
-import { UserLevel } from '../../UserLevel/UserLevel'
+import { Level } from '../../Level/Level'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -171,9 +171,11 @@ export default function PersonInfo({
             />
             <div className="personInfo--personFields">
               {!isEmployee && (
-                <UserLevel
-                  level={1} //Уровень пользователя -- profile.level
-                  experience={100} //Опыт пользователя на данном уровне -- profile.experience
+                <Level
+                  level={profile.level.number}
+                  name={profile.level.name}
+                  experience={profile.level.experience}
+                  experienceToNextLevel={profile.level.experienceToNextLevel}
                 />
               )}
 

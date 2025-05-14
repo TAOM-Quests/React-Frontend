@@ -1,6 +1,7 @@
 import { Department } from './department'
 import { QuestMinimize } from './questMinimize'
 import { ServerFile } from './serverFile'
+import { UserLevel } from './userLevel'
 import { UserPosition } from './userPoistion'
 
 export interface UserProfile {
@@ -14,6 +15,7 @@ export interface UserProfile {
   phoneNumber: string
   birthDate: Date | null
   completedQuests: QuestMinimize[]
+  level: UserLevel
 }
 
 export interface UserProfileEmployee extends UserProfile {
