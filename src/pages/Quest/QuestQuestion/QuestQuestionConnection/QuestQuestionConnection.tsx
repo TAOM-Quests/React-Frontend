@@ -32,11 +32,28 @@ export const QuestQuestionConnection = forwardRef(
   ) => {
     const [userAnswer, setUserAnswer] = useState<string[]>(userAnswerProp ?? [])
     const [dndOptions, setDndOptions] = useState<DndOption[]>(
-      question.answer.options.map((option, optionIndex) => ({
-        id: optionIndex,
-        text: option,
-        target: null,
-      })),
+      userAnswerProp
+        ? userAnswerProp.reduce<DndOption[]>((acc, answer) => {
+            const [firstPart, secondPart] = answer.split(' - ')
+
+            acc.push({
+              id: +firstPart,
+              text: question.answer.options[+firstPart],
+              target: +secondPart,
+            })
+            acc.push({
+              id: +secondPart,
+              text: question.answer.options[+secondPart],
+              target: null,
+            })
+
+            return acc
+          }, [])
+        : question.answer.options.map((option, optionIndex) => ({
+            id: optionIndex,
+            text: option,
+            target: null,
+          })),
     )
 
     useImperativeHandle(
