@@ -2,13 +2,34 @@ import { Notification } from '../../models/notification'
 import { toast, ToastContainer } from 'react-toastify'
 import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
 import './NotificationToaster.scss'
+import { io } from 'socket.io-client'
 import classNames from 'classnames'
 
-const NOTIFICATIONS_WEB_SOCKET_URL = 'ws://localhost:8080/ws/notifications'
+export const NotificationToaster = () => {
+  const socket = io(import.meta.env.VITE_NOTIFICATIONS_WEB_SOCKET_URL)
+
+  socket.on('notification', notification => {
+    toast(<CustomNotification {...notification} />)
+  })
+
+  return (
+    <ToastContainer
+      position="bottom-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+    />
+  )
+}
 
 const CustomNotification = ({
   name,
-  type = 'quests',
+  type,
   imageUrl,
   description,
 }: Notification) => (
@@ -27,26 +48,3 @@ const CustomNotification = ({
     </div>
   </ContainerBox>
 )
-
-export const NotificationToaster = () => {
-  const socket = new WebSocket(NOTIFICATIONS_WEB_SOCKET_URL)
-
-  socket.onmessage = event => {
-    const notification = JSON.parse(event.data)
-    toast(<CustomNotification {...notification} />)
-  }
-
-  return (
-    <ToastContainer
-      position="bottom-right"
-      autoClose={3000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-    />
-  )
-}
