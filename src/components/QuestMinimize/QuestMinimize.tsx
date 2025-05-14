@@ -65,7 +65,11 @@ export default function QuestMinimize({
   return (
     <ContainerBox
       style={{ backgroundImage: `url(${imageUrl})` }}
-      onClick={() => navigate(`/quest/complete/${id}`)}
+      onClick={() =>
+        isEmployeeView
+          ? navigate(`/quest/${id}`)
+          : navigate(`/quest/complete/${id}`)
+      }
       className="questMinimize"
     >
       <div className="questMinimize__image-wrapper">
