@@ -1,8 +1,5 @@
 import { UserProfile, UserProfileEmployee } from '../../../models/userProfile'
-import {
-  AchievementsList,
-  allAchievements,
-} from '../AchievementsList/AchievementsList'
+import { AchievementsList } from '../AchievementsList/AchievementsList'
 import EmployeeInfo from './EmployeeInfo/EmployeeInfo'
 import PersonInfo from './PersonInfo/PersonInfo'
 import './PersonTab.scss'
@@ -23,7 +20,7 @@ export default function PersonTab({ profile, updatePerson }: PersonTabProps) {
         isEmployee={isEmployee}
       />
       {isEmployee && <EmployeeInfo {...profile} />}
-      {!isEmployee && <AchievementsList achievements={allAchievements} />}
+      {!isEmployee && <AchievementsList achievements={profile.achievements} />}
     </div>
   )
 }
