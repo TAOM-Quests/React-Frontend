@@ -47,9 +47,13 @@ export const QuestStartView = ({
           ></p>
         </div>
         {isCompleted ? (
-          <div>
+          <div className="quest-start__buttons">
             <Button text="Пройти заново" onClick={onClickRestartButton} />
-            <Button text="Посмотреть результаты" onClick={onClickStartButton} />
+            <Button
+              text="Посмотреть результаты"
+              colorType="accent"
+              onClick={onClickStartButton}
+            />
           </div>
         ) : (
           <div>
