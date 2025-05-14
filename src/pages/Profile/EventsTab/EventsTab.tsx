@@ -151,6 +151,7 @@ export default function EventsTab({ user }: EventsTabProps) {
                 status: event.status.name,
                 name: event.name ?? '',
                 type: event.type?.name ?? '',
+                tags: event.tags?.map(tag => tag.name) ?? [],
                 imageUrl: event.image?.url ?? '',
                 address: offlinePlace?.address ?? '',
                 platform: onlinePlace?.platform ?? '',

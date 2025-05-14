@@ -8,6 +8,8 @@ import { OptionProps } from '../UI/Option/Option'
 import { ContextMenu } from '../ContextMenu/ContextMenu'
 import { useState } from 'react'
 import { events } from '../../services/api/eventModule/events/events'
+import { getTwoShortestTags } from '../../utils/getTwoShortestTags'
+import { Tag } from '../UI/Tag/Tag'
 
 export interface EventMinimizeProps {
   id: number
@@ -18,6 +20,7 @@ export interface EventMinimizeProps {
   platform: string
   imageUrl: string
   date: Date | null
+  tags: string[]
   departmentName: string
   onDelete?: () => void
   isEmployeeView?: boolean
@@ -29,6 +32,7 @@ export const EventMinimize = ({
   date,
   name,
   type,
+  tags,
   status,
   address,
   platform,
@@ -41,6 +45,8 @@ export const EventMinimize = ({
   const [openMenuId, setOpenMenuId] = useState<number | null>(null)
 
   const navigate = useNavigate()
+
+  const shortestTags = tags ? getTwoShortestTags(tags) : []
 
   const eventOptionsContextMenu: OptionProps[] = [
     {
@@ -92,6 +98,13 @@ export const EventMinimize = ({
       </div>
 
       <div className="eventMinimize__header">
+        <div className="eventMinimize__header--left">
+          <div className="eventMinimize__tags">
+            {shortestTags.map((tag, index) => (
+              <Tag key={index} text={tag} type="secondary" size="small" />
+            ))}
+          </div>
+        </div>
         <div className="eventMinimize__header--right">
           {isEmployeeView && (
             <>
@@ -145,6 +158,12 @@ export const EventMinimize = ({
           <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
           <p className="body_l_m text_ellipsis">{departmentName}</p>
         </div>
+        {isEmployeeView && (
+          <div className="questMinimize__info">
+            <Icon icon="USER" colorIcon="soft-blue" />
+            <p className="body_m_m">{participantsCount ?? 0}</p>
+          </div>
+        )}
       </div>
     </ContainerBox>
   )
