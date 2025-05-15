@@ -118,10 +118,11 @@ export const EventMinimize = ({
       <div className="eventMinimize__header">
         <div className="eventMinimize__header--left">
           <div className="eventMinimize__tags">
-          <div className="eventMinimize__header--tags">
-            {shortestTags.map((tag, index) => (
-              <Tag key={index} text={tag} type="secondary" size="small" />
-            ))}
+            <div className="eventMinimize__header--tags">
+              {shortestTags.map((tag, index) => (
+                <Tag key={index} text={tag} type="secondary" size="small" />
+              ))}
+            </div>
           </div>
         </div>
         <div className="eventMinimize__header--right">
@@ -159,42 +160,34 @@ export const EventMinimize = ({
             </p>
           </div>
         )}
-        
         {platform && (
           <div className="eventMinimize__onlineMeeting">
             <Icon colorIcon="soft-blue" icon="PLATFORM" />
             <p className="body_l_m text_ellipsis">{platform}</p>
           </div>
         )}
-
         {type && (
           <div className="eventMinimize__type">
             <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
             <p className="body_l_m text_ellipsis">{type}</p>
           </div>
-        )}
-        
-        {' '}
-
+        )}{' '}
         {isEmployeeView && (
           <div className="eventMinimize__participantsCount">
             <Icon icon="USER" colorIcon="soft-blue" />
             <p className="body_l_m">{participantsCount || 0}</p>
           </div>
         )}
-
         <div className="eventMinimize__departmentName">
           <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
           <p className="body_l_m text_ellipsis">{departmentName}</p>
         </div>
-
         {isEmployeeView && (
           <div className="questMinimize__info">
             <Icon icon="USER" colorIcon="soft-blue" />
             <p className="body_m_m">{participantsCount ?? 0}</p>
           </div>
         )}
-
         {isInspectorView && (
           <div>
             <Button text="Взять в работу" onClick={inspectorHandler} />
