@@ -47,6 +47,7 @@ import { TAOM } from './taom'
 import { LOGOUT } from './logout'
 import { DZEN } from './dzen'
 import { VK } from './vk'
+import { USER } from './user'
 import { BACKSPACE } from './backspace'
 
 export const ICON_MAP = {
@@ -99,6 +100,7 @@ export const ICON_MAP = {
   LOGOUT: LOGOUT,
   DZEN: DZEN,
   VK: VK,
+  USER: USER,
   BACKSPACE: BACKSPACE,
 }
 

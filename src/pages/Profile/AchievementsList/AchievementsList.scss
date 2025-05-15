@@ -1,0 +1,50 @@
+.achievements {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 160px;
+    gap: 5px;
+    cursor: default;
+    transition: filter 0.2s;
+    &--unlocked {
+      .achievements__image {
+        filter: none !important;
+      }
+
+      .achievements__exp {
+        color: var(--text_c_accent) !important;
+      }
+    }
+  }
+  &__image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+  }
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) brightness(0.7);
+    transition: filter 0.2s;
+  }
+  &__name {
+    color: var(--text_c_primary);
+    text-align: center;
+  }
+  &__exp {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    color: var(--text_c_primary);
+    text-align: center;
+  }
+}

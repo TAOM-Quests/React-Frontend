@@ -11,6 +11,7 @@ export interface QuestQuestionConnectionProps {
   question: QuestQuestionConnectionInterface
   isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
+  userAnswer?: string[]
 }
 
 interface DndOption {
@@ -21,16 +22,38 @@ interface DndOption {
 
 export const QuestQuestionConnection = forwardRef(
   (
-    { question, isCheckMode, setIsAnswerReady }: QuestQuestionConnectionProps,
+    {
+      question,
+      isCheckMode,
+      setIsAnswerReady,
+      userAnswer: userAnswerProp,
+    }: QuestQuestionConnectionProps,
     ref,
   ) => {
-    const [userAnswer, setUserAnswer] = useState<string[]>([])
+    const [userAnswer, setUserAnswer] = useState<string[]>(userAnswerProp ?? [])
     const [dndOptions, setDndOptions] = useState<DndOption[]>(
-      question.answer.options.map((option, optionIndex) => ({
-        id: optionIndex,
-        text: option,
-        target: null,
-      })),
+      userAnswerProp
+        ? userAnswerProp.reduce<DndOption[]>((acc, answer) => {
+            const [firstPart, secondPart] = answer.split(' - ')
+
+            acc.push({
+              id: +firstPart,
+              text: question.answer.options[+firstPart],
+              target: +secondPart,
+            })
+            acc.push({
+              id: +secondPart,
+              text: question.answer.options[+secondPart],
+              target: null,
+            })
+
+            return acc
+          }, [])
+        : question.answer.options.map((option, optionIndex) => ({
+            id: optionIndex,
+            text: option,
+            target: null,
+          })),
     )
 
     useImperativeHandle(
@@ -75,18 +98,16 @@ export const QuestQuestionConnection = forwardRef(
     }
 
     const getAnswerType = (option: DndOption): TypeQuestQuestion => {
+      if (!isCheckMode) return 'primary'
+
       const connectedOption = dndOptions.find(o => o.target === option.id)
       const pair1 = `${option.id} - ${connectedOption?.id}`
       const pair2 = `${connectedOption?.id} - ${option.id}`
       const correctPairs = question.answer.correctAnswer
+      const isCorrect =
+        correctPairs.includes(pair1) || correctPairs.includes(pair2)
 
-      if (isCheckMode) {
-        const isCorrect =
-          correctPairs.includes(pair1) || correctPairs.includes(pair2)
-        return isCorrect ? 'correct' : 'wrong'
-      }
-
-      return 'primary'
+      return isCorrect ? 'correct' : 'wrong'
     }
 
     const removeConnection = (optionId: number) => {
@@ -100,9 +121,11 @@ export const QuestQuestionConnection = forwardRef(
       )
     }
 
-    const renderConnectedChildOption = (text: string, optionIndex: number) => (
-      <div key={optionIndex} className="connected-child-option">
-        <span className="body_m_sb connected-child-option__text">{text}</span>
+    const renderConnectedChildOption = (option: DndOption) => (
+      <div key={option.id} className="connected-child-option">
+        <span className="body_m_sb connected-child-option__text">
+          {option.text}
+        </span>
       </div>
     )
 
@@ -120,8 +143,7 @@ export const QuestQuestionConnection = forwardRef(
               <span className="body_m_sb droppable-area__text">
                 {option.text}
               </span>
-              {(option.target !== null ||
-                dndOptions.some(o => o.target === option.id)) && (
+              {dndOptions.some(o => o.target === option.id) && (
                 <div className="connected-child-option__icon">
                   <Icon
                     icon="CROSS"
@@ -131,12 +153,10 @@ export const QuestQuestionConnection = forwardRef(
                 </div>
               )}
             </Droppable>
-
-            {dndOptions.map(option => {
-              if (option.target === optionIndex) {
-                return renderConnectedChildOption(option.text, option.id)
-              }
-            })}
+            {dndOptions.some(o => o.target === option.id) &&
+              renderConnectedChildOption(
+                dndOptions.find(o => o.target === option.id)!,
+              )}
           </Draggable>
         )
       }
@@ -168,7 +188,6 @@ function Droppable({ id, children, className, ...props }: any) {
 
 export function Draggable({
   id,
-
   children,
   disabled,
   className,
@@ -181,7 +200,7 @@ export function Draggable({
   return (
     <>
       <button
-        ref={ref}
+        ref={disabled ? null : ref}
         className={`draggable ${disabled ? 'draggable--disabled' : ''} ${className || ''}`}
         disabled={disabled}
         {...props}

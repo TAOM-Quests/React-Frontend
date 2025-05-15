@@ -21,6 +21,20 @@
     flex-basis: 100%;
   }
 
+  &__tags {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  &__menu {
+    display: flex;
+    .context-menu {
+      right: 0;
+      top: 24px;
+    }
+  }
+
   &__image-wrapper {
     position: absolute;
     top: 0;
@@ -61,7 +75,9 @@
 
   &__header {
     display: flex;
-    justify-content: flex-end;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
 
     &--right {
       display: flex;
@@ -69,6 +85,14 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
+    }
+
+    &--tags {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      white-space: nowrap;
+      gap: 4px;
     }
   }
 

@@ -68,4 +68,14 @@
     scrollbar-width: thin;
     scrollbar-color: var(--bg_c_primary) transparent;
   }
+
+  &--footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+    .button {
+      width: 100%;
+    }
+  }
 }
