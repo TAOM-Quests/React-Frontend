@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from 'react'
 import { Button } from '../../../components/UI/Button/Button'
@@ -43,6 +44,16 @@ export const EventCreateSchedule = forwardRef<
     const [errors, setErrors] = useState<EventCreateScheduleValidationError[]>(
       schedule.map(() => ({})),
     )
+    const lastScheduleRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      if (lastScheduleRef.current) {
+        lastScheduleRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+      }
+    }, [schedule.length])
 
     useEffect(() => {
       if (onErrorsChange) {
@@ -179,7 +190,11 @@ export const EventCreateSchedule = forwardRef<
         <label className="body_s_sb label">Регламент</label>
         <div className="schedule__container-items">
           {schedule.map((item, index) => (
-            <div className="schedule--item" key={`schedule-item-${index}`}>
+            <div
+              ref={index === schedule.length - 1 ? lastScheduleRef : null}
+              className="schedule--item"
+              key={`schedule-item-${index}`}
+            >
               <div className="schedule--time">
                 <TimeInput
                   errorText={

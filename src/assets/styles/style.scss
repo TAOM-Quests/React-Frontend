@@ -339,3 +339,9 @@ body {
   background-position: bottom left;
   background-size: 25px 4px;
 }
+
+.container_min_width {
+  @media (min-width: 1350px) {
+    min-height: 870px;
+  }
+}

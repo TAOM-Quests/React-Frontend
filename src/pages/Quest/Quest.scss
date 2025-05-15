@@ -11,11 +11,6 @@
 
   padding: 60px 10vw;
 
-  @media (min-width: 1350px) {
-    // height: calc(100vh - 76px);
-    min-height: 870px;
-  }
-
   @media (max-width: 350px) {
     padding: 60px 4vw;
   }

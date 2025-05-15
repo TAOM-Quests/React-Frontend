@@ -111,7 +111,7 @@ export const Quest = () => {
     <>
       {!isLoading && quest ? (
         <div
-          className="quest"
+          className="quest container_min_width"
           style={{
             backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${quest.image?.url})`,
           }}

@@ -5,7 +5,7 @@ import { Tag } from '../../../components/UI/Tag/Tag'
 import { ReactNode, useEffect, useState } from 'react'
 import { Modal } from '../../../components/UI/Modal/Modal'
 import { useNavigate } from 'react-router'
-import EventMinimizeComponent from '../../../components/EventMinimize/EventMinimize'
+import { EventMinimize as EventMinimizeComponent } from '../../../components/EventMinimize/EventMinimize'
 import { PlaceOffline, PlaceOnline } from '../../../models/event'
 import classNames from 'classnames'
 import './CalendarDay.scss'
@@ -152,8 +152,10 @@ export const CalendarDay = ({ events, isToday, day }: CalendarDayProps) => {
                   date={event.date ?? null}
                   status={event.status.name}
                   name={event.name ?? ''}
+                  tags={event.tags?.map(tag => tag.name) ?? []}
                   type={event.type?.name ?? ''}
                   address={offlinePlace?.address ?? ''}
+                  departmentName={event.department.name}
                   platform={onlinePlace?.platform ?? ''}
                   imageUrl={event.image?.url ?? ''}
                 />

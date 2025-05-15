@@ -21,6 +21,20 @@
     flex-basis: 100%;
   }
 
+  &__tags {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+
+  &__menu {
+    display: flex;
+    .context-menu {
+      right: 0;
+      top: 24px;
+    }
+  }
+
   &__image-wrapper {
     position: absolute;
     top: 0;
@@ -61,6 +75,7 @@
 
   &__header {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     gap: 10px;
 
