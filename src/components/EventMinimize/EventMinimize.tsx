@@ -69,9 +69,9 @@ export const EventMinimize = ({
   const statusColor: { [key: string]: TypeBadge } = {
     Черновик: 'neutral',
     Утверждено: 'success',
-    Отклонено: 'critical',
+    'На доработке': 'critical',
     'На утверждении': 'caution',
-    'В работе': 'info',
+    'Ожидает нормального названия статуса': 'info',
     Архив: 'neutral',
   }
 
@@ -122,9 +122,7 @@ export const EventMinimize = ({
           )}
         </div>
       </div>
-      <p className="body_xl_sb eventMinimize__name">
-        {name ? name : 'Черновик'}
-      </p>
+      <p className="body_xl_sb eventMinimize__name">{name}</p>
       <div className="eventMinimize__info">
         {date && (
           <div className="eventMinimize__date">

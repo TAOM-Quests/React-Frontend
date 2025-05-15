@@ -152,6 +152,7 @@ export const CalendarDay = ({ events, isToday, day }: CalendarDayProps) => {
                   date={event.date ?? null}
                   status={event.status.name}
                   name={event.name ?? ''}
+                  tags={event.tags?.map(tag => tag.name) ?? []}
                   type={event.type?.name ?? ''}
                   address={offlinePlace?.address ?? ''}
                   departmentName={event.department.name}

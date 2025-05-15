@@ -100,6 +100,7 @@ export const UpcomingEvents = () => {
                     date={event.date ?? null}
                     status={event.status.name}
                     name={event.name ?? ''}
+                    tags={event.tags?.map(tag => tag.name) ?? []}
                     type={event.type?.name ?? ''}
                     imageUrl={event.image?.url ?? ''}
                     address={offlinePlace?.address ?? ''}

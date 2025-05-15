@@ -74,6 +74,7 @@ export const CalendarMonthDay = ({ day, events }: CalendarMonthDayProps) => {
                   date={event.date ?? null}
                   status={event.status.name}
                   name={event.name ?? ''}
+                  tags={event.tags?.map(tag => tag.name) ?? []}
                   type={event.type?.name ?? ''}
                   departmentName={event.department.name}
                   address={offlinePlace?.address ?? ''}

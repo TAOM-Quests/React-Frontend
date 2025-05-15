@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { eventEmptyData, eventFullData } from './eventMinimizeEnvironment'
-import EventMinimize from '../EventMinimize'
 import { renderWithProviders } from '../../../mocks/redux/utils'
 import { userEvent } from '@vitest/browser/context'
+import { EventMinimize } from '../EventMinimize'
 
 const mockNavigate = vi.fn()
 vi.mock('react-router', async () => {

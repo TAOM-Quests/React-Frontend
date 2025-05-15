@@ -67,9 +67,7 @@ export const EventMainData = ({
     >
       <div className="event-banner__overlay" />
       <div className="event-banner__content">
-        <h3 className="heading_3 event-banner__title">
-          {name ? name : 'Черновик'}
-        </h3>
+        <h3 className="heading_3 event-banner__title">{name}</h3>
 
         <div className="event-banner__info-rows">
           {date && (
