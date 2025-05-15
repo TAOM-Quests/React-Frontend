@@ -87,18 +87,14 @@ export const Wordle = () => {
     setCurrentGuess(prev => prev.slice(0, -1))
   }, [gameOver])
 
-  const handleEnter = useCallback(async () => {
+  const handleEnter = async () => {
     if (gameOver) return
     if (currentGuess.length !== WORD_LENGTH) return
 
     try {
       setError(null)
 
-      const response = await fetch('/api/wordle/guess', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guess: currentGuess }),
-      })
+      const response = await fetch(`/api/wordle/attempts/${user?.id}`)
 
       if (!response.ok) {
         setError('Слово не существует')
@@ -143,7 +139,7 @@ export const Wordle = () => {
       setError('Ошибка сети или сервера')
       console.error(error)
     }
-  }, [currentGuess, gameOver, keyboardStatus, WORD_LENGTH])
+  }
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
