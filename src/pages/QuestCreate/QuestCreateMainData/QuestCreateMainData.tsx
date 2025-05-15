@@ -99,7 +99,7 @@ export const QuestCreateMainData = ({
               !isArray(selected) &&
               setDifficulty(
                 questDifficulties.find(
-                  difficult => difficult.id === +selected,
+                  difficult => difficult.id === selected.id,
                 ) ?? null,
               )
             }
