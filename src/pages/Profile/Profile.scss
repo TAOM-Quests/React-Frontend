@@ -6,6 +6,10 @@
   gap: 20px;
   background-color: var(--bg_body_primary);
 
+  @media (min-width: 1350px) {
+    min-height: 860px;
+  }
+
   &--header {
     display: flex;
     align-items: center;

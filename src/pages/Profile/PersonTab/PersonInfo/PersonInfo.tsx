@@ -23,6 +23,7 @@ import { OptionProps } from '../../../../components/UI/Option/Option'
 import { NotificationsModal } from './NotificationsModal/NotificationsModal'
 import { NotificationSettings } from './NotificationsModal/notificationSettingsConfig'
 import { ChangePasswordModal } from './ChangePasswordModal/ChangePasswordModal'
+import { Level } from '../../Level/Level'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -217,6 +218,15 @@ export default function PersonInfo({
               }}
             />
             <div className="personInfo--personFields">
+              {!isEmployee && (
+                <Level
+                  level={profile.level.number}
+                  name={profile.level.name}
+                  experience={profile.level.experience}
+                  experienceToNextLevel={profile.level.experienceToNextLevel}
+                />
+              )}
+
               <div className="personInfo--personFieldsNames">
                 {personFieldsNames.map(field => (
                   <Input

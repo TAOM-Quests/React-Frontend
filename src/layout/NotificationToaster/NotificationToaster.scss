@@ -1,0 +1,55 @@
+:root {
+  --toastify-toast-width: 400px !important;
+}
+
+.Toastify__toast {
+  padding: 0 !important;
+  border-radius: 8px !important;
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+
+  &--quests {
+    background: linear-gradient(135deg, #5a189a 0%, #9d4edd 100%);
+    border: 1px solid rgba(90, 24, 154, 0.8);
+    color: var(--text_c_secondary) !important;
+  }
+
+  &--events {
+    background: linear-gradient(135deg, #00b894 0%, #006d5b 100%);
+    border: 1px solid rgba(0, 184, 148, 0.8);
+    color: var(--text_c_secondary) !important;
+  }
+
+  &--games {
+    background: linear-gradient(135deg, #ff6f61 0%, #b23a48 100%);
+    border: 1px solid rgba(255, 111, 97, 0.8);
+    color: var(--text_c_secondary) !important;
+  }
+
+  &--achievements {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    border: 1px solid rgba(246, 211, 101, 0.8);
+    color: var(--text_c_secondary) !important;
+  }
+
+  &--level_up {
+    color: var(--text_c_secondary) !important;
+    background: linear-gradient(135deg, #009ac1 0%, #005f73 100%);
+    border: 1px solid rgba(0, 154, 193, 0.8);
+  }
+
+  &__image {
+    width: 50px;
+    height: 50px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}

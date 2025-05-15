@@ -18,6 +18,7 @@ import { Footer } from './layout/Footer/Footer.tsx'
 import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
+import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -62,6 +63,7 @@ root.render(
         <main className="main-content">
           <Header />
           <ScrollToTop>
+            <NotificationToaster />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
