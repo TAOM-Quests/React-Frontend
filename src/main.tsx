@@ -67,6 +67,7 @@ root.render(
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="games" element={<Games />} />
+              <Route path="game/wordle" element={<Wordle word={'схема'} />} />
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
@@ -78,9 +79,6 @@ root.render(
           </ScrollToTop>
           <Footer />
         </main>
-        <div>
-          <Wordle word="СХЕМА" maxAttempts={6} />
-        </div>
       </div>
     </Provider>
   </BrowserRouter>,

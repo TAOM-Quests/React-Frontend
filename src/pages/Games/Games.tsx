@@ -4,11 +4,13 @@ import './Games.scss'
 const gamesExample = [
   {
     name: '5 букв',
+    path: '/game/wordle',
     imageUrl:
       'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
   },
   {
     name: 'Кроссворд',
+    path: '/game/crossword',
     imageUrl:
       'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
   },
@@ -20,7 +22,12 @@ export const Games = () => {
       <h6 className="heading_6">Игры</h6>
       <div className="games__list">
         {gamesExample.map((game, index) => (
-          <CardGame key={index} name={game.name} imageUrl={game.imageUrl} />
+          <CardGame
+            key={index}
+            path={game.path}
+            name={game.name}
+            imageUrl={game.imageUrl}
+          />
         ))}
       </div>
     </div>
