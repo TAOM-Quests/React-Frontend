@@ -1,20 +1,17 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Button } from '../UI/Button/Button'
 import './Wordle.scss'
-import { useAppSelector } from '../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../redux/auth/authSlice'
 import { useParams } from 'react-router'
-
-interface LetterInfo {
-  name: string
-  status: LetterStatus
-}
-
-interface GuessResponse {
-  letters: LetterInfo[]
-}
-
-type LetterStatus = 'correct' | 'present' | 'absent' | ''
+import {
+  WordleAttempt,
+  WordleAttemptLetterStatus,
+} from '../../../models/wordleAttempt'
+import { wordle } from '../../../services/api/gamesModule/games/wordle'
+import { Button } from '../../../components/UI/Button/Button'
+import { useAppSelector } from '../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../redux/auth/authSlice'
+import { lowerCase } from 'lodash'
+import { Loading } from '../../../components/Loading/Loading'
+import moment from 'moment'
 
 const RUSSIAN_ALPHABET = [
   'Й',
@@ -51,27 +48,45 @@ const RUSSIAN_ALPHABET = [
   'Ю',
 ]
 
+const MAX_ATTEMPTS = 6
+const WORD_LENGTH = 5
+
 export const Wordle = () => {
-  const [guessResponses, setGuessResponses] = useState<GuessResponse[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isGameOver, setIsGameOver] = useState(false)
   const [currentGuess, setCurrentGuess] = useState('')
-  const [attempt, setAttempt] = useState(0)
-  const [gameOver, setGameOver] = useState(false)
-  const [keyboardStatus, setKeyboardStatus] = useState<
-    Record<string, LetterStatus>
-  >({})
   const [error, setError] = useState<string | null>(null)
-  const MAX_ATTEMPTS = 6
-  const WORD_LENGTH = 5
+  const [prevAttempts, setPrevAttempts] = useState<WordleAttempt[]>([])
+  const [keyboardStatus, setKeyboardStatus] = useState<
+    Record<string, WordleAttemptLetterStatus>
+  >({})
 
   const user = useAppSelector(selectAuth)
-  const date = new Date()
+  const { id: departmentId } = useParams<{ id: string }>()
 
-  const { id } = useParams<{ id: string }>()
-  const departmentId = Number(id)
+  useEffect(() => {
+    setIsLoading(true)
+
+    const fetchAttempts = async () => {
+      if (!user || !departmentId) return
+
+      setPrevAttempts(
+        await wordle.getAttempts(
+          user.id,
+          moment().format('YYYY-MM-DD'),
+          +departmentId!,
+        ),
+      )
+    }
+
+    fetchAttempts()
+
+    setIsLoading(false)
+  }, [departmentId])
 
   const handleLetterInput = useCallback(
     (letter: string) => {
-      if (gameOver) return
+      if (isGameOver) return
       if (
         currentGuess.length < WORD_LENGTH &&
         RUSSIAN_ALPHABET.includes(letter)
@@ -79,65 +94,60 @@ export const Wordle = () => {
         setCurrentGuess(prev => prev + letter)
       }
     },
-    [currentGuess, gameOver, WORD_LENGTH],
+    [currentGuess, isGameOver, WORD_LENGTH],
   )
 
   const handleBackspace = useCallback(() => {
-    if (gameOver) return
+    if (isGameOver) return
     setCurrentGuess(prev => prev.slice(0, -1))
-  }, [gameOver])
+  }, [isGameOver])
 
   const handleEnter = async () => {
-    if (gameOver) return
-    if (currentGuess.length !== WORD_LENGTH) return
+    if (isGameOver || currentGuess.length !== WORD_LENGTH) return
 
     try {
       setError(null)
 
-      const response = await fetch(`/api/wordle/attempts/${user?.id}`)
+      if (!user) throw new Error('User not found')
+      if (!departmentId) throw new Error('Department id not found')
 
-      if (!response.ok) {
-        setError('Слово не существует')
-        return
-      }
+      const newAttempt = await wordle.addAttempt(
+        lowerCase(currentGuess),
+        user.id,
+        +departmentId,
+      )
 
-      const data: GuessResponse[] = await response.json()
-
-      setGuessResponses(data)
       setCurrentGuess('')
-
-      const newKeyboardStatus: Record<string, LetterStatus> = {
-        ...keyboardStatus,
-      }
-      data.forEach(guessResp => {
-        guessResp.letters.forEach(({ name, status }) => {
-          const prev = newKeyboardStatus[name]
-          if (status === 'correct' || prev === 'correct') {
-            newKeyboardStatus[name] = 'correct'
-          } else if (status === 'present' || prev === 'present') {
-            newKeyboardStatus[name] = 'present'
-          } else if (!prev) {
-            newKeyboardStatus[name] = 'absent'
+      setPrevAttempts(prevAttempts => [...prevAttempts, newAttempt])
+      setKeyboardStatus(prevKeyboard => {
+        newAttempt.letters.forEach(({ name, status }) => {
+          const prevLetterStatus = prevKeyboard[name]
+          if (status === 'correct' || prevLetterStatus === 'correct') {
+            prevKeyboard[name] = 'correct'
+          } else if (status === 'present' || prevLetterStatus === 'present') {
+            prevKeyboard[name] = 'present'
+          } else if (!prevLetterStatus) {
+            prevKeyboard[name] = 'absent'
           }
         })
+        return prevKeyboard
       })
-      setKeyboardStatus(newKeyboardStatus)
 
-      const lastGuess = data[data.length - 1]
-      const isCorrect = lastGuess.letters.every(
+      const isCorrect = newAttempt.letters.every(
         letter => letter.status === 'correct',
       )
 
       if (isCorrect) {
-        setGameOver(true)
-      } else if (data.length === MAX_ATTEMPTS) {
-        setGameOver(true)
-      } else {
-        setAttempt(data.length)
+        setIsGameOver(true)
+      } else if (prevAttempts.length + 1 === MAX_ATTEMPTS) {
+        setIsGameOver(true)
       }
-    } catch (error) {
-      setError('Ошибка сети или сервера')
-      console.error(error)
+    } catch (e) {
+      if (+(e as Error).message.split(' - ')[0] === 404) {
+        setError('Слово не существует')
+      }
+
+      console.log(`[Wordle] ${e}`)
     }
   }
 
@@ -160,23 +170,25 @@ export const Wordle = () => {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [handleBackspace, handleEnter, handleLetterInput])
 
-  return (
+  return !isLoading ? (
     <div className="wordle">
       <div className="board">
         {Array(MAX_ATTEMPTS)
           .fill(null)
-          .map((_, idx) => {
-            const guessResp = guessResponses[idx]
+          .map((_, attemptIndex) => {
+            const attempt = prevAttempts[attemptIndex]
             return (
-              <div className="row" key={idx}>
+              <div className="row" key={attemptIndex}>
                 {Array(WORD_LENGTH)
                   .fill('')
                   .map((_, i) => {
-                    const letterInfo = guessResp?.letters[i]
+                    const letterInfo = attempt?.letters[i]
                     const status = letterInfo?.status || ''
                     const letter =
-                      guessResp?.letters[i]?.name ||
-                      (idx === attempt ? currentGuess[i] || '' : '')
+                      attempt?.letters[i]?.name ||
+                      (attemptIndex === prevAttempts.length
+                        ? currentGuess[i] || ''
+                        : '')
                     return (
                       <div className={`cell ${status}`} key={i}>
                         {letter}
@@ -188,7 +200,7 @@ export const Wordle = () => {
           })}
       </div>
 
-      {!gameOver && (
+      {!isGameOver && (
         <div className="keyboard">
           {[
             RUSSIAN_ALPHABET.slice(0, 12),
@@ -228,15 +240,17 @@ export const Wordle = () => {
         </div>
       )}
       {error && <div className="error-message">{error}</div>}
-      {gameOver && (
+      {isGameOver && (
         <div className="result">
-          {guessResponses.some(guessResp =>
-            guessResp.letters.every(letter => letter.status === 'correct'),
+          {prevAttempts.some(attempt =>
+            attempt.letters.every(letter => letter.status === 'correct'),
           )
             ? 'Поздравляем! Вы угадали!'
             : 'Игра окончена!'}
         </div>
       )}
     </div>
+  ) : (
+    <Loading />
   )
 }
