@@ -16,8 +16,8 @@ export default function PersonTab({ profile, updatePerson }: PersonTabProps) {
     <div className="personTab">
       <PersonInfo
         profile={profile}
-        updateProfile={updatePerson}
         isEmployee={isEmployee}
+        updateProfile={updatePerson}
       />
       {isEmployee && <EmployeeInfo {...profile} />}
       {!isEmployee && <AchievementsList achievements={profile.achievements} />}

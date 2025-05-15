@@ -2,7 +2,7 @@ import { InputHTMLAttributes, ReactNode } from 'react'
 import classNames from 'classnames'
 import { Icon } from '../Icon/Icon'
 import './Checkbox.scss'
-import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
+import { generateRandomElementId } from '../../../utils/generateRandomElementId'
 
 export interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   isSelected: boolean

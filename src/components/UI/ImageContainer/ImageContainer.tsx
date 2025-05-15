@@ -95,7 +95,6 @@ export const ImageContainer = ({
           </div>
         )}
       </div>
-
       {selectedImages.length > 1 && (
         <div className="cardsImages">
           {selectedImages.map(image => (

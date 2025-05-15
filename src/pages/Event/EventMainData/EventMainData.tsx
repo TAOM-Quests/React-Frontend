@@ -11,11 +11,14 @@ import { useNavigate } from 'react-router'
 import { Participant } from '../../../models/user'
 import { EventType } from '../../../models/eventType'
 import './EventMainData.scss'
+import { EventTag } from '../../../models/eventTag'
+import { Tag } from '../../../components/UI/Tag/Tag'
 
 export interface EventMainDataProps {
   eventId: number
   department: Department
   date?: Date
+  tags?: EventTag[]
   name?: string
   type?: EventType
   image?: ServerFile
@@ -27,6 +30,7 @@ export const EventMainData = ({
   date,
   name,
   type,
+  tags,
   image,
   places,
   eventId,
@@ -66,40 +70,58 @@ export const EventMainData = ({
         <h3 className="heading_3 event-banner__title">{name}</h3>
 
         <div className="event-banner__info-rows">
-          <div className="body_xl_m event-banner__info-row">
-            <Icon icon="CALENDAR" colorIcon="subdued" />
-            <span>{moment(date).format('DD MMMM YYYY год')}</span>
-          </div>
-
-          <div className="body_xl_m event-banner__info-row">
-            <Icon icon="TIME" colorIcon="subdued" />
-            <span>{moment(date).format('HH:mm')}</span>
-          </div>
+          {date && (
+            <div className="body_xl_m event-banner__info-row">
+              <Icon icon="CALENDAR" size={'large'} colorIcon="subdued" />
+              <span>{moment(date).format('DD MMMM YYYY год')}</span>
+            </div>
+          )}
+          {date && (
+            <div className="body_xl_m event-banner__info-row">
+              <Icon icon="TIME" size={'large'} colorIcon="subdued" />
+              <span>{moment(date).format('HH:mm')}</span>
+            </div>
+          )}
 
           {placeOffline?.address && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="MARKER_MAP" colorIcon="subdued" />
+              <div className="event-banner__info-row-icon">
+                <Icon icon="MARKER_MAP" size={'large'} colorIcon="subdued" />
+              </div>
+
               <span>{placeOffline?.address}</span>
             </div>
           )}
 
           {placeOnline?.platform && (
             <div className="body_xl_m event-banner__info-row">
-              <Icon icon="PLATFORM" colorIcon="subdued" />
+              <div className="event-banner__info-row-icon">
+                <Icon icon="PLATFORM" size={'large'} colorIcon="subdued" />
+              </div>
               <span>{placeOnline?.platform}</span>
             </div>
           )}
-
+          {type?.name && (
+            <div className="body_xl_m event-banner__info-row">
+              <Icon icon="GRADUATION_CAP" size={'large'} colorIcon="subdued" />
+              <span>{type?.name}</span>
+            </div>
+          )}
           <div className="body_xl_m event-banner__info-row">
-            <Icon icon="DEPARTMENT" colorIcon="subdued" />
+            <div className="event-banner__info-row-icon">
+              <Icon icon="DEPARTMENT" size={'large'} colorIcon="subdued" />
+            </div>
             <span>{department.name}</span>
           </div>
-
-          <div className="body_xl_m event-banner__info-row">
-            <Icon icon="GRADUATION_CAP" colorIcon="subdued" />
-            <span>{type?.name}</span>
-          </div>
         </div>
+
+        {tags?.length ? (
+          <div className="event-banner__tags">
+            {tags?.map(tag => (
+              <Tag key={tag.id} text={tag.name} size="small"></Tag>
+            ))}
+          </div>
+        ) : null}
 
         {user &&
         participants?.map(participant => participant.id).includes(user.id) ? (

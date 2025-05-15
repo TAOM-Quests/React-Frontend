@@ -1,0 +1,56 @@
+.management-data {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .inputWrapper,
+    .calendar-input-container,
+    .dropdown-container {
+      flex-basis: calc((100% - 10px) / 2);
+      min-width: 250px;
+    }
+
+    @media (max-width: 420px) {
+      .inputWrapper,
+      .calendar-input-container,
+      .dropdown-container {
+        min-width: 100% !important;
+      }
+    }
+
+    @media (max-width: 1690px) {
+      .inputWrapper,
+      .calendar-input-container,
+      .dropdown-container {
+        flex-basis: 100%;
+      }
+    }
+  }
+
+  &__miniInput {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-basis: calc((100% - 10px) / 2);
+    @media (max-width: 1690px) {
+      flex-basis: 100%;
+    }
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+
+    .inputWrapper,
+    .inputWrapperNumber {
+      min-width: 120px;
+      width: 100%;
+    }
+    .time-input-container {
+      width: 100%;
+    }
+  }
+}

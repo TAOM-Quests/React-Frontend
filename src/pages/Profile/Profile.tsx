@@ -8,7 +8,7 @@ import { useNavigate, useSearchParams } from 'react-router'
 import EventsTab from './EventsTab/EventsTab'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import './Profile.scss'
-import { EmployeeAuth } from '../../models/userAuth'
+import QuestsTab from './QuestsTab/QuestsTab'
 
 const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
 
@@ -58,12 +58,14 @@ export default function Profile() {
       case 0:
         return <PersonTab profile={profile!} updatePerson={updateProfile} />
       case 1:
-        return <EventsTab user={user! as EmployeeAuth} />
+        return <EventsTab user={user!} />
+      case 2:
+        return <QuestsTab user={user!} />
     }
   }
 
   return (
-    <div className="profile">
+    <div className="profile container_min_width">
       <div className="profile--header">
         <h5 className="heading_5 profile--title">Личный кабинет</h5>
         <Switcher

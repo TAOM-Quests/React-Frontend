@@ -1,14 +1,4 @@
-.profile_events--tabs {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 10px;
-
-  @media (max-width: 880px) {
-    justify-content: center;
-  }
-}
-.profile_events {
+.profile_quests {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -27,8 +17,13 @@
   &--filters {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
     width: 100%;
+
+    @media (max-width: 1297px) {
+      width: auto;
+    }
 
     .inputWrapper {
       flex-basis: calc((100% - 40px) / 3);
@@ -64,11 +59,10 @@
       }
     }
   }
-  &--events {
+  &--quests {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    width: 100%;
 
     @media (max-width: 1297px) {
       justify-content: center;
