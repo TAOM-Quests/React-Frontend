@@ -47,6 +47,7 @@ import { TAOM } from './taom'
 import { LOGOUT } from './logout'
 import { DZEN } from './dzen'
 import { VK } from './vk'
+import { USER } from './user'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -98,6 +99,7 @@ export const ICON_MAP = {
   LOGOUT: LOGOUT,
   DZEN: DZEN,
   VK: VK,
+  USER: USER,
 }
 
 type IconName = keyof typeof ICON_MAP

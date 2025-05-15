@@ -27,4 +27,14 @@ export const users = {
 
   getEmployees: (): Promise<Employee[]> =>
     userModule<Employee[], null>('users?isEmployee=true'),
+
+  changePassword: (params: {
+    oldPassword: string
+    newPassword: string
+  }): Promise<void> =>
+    // Добавить метод смены пароля в API
+    userModule<void, { oldPassword: string; newPassword: string }>(
+      'users/change-password',
+      params,
+    ),
 }

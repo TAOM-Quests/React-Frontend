@@ -12,22 +12,28 @@ import {
   Dropdown,
   DropdownItemType,
 } from '../../../../components/UI/Dropdown/Dropdown'
-
 import { MaskedInput } from '../../../../components/MaskedInput/MaskedInput'
 import { validateName } from '../../../../validation/validateName'
 import { validateDateOfBirth } from '../../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../../validation/validateEmail'
 import { validatePhone } from '../../../../validation/validatePhone'
 import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
+import { ContextMenu } from '../../../../components/ContextMenu/ContextMenu'
+import { OptionProps } from '../../../../components/UI/Option/Option'
+import { NotificationsModal } from './NotificationsModal/NotificationsModal'
+import { NotificationSettings } from './NotificationsModal/notificationSettingsConfig'
+import { ChangePasswordModal } from './ChangePasswordModal/ChangePasswordModal'
 
 export interface PersonInfoProps {
   profile: UserProfile
   updateProfile: (profile: UserProfile) => void
+  isEmployee?: boolean
 }
 
 export default function PersonInfo({
   profile,
   updateProfile,
+  isEmployee,
 }: PersonInfoProps) {
   const [image, setImage] = useState(profile.image)
   const [lastName, setLastName] = useState(profile.lastName)
@@ -38,21 +44,17 @@ export default function PersonInfo({
   const [phoneNumber, setPhoneNumber] = useState(profile.phoneNumber)
   const [email, setEmail] = useState(profile.email)
 
-  const handleDateSelect = (date: Date | null) => {
-    setBirthDate(date)
-  }
-
-  const handleChangeSex = (
-    selectedItem: DropdownItemType | DropdownItemType[] | null,
-  ) => {
-    if (selectedItem !== null && !Array.isArray(selectedItem)) {
-      setSex(selectedItem.text)
-    } else {
-      setSex('')
-    }
-  }
-
   const [changingMode, setChangingMode] = useState(false)
+  const [openMenu, setOpenMenu] = useState<boolean>(false)
+
+  const [isNotificationsModalOpen, setNotificationsModalOpen] = useState(false)
+  const [notificationSettings, setNotificationSettings] =
+    useState<NotificationSettings>({})
+
+  const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
+    useState(false)
+
+  const role = isEmployee ? 'teacher' : 'applicant'
 
   const lastNameValidator = validateName(lastName, false)
   const firstNameValidator = validateName(firstName, false)
@@ -106,6 +108,36 @@ export default function PersonInfo({
     },
   ]
 
+  const settingProfileOptions: OptionProps[] = [
+    {
+      text: 'Настройки уведомлений',
+      onSelect: () => setNotificationsModalOpen(true),
+    },
+    {
+      text: 'Сменить пароль',
+      onSelect: () => setChangePasswordModalOpen(true),
+    },
+  ]
+
+  const handleSaveNotificationSettings = (settings: NotificationSettings) => {
+    setNotificationSettings(settings)
+    // Здесь нужно добавить сохранение на сервер
+  }
+
+  const handleDateSelect = (date: Date | null) => {
+    setBirthDate(date)
+  }
+
+  const handleChangeSex = (
+    selectedItem: DropdownItemType | DropdownItemType[] | null,
+  ) => {
+    if (selectedItem !== null && !Array.isArray(selectedItem)) {
+      setSex(selectedItem.text)
+    } else {
+      setSex('')
+    }
+  }
+
   const toggleChangingMode = async () => {
     if (changingMode) {
       const updatedFields = await users.updateProfile({
@@ -132,10 +164,28 @@ export default function PersonInfo({
     setChangingMode(!changingMode)
   }
 
+  const toggleMenu = () => {
+    setOpenMenu(!openMenu)
+  }
+
+  const handlePasswordChangeSuccess = () => {
+    alert('Пароль успешно изменён')
+    // Можно добавить дополнительную логику, например, разлогинить пользователя
+  }
+
   return (
     <div className="personInfo">
       <div className="personInfo--header">
-        <Icon icon="MENU_DOTS" />
+        <div className="personInfo--header__menu">
+          <ContextMenu
+            isVisible={openMenu}
+            onToggle={toggleMenu}
+            options={settingProfileOptions}
+          >
+            <Icon icon="MENU_DOTS" />
+          </ContextMenu>
+        </div>
+
         <Button
           text={changingMode ? 'Сохранить' : 'Изменить профиль'}
           colorType={changingMode ? 'primary' : 'secondary'}
@@ -228,6 +278,24 @@ export default function PersonInfo({
           />
         </ContainerBox>
       </div>
+
+      {isNotificationsModalOpen && (
+        <NotificationsModal
+          isOpen={isNotificationsModalOpen}
+          onClose={() => setNotificationsModalOpen(false)}
+          role={role}
+          initialSettings={notificationSettings}
+          onSave={handleSaveNotificationSettings}
+        />
+      )}
+
+      {isChangePasswordModalOpen && (
+        <ChangePasswordModal
+          isOpen={isChangePasswordModalOpen}
+          onClose={() => setChangePasswordModalOpen(false)}
+          onSuccess={handlePasswordChangeSuccess}
+        />
+      )}
     </div>
   )
 }

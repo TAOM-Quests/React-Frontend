@@ -9,14 +9,20 @@ export interface QuestQuestionMultipleProps {
   question: QuestQuestionMultipleInterface
   isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
+  userAnswer?: number[]
 }
 
 export const QuestQuestionMultiple = forwardRef(
   (
-    { question, isCheckMode, setIsAnswerReady }: QuestQuestionMultipleProps,
+    {
+      question,
+      isCheckMode,
+      setIsAnswerReady,
+      userAnswer: userAnswerProp,
+    }: QuestQuestionMultipleProps,
     ref,
   ) => {
-    const [userAnswer, setUserAnswer] = useState<number[]>([])
+    const [userAnswer, setUserAnswer] = useState<number[]>(userAnswerProp ?? [])
 
     useImperativeHandle(
       ref,
