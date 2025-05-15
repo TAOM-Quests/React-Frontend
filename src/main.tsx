@@ -6,7 +6,9 @@ import { setupStore } from './redux/store.ts'
 import Profile from './pages/Profile/Profile.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import '../src/assets/styles/style.scss'
-import './assets/styles/style.scss'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 import { Event } from './pages/Event/Event.tsx'
 import moment from 'moment'
 import { EventCalendar } from './pages/EventCalendar/EventCalendar.tsx'
@@ -69,6 +71,7 @@ root.render(
               <Route path="event/:id/edit" element={<EventCreate />} />
               <Route path="event/calendar" element={<EventCalendar />} />
               <Route path="quest/:id" element={<Quest />} />
+              <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
             </Routes>

@@ -1,0 +1,26 @@
+.notifications-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  &__setting {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    @media (max-width: 700px) {
+      flex-direction: column;
+      align-items: start;
+      gap: 10px;
+    }
+  }
+
+  &__channels {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    max-width: 250px;
+    width: 100%;
+  }
+}

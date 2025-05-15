@@ -38,6 +38,30 @@
     justify-content: flex-end;
     flex-direction: row;
     gap: 10px;
+
+    &__menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      .context-menu {
+        top: 22px;
+        right: 0;
+
+        .item_selected {
+          background-color: var(--bg_c_secondary);
+
+          &:hover {
+            background-color: var(--bg_c_secondary_hover);
+          }
+
+          &:active {
+            background-color: var(--bg_c_secondary_active);
+          }
+        }
+      }
+    }
   }
 
   &--info {
@@ -123,6 +147,17 @@
 
     @media (max-width: 740px) {
       min-width: 100%;
+    }
+  }
+
+  &--modal {
+    &__buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      .button {
+        width: 100%;
+      }
     }
   }
 }

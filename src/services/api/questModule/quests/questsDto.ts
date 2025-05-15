@@ -1,6 +1,16 @@
 import { QuestQuestion } from '../../../../models/questQuestion'
 import { QuestResult } from '../../../../models/questResult'
 
+export interface QuestsGetDto {
+  limit?: number
+  offset?: number
+  tags?: number[]
+  completeBy?: number
+  executor?: number[]
+  department?: number[]
+  isCompleted?: boolean
+}
+
 export interface SaveQuestDto {
   executorId: number
   departmentId: number
@@ -48,7 +58,6 @@ interface SaveQuestionComplete {
   type: string
   answer: {
     userAnswer: any
-    isCorrect: boolean
     options?: string[]
   }
   imageId?: number

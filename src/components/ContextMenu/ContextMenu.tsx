@@ -26,7 +26,7 @@ export const ContextMenu = ({
   children,
   isVisible = false,
   onToggle,
-
+  className,
   ...props
 }: ContextMenuProps) => {
   const menuRef = useRef<HTMLUListElement>(null)
@@ -75,11 +75,7 @@ export const ContextMenu = ({
       {trigger}
 
       {isVisible && (
-        <ul
-          className={`context-menu ${props.className}`}
-          ref={menuRef}
-          {...props}
-        >
+        <ul className={`context-menu ${className}`} ref={menuRef} {...props}>
           <ContainerBox className="context-menu__box">
             {options.map(option => (
               <Option

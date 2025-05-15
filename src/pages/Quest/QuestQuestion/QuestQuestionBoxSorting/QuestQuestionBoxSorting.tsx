@@ -13,20 +13,27 @@ export interface QuestQuestionBoxSortingProps {
   question: QuestQuestionBoxSortingInterface
   isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
+  userAnswer?: QuestQuestionBoxSortingAnswer[]
 }
 
 export const QuestQuestionBoxSorting = forwardRef(
   (
-    { isCheckMode, question, setIsAnswerReady }: QuestQuestionBoxSortingProps,
+    {
+      isCheckMode,
+      question,
+      setIsAnswerReady,
+      userAnswer: userAnswerProp,
+    }: QuestQuestionBoxSortingProps,
     ref,
   ) => {
     const [userAnswer, setUserAnswer] = useState<
       QuestQuestionBoxSortingAnswer[]
     >(
-      question.answer.correctAnswer.map(box => ({
-        name: box.name,
-        options: [],
-      })),
+      userAnswerProp ??
+        question.answer.correctAnswer.map(box => ({
+          name: box.name,
+          options: [],
+        })),
     )
 
     useImperativeHandle(
