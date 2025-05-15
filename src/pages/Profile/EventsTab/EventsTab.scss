@@ -1,3 +1,13 @@
+.profile_events--tabs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+
+  @media (max-width: 880px) {
+    justify-content: center;
+  }
+}
 .profile_events {
   display: flex;
   flex-direction: column;

@@ -54,6 +54,10 @@ export const Quest = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (isResultView) saveComplete()
+  }, [isResultView])
+
   const setNextQuestion = (userAnswer: any, isCorrectAnswer: boolean) => {
     setUserAnswers([...userAnswers, { answer: userAnswer, isCorrectAnswer }])
 
@@ -62,8 +66,6 @@ export const Quest = () => {
     } else {
       setCurrentQuestionIndex(null)
       setIsResultView(true)
-
-      saveComplete()
     }
   }
 

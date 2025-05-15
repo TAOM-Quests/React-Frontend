@@ -9,6 +9,7 @@ export const user: UserAuth = {
   id: 2,
   email: 'marika.meidra@gmail.com',
   token: 'testToken',
+  name: '',
 }
 
 export const userProfile: UserProfile = {
