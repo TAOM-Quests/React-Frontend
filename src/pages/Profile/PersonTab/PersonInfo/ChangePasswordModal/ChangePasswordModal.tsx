@@ -7,7 +7,7 @@ import './ChangePasswordModal.scss'
 interface ChangePasswordModalProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: () => void // колбек при успешной смене пароля если нужен
+  onSuccess?: () => void // Callback при успешной смене пароля если нужен
 }
 
 export const ChangePasswordModal = ({

@@ -12,7 +12,6 @@ import {
 } from './questsDto'
 
 export const quests = {
-  //Сделать получение квестов пользователя
   getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
     let queryString = Object.entries(params)
       .map(([key, value]) => `${key}=${value}`)

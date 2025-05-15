@@ -25,8 +25,8 @@ export interface EventMinimizeProps {
   address: string
   platform: string
   imageUrl: string
-  onDelete?: () => void
   tags?: string[]
+  onDelete?: () => void
   isEmployeeView?: boolean
   isInspectorView?: boolean
   participantsCount?: number
@@ -140,7 +140,7 @@ export default function EventMinimize({
         <div className="eventMinimize__date">
           <Icon colorIcon="soft-blue" icon="CALENDAR" />
           <p className="body_l_m text_ellipsis">
-            g{date ? moment.utc(date).format('D MMMM HH:mm') : ''}
+            {date ? moment.utc(date).format('D MMMM HH:mm') : ''}
           </p>
         </div>
         {address && (

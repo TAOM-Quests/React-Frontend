@@ -104,16 +104,14 @@ export default function QuestMinimize({
         </div>
         <div className="questMinimize__header--right">
           {isEmployeeView && (
-            <>
-              <ContextMenu
-                isVisible={openMenuId === id}
-                onToggle={toggleMenu}
-                options={questOptionsContextMenu}
-                className="questMinimize__header--menu"
-              >
-                <Icon colorIcon="primary" icon="MENU_DOTS" />
-              </ContextMenu>
-            </>
+            <ContextMenu
+              isVisible={openMenuId === id}
+              onToggle={toggleMenu}
+              options={questOptionsContextMenu}
+              className="questMinimize__header--menu"
+            >
+              <Icon colorIcon="primary" icon="MENU_DOTS" />
+            </ContextMenu>
           )}
         </div>
       </div>
