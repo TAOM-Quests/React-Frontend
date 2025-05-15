@@ -66,8 +66,8 @@ root.render(
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="games" element={<Games />} />
-              <Route path="game/wordle" element={<Wordle />} />
+              <Route path="games/:id" element={<Games />} />
+              <Route path="games/wordle/:id" element={<Wordle />} />
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />

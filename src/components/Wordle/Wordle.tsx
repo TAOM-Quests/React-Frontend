@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Button } from '../UI/Button/Button'
 import './Wordle.scss'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useParams } from 'react-router'
 
 interface LetterInfo {
   name: string
@@ -59,6 +62,12 @@ export const Wordle = () => {
   const [error, setError] = useState<string | null>(null)
   const MAX_ATTEMPTS = 6
   const WORD_LENGTH = 5
+
+  const user = useAppSelector(selectAuth)
+  const date = new Date()
+
+  const { id } = useParams<{ id: string }>()
+  const departmentId = Number(id)
 
   const handleLetterInput = useCallback(
     (letter: string) => {
