@@ -16,6 +16,8 @@ import { Footer } from './layout/Footer/Footer.tsx'
 import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
+import { Wordle } from './components/Wordle/Wordle.tsx'
+import { Games } from './pages/Games/Games.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -64,6 +66,7 @@ root.render(
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="games" element={<Games />} />
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
@@ -75,6 +78,9 @@ root.render(
           </ScrollToTop>
           <Footer />
         </main>
+        <div>
+          <Wordle word="СХЕМА" maxAttempts={6} />
+        </div>
       </div>
     </Provider>
   </BrowserRouter>,

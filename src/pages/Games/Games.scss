@@ -1,0 +1,13 @@
+.games {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 80px 15vw;
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 20px;
+    width: 100%;
+  }
+}
