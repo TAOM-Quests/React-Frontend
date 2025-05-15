@@ -70,13 +70,29 @@ export const Wordle = () => {
     const fetchAttempts = async () => {
       if (!user || !departmentId) return
 
-      setPrevAttempts(
-        await wordle.getAttempts(
-          user.id,
-          moment().format('YYYY-MM-DD'),
-          +departmentId!,
-        ),
+      const attempts = await wordle.getAttempts(
+        user.id,
+        moment().format('YYYY-MM-DD'),
+        +departmentId!,
       )
+
+      setPrevAttempts(attempts)
+      setKeyboardStatus(prevKeyboard => {
+        attempts.forEach(attempt => {
+          attempt.letters.forEach(({ name, status }) => {
+            const prevLetterStatus = prevKeyboard[name]
+            if (status === 'correct' || prevLetterStatus === 'correct') {
+              prevKeyboard[name] = 'correct'
+            } else if (status === 'present' || prevLetterStatus === 'present') {
+              prevKeyboard[name] = 'present'
+            } else if (!prevLetterStatus) {
+              prevKeyboard[name] = 'absent'
+            }
+          })
+        })
+
+        return prevKeyboard
+      })
     }
 
     fetchAttempts()
