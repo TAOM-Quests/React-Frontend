@@ -9,7 +9,7 @@ import { wordle } from '../../../services/api/gamesModule/games/wordle'
 import { Button } from '../../../components/UI/Button/Button'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
-import { lowerCase } from 'lodash'
+import { upperCase } from 'lodash'
 import { Loading } from '../../../components/Loading/Loading'
 import moment from 'moment'
 
@@ -112,7 +112,7 @@ export const Wordle = () => {
       if (!departmentId) throw new Error('Department id not found')
 
       const newAttempt = await wordle.addAttempt(
-        lowerCase(currentGuess),
+        upperCase(currentGuess),
         user.id,
         +departmentId,
       )
