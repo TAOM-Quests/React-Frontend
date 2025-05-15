@@ -1,21 +1,22 @@
 .wordle {
-  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 600px;
   margin: 30px auto;
   padding: 20px;
-  border-radius: 16px;
-  background: #fafbfc;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 
   .board {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-bottom: 24px;
   }
 
   .row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    display: flex;
+    flex-direction: row;
     gap: 6px;
   }
 
@@ -23,7 +24,7 @@
     width: 40px;
     height: 40px;
     border-radius: 6px;
-    background: #e0e0e0;
+    background: var(--bg_c_secondary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,27 +34,30 @@
     transition:
       background 0.2s,
       color 0.2s;
-    border: 2px solid #bdbdbd;
+    border: var(--border_primary) var(--border_c_accent);
 
     &.correct {
-      background: #6aaa64;
-      color: #fff;
-      border-color: #6aaa64;
+      background: var(--bg_c_accent);
+      color: var(--text_c_secondary);
+      border-color: var(--border_c_accent);
     }
     &.present {
-      background: #4ba3c7;
-      color: #fff;
-      border-color: #4ba3c7;
+      background: #6bdaf6;
+      color: var(--text_c_secondary);
+      border-color: #6bdaf6;
     }
     &.absent {
       background: #bdbdbd;
-      color: #fff;
+      color: var(--text_c_secondary);
       border-color: #bdbdbd;
     }
   }
 
   .keyboard {
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
     .keyboard-rows {
       display: flex;
       flex-direction: column;
@@ -62,8 +66,7 @@
     .keyboard-row {
       display: flex;
       justify-content: center;
-      gap: 4px;
-      margin-bottom: 2px;
+      gap: 5px;
     }
     .key {
       min-width: 34px;
@@ -79,26 +82,26 @@
         background 0.2s,
         color 0.2s;
       &.correct {
-        background: #6aaa64;
-        color: #fff;
+        background: var(--bg_c_accent);
+        color: var(--text_c_secondary);
       }
       &.present {
-        background: #4ba3c7;
-        color: #fff;
+        background: #6bdaf6;
+        color: var(--text_c_secondary);
       }
       &.absent {
         background: #bdbdbd;
-        color: #fff;
+        color: var(--text_c_secondary);
       }
-      &.special {
-        background: #4ba3c7;
-        color: #fff;
-        min-width: 48px;
-      }
+
       &:disabled {
         opacity: 0.6;
         cursor: default;
       }
+    }
+    .special {
+      height: 40px;
+      width: 53px;
     }
   }
 

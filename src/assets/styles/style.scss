@@ -153,7 +153,10 @@ body,
 }
 
 .main-content {
-  flex: 1 0 auto; // Контент занимает всё доступное пространство
+  flex: 1 0 auto;
+  background-color: var(--bg_body_primary);
+
+  // Контент занимает всё доступное пространство
 }
 
 // .footer {

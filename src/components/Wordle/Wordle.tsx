@@ -1,9 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { Button } from '../UI/Button/Button'
 import './Wordle.scss'
 
-export interface WordleProps {
-  word: string // Загаданное слово, например: "РЕАКТ"
-  maxAttempts?: number // Максимальное число попыток (по умолчанию 6)
+interface LetterInfo {
+  name: string
+  status: LetterStatus
+}
+
+interface GuessResponse {
+  letters: LetterInfo[]
 }
 
 type LetterStatus = 'correct' | 'present' | 'absent' | ''
@@ -43,50 +48,18 @@ const RUSSIAN_ALPHABET = [
   'Ю',
 ]
 
-const getStatuses = (guess: string, answer: string): LetterStatus[] => {
-  const result: LetterStatus[] = Array(guess.length).fill('')
-  const answerLetterCount: Record<string, number> = {}
-
-  // Подсчёт количества каждой буквы в ответе
-  for (const ch of answer) {
-    answerLetterCount[ch] = (answerLetterCount[ch] || 0) + 1
-  }
-
-  // Сначала отмечаем правильные буквы (зелёные)
-  for (let i = 0; i < guess.length; i++) {
-    if (guess[i] === answer[i]) {
-      result[i] = 'correct'
-      answerLetterCount[guess[i]] -= 1
-    }
-  }
-
-  // Затем отмечаем буквы, которые есть в слове, но не на своём месте (жёлтые)
-  for (let i = 0; i < guess.length; i++) {
-    if (result[i] === '') {
-      const letter = guess[i]
-      if (answerLetterCount[letter] > 0) {
-        result[i] = 'present'
-        answerLetterCount[letter] -= 1
-      } else {
-        result[i] = 'absent'
-      }
-    }
-  }
-
-  return result
-}
-
-export const Wordle: React.FC<WordleProps> = ({ word, maxAttempts = 6 }) => {
-  const WORD_LENGTH = word.length
-  const [guesses, setGuesses] = useState<string[]>(Array(maxAttempts).fill(''))
+export const Wordle = () => {
+  const [guessResponses, setGuessResponses] = useState<GuessResponse[]>([])
   const [currentGuess, setCurrentGuess] = useState('')
   const [attempt, setAttempt] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [keyboardStatus, setKeyboardStatus] = useState<
     Record<string, LetterStatus>
   >({})
+  const [error, setError] = useState<string | null>(null)
+  const MAX_ATTEMPTS = 6
+  const WORD_LENGTH = 5
 
-  // Обработчик ввода буквы (через физ. клавиатуру или виртуальную)
   const handleLetterInput = useCallback(
     (letter: string) => {
       if (gameOver) return
@@ -100,51 +73,69 @@ export const Wordle: React.FC<WordleProps> = ({ word, maxAttempts = 6 }) => {
     [currentGuess, gameOver, WORD_LENGTH],
   )
 
-  // Обработчик Backspace
   const handleBackspace = useCallback(() => {
     if (gameOver) return
     setCurrentGuess(prev => prev.slice(0, -1))
   }, [gameOver])
 
-  // Обработчик Enter
-  const handleEnter = useCallback(() => {
+  const handleEnter = useCallback(async () => {
     if (gameOver) return
     if (currentGuess.length !== WORD_LENGTH) return
 
-    // Добавляем текущую попытку в guesses
-    const newGuesses = [...guesses]
-    newGuesses[attempt] = currentGuess
-    setGuesses(newGuesses)
+    try {
+      setError(null)
 
-    // Обновляем статусы клавиатуры
-    const statuses = getStatuses(currentGuess, word)
-    const newKeyboardStatus = { ...keyboardStatus }
-    currentGuess.split('').forEach((char, idx) => {
-      const prev = newKeyboardStatus[char]
-      if (statuses[idx] === 'correct' || prev === 'correct') {
-        newKeyboardStatus[char] = 'correct'
-      } else if (statuses[idx] === 'present' || prev === 'present') {
-        newKeyboardStatus[char] = 'present'
-      } else {
-        newKeyboardStatus[char] = 'absent'
+      const response = await fetch('/api/wordle/guess', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guess: currentGuess }),
+      })
+
+      if (!response.ok) {
+        setError('Слово не существует')
+        return
       }
-    })
-    setKeyboardStatus(newKeyboardStatus)
 
-    if (currentGuess === word || attempt === maxAttempts - 1) setGameOver(true)
-    setAttempt(attempt + 1)
-    setCurrentGuess('')
-  }, [
-    attempt,
-    currentGuess,
-    gameOver,
-    guesses,
-    keyboardStatus,
-    maxAttempts,
-    word,
-  ])
+      const data: GuessResponse[] = await response.json()
 
-  // Обработчик нажатий с физической клавиатуры
+      setGuessResponses(data)
+      setCurrentGuess('')
+
+      const newKeyboardStatus: Record<string, LetterStatus> = {
+        ...keyboardStatus,
+      }
+      data.forEach(guessResp => {
+        guessResp.letters.forEach(({ name, status }) => {
+          const prev = newKeyboardStatus[name]
+          if (status === 'correct' || prev === 'correct') {
+            newKeyboardStatus[name] = 'correct'
+          } else if (status === 'present' || prev === 'present') {
+            newKeyboardStatus[name] = 'present'
+          } else if (!prev) {
+            newKeyboardStatus[name] = 'absent'
+          }
+        })
+      })
+      setKeyboardStatus(newKeyboardStatus)
+
+      const lastGuess = data[data.length - 1]
+      const isCorrect = lastGuess.letters.every(
+        letter => letter.status === 'correct',
+      )
+
+      if (isCorrect) {
+        setGameOver(true)
+      } else if (data.length === MAX_ATTEMPTS) {
+        setGameOver(true)
+      } else {
+        setAttempt(data.length)
+      }
+    } catch (error) {
+      setError('Ошибка сети или сервера')
+      console.error(error)
+    }
+  }, [currentGuess, gameOver, keyboardStatus, WORD_LENGTH])
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase()
@@ -167,22 +158,29 @@ export const Wordle: React.FC<WordleProps> = ({ word, maxAttempts = 6 }) => {
   return (
     <div className="wordle">
       <div className="board">
-        {guesses.map((guess, idx) => {
-          const statuses = guess
-            ? getStatuses(guess, word)
-            : Array(WORD_LENGTH).fill('')
-          return (
-            <div className="row" key={idx}>
-              {Array(WORD_LENGTH)
-                .fill('')
-                .map((_, i) => (
-                  <div className={`cell ${statuses[i]}`} key={i}>
-                    {guess[i] || (idx === attempt && currentGuess[i]) || ''}
-                  </div>
-                ))}
-            </div>
-          )
-        })}
+        {Array(MAX_ATTEMPTS)
+          .fill(null)
+          .map((_, idx) => {
+            const guessResp = guessResponses[idx]
+            return (
+              <div className="row" key={idx}>
+                {Array(WORD_LENGTH)
+                  .fill('')
+                  .map((_, i) => {
+                    const letterInfo = guessResp?.letters[i]
+                    const status = letterInfo?.status || ''
+                    const letter =
+                      guessResp?.letters[i]?.name ||
+                      (idx === attempt ? currentGuess[i] || '' : '')
+                    return (
+                      <div className={`cell ${status}`} key={i}>
+                        {letter}
+                      </div>
+                    )
+                  })}
+              </div>
+            )
+          })}
       </div>
 
       {!gameOver && (
@@ -194,9 +192,12 @@ export const Wordle: React.FC<WordleProps> = ({ word, maxAttempts = 6 }) => {
           ].map((row, idx) => (
             <div className="keyboard-row" key={idx}>
               {idx === 2 && (
-                <button className="key special" onClick={handleEnter}>
-                  ✓
-                </button>
+                <Button
+                  iconBefore="CHECK"
+                  isIconOnly
+                  onClick={handleEnter}
+                  className="special"
+                />
               )}
               {row.map(letter => (
                 <button
@@ -209,20 +210,26 @@ export const Wordle: React.FC<WordleProps> = ({ word, maxAttempts = 6 }) => {
                 </button>
               ))}
               {idx === 2 && (
-                <button className="key special" onClick={handleBackspace}>
-                  ⌫
-                </button>
+                <Button
+                  iconBefore="BACKSPACE"
+                  isIconOnly
+                  colorType="secondary"
+                  onClick={handleBackspace}
+                  className="special"
+                />
               )}
             </div>
           ))}
         </div>
       )}
-
+      {error && <div className="error-message">{error}</div>}
       {gameOver && (
         <div className="result">
-          {guesses.includes(word)
+          {guessResponses.some(guessResp =>
+            guessResp.letters.every(letter => letter.status === 'correct'),
+          )
             ? 'Поздравляем! Вы угадали!'
-            : `Игра окончена! Ответ: ${word}`}
+            : 'Игра окончена!'}
         </div>
       )}
     </div>
