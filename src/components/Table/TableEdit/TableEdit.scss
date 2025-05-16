@@ -1,0 +1,181 @@
+.table-edit {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  color: #333;
+
+  &__header {
+    margin-bottom: 16px;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    &-checkbox-placeholder {
+      width: 40px; // ширина колонки с чекбоксами
+      flex-shrink: 0;
+    }
+
+    &-delete-placeholder {
+      width: 100px; // ширина колонки с кнопками удаления
+      flex-shrink: 0;
+    }
+  }
+
+  &__filter-cell {
+    flex: 1;
+    min-width: 210px;
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    border: var(--border_primary) var(--border_c_primary);
+    border-radius: 10px;
+    background-color: var(--bg_c_secondary);
+  }
+
+  &__table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: max-content; // минимальная ширина, чтобы включился горизонтальный скролл если нужно
+
+    th,
+    td {
+      padding: 18px 10px;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+      text-align: left;
+      white-space: nowrap;
+      min-width: 240px;
+    }
+
+    th.table-edit__checkbox-col,
+    td.table-edit__checkbox-col {
+      width: 40px;
+      min-width: 40px;
+      text-align: center;
+      padding: 18px 10px;
+    }
+
+    th.table-edit__actions-col,
+    td.table-edit__actions-col {
+      width: 100px;
+      min-width: 100px;
+      text-align: center;
+      padding: 18px 10px;
+    }
+
+    tbody tr:hover {
+      background-color: #fafafa;
+    }
+
+    &__no-data {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+    }
+  }
+
+  &__thead {
+    background-color: var(--bg_c_gray_primary);
+    font-weight: 600;
+    display: table-header-group; /* важно для корректного отображения */
+  }
+  &__tbody {
+    display: block;
+    overflow-y: auto;
+    height: 500px;
+    width: 100%;
+  }
+  &__thead tr {
+    display: table;
+    min-width: 210px;
+    table-layout: fixed;
+  }
+  &__tbody tr {
+    display: table;
+    min-width: 210px;
+    table-layout: fixed;
+  }
+
+  &__delete-button {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #dc3545;
+      color: #fff;
+    }
+  }
+
+  &__footer {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-text {
+      font-weight: 500;
+    }
+  }
+
+  &__footer-delete-button {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #a71d2a;
+    }
+  }
+
+  &__add-row {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    overflow-x: auto; // горизонтальный скролл
+    white-space: nowrap; // запрет переноса элементов на новую строку
+    padding-bottom: 8px; // чтобы скролл не перекрывался содержимым
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    &-cell {
+      display: inline-block; // чтобы элементы располагались в строку
+      min-width: 240px; // минимальная ширина ячейки
+      vertical-align: middle;
+    }
+  }
+
+  &__add-row-button {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #1e7e34;
+    }
+  }
+}

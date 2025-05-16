@@ -19,6 +19,7 @@ import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
+import { TableEditAlwaysAddRow } from './pages/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -76,10 +77,12 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
+              <Route path="table" element={<TableEditAlwaysAddRow />} />
             </Routes>
           </ScrollToTop>
           <Footer />
         </main>
+        {/* <WordleWordsEditor /> */}
       </div>
     </Provider>
   </BrowserRouter>,
