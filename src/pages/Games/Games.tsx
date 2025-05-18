@@ -18,8 +18,7 @@ const gamesExample = [
 ]
 
 export const Games = () => {
-  const { id } = useParams<{ id: string }>()
-  const departmentId = Number(id)
+  const { departmentId } = useParams()
 
   return (
     <div className="games">

@@ -21,6 +21,7 @@ import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
+import { Crossword } from './pages/Games/Crossword/Crossword.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -71,8 +72,12 @@ root.render(
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
 
-              <Route path="games/:id" element={<Games />} />
-              <Route path="games/wordle/:id" element={<Wordle />} />
+              <Route path="games/:departmentId" element={<Games />} />
+              <Route path="games/wordle/:departmentId" element={<Wordle />} />
+              <Route
+                path="games/crossword/:departmentId"
+                element={<Crossword />}
+              />
 
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />

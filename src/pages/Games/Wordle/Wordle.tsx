@@ -62,7 +62,7 @@ export const Wordle = () => {
   >({})
 
   const user = useAppSelector(selectAuth)
-  const { id: departmentId } = useParams<{ id: string }>()
+  const { departmentId } = useParams()
 
   useEffect(() => {
     setIsLoading(true)
