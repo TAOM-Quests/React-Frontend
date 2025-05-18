@@ -19,7 +19,7 @@ import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
-import { TableEditAlwaysAddRow } from './pages/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
+import { WordleWordsEditor } from './pages/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
 
@@ -74,6 +74,10 @@ root.render(
 
               <Route path="games/:id" element={<Games />} />
               <Route path="games/wordle/:id" element={<Wordle />} />
+              <Route
+                path="games/wordle/edit/:id"
+                element={<WordleWordsEditor />}
+              />
 
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />
@@ -84,7 +88,6 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
-              <Route path="table/1" element={<TableEditAlwaysAddRow />} />
             </Routes>
           </ScrollToTop>
           <Footer />

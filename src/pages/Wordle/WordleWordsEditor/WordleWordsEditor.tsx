@@ -1,56 +1,89 @@
+import { useParams } from 'react-router'
 import {
   TableColumn,
   TableEdit,
 } from '../../../components/Table/TableEdit/TableEdit'
 import Input from '../../../components/UI/Input/Input'
+import { useEffect, useState } from 'react'
+import { WordleWord } from '../../../models/wordleWord'
+import { wordle } from '../../../services/api/gamesModule/games/wordle'
+import { Loading } from '../../../components/Loading/Loading'
 
-interface WordRow {
-  id: number
-  word: string
-  departmentId: number
-}
+export const WordleWordsEditor = () => {
+  const { id: departmentId } = useParams<{ id: string }>()
+  const [words, setWords] = useState<WordleWord[]>([])
+  const [newWord, setNewWord] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-const columns: TableColumn<WordRow>[] = [
-  {
-    key: 'word',
-    title: 'Слово',
-    render: (row, onChange, isDisabled) => (
-      <Input
-        value={row.word}
-        onChange={e => onChange(e.target.value)}
-        disabled={isDisabled}
-        placeholder="Слово"
-      />
-    ),
-  },
-]
+  useEffect(() => {
+    setIsLoading(true)
 
-const initialRows: WordRow[] = [
-  {
-    id: 1,
-    word: 'Пример',
-    departmentId: 1,
-  },
-  {
-    id: 2,
-    word: 'Пример',
-    departmentId: 1,
-  },
-]
+    const fetchWords = async () => {
+      if (!departmentId) return
 
-const addRowTemplate = {
-  word: '',
-}
+      try {
+        const data = await wordle.getWords(+departmentId)
+        setWords(data)
+      } catch (e) {
+        console.log(`[Wordle] ${e}`)
+      }
+    }
 
-export const TableEditAlwaysAddRow = () => {
-  return (
+    fetchWords()
+
+    setIsLoading(false)
+  }, [departmentId])
+
+  const columns: TableColumn<WordleWord>[] = [
+    {
+      key: 'word',
+      title: 'Слово',
+      render: (row, onChange, isDisabled) => (
+        <Input
+          value={row.word}
+          onChange={e => onChange(e.target.value)}
+          disabled={isDisabled}
+          placeholder="Слово"
+        />
+      ),
+    },
+  ]
+
+  const addRowTemplate = {
+    word: '',
+  }
+
+  const handleCreateWord = async () => {
+    if (!newWord.trim() || !departmentId) return
+    setIsLoading(true)
+    try {
+      const addedWord = await wordle.createWord(newWord.trim(), +departmentId)
+
+      setWords(prev => [...prev, addedWord])
+      setNewWord('')
+    } catch (e) {
+      console.log(`[Wordle] ${e}`)
+    }
+  }
+
+  return !isLoading ? (
     <div style={{ padding: 20 }}>
-      <TableEdit<WordRow>
+      <TableEdit<WordleWord>
         title="Редактирование игры «5 букв»"
         columns={columns}
-        initialRows={initialRows}
+        initialRows={words}
         addRowTemplate={addRowTemplate}
+        onAddRow={handleCreateWord}
       />
+
+      <Input
+        value={newWord}
+        onChange={e => setNewWord(e.target.value)}
+        placeholder="Слово"
+      />
+      <button onClick={handleCreateWord}>Добавить слово</button>
     </div>
+  ) : (
+    <Loading />
   )
 }

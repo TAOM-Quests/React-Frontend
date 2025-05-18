@@ -5,6 +5,7 @@ import {
   Dispatch,
   SetStateAction,
   ReactNode,
+  useEffect,
 } from 'react'
 import { TableEditHeader } from './TableEditHeader'
 import { TableEditFilters } from './TableEditFilters'
@@ -31,7 +32,8 @@ export interface TableEditProps<T extends { id: string | number }> {
   title: string
   columns: TableColumn<T>[]
   initialRows: T[]
-  addRowTemplate: Omit<T, keyof { id: never; departmentId: never }>
+  addRowTemplate: Omit<T, 'id'>
+  onAddRow?: () => void
 }
 
 export const TableEdit = <T extends { id: string | number }>({
@@ -39,12 +41,12 @@ export const TableEdit = <T extends { id: string | number }>({
   columns,
   initialRows,
   addRowTemplate,
+  onAddRow,
 }: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([])
   const [isEdit, setIsEdit] = useState(false)
-  const [newRow, setNewRow] =
-    useState<Omit<T, keyof { id: never; departmentId: never }>>(addRowTemplate)
+  const [newRow, setNewRow] = useState<Omit<T, 'id'>>(addRowTemplate)
   const [filters, setFilters] = useState<Record<string, any>>({})
 
   const tableWrapperRef = useRef<HTMLDivElement>(null)
@@ -52,6 +54,10 @@ export const TableEdit = <T extends { id: string | number }>({
   const filtersRef = useRef<HTMLDivElement>(null)
 
   useSyncedScroll([tableWrapperRef, addRowRef, filtersRef])
+
+  useEffect(() => {
+    setRows(initialRows)
+  }, [initialRows])
 
   const toggleEdit = () => {
     setIsEdit(prev => !prev)
@@ -69,9 +75,10 @@ export const TableEdit = <T extends { id: string | number }>({
   }
 
   const handleAddRow = () => {
-    const id = Date.now()
-    setRows(prev => [...prev, { ...newRow, id } as T])
-    setNewRow(addRowTemplate)
+    // const id = Date.now()
+    // setRows(prev => [...prev, { ...newRow, id } as T])
+    // setNewRow(addRowTemplate)
+    if (onAddRow) onAddRow()
   }
 
   const handleDeleteSelected = () => {
