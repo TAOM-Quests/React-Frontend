@@ -8,100 +8,182 @@ import moment from 'moment'
 import { useParams } from 'react-router'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
+import { CrosswordDifficulty } from '../../../models/crosswordDifficulty'
+import { Loading } from '../../../components/Loading/Loading'
+import { Switcher } from '../../../components/UI/Switcher/Switcher'
 
 type UserAnswers = Record<string, string> // key: `${x},${y},${direction},${idx}`
+interface SaveCrossword {
+  day: string
+  difficultyId: number
+  departmentId: number
+  userAnswers: UserAnswers
+}
 
 const LOCAL_STORAGE_KEY = 'crossword_user_answers'
 
 export const Crossword = () => {
-  const [words, setWords] = useState<CrosswordPlaceWord[]>([])
-  const [userAnswers, setUserAnswers] = useState<UserAnswers>(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY)
-      return saved ? JSON.parse(saved) : {}
-    } catch {
-      return {}
-    }
-  })
-  const [statuses, setStatuses] = useState<Record<string, boolean | undefined>>(
-    {},
-  )
-
   const { departmentId } = useParams()
   const user = useAppSelector(selectAuth)
 
+  const getUserAnswerFromStorage = (): UserAnswers => {
+    try {
+      if (!departmentId) throw new Error('Department id not found')
+
+      const savedCrosswords = localStorage.getItem(LOCAL_STORAGE_KEY)
+      const savedUserAnswer =
+        savedCrosswords &&
+        (JSON.parse(savedCrosswords) as SaveCrossword[]).find(
+          w =>
+            w.day === moment().format('YYYY-MM-DD') &&
+            w.departmentId === +departmentId &&
+            w.difficultyId === currentDifficulty,
+        )?.userAnswers
+      return savedUserAnswer ? savedUserAnswer : {}
+    } catch {
+      return {}
+    }
+  }
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [words, setWords] = useState<CrosswordPlaceWord[]>([])
+  const [currentDifficulty, setCurrentDifficulty] = useState(0)
+  const [difficulties, setDifficulties] = useState<CrosswordDifficulty[]>([])
+  const [statuses, setStatuses] = useState<Record<string, boolean | undefined>>(
+    {},
+  )
+  const [userAnswers, setUserAnswers] = useState<UserAnswers>(
+    getUserAnswerFromStorage(),
+  )
+
   // Собираем сетку
-  const { cells, minX, minY, maxX, maxY, startNumbers } = useMemo(() => {
-    const cells: Record<
-      string,
-      {
-        letter: string
-        wordIndex: number
-        word: string
-        direction: CrosswordDirection
-      }
-    > = {}
-    let minX = 0,
-      minY = 0,
-      maxX = 0,
-      maxY = 0
-    const startNumbers: Record<string, number> = {}
-    let number = 1
-
-    // Для каждой стартовой ячейки слова присваиваем номер
-    const startCellSet = new Set<string>()
-    words.forEach(w => {
-      const startKey = `${w.x},${w.y}`
-      if (!startCellSet.has(startKey)) {
-        startNumbers[startKey] = number++
-        startCellSet.add(startKey)
-      }
-    })
-
-    words.forEach((w, wi) => {
-      for (let i = 0; i < w.length; i++) {
-        const cx = w.direction === 'horizontal' ? w.x + i : w.x
-        const cy = w.direction === 'vertical' ? w.y + i : w.y
-        const key = `${cx},${cy}`
-        cells[key] = {
-          letter: w.word ? w.word[i] : '',
-          wordIndex: wi,
-          word: '',
-          direction: w.direction,
+  const { cells, minX, minY, maxX, maxY, startNumbers, questions } =
+    useMemo(() => {
+      const cells: Record<
+        string,
+        {
+          letter: string
+          wordIndex: number
+          direction: CrosswordDirection
         }
-        minX = Math.min(minX, cx)
-        minY = Math.min(minY, cy)
-        maxX = Math.max(maxX, cx)
-        maxY = Math.max(maxY, cy)
+      > = {}
+      let minX = 0,
+        minY = 0,
+        maxX = 0,
+        maxY = 0
+      const startNumbers: Record<string, number> = {}
+      const questions: Record<CrosswordDirection, Record<number, string>> = {
+        horizontal: {},
+        vertical: {},
       }
-    })
-    return { cells, minX, minY, maxX, maxY, startNumbers }
-  }, [words])
+      let number = 1
+
+      // Для каждой стартовой ячейки слова присваиваем номер
+      const startCellMap = new Map<string, number>()
+      words.forEach(w => {
+        const startKey = `${w.x},${w.y}`
+
+        if (!startCellMap.has(startKey)) {
+          startNumbers[startKey] = number++
+          startCellMap.set(startKey, number)
+        }
+
+        questions[w.direction][startNumbers[startKey]] = w.question
+      })
+
+      words.forEach((w, wi) => {
+        for (let i = 0; i < w.length; i++) {
+          const cx = w.direction === 'horizontal' ? w.x + i : w.x
+          const cy = w.direction === 'vertical' ? w.y + i : w.y
+          const key = `${cx},${cy}`
+          cells[key] = {
+            letter: '',
+            wordIndex: wi,
+            direction: w.direction,
+          }
+          minX = Math.min(minX, cx)
+          minY = Math.min(minY, cy)
+          maxX = Math.max(maxX, cx)
+          maxY = Math.max(maxY, cy)
+        }
+      })
+      return { cells, minX, minY, maxX, maxY, startNumbers, questions }
+    }, [words])
 
   // Сохраняем userAnswers в localStorage
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userAnswers))
+    const savedCrosswords = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (!savedCrosswords) {
+      const newCrosswords: SaveCrossword[] = [
+        {
+          day: moment().format('YYYY-MM-DD'),
+          difficultyId: currentDifficulty,
+          departmentId: +departmentId!,
+          userAnswers,
+        },
+      ]
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newCrosswords))
+    } else {
+      const parsedCrosswords: SaveCrossword[] = JSON.parse(savedCrosswords)
+      const newCrosswords = [
+        ...parsedCrosswords.filter(
+          w =>
+            w.day === moment().format('YYYY-MM-DD') &&
+            w.difficultyId !== currentDifficulty,
+        ),
+        {
+          day: moment().format('YYYY-MM-DD'),
+          difficultyId: currentDifficulty,
+          departmentId: +departmentId!,
+          userAnswers,
+        },
+      ]
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newCrosswords))
+    }
   }, [userAnswers])
 
   useEffect(() => {
-    const fetchCrossword = async () => {
-      try {
-        if (!departmentId) throw new Error('Department id not found')
-
-        setWords(
-          await crossword.getCrossword(
-            moment().format('YYYY-MM-DD'),
-            +departmentId,
-            1,
-          ),
-        )
-      } catch (e) {
-        console.log(`[Crossword] ${e}`)
-      }
-    }
-
+    setIsLoading(true)
+    fetchAllowedDifficulties()
     fetchCrossword()
+    setIsLoading(false)
   }, [])
+
+  useEffect(() => {
+    setIsLoading(true)
+    fetchCrossword()
+    setIsLoading(false)
+  }, [currentDifficulty])
+
+  const fetchAllowedDifficulties = async () => {
+    try {
+      if (!user) throw new Error('User not found')
+      if (!departmentId) throw new Error('Department id not found')
+
+      setDifficulties(
+        await crossword.getAllowedDifficulties(+user.id, +departmentId),
+      )
+    } catch (e) {
+      console.log(`[Crossword] ${e}`)
+    }
+  }
+
+  const fetchCrossword = async () => {
+    try {
+      if (!departmentId) throw new Error('Department id not found')
+
+      setWords(
+        await crossword.getCrossword(
+          moment().format('YYYY-MM-DD'),
+          +departmentId,
+          currentDifficulty + 1,
+        ),
+      )
+    } catch (e) {
+      console.log(`[Crossword] ${e}`)
+    }
+  }
 
   // Обработка ввода
   const handleInput = (
@@ -119,7 +201,7 @@ export const Crossword = () => {
   }
 
   // Формируем отправляемый ответ пользователя
-  const getUserWords = () => {
+  const getUserWords = (): CrosswordPlaceWord[] => {
     return words.map(w => {
       let answer = ''
       for (let i = 0; i < w.length; i++) {
@@ -131,6 +213,7 @@ export const Crossword = () => {
         y: w.y,
         word: answer,
         length: w.length,
+        question: w.question,
         direction: w.direction,
       }
     })
@@ -258,14 +341,47 @@ export const Crossword = () => {
     rows.push(<tr key={y}>{row}</tr>)
   }
 
-  return (
+  const renderQuestions = (
+    direction: CrosswordDirection,
+    questions: Record<number, string>,
+  ) => (
     <div>
-      <table style={{ borderCollapse: 'collapse', margin: 16 }}>
-        <tbody>{rows}</tbody>
-      </table>
-      <button onClick={handleSubmit} style={{ marginTop: 16 }}>
-        Отправить ответ
-      </button>
+      <h4>{direction === 'horizontal' ? 'По горизонтали' : 'По вертикали'}</h4>
+      {Object.keys(questions).map(questionNumber => (
+        <div key={questionNumber}>
+          <b>{questionNumber}.</b> {questions[+questionNumber]}
+        </div>
+      ))}
     </div>
+  )
+
+  return (
+    <>
+      {!isLoading ? (
+        <div>
+          {difficulties.length && (
+            <Switcher
+              options={difficulties.map(d => d.name)}
+              activeOption={difficulties[currentDifficulty].name}
+              onChange={selected =>
+                setCurrentDifficulty(
+                  difficulties.map(d => d.name).indexOf(selected),
+                )
+              }
+            />
+          )}
+          <table style={{ borderCollapse: 'collapse', margin: 16 }}>
+            <tbody>{rows}</tbody>
+          </table>
+          {renderQuestions('horizontal', questions.horizontal)}
+          {renderQuestions('vertical', questions.vertical)}
+          <button onClick={handleSubmit} style={{ marginTop: 16 }}>
+            Отправить ответ
+          </button>
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </>
   )
 }
