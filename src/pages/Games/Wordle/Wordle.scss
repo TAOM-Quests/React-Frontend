@@ -1,0 +1,114 @@
+.wordle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+
+  .board {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .cell {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: var(--bg_c_secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition:
+      background 0.2s,
+      color 0.2s;
+    border: var(--border_primary) var(--border_c_accent);
+
+    &.correct {
+      background: var(--bg_c_accent);
+      color: var(--text_c_secondary);
+      border-color: var(--border_c_accent);
+    }
+    &.present {
+      background: #6bdaf6;
+      color: var(--text_c_secondary);
+      border-color: #6bdaf6;
+    }
+    &.absent {
+      background: #bdbdbd;
+      color: var(--text_c_secondary);
+      border-color: #bdbdbd;
+    }
+  }
+
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .keyboard-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+    .key {
+      min-width: 34px;
+      height: 40px;
+      border-radius: 6px;
+      border: none;
+      background: #fff;
+      color: #222;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition:
+        background 0.2s,
+        color 0.2s;
+      &.correct {
+        background: var(--bg_c_accent);
+        color: var(--text_c_secondary);
+      }
+      &.present {
+        background: #6bdaf6;
+        color: var(--text_c_secondary);
+      }
+      &.absent {
+        background: #bdbdbd;
+        color: var(--text_c_secondary);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: default;
+      }
+    }
+    .special {
+      height: 40px;
+      width: 53px;
+    }
+  }
+
+  .result {
+    margin-top: 18px;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #333;
+  }
+}
