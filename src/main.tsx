@@ -77,7 +77,7 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
-              <Route path="table" element={<TableEditAlwaysAddRow />} />
+              <Route path="table/1" element={<TableEditAlwaysAddRow />} />
             </Routes>
           </ScrollToTop>
           <Footer />

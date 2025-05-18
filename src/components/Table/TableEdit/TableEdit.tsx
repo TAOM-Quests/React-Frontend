@@ -1,80 +1,57 @@
-import React, { useState, useMemo, ReactNode, FC } from 'react'
-import { Switcher } from '../../UI/Switcher/Switcher'
-import { Checkbox } from '../../UI/Checkbox/Checkbox'
-import Input from '../../UI/Input/Input'
-import { Button } from '../../UI/Button/Button'
+import {
+  useState,
+  useMemo,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  ReactNode,
+} from 'react'
+import { TableEditHeader } from './TableEditHeader'
+import { TableEditFilters } from './TableEditFilters'
+import { TableEditTable } from './TableEditTable'
+import { TableEditFooter } from './TableEditFooter'
+import { TableEditAddRow } from './TableEditAddRow'
+import { useSyncedScroll } from '../../../hooks/redux/useSyncedScroll'
 import './TableEdit.scss'
+
+export type RenderFunction<T> = (
+  row: T,
+  onChange: (value: any) => void,
+  isDisabled: boolean,
+) => ReactNode
 
 export interface TableColumn<T> {
   key: keyof T
   title: string
-  render?: (
-    row: T,
-    onChange: (value: any) => void,
-    disabled: boolean,
-  ) => ReactNode
-  Filter?: FC<{
-    title: string
-    filterValue: any
-    setFilterValue: (value: any) => void
-  }>
+  render?: RenderFunction<T>
   switcherOptions?: string[]
 }
 
 export interface TableEditProps<T extends { id: string | number }> {
+  title: string
   columns: TableColumn<T>[]
   initialRows: T[]
-  addRowTemplate: Omit<T, 'id'>
+  addRowTemplate: Omit<T, keyof { id: never; departmentId: never }>
 }
 
-function DefaultColumnFilter({
-  filterValue,
-  setFilterValue,
+export const TableEdit = <T extends { id: string | number }>({
   title,
-}: {
-  title: string
-  filterValue: string
-  setFilterValue: (value: string) => void
-}) {
-  return (
-    <Input
-      type="text"
-      value={filterValue}
-      onChange={e => setFilterValue(e.target.value)}
-      placeholder={`Фильтр по столбцу «${title}»`}
-    />
-  )
-}
-
-function SwitcherFilter({
-  filterValue,
-  setFilterValue,
-  options,
-}: {
-  filterValue: string
-  setFilterValue: (value: string) => void
-  options: string[]
-}) {
-  return (
-    <Switcher
-      options={options}
-      activeOption={filterValue || 'Все'}
-      onChange={val => setFilterValue(val)}
-    />
-  )
-}
-
-export function TableEdit<T extends { id: string | number }>({
   columns,
   initialRows,
   addRowTemplate,
-}: TableEditProps<T>) {
+}: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([])
   const [isEdit, setIsEdit] = useState(false)
-  const [newRow, setNewRow] = useState<Omit<T, 'id'>>(addRowTemplate)
-
+  const [newRow, setNewRow] =
+    useState<Omit<T, keyof { id: never; departmentId: never }>>(addRowTemplate)
   const [filters, setFilters] = useState<Record<string, any>>({})
+
+  const tableWrapperRef = useRef<HTMLDivElement>(null)
+  const addRowRef = useRef<HTMLDivElement>(null)
+  const filtersRef = useRef<HTMLDivElement>(null)
+
+  useSyncedScroll([tableWrapperRef, addRowRef, filtersRef])
 
   const toggleEdit = () => {
     setIsEdit(prev => !prev)
@@ -154,145 +131,46 @@ export function TableEdit<T extends { id: string | number }>({
 
   return (
     <div className="table-edit">
-      <div className="table-edit__header">
-        <Button
-          text={isEdit ? 'Сохранить изменения' : 'Редактировать'}
-          onClick={toggleEdit}
-          iconBefore={isEdit ? 'CHECK' : 'EDIT'}
-        />
-      </div>
-
-      <div className="table-edit__filters">
-        <div className="table-edit__filters-checkbox-placeholder" />
-        {columns.map(col => {
-          const FilterComponent = col.Filter
-            ? col.Filter
-            : col.switcherOptions && col.switcherOptions.length > 0
-              ? (props: any) => (
-                  <SwitcherFilter {...props} options={col.switcherOptions!} />
-                )
-              : DefaultColumnFilter
-
-          return (
-            <div key={String(col.key)} className="table-edit__filter-cell">
-              <FilterComponent
-                title={col.title}
-                filterValue={filters[String(col.key)] || ''}
-                setFilterValue={(val: any) => setFilterValue(col.key, val)}
-              />
-            </div>
-          )
-        })}
-        <div className="table-edit__filters-delete-placeholder" />
-      </div>
-
-      <div className="table-edit__table-wrapper">
-        <table className="table-edit__table">
-          <thead className="table-edit__thead">
-            <tr>
-              <th className="table-edit__checkbox-col">
-                <Checkbox
-                  isSelected={
-                    selectedIds.length === filteredRows.length &&
-                    filteredRows.length > 0
-                  }
-                  onChange={handleSelectAll}
-                  isDisabled={!isEdit}
-                />
-              </th>
-              {columns.map(col => (
-                <th key={String(col.key)} className="table-edit__th">
-                  {col.title}
-                </th>
-              ))}
-              <th className="table-edit__actions-col" />
-            </tr>
-          </thead>
-          <tbody className="table-edit__tbody">
-            {filteredRows.map(row => (
-              <tr key={row.id} className="table-edit__tr">
-                <td className="table-edit__checkbox-col">
-                  <Checkbox
-                    isSelected={selectedIds.includes(row.id)}
-                    onChange={() => handleSelectRow(row.id)}
-                    isDisabled={!isEdit}
-                  />
-                </td>
-                {columns.map(col => (
-                  <td key={String(col.key)} className="table-edit__td">
-                    {col.render
-                      ? col.render(
-                          row,
-                          value => handleCellChange(row.id, col.key, value),
-                          !isEdit,
-                        )
-                      : (row[col.key] as React.ReactNode)}
-                  </td>
-                ))}
-                <td className="table-edit__actions-col">
-                  {isEdit && (
-                    <button
-                      className="table-edit__delete-button"
-                      onClick={() => handleDeleteRow(row.id)}
-                      type="button"
-                      aria-label="Удалить строку"
-                    >
-                      Удалить
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-            {filteredRows.length === 0 && (
-              <tr>
-                <td
-                  colSpan={columns.length + 2}
-                  className="table-edit__no-data"
-                >
-                  Нет данных по текущему фильтру
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {isEdit && selectedIds.length > 0 && (
-        <div className="table-edit__footer">
-          <span className="table-edit__footer-text">
-            Выбрано {selectedIds.length}{' '}
-            {selectedIds.length === 1 ? 'строка' : 'строк'} из{' '}
-            {filteredRows.length}
-          </span>
-          <button
-            className="table-edit__footer-delete-button"
-            onClick={handleDeleteSelected}
-            type="button"
-          >
-            Удалить
-          </button>
+      <TableEditHeader isEdit={isEdit} toggleEdit={toggleEdit} title={title} />
+      <TableEditFilters
+        columns={columns}
+        filters={filters}
+        setFilterValue={setFilterValue}
+        filtersRef={filtersRef}
+      />
+      <div>
+        <div ref={tableWrapperRef} className="table-edit__table-wrapper">
+          <TableEditTable
+            columns={columns}
+            filteredRows={filteredRows}
+            selectedIds={selectedIds}
+            isEdit={isEdit}
+            handleSelectAll={handleSelectAll}
+            handleSelectRow={handleSelectRow}
+            handleCellChange={handleCellChange}
+            handleDeleteRow={handleDeleteRow}
+          />
         </div>
-      )}
-
-      <div className="table-edit__add-row">
-        {columns.map(col => (
-          <div key={String(col.key)} className="table-edit__add-row-cell">
-            {col.render
-              ? col.render(
-                  { ...newRow, id: 'new' } as T,
-                  value => setNewRow(prev => ({ ...prev, [col.key]: value })),
-                  false,
-                )
-              : null}
-          </div>
-        ))}
-        <button
-          className="table-edit__add-row-button"
-          onClick={handleAddRow}
-          type="button"
-        >
-          Добавить
-        </button>
+        {isEdit && selectedIds.length > 0 && (
+          <TableEditFooter
+            totalCount={filteredRows.length}
+            selectedCount={selectedIds.length}
+            onDelete={handleDeleteSelected}
+          />
+        )}
+        <div>
+          <TableEditAddRow
+            ref={addRowRef}
+            columns={columns as TableColumn<{ id: string | number }>[]}
+            newRow={newRow}
+            setNewRow={
+              setNewRow as Dispatch<
+                SetStateAction<Omit<{ id: string | number }, 'id'>>
+              >
+            }
+            onAddRow={handleAddRow}
+          />
+        </div>
       </div>
     </div>
   )

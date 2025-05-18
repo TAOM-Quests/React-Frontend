@@ -1,181 +1,162 @@
+.table-edit__table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: max-content;
+
+  th,
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+    text-align: left;
+    white-space: nowrap;
+    min-width: 240px;
+    background: #fff;
+    z-index: 1;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--bg_c_gray_secondary); /* или #fff */
+    z-index: 10;
+    padding: 18px 10px;
+    box-shadow: 0 2px 5px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .table-edit__thead-sticky {
+    z-index: 20 !important;
+    background-color: var(--bg_c_gray_secondary) !important;
+  }
+
+  .table-edit__sticky-col-left {
+    position: sticky;
+    left: 0;
+    z-index: 11; /* выше, чем у обычных th */
+    background: var(--bg_c_secondary);
+    box-shadow:
+      -2px 0 5px -2px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 #eee;
+  }
+
+  .table-edit__sticky-col-right {
+    position: sticky;
+    right: 0;
+    z-index: 11;
+    background: var(--bg_c_secondary);
+    box-shadow:
+      -2px 0 5px -2px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 #eee;
+  }
+
+  th.table-edit__checkbox-col,
+  td.table-edit__checkbox-col {
+    width: 40px;
+    min-width: 40px;
+    text-align: center;
+    padding: 10px;
+    z-index: 12;
+  }
+
+  th.table-edit__actions-col,
+  td.table-edit__actions-col {
+    width: 50px;
+    min-width: 50px;
+    text-align: center;
+    padding: 10px;
+    z-index: 12;
+  }
+}
+
 .table-edit {
   display: flex;
   flex-direction: column;
-  font-family: Arial, sans-serif;
-  font-size: 15px;
-  color: #333;
+  gap: 20px;
 
   &__header {
-    margin-bottom: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &__filters {
     display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-
-    &-checkbox-placeholder {
-      width: 40px; // ширина колонки с чекбоксами
-      flex-shrink: 0;
+    flex-direction: row;
+    overflow-x: auto;
+    &-empty {
+      width: 60px;
+      min-width: 60px;
+      padding: 10px;
     }
 
-    &-delete-placeholder {
-      width: 100px; // ширина колонки с кнопками удаления
-      flex-shrink: 0;
+    &-cell {
+      padding: 10px;
+      min-width: 240px;
+      width: 100%;
     }
-  }
-
-  &__filter-cell {
-    flex: 1;
-    min-width: 210px;
   }
 
   &__table-wrapper {
     overflow-x: auto;
     overflow-y: auto;
     border: var(--border_primary) var(--border_c_primary);
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
     background-color: var(--bg_c_secondary);
-  }
-
-  &__table {
-    border-collapse: collapse;
-    width: 100%;
-    min-width: max-content; // минимальная ширина, чтобы включился горизонтальный скролл если нужно
-
-    th,
-    td {
-      padding: 18px 10px;
-      border-bottom: 1px solid #eee;
-      vertical-align: middle;
-      text-align: left;
-      white-space: nowrap;
-      min-width: 240px;
-    }
-
-    th.table-edit__checkbox-col,
-    td.table-edit__checkbox-col {
-      width: 40px;
-      min-width: 40px;
-      text-align: center;
-      padding: 18px 10px;
-    }
-
-    th.table-edit__actions-col,
-    td.table-edit__actions-col {
-      width: 100px;
-      min-width: 100px;
-      text-align: center;
-      padding: 18px 10px;
-    }
-
-    tbody tr:hover {
-      background-color: #fafafa;
-    }
-
-    &__no-data {
-      text-align: center;
-      padding: 20px;
-      color: #999;
-    }
-  }
-
-  &__thead {
-    background-color: var(--bg_c_gray_primary);
-    font-weight: 600;
-    display: table-header-group; /* важно для корректного отображения */
-  }
-  &__tbody {
-    display: block;
-    overflow-y: auto;
     height: 500px;
-    width: 100%;
-  }
-  &__thead tr {
-    display: table;
-    min-width: 210px;
-    table-layout: fixed;
-  }
-  &__tbody tr {
-    display: table;
-    min-width: 210px;
-    table-layout: fixed;
   }
 
-  &__delete-button {
-    background-color: transparent;
-    border: 1px solid #dc3545;
-    color: #dc3545;
-    padding: 4px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #dc3545;
-      color: #fff;
-    }
+  &__no-data {
+    padding: 18px 70px !important;
   }
 
   &__footer {
-    margin-top: 12px;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: 5px;
+    background-color: var (--bg_c_secondary);
+    border-top: 0 !important;
+    border: var(--border_primary) var(--border_c_primary);
+    padding: 10px;
 
     &-text {
-      font-weight: 500;
-    }
-  }
-
-  &__footer-delete-button {
-    background-color: #dc3545;
-    border: none;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #a71d2a;
+      color: var(--text_c_subdued);
     }
   }
 
   &__add-row {
-    margin-top: 20px;
+    position: relative;
     display: flex;
-    gap: 8px;
-    align-items: center;
+    flex-direction: row;
+    overflow-x: auto;
+    border-radius: 0 0 10px 10px;
+    border-top: 0 !important;
+    border: var(--border_primary) var(--border_c_primary);
 
-    overflow-x: auto; // горизонтальный скролл
-    white-space: nowrap; // запрет переноса элементов на новую строку
-    padding-bottom: 8px; // чтобы скролл не перекрывался содержимым
-    &::-webkit-scrollbar {
-      height: 8px;
+    &-empty {
+      width: 60px;
+      min-width: 60px;
+      padding: 10px;
     }
 
     &-cell {
-      display: inline-block; // чтобы элементы располагались в строку
-      min-width: 240px; // минимальная ширина ячейки
-      vertical-align: middle;
-    }
-  }
+      min-width: 240px;
+      padding: 10px;
+      width: 100%;
 
-  &__add-row-button {
-    background-color: #28a745;
-    border: none;
-    color: white;
-    padding: 8px 18px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #1e7e34;
+      &-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        background-color: var(--bg_c_secondary);
+        width: 50px;
+        min-width: 50px;
+        top: 0;
+        right: 0;
+      }
     }
   }
 }
