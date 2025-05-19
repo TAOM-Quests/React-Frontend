@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   CrosswordDirection,
   CrosswordPlaceWord,
@@ -11,8 +11,13 @@ import { selectAuth } from '../../../redux/auth/authSlice'
 import { CrosswordDifficulty } from '../../../models/crosswordDifficulty'
 import { Loading } from '../../../components/Loading/Loading'
 import { Switcher } from '../../../components/UI/Switcher/Switcher'
+import './Crossword.scss'
 
-type UserAnswers = Record<string, string> // key: `${x},${y},${direction},${idx}`
+type Direction = 'horizontal' | 'vertical'
+type CellAnswers = {
+  value: string
+}
+type UserAnswers = Record<string, CellAnswers> // key: `${x},${y},${direction},${idx}`
 interface SaveCrossword {
   day: string
   difficultyId: number
@@ -55,6 +60,9 @@ export const Crossword = () => {
   const [userAnswers, setUserAnswers] = useState<UserAnswers>(
     getUserAnswerFromStorage(),
   )
+  const [currentDirection, setCurrentDirection] =
+    useState<Direction>('horizontal')
+  const [focusTarget, setFocusTarget] = useState<string | null>(null)
 
   // Собираем сетку
   const { cells, minX, minY, maxX, maxY, startNumbers, questions } =
@@ -186,18 +194,61 @@ export const Crossword = () => {
   }
 
   // Обработка ввода
-  const handleInput = (
-    x: number,
-    y: number,
-    direction: CrosswordDirection,
-    idx: number,
-    value: string,
-  ) => {
-    const key = `${x},${y},${direction},${idx}`
+  const handleInput = (x: number, y: number, value: string) => {
     setUserAnswers(prev => ({
       ...prev,
-      [key]: value.slice(-1).toUpperCase(),
+      [`${x},${y}`]: {
+        value: value.slice(-1).toUpperCase(),
+      },
     }))
+
+    // переход к следующей ячейке по currentDirection
+    let nextX = x,
+      nextY = y
+    if (currentDirection === 'horizontal') nextX = x + 1
+    else nextY = y + 1
+    setFocusTarget(`${nextX},${nextY}`)
+  }
+
+  useEffect(() => {
+    if (focusTarget) {
+      const input = document.getElementById(focusTarget)
+      if (input) {
+        ;(input as HTMLInputElement).focus()
+        ;(input as HTMLInputElement).select() // выделить букву для замены
+      }
+      setFocusTarget(null) // сбрасываем
+    }
+  }, [focusTarget])
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    x: number,
+    y: number,
+  ) => {
+    const key = `${x},${y}`
+    const letter = userAnswers[key]?.value || ''
+    if (e.key === 'Backspace') {
+      if (letter) {
+        setUserAnswers(prev => ({
+          ...prev,
+          [key]: { value: '' },
+        }))
+        e.preventDefault()
+      } else {
+        let prevX = x,
+          prevY = y
+        if (currentDirection === 'horizontal') prevX = x - 1
+        else prevY = y - 1
+        const prevKey = `${prevX},${prevY}`
+        setUserAnswers(prev => ({
+          ...prev,
+          [prevKey]: { value: '' },
+        }))
+        setFocusTarget(prevKey)
+        e.preventDefault()
+      }
+    }
   }
 
   // Формируем отправляемый ответ пользователя
@@ -272,70 +323,40 @@ export const Crossword = () => {
         row.push(
           <td
             key={cellKey}
+            className="crossword-cell"
             style={{
-              border: '1px solid #333',
-              width: 32,
-              height: 32,
-              textAlign: 'center',
               background:
                 status === undefined ? '#fff' : status ? '#c6f6d5' : '#fed7d7',
-              position: 'relative',
-              verticalAlign: 'top',
-              padding: 0,
             }}
           >
-            {startNumber && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: 2,
-                  left: 2,
-                  fontSize: 10,
-                  color: '#555',
-                }}
-              >
-                {startNumber}
-              </span>
-            )}
+            {startNumber && <span className="body_xs_sb">{startNumber}</span>}
             <input
+              id={`${x},${y}`}
               maxLength={1}
-              style={{
-                width: '90%',
-                height: '90%',
-                textAlign: 'center',
-                fontSize: 20,
-                border: 'none',
-                outline: 'none',
-                background: 'transparent',
-                color: '#222',
-                fontWeight: 'bold',
-                marginTop: startNumber ? 8 : 0,
+              value={userAnswers[`${x},${y}`]?.value || ''}
+              onChange={e => handleInput(x, y, e.target.value)}
+              onKeyDown={e => handleKeyDown(e, x, y)}
+              onClick={() => {
+                const cellWords = words.filter(w => {
+                  for (let i = 0; i < w.length; i++) {
+                    const cx = w.direction === 'horizontal' ? w.x + i : w.x
+                    const cy = w.direction === 'vertical' ? w.y + i : w.y
+                    if (cx === x && cy === y) return true
+                  }
+                  return false
+                })
+                if (cellWords.length === 1)
+                  setCurrentDirection(cellWords[0].direction)
+                else if (cellWords.length === 2)
+                  setCurrentDirection(curr =>
+                    curr === 'horizontal' ? 'vertical' : 'horizontal',
+                  )
               }}
-              value={userAnswers[inputKey] || ''}
-              onChange={e =>
-                handleInput(
-                  mainWord.x,
-                  mainWord.y,
-                  mainWord.direction as CrosswordDirection,
-                  idx,
-                  e.target.value,
-                )
-              }
             />
           </td>,
         )
       } else {
-        row.push(
-          <td
-            key={cellKey}
-            style={{
-              border: '1px solid #eee',
-              width: 32,
-              height: 32,
-              background: '#ccc',
-            }}
-          />,
-        )
+        row.push(<td key={cellKey} className="crossword-cell-empty" />)
       }
     }
     rows.push(<tr key={y}>{row}</tr>)
@@ -358,7 +379,7 @@ export const Crossword = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
+        <div className="crossword">
           {difficulties.length && (
             <Switcher
               options={difficulties.map(d => d.name)}
@@ -370,7 +391,7 @@ export const Crossword = () => {
               }
             />
           )}
-          <table style={{ borderCollapse: 'collapse', margin: 16 }}>
+          <table className="crossword-table">
             <tbody>{rows}</tbody>
           </table>
           {renderQuestions('horizontal', questions.horizontal)}

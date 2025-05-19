@@ -1,0 +1,150 @@
+// .crossword {
+//   &-table {
+//     border-collapse: collapse;
+//   }
+//   &-cell {
+//     border: var(--border_checkbox) var(--border_c_accent);
+//     width: 32px;
+//     height: 32px;
+//     text-align: center;
+//     position: relative;
+//     vertical-align: top;
+//     padding: 0;
+
+//     &-empty {
+//       width: 32px;
+//       height: 32px;
+//       visibility: hidden;
+//     }
+//   }
+// }
+
+.crossword {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+
+  .crossword-table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    padding: 12px;
+
+    td {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      background: var(--bg_c_secondary);
+      border: var(--border_checkbox) var(--border_c_accent);
+      border-radius: 6px;
+      text-align: center;
+      vertical-align: middle;
+      transition: box-shadow 0.2s;
+
+      &.crossword-cell {
+        background: var(--bg_c_secondary);
+        box-shadow: 0 0 0 1px #22b0e8;
+        padding: 0;
+      }
+
+      &.crossword-cell-empty {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+      }
+
+      // Номер слова
+      span {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        color: var(--text_c_subdued);
+        pointer-events: none;
+        user-select: none;
+        z-index: 2;
+      }
+
+      // Инпут
+      input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--text_c_primary);
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        z-index: 1;
+
+        &:focus {
+          border-radius: 6px;
+          background: #e0f7fa;
+          box-shadow: 0 0 0 2px #22b0e8;
+        }
+      }
+    }
+  }
+
+  // Секция вопросов
+  .crossword-questions {
+    flex: 1 1 0;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 20px 24px;
+    min-width: 320px;
+
+    h4 {
+      margin: 8px 0 4px 0;
+      color: #22b0e8;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    div {
+      margin-bottom: 8px;
+      font-size: 1em;
+      color: #222;
+    }
+  }
+
+  // Кнопка отправки
+  button {
+    margin-top: 20px;
+    background: #22b0e8;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 28px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #1a93c7;
+    }
+  }
+}
+
+// Для мобильных можно добавить адаптацию:
+@media (max-width: 700px) {
+  .crossword {
+    flex-direction: column;
+    align-items: stretch;
+
+    .crossword-table {
+      margin: 0 auto;
+    }
+    .crossword-questions {
+      min-width: unset;
+      margin-top: 16px;
+    }
+  }
+}
