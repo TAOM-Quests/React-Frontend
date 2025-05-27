@@ -11,7 +11,12 @@ export const CrosswordRulesModal = ({
   onClose,
 }: CrosswordRulesModalProps) => {
   return (
-    <Modal title="Правила игры «Кроссворд»" isOpen={isOpen} onClose={onClose}>
+    <Modal
+      title="Правила игры «Кроссворд»"
+      isOpen={isOpen}
+      onClose={onClose}
+      className="rules-crossword-modal"
+    >
       <div className="rules-crossword">
         <p className="body_l_m">
           Необходимо разгадать все слова, вписав их в сетку кроссворда по
