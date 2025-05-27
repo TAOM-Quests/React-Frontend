@@ -49,6 +49,7 @@ import { DZEN } from './dzen'
 import { VK } from './vk'
 import { USER } from './user'
 import { BACKSPACE } from './backspace'
+import { GAME_RULES } from './gameRules'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -102,6 +103,7 @@ export const ICON_MAP = {
   VK: VK,
   USER: USER,
   BACKSPACE: BACKSPACE,
+  GAME_RULES: GAME_RULES,
 }
 
 type IconName = keyof typeof ICON_MAP

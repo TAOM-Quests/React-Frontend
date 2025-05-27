@@ -12,6 +12,9 @@ import { CrosswordDifficulty } from '../../../models/crosswordDifficulty'
 import { Loading } from '../../../components/Loading/Loading'
 import { Switcher } from '../../../components/UI/Switcher/Switcher'
 import './Crossword.scss'
+import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
+import { Button } from '../../../components/UI/Button/Button'
+import { CrosswordRulesModal } from './CrosswordRulesModal/CrosswordRulesModal'
 
 type Direction = 'horizontal' | 'vertical'
 type CellAnswers = {
@@ -30,6 +33,12 @@ const LOCAL_STORAGE_KEY = 'crossword_user_answers'
 export const Crossword = () => {
   const { departmentId } = useParams()
   const user = useAppSelector(selectAuth)
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openRulesModal = () => {
+    setIsModalOpen(true)
+  }
 
   const getUserAnswerFromStorage = (): UserAnswers => {
     try {
@@ -366,10 +375,12 @@ export const Crossword = () => {
     direction: CrosswordDirection,
     questions: Record<number, string>,
   ) => (
-    <div>
-      <h4>{direction === 'horizontal' ? 'По горизонтали' : 'По вертикали'}</h4>
+    <div className="crossword-questions">
+      <h6 className="heading_6">
+        {direction === 'horizontal' ? 'По горизонтали' : 'По вертикали'}
+      </h6>
       {Object.keys(questions).map(questionNumber => (
-        <div key={questionNumber}>
+        <div className="body_l_r" key={questionNumber}>
           <b>{questionNumber}.</b> {questions[+questionNumber]}
         </div>
       ))}
@@ -379,26 +390,61 @@ export const Crossword = () => {
   return (
     <>
       {!isLoading ? (
-        <div className="crossword">
-          {difficulties.length && (
-            <Switcher
-              options={difficulties.map(d => d.name)}
-              activeOption={difficulties[currentDifficulty].name}
-              onChange={selected =>
-                setCurrentDifficulty(
-                  difficulties.map(d => d.name).indexOf(selected),
-                )
-              }
+        <div className="container_min_width crossword">
+          <div className="crossword__header">
+            <h5 className="heading_4  crossword__title">Кроссворд</h5>
+            {difficulties.length && (
+              <Switcher
+                options={difficulties.map(d => d.name)}
+                activeOption={difficulties[currentDifficulty].name}
+                onChange={selected =>
+                  setCurrentDifficulty(
+                    difficulties.map(d => d.name).indexOf(selected),
+                  )
+                }
+              />
+            )}
+            <Button
+              text="Редактировать игру"
+              iconBefore="EDIT"
+              colorType="secondary"
+            />
+          </div>
+          <div className="crossword__rules">
+            <Button
+              text="Правила игры"
+              iconBefore="GAME_RULES"
+              colorType="secondary"
+              size="small"
+              onClick={() => openRulesModal()}
+            />
+          </div>
+
+          <div className="crossword-container">
+            <div className="crossword-grid">
+              <table className="crossword-table">
+                <tbody>{rows}</tbody>
+              </table>
+            </div>
+
+            <ContainerBox>
+              {renderQuestions('horizontal', questions.horizontal)}
+              {renderQuestions('vertical', questions.vertical)}
+            </ContainerBox>
+          </div>
+
+          <Button
+            text="Отправить ответ"
+            colorType="accent"
+            onClick={handleSubmit}
+          />
+
+          {isModalOpen && (
+            <CrosswordRulesModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
             />
           )}
-          <table className="crossword-table">
-            <tbody>{rows}</tbody>
-          </table>
-          {renderQuestions('horizontal', questions.horizontal)}
-          {renderQuestions('vertical', questions.vertical)}
-          <button onClick={handleSubmit} style={{ marginTop: 16 }}>
-            Отправить ответ
-          </button>
         </div>
       ) : (
         <Loading />

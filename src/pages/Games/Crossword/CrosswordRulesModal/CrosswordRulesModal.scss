@@ -1,0 +1,61 @@
+.rules-crossword {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  &-cell {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    background: var(--bg_c_secondary);
+    border: var(--border_checkbox) var(--border_c_accent);
+    border-radius: 6px;
+    text-align: center;
+    vertical-align: middle;
+    transition: box-shadow 0.2s;
+
+    span {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      color: var(--text_c_subdued);
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text_c_primary);
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    &--correct {
+      background-color: var(--bg_c_correct);
+    }
+
+    &--wrong {
+      background-color: var(--bg_c_wrong);
+    }
+  }
+}
