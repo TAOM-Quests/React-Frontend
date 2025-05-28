@@ -5,8 +5,8 @@
   padding: 80px 15vw;
 
   &__list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
     width: 100%;
   }

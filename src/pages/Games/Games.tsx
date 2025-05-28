@@ -22,7 +22,7 @@ export const Games = () => {
   const departmentId = Number(id)
 
   return (
-    <div className="games">
+    <div className="container_min_width games">
       <h6 className="heading_6">Игры</h6>
       <div className="games__list">
         {gamesExample.map((game, index) => (
