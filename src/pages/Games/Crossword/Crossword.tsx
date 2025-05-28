@@ -427,7 +427,7 @@ export const Crossword = () => {
               </table>
             </div>
 
-            <ContainerBox>
+            <ContainerBox className="crossword-questions-container">
               {renderQuestions('horizontal', questions.horizontal)}
               {renderQuestions('vertical', questions.vertical)}
             </ContainerBox>

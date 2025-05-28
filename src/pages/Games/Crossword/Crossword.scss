@@ -6,6 +6,10 @@
   justify-content: center;
   padding: 80px 8vw;
 
+  &-questions-container {
+    height: fit-content;
+  }
+
   &__header {
     display: flex;
     flex-direction: row;
