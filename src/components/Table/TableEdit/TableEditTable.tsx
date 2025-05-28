@@ -15,10 +15,12 @@ interface TableEditTableProps<T extends { id: string | number }> {
   filteredRows: T[]
   selectedIds: (string | number)[]
   isEdit: boolean
-  handleSelectAll: () => void
+  handleSelectAll?: () => void
   handleSelectRow: (id: string | number) => void
   handleCellChange: (rowId: string | number, key: keyof T, value: any) => void
-  handleDeleteRow: (id: string | number) => void
+  handleDeleteRow?: (id: string | number) => void
+  isAllowMultiSelect?: boolean
+  isAllowDelete?: boolean
 }
 
 export const TableEditTable = <T extends { id: string | number }>({
@@ -30,20 +32,26 @@ export const TableEditTable = <T extends { id: string | number }>({
   handleSelectRow,
   handleCellChange,
   handleDeleteRow,
+  isAllowMultiSelect = true,
+  isAllowDelete = true,
 }: TableEditTableProps<T>) => (
   <table className="table-edit__table">
     <thead className="table-edit__thead">
       <tr>
-        <th className="table-edit__checkbox-col table-edit__sticky-col-left table-edit__thead-sticky">
-          <Checkbox
-            isSelected={
-              selectedIds.length === filteredRows.length &&
-              filteredRows.length > 0
-            }
-            onChange={handleSelectAll}
-            isDisabled={!isEdit}
-          />
-        </th>
+        {isAllowMultiSelect ? (
+          <th className="table-edit__checkbox-col table-edit__sticky-col-left table-edit__thead-sticky">
+            <Checkbox
+              isSelected={
+                selectedIds.length === filteredRows.length &&
+                filteredRows.length > 0
+              }
+              onChange={handleSelectAll}
+              isDisabled={!isEdit}
+            />
+          </th>
+        ) : (
+          <th className="table-edit__checkbox-col table-edit__sticky-col-left table-edit__thead-sticky" />
+        )}
         {columns.map(col => (
           <th key={String(col.key)} className="table-edit__th">
             {col.title}
@@ -55,13 +63,17 @@ export const TableEditTable = <T extends { id: string | number }>({
     <tbody className="table-edit__tbody">
       {filteredRows.map(row => (
         <tr key={row.id} className="table-edit__tr">
-          <td className="table-edit__checkbox-col table-edit__sticky-col-left">
-            <Checkbox
-              isSelected={selectedIds.includes(row.id)}
-              onChange={() => handleSelectRow(row.id)}
-              isDisabled={!isEdit}
-            />
-          </td>
+          {isAllowMultiSelect ? (
+            <td className="table-edit__checkbox-col table-edit__sticky-col-left">
+              <Checkbox
+                isSelected={selectedIds.includes(row.id)}
+                onChange={() => handleSelectRow(row.id)}
+                isDisabled={!isEdit}
+              />
+            </td>
+          ) : (
+            <td className="table-edit__checkbox-col table-edit__sticky-col-left" />
+          )}
           {columns.map(col => (
             <td key={String(col.key)} className="table-edit__td">
               {col.render
@@ -74,11 +86,11 @@ export const TableEditTable = <T extends { id: string | number }>({
             </td>
           ))}
           <td className="table-edit__actions-col table-edit__sticky-col-right">
-            {isEdit && (
+            {isEdit && isAllowDelete && (
               <Icon
                 icon="DELETE"
                 className="table-edit__delete-button"
-                onClick={() => handleDeleteRow(row.id)}
+                onClick={() => handleDeleteRow?.(row.id)}
               />
             )}
           </td>

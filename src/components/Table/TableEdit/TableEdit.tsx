@@ -32,8 +32,11 @@ export interface TableEditProps<T extends { id: string | number }> {
   title: string
   columns: TableColumn<T>[]
   initialRows: T[]
-  addRowTemplate: Omit<T, 'id'>
+  addRowTemplate?: Omit<T, 'id'>
   onAddRow?: () => void
+  isAllowAddRow?: boolean
+  isAllowMultiSelect?: boolean
+  isAllowDelete?: boolean
 }
 
 export const TableEdit = <T extends { id: string | number }>({
@@ -42,11 +45,16 @@ export const TableEdit = <T extends { id: string | number }>({
   initialRows,
   addRowTemplate,
   onAddRow,
+  isAllowAddRow = true,
+  isAllowMultiSelect = true,
+  isAllowDelete = true,
 }: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([])
   const [isEdit, setIsEdit] = useState(false)
-  const [newRow, setNewRow] = useState<Omit<T, 'id'>>(addRowTemplate)
+  const [newRow, setNewRow] = useState<Omit<T, 'id'>>(
+    addRowTemplate ?? (() => ({}) as Omit<T, 'id'>),
+  )
   const [filters, setFilters] = useState<Record<string, any>>({})
 
   const tableWrapperRef = useRef<HTMLDivElement>(null)
@@ -92,9 +100,13 @@ export const TableEdit = <T extends { id: string | number }>({
   }
 
   const handleSelectRow = (id: string | number) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id],
-    )
+    if (!isAllowMultiSelect) {
+      setSelectedIds(prev => (prev.includes(id) ? [] : [id]))
+    } else {
+      setSelectedIds(prev =>
+        prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id],
+      )
+    }
   }
 
   const handleSelectAll = () => {
@@ -152,32 +164,36 @@ export const TableEdit = <T extends { id: string | number }>({
             filteredRows={filteredRows}
             selectedIds={selectedIds}
             isEdit={isEdit}
-            handleSelectAll={handleSelectAll}
+            handleSelectAll={isAllowMultiSelect ? handleSelectAll : undefined}
             handleSelectRow={handleSelectRow}
             handleCellChange={handleCellChange}
-            handleDeleteRow={handleDeleteRow}
+            handleDeleteRow={isAllowDelete ? handleDeleteRow : undefined}
+            isAllowMultiSelect={isAllowMultiSelect}
+            isAllowDelete={isAllowDelete}
           />
         </div>
-        {isEdit && selectedIds.length > 0 && (
+        {isEdit && isAllowDelete && selectedIds.length > 0 && (
           <TableEditFooter
             totalCount={filteredRows.length}
             selectedCount={selectedIds.length}
             onDelete={handleDeleteSelected}
           />
         )}
-        <div>
-          <TableEditAddRow
-            ref={addRowRef}
-            columns={columns as TableColumn<{ id: string | number }>[]}
-            newRow={newRow}
-            setNewRow={
-              setNewRow as Dispatch<
-                SetStateAction<Omit<{ id: string | number }, 'id'>>
-              >
-            }
-            onAddRow={handleAddRow}
-          />
-        </div>
+        {isAllowAddRow && (
+          <div>
+            <TableEditAddRow
+              ref={addRowRef}
+              columns={columns as TableColumn<{ id: string | number }>[]}
+              newRow={newRow}
+              setNewRow={
+                setNewRow as Dispatch<
+                  SetStateAction<Omit<{ id: string | number }, 'id'>>
+                >
+              }
+              onAddRow={handleAddRow}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
