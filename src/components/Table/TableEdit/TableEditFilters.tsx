@@ -9,6 +9,7 @@ interface FilterTableEditProps {
 }
 
 interface TableColumn<T> {
+  render?: any
   key: keyof T
   title: string
   Filter?: (props: FilterTableEditProps) => ReactNode
@@ -31,21 +32,29 @@ export const TableEditFilters = <T,>({
   <div ref={filtersRef} className="table-edit__filters">
     <div className="table-edit__filters-empty" />
     {columns.map(col => {
-      const FilterComponent = col.Filter
-        ? col.Filter
-        : col.switcherOptions && col.switcherOptions.length > 0
-          ? (props: any) => (
-              <SwitcherFilter {...props} options={col.switcherOptions!} />
-            )
-          : DefaultColumnFilter
+      if (!col.render) {
+        // Если render нет, используем дефолтный инпут
+        return (
+          <div key={String(col.key)} className="table-edit__filters-cell">
+            <input
+              value={filters[String(col.key)] || ''}
+              onChange={e => setFilterValue(col.key, e.target.value)}
+              placeholder={col.title}
+            />
+          </div>
+        )
+      }
+
+      // Формируем объект с одним ключом для передачи в render
+      const filterRow = { [col.key]: filters[String(col.key)] } as T
 
       return (
         <div key={String(col.key)} className="table-edit__filters-cell">
-          <FilterComponent
-            title={col.title}
-            filterValue={filters[String(col.key)] || ''}
-            setFilterValue={(val: any) => setFilterValue(col.key, val)}
-          />
+          {col.render(
+            filterRow,
+            (val: any) => setFilterValue(col.key, val),
+            false,
+          )}
         </div>
       )
     })}

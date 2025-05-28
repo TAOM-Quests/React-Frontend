@@ -1,9 +1,9 @@
 import { Button } from '../../UI/Button/Button'
 
 interface TableEditHeaderProps {
-  title: string
   isEdit: boolean
   toggleEdit: () => void
+  title?: string
 }
 
 export const TableEditHeader = ({

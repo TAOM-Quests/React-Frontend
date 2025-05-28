@@ -32,8 +32,8 @@ export const TableEditTable = <T extends { id: string | number }>({
   handleSelectRow,
   handleCellChange,
   handleDeleteRow,
-  isAllowMultiSelect = true,
-  isAllowDelete = true,
+  isAllowMultiSelect = false,
+  isAllowDelete = false,
 }: TableEditTableProps<T>) => (
   <table className="table-edit__table">
     <thead className="table-edit__thead">

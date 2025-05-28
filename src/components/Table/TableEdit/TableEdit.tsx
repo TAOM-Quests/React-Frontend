@@ -26,13 +26,18 @@ export interface TableColumn<T> {
   title: string
   render?: RenderFunction<T>
   switcherOptions?: string[]
+  filterRender?: (
+    filterValue: any,
+    onChange: (val: any) => void,
+    isDisabled: boolean,
+  ) => ReactNode
 }
 
 export interface TableEditProps<T extends { id: string | number }> {
-  title: string
   columns: TableColumn<T>[]
   initialRows: T[]
   addRowTemplate?: Omit<T, 'id'>
+  title?: string
   onAddRow?: () => void
   isAllowAddRow?: boolean
   isAllowMultiSelect?: boolean
@@ -45,9 +50,9 @@ export const TableEdit = <T extends { id: string | number }>({
   initialRows,
   addRowTemplate,
   onAddRow,
-  isAllowAddRow = true,
-  isAllowMultiSelect = true,
-  isAllowDelete = true,
+  isAllowAddRow = false,
+  isAllowMultiSelect = false,
+  isAllowDelete = false,
 }: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([])
