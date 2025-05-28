@@ -170,6 +170,7 @@ export const Crossword = () => {
   useEffect(() => {
     setIsLoading(true)
     fetchCrossword()
+    setUserAnswers(getUserAnswerFromStorage())
     setIsLoading(false)
   }, [currentDifficulty])
 
@@ -292,9 +293,9 @@ export const Crossword = () => {
 
       const checkerAnswers = await crossword.checkAnswer({
         words: getUserWords(),
-        userId: 1,
+        userId: user.id,
         departmentId: +departmentId,
-        difficultyId: 1,
+        difficultyId: currentDifficulty + 1,
       })
       const newStatuses: Record<string, boolean> = {}
       checkerAnswers.forEach(w => {
