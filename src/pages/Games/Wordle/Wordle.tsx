@@ -12,6 +12,7 @@ import { selectAuth } from '../../../redux/auth/authSlice'
 import { upperCase } from 'lodash'
 import { Loading } from '../../../components/Loading/Loading'
 import moment from 'moment'
+import { WordleRulesModal } from './WordleRulesModal/WordleRulesModal'
 
 const RUSSIAN_ALPHABET = [
   'Й',
@@ -190,7 +191,7 @@ export const Wordle = () => {
   }, [handleBackspace, handleEnter, handleLetterInput])
 
   return !isLoading ? (
-    <div className="wordle">
+    <div className="container_min_width wordle">
       <div className="wordle__header">
         <h5 className="heading_4  wordle__title">5 букв</h5>
         <div className="wordle__rules">
