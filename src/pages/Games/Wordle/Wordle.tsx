@@ -60,6 +60,7 @@ export const Wordle = () => {
   const [keyboardStatus, setKeyboardStatus] = useState<
     Record<string, WordleAttemptLetterStatus>
   >({})
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const user = useAppSelector(selectAuth)
   const { id: departmentId } = useParams<{ id: string }>()
@@ -99,6 +100,8 @@ export const Wordle = () => {
 
     setIsLoading(false)
   }, [departmentId])
+
+  const openRulesModal = () => setIsModalOpen(true)
 
   const handleLetterInput = useCallback(
     (letter: string) => {
@@ -188,6 +191,24 @@ export const Wordle = () => {
 
   return !isLoading ? (
     <div className="wordle">
+      <div className="wordle__header">
+        <h5 className="heading_4  wordle__title">5 букв</h5>
+        <div className="wordle__rules">
+          <Button
+            text="Правила игры"
+            iconBefore="GAME_RULES"
+            colorType="secondary"
+            size="small"
+            onClick={() => openRulesModal()}
+          />
+          <Button
+            text="Редактировать игру"
+            iconBefore="EDIT"
+            colorType="secondary"
+          />
+        </div>
+      </div>
+
       <div className="board">
         {Array(MAX_ATTEMPTS)
           .fill(null)
@@ -264,6 +285,12 @@ export const Wordle = () => {
             ? 'Поздравляем! Вы угадали!'
             : 'Игра окончена!'}
         </div>
+      )}
+      {isModalOpen && (
+        <WordleRulesModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </div>
   ) : (
