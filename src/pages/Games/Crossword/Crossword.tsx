@@ -20,7 +20,7 @@ type Direction = 'horizontal' | 'vertical'
 type CellAnswers = {
   value: string
 }
-type UserAnswers = Record<string, CellAnswers> // key: `${x},${y},${direction},${idx}`
+type UserAnswers = Record<string, CellAnswers> // key: `${x},${y}`
 interface SaveCrossword {
   day: string
   difficultyId: number
@@ -264,9 +264,14 @@ export const Crossword = () => {
   const getUserWords = (): CrosswordPlaceWord[] => {
     return words.map(w => {
       let answer = ''
+      let x = w.x
+      let y = w.y
       for (let i = 0; i < w.length; i++) {
-        const key = `${w.x},${w.y},${w.direction},${i}`
-        answer += userAnswers[key] || ''
+        const key = `${x},${y}`
+        answer += userAnswers[key]?.value || ''
+
+        if (w.direction === 'horizontal') x++
+        if (w.direction === 'vertical') y++
       }
       return {
         x: w.x,
@@ -294,7 +299,7 @@ export const Crossword = () => {
       const newStatuses: Record<string, boolean> = {}
       checkerAnswers.forEach(w => {
         for (let i = 0; i < w.length; i++) {
-          const key = `${w.x},${w.y},${w.direction},${i}`
+          const key = `${w.x},${w.y}`
           newStatuses[key] = !!w.isCorrect
         }
       })
@@ -322,10 +327,7 @@ export const Crossword = () => {
         })
         // Для простоты берём первое подходящее слово
         const mainWord = cellWords[0]
-        let idx = 0
-        if (mainWord.direction === 'horizontal') idx = x - mainWord.x
-        else idx = y - mainWord.y
-        const inputKey = `${mainWord.x},${mainWord.y},${mainWord.direction},${idx}`
+        const inputKey = `${mainWord.x},${mainWord.y}`
         const status = statuses[inputKey]
         const startNumber = startNumbers[cellKey]
 
