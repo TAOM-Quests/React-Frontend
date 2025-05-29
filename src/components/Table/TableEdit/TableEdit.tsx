@@ -134,8 +134,8 @@ export const TableEdit = <T extends { id: string | number }>({
 
         const cellVal = row[col.key]
 
-        if (col.switcherOptions && col.switcherOptions.length > 0) {
-          return cellVal === filterVal
+        if (cellVal && typeof cellVal === 'object' && 'id' in cellVal) {
+          return cellVal.id === filterVal
         }
 
         if (typeof cellVal === 'string' && typeof filterVal === 'string') {

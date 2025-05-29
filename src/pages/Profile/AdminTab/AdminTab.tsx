@@ -134,6 +134,7 @@ export default function AdminTab() {
         />
       ),
     },
+
     {
       key: 'department',
       title: 'Кафедра',
@@ -251,9 +252,7 @@ export default function AdminTab() {
     <>
       {!isLoading ? (
         <div className="adminTab">
-          {departments.length > 0 && (
-            <TableEdit<UserProfile> columns={columns} initialRows={users} />
-          )}
+          <TableEdit<UserProfile> columns={columns} initialRows={users} />
         </div>
       ) : (
         <Loading />
