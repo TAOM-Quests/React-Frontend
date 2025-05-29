@@ -26,11 +26,7 @@ export interface TableColumn<T> {
   title: string
   render?: RenderFunction<T>
   switcherOptions?: string[]
-  filterRender?: (
-    filterValue: any,
-    onChange: (val: any) => void,
-    isDisabled: boolean,
-  ) => ReactNode
+  disableFilter?: boolean
 }
 
 export interface TableEditProps<T extends { id: string | number }> {

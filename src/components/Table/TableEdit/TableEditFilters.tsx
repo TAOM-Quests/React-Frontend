@@ -14,6 +14,7 @@ interface TableColumn<T> {
   title: string
   Filter?: (props: FilterTableEditProps) => ReactNode
   switcherOptions?: string[]
+  disableFilter?: boolean
 }
 
 interface TableEditFiltersProps<T> {
@@ -32,6 +33,12 @@ export const TableEditFilters = <T,>({
   <div ref={filtersRef} className="table-edit__filters">
     <div className="table-edit__filters-empty" />
     {columns.map(col => {
+      if (col.disableFilter) {
+        // Фильтр для этого столбца не отображаем
+        return (
+          <div key={String(col.key)} className="table-edit__filters-cell" />
+        )
+      }
       if (!col.render) {
         // Если render нет, используем дефолтный инпут
         return (

@@ -8,9 +8,8 @@
   flex-direction: column;
   gap: 20px;
   position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 10;
+  left: -13px !important;
+  z-index: 9999;
   background-color: var(--bg_c_secondary);
   border: var(--border_primary) var(--border_c_primary);
   border-radius: 8px;

@@ -50,14 +50,18 @@ export const TableEditTable = <T extends { id: string | number }>({
             />
           </th>
         ) : (
-          <th className="table-edit__checkbox-col table-edit__sticky-col-left table-edit__thead-sticky" />
+          <></>
         )}
         {columns.map(col => (
           <th key={String(col.key)} className="table-edit__th">
             {col.title}
           </th>
         ))}
-        <th className="table-edit__actions-col table-edit__sticky-col-right table-edit__thead-sticky" />
+        {isAllowMultiSelect ? (
+          <th className="table-edit__actions-col table-edit__sticky-col-right table-edit__thead-sticky" />
+        ) : (
+          <></>
+        )}
       </tr>
     </thead>
     <tbody className="table-edit__tbody">
@@ -72,7 +76,7 @@ export const TableEditTable = <T extends { id: string | number }>({
               />
             </td>
           ) : (
-            <td className="table-edit__checkbox-col table-edit__sticky-col-left" />
+            <></>
           )}
           {columns.map(col => (
             <td key={String(col.key)} className="table-edit__td">
@@ -85,15 +89,19 @@ export const TableEditTable = <T extends { id: string | number }>({
                 : (row[col.key] as React.ReactNode)}
             </td>
           ))}
-          <td className="table-edit__actions-col table-edit__sticky-col-right">
-            {isEdit && isAllowDelete && (
-              <Icon
-                icon="DELETE"
-                className="table-edit__delete-button"
-                onClick={() => handleDeleteRow?.(row.id)}
-              />
-            )}
-          </td>
+          {isAllowMultiSelect ? (
+            <td className="table-edit__actions-col table-edit__sticky-col-right">
+              {isEdit && isAllowDelete && (
+                <Icon
+                  icon="DELETE"
+                  className="table-edit__delete-button"
+                  onClick={() => handleDeleteRow?.(row.id)}
+                />
+              )}
+            </td>
+          ) : (
+            <></>
+          )}
         </tr>
       ))}
       {filteredRows.length === 0 && (

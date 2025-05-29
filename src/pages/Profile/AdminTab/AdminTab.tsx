@@ -109,12 +109,12 @@ export default function AdminTab() {
   const usersData: GetUsers[] = [
     {
       id: 1,
-      firstName: 'Иван',
-      email: 'a@a.ru',
-      lastName: 'Иванов',
-      patronymic: 'Иванович',
-      phoneNumber: '89888888888',
-      birthDate: new Date('07-08-2003'),
+      firstName: 'Петр',
+      email: 'p@p.ru',
+      lastName: 'Петров',
+      patronymic: 'Петрович',
+      phoneNumber: '+7 (000) 000-00-00',
+      birthDate: new Date('08.07.2003'),
       sex: 'Мужской',
       departmentId: 1,
       positionId: 1,
@@ -128,7 +128,7 @@ export default function AdminTab() {
       email: 'и@a.ru',
       lastName: 'Иванов',
       patronymic: 'Иванович',
-      phoneNumber: '89888888887',
+      phoneNumber: '+7 (898) 888-88-88',
       birthDate: new Date('07-08-2003'),
       sex: 'Мужской',
       departmentId: 1,
@@ -141,18 +141,23 @@ export default function AdminTab() {
 
   const columns: TableColumn<GetUsers>[] = [
     {
+      key: 'imageUrl',
+      title: '',
+      disableFilter: true,
+      render: (row, onChange, isDisabled) => (
+        <Avatar src={row.imageUrl} size="small" />
+      ),
+    },
+    {
       key: 'lastName',
       title: 'Фамилия',
       render: (row, onChange, isDisabled) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Avatar src={row.imageUrl} size="small" />
-          <Input
-            value={row.lastName}
-            onChange={e => onChange(e.target.value)}
-            disabled={isDisabled}
-            placeholder="Фамилия"
-          />
-        </div>
+        <Input
+          value={row.lastName}
+          onChange={e => onChange(e.target.value)}
+          disabled={isDisabled}
+          placeholder="Фамилия"
+        />
       ),
     },
     {
@@ -187,7 +192,13 @@ export default function AdminTab() {
           selectedItems={roles
             .filter(role => role.id === row.roleId)
             .map(role => ({ id: role.id, text: role.name }))}
-          onChange={e => onChange(e.target.value)}
+          onChangeDropdown={selectedItem => {
+            if (selectedItem && !Array.isArray(selectedItem)) {
+              onChange(selectedItem.id)
+            } else {
+              onChange(undefined)
+            }
+          }}
           disabled={isDisabled}
           placeholder="Роль"
           items={roles.map(role => ({ id: role.id, text: role.name }))}
@@ -277,7 +288,7 @@ export default function AdminTab() {
             .map(s => ({ id: s.id, text: s.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
-              onChange(selectedItem.id)
+              onChange(selectedItem.text)
             } else {
               onChange(undefined)
             }
@@ -294,11 +305,13 @@ export default function AdminTab() {
     {
       key: 'birthDate',
       title: 'Дата рождения',
+      disableFilter: true,
       render: (row, onChange, isDisabled) => (
         <DateInput
           placeholder="Дата рождения"
           value={row.birthDate}
           disabled={isDisabled}
+          onChange={e => onChange(e.target.value)}
           onDateSelect={date => onChange(date)}
         />
       ),
@@ -306,14 +319,16 @@ export default function AdminTab() {
   ]
 
   return (
-    <div className="adminTab">
-      {departments.length > 0 && (
-        <TableEdit<GetUsers>
-          columns={columns}
-          initialRows={usersData}
-          addRowTemplate={addRowTemplate}
-        />
-      )}
-    </div>
+    isAdmin && (
+      <div className="adminTab">
+        {departments.length > 0 && (
+          <TableEdit<GetUsers>
+            columns={columns}
+            initialRows={usersData}
+            addRowTemplate={addRowTemplate}
+          />
+        )}
+      </div>
+    )
   )
 }
