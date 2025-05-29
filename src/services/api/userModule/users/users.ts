@@ -1,8 +1,15 @@
-import { Employee } from '../../../../models/user'
+import { Employee, User } from '../../../../models/user'
 import { UserAuth } from '../../../../models/userAuth'
+import { UserPosition } from '../../../../models/userPoistion'
 import { UserProfile, UserProfileUpdated } from '../../../../models/userProfile'
+import { UserRole } from '../../../../models/userRole'
 import { userModule } from '../userModule'
-import { ProfileGetDto, ProfileUpdateDto, UserEnterDto } from './usersDto'
+import {
+  ProfileGetDto,
+  ProfileUpdateDto,
+  UserEnterDto,
+  UsersGetDto,
+} from './usersDto'
 
 export const users = {
   auth: (params: UserEnterDto): Promise<UserAuth> =>
@@ -25,8 +32,21 @@ export const users = {
     )
   },
 
+  getUsers: (params: UsersGetDto): Promise<User[]> => {
+    const queryString = Object.entries(params)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')
+
+    return userModule<User[], null>(`users?${queryString}`)
+  },
+
   getEmployees: (): Promise<Employee[]> =>
     userModule<Employee[], null>('users?isEmployee=true'),
+
+  getRoles: (): Promise<UserRole[]> => userModule<UserRole[], null>('roles'),
+
+  getPositions: (): Promise<UserPosition[]> =>
+    userModule<UserRole[], null>('positions'),
 
   changePassword: (params: {
     oldPassword: string

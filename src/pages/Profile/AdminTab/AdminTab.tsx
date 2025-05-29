@@ -11,53 +11,14 @@ import { Avatar } from '../../../components/UI/Avatar/Avatar'
 import { MaskedInput } from '../../../components/MaskedInput/MaskedInput'
 import { DateInput } from '../../../components/UI/DateInput/DateInput'
 import './AdminTab.scss'
-
-const isAdmin = true
-
-interface GetUsers {
-  id: number
-  imageUrl: string
-  lastName?: string
-  firstName?: string
-  patronymic?: string
-  roleId?: number | null
-  departmentId?: number
-  positionId?: number
-  email: string
-  phoneNumber?: string
-  // telegram?: string
-  sex?: string
-  birthDate?: Date
-}
-const roles = [
-  {
-    id: 1,
-    name: 'Администратор',
-  },
-  {
-    id: 2,
-    name: 'Модератор',
-  },
-  {
-    id: 3,
-    name: 'Пользователь',
-  },
-]
-
-const positions = [
-  {
-    id: 1,
-    name: 'Администратор',
-  },
-  {
-    id: 2,
-    name: 'Модератор',
-  },
-  {
-    id: 3,
-    name: 'Пользователь',
-  },
-]
+import { UserRole } from '../../../models/userRole'
+import { UserPosition } from '../../../models/userPoistion'
+import { useAppSelector } from '../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../redux/auth/authSlice'
+import { useNavigate } from 'react-router'
+import { Loading } from '../../../components/Loading/Loading'
+import { UserProfile } from '../../../models/userProfile'
+import { users as usersApi } from '../../../services/api/userModule/users/users'
 
 const sex = [
   {
@@ -70,82 +31,50 @@ const sex = [
   },
 ]
 
-const addRowTemplate = {
-  imageUrl: '',
-  lastName: '',
-  firstName: '',
-  patronymic: '',
-  roleId: undefined,
-  departmentId: undefined,
-  positionId: undefined,
-  email: '',
-  phoneNumber: '',
-  sex: '',
-  birthDate: undefined,
-}
-
 export default function AdminTab() {
-  const [users, setUsers] = useState<GetUsers[]>([])
+  const [users, setUsers] = useState<UserProfile[]>([])
+  const [roles, setRoles] = useState<UserRole[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [positions, setPositions] = useState<UserPosition[]>([])
   const [departments, setDepartments] = useState<Department[]>([])
 
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
+
   useEffect(() => {
+    if (!user || !user.isAdmin) {
+      navigate('/')
+    }
+
     const fetchFilterData = async () => {
       try {
         setIsLoading(true)
-
-        const usersDepartments = await commonEntities.getDepartments()
-
-        setDepartments(usersDepartments)
+        setUsers(
+          await Promise.all(
+            (await usersApi.getUsers({})).map(user =>
+              usersApi.getProfile({ id: user.id }),
+            ),
+          ),
+        )
+        setRoles(await usersApi.getRoles())
+        setPositions(await usersApi.getPositions())
+        setDepartments(await commonEntities.getDepartments())
         setIsLoading(false)
       } catch (e) {
-        console.log(`[CalendarFilter] ${e}`)
+        console.log(`[AdminTab] ${e}`)
       }
     }
 
     fetchFilterData()
   }, [])
 
-  const usersData: GetUsers[] = [
+  const columns: TableColumn<UserProfile>[] = [
     {
-      id: 1,
-      firstName: 'Петр',
-      email: 'p@p.ru',
-      lastName: 'Петров',
-      patronymic: 'Петрович',
-      phoneNumber: '+7 (000) 000-00-00',
-      birthDate: new Date('08.07.2003'),
-      sex: 'Мужской',
-      departmentId: 1,
-      positionId: 1,
-      roleId: null,
-      imageUrl:
-        'http://localhost:3000/api/v1/commonModule/file?fileName=Default_avatar.png',
-    },
-    {
-      id: 2,
-      firstName: 'Иван',
-      email: 'и@a.ru',
-      lastName: 'Иванов',
-      patronymic: 'Иванович',
-      phoneNumber: '+7 (898) 888-88-88',
-      birthDate: new Date('07-08-2003'),
-      sex: 'Мужской',
-      departmentId: 1,
-      positionId: 1,
-      roleId: null,
-      imageUrl:
-        'http://localhost:3000/api/v1/commonModule/file?fileName=Default_avatar.png',
-    },
-  ]
-
-  const columns: TableColumn<GetUsers>[] = [
-    {
-      key: 'imageUrl',
+      key: 'image',
       title: '',
       disableFilter: true,
       render: (row, onChange, isDisabled) => (
-        <Avatar src={row.imageUrl} size="small" />
+        <Avatar src={row.image.url} size="small" />
       ),
     },
     {
@@ -185,12 +114,12 @@ export default function AdminTab() {
       ),
     },
     {
-      key: 'roleId',
+      key: 'role',
       title: 'Роль',
       render: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={roles
-            .filter(role => role.id === row.roleId)
+            .filter(role => role.id === row.role?.id)
             .map(role => ({ id: role.id, text: role.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
@@ -206,12 +135,12 @@ export default function AdminTab() {
       ),
     },
     {
-      key: 'departmentId',
+      key: 'department',
       title: 'Кафедра',
       render: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={departments
-            .filter(department => department.id === row.departmentId)
+            .filter(department => department.id === row.department?.id)
             .map(department => ({ id: department.id, text: department.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
@@ -230,12 +159,12 @@ export default function AdminTab() {
       ),
     },
     {
-      key: 'positionId',
+      key: 'position',
       title: 'Должность',
       render: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={positions
-            .filter(position => position.id === row.positionId)
+            .filter(position => position.id === row.position?.id)
             .map(position => ({ id: position.id, text: position.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
@@ -319,16 +248,16 @@ export default function AdminTab() {
   ]
 
   return (
-    isAdmin && (
-      <div className="adminTab">
-        {departments.length > 0 && (
-          <TableEdit<GetUsers>
-            columns={columns}
-            initialRows={usersData}
-            addRowTemplate={addRowTemplate}
-          />
-        )}
-      </div>
-    )
+    <>
+      {!isLoading ? (
+        <div className="adminTab">
+          {departments.length > 0 && (
+            <TableEdit<UserProfile> columns={columns} initialRows={users} />
+          )}
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </>
   )
 }

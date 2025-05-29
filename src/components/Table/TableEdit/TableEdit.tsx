@@ -32,7 +32,7 @@ export interface TableColumn<T> {
 export interface TableEditProps<T extends { id: string | number }> {
   columns: TableColumn<T>[]
   initialRows: T[]
-  addRowTemplate?: Omit<T, 'id'>
+  addRowTemplate?: Partial<T>
   title?: string
   onAddRow?: () => void
   isAllowAddRow?: boolean
@@ -53,9 +53,7 @@ export const TableEdit = <T extends { id: string | number }>({
   const [rows, setRows] = useState<T[]>(initialRows)
   const [selectedIds, setSelectedIds] = useState<(string | number)[]>([])
   const [isEdit, setIsEdit] = useState(false)
-  const [newRow, setNewRow] = useState<Omit<T, 'id'>>(
-    addRowTemplate ?? (() => ({}) as Omit<T, 'id'>),
-  )
+  const [newRow, setNewRow] = useState<Partial<T>>(addRowTemplate ?? {})
   const [filters, setFilters] = useState<Record<string, any>>({})
 
   const tableWrapperRef = useRef<HTMLDivElement>(null)
