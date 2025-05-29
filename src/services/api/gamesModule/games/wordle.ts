@@ -24,4 +24,9 @@ export const wordle = {
       `${WORDLE_API_URL}words/${departmentId}`,
       { word },
     ),
+
+  deleteWord: (id: number): Promise<void> =>
+    gamesModule<void, null>(`${WORDLE_API_URL}words/${id}`, null, {
+      method: 'DELETE',
+    }),
 }

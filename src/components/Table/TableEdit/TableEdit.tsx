@@ -29,29 +29,39 @@ export interface TableColumn<T> {
   switcherOptions?: string[]
 }
 
-export interface TableEditProps<T extends { id: string | number }> {
+export interface TableEditProps<T extends { id: number }> {
   title: string
   columns: TableColumn<T>[]
   initialRows: T[]
   addRowTemplate?: Omit<T, 'id'>
   onAddRow?: (newRow: Omit<T, 'id'>) => void
+  onDeleteRow?: (id: number) => void
   isAllowAddRow?: boolean
   isAllowMultiSelect?: boolean
   isAllowDelete?: boolean
+  selectedIds?: number[]
+  setSelectedIds?: React.Dispatch<React.SetStateAction<number[]>>
+  onDeleteSelected?: () => void
 }
 
-export const TableEdit = <T extends { id: string | number }>({
+export const TableEdit = <T extends { id: number }>({
   title,
   columns,
   initialRows,
   addRowTemplate,
   onAddRow,
+  onDeleteRow,
   isAllowAddRow = true,
   isAllowMultiSelect = true,
   isAllowDelete = true,
+  selectedIds = [],
+  setSelectedIds,
+  onDeleteSelected,
 }: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
-  const [selectedIds, setSelectedIds] = useState<(string | number)[]>([])
+  // const [selectedIds, setSelectedIds] = useState<number[]>([])
+  const [localSelectedIds, setLocalSelectedIds] =
+    useState<number[]>(selectedIds)
   const [isEdit, setIsEdit] = useState(false)
   const [newRow, setNewRow] = useState<Omit<T, 'id'>>(
     addRowTemplate ?? (() => ({}) as Omit<T, 'id'>),
@@ -65,19 +75,19 @@ export const TableEdit = <T extends { id: string | number }>({
   useSyncedScroll([tableWrapperRef, addRowRef, filtersRef])
 
   useEffect(() => {
+    if (selectedIds) setLocalSelectedIds(selectedIds)
+  }, [selectedIds])
+
+  useEffect(() => {
     setRows(initialRows)
   }, [initialRows])
 
   const toggleEdit = () => {
     setIsEdit(prev => !prev)
-    if (isEdit) setSelectedIds([])
+    if (isEdit) setLocalSelectedIds([])
   }
 
-  const handleCellChange = (
-    rowId: string | number,
-    key: keyof T,
-    value: any,
-  ) => {
+  const handleCellChange = (rowId: number, key: keyof T, value: any) => {
     setRows(prev =>
       prev.map(row => (row.id === rowId ? { ...row, [key]: value } : row)),
     )
@@ -91,28 +101,50 @@ export const TableEdit = <T extends { id: string | number }>({
   }, [onAddRow, newRow, addRowTemplate])
 
   const handleDeleteSelected = () => {
-    setRows(prev => prev.filter(row => !selectedIds.includes(row.id)))
-    setSelectedIds([])
-  }
-
-  const handleDeleteRow = (id: string | number) => {
-    setRows(prev => prev.filter(row => row.id !== id))
-    setSelectedIds(prev => prev.filter(sid => sid !== id))
-  }
-
-  const handleSelectRow = (id: string | number) => {
-    if (!isAllowMultiSelect) {
-      setSelectedIds(prev => (prev.includes(id) ? [] : [id]))
+    if (onDeleteSelected) {
+      onDeleteSelected()
     } else {
-      setSelectedIds(prev =>
-        prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id],
-      )
+      // Локальное удаление, если внешняя функция не передана
+      setRows(prev => prev.filter(row => !localSelectedIds.includes(row.id)))
+      if (setSelectedIds) {
+        setSelectedIds([])
+      }
     }
   }
 
+  const handleDeleteRow = (id: number) => {
+    if (onDeleteRow) {
+      onDeleteRow(id)
+    } else {
+      setRows(prev => prev.filter(row => row.id !== id))
+      if (setSelectedIds) {
+        setSelectedIds(prev => prev.filter(sid => sid !== id))
+      }
+    }
+  }
+
+  const handleSelectRow = (id: number) => {
+    let newSelected: number[]
+    if (!isAllowMultiSelect) {
+      newSelected = localSelectedIds.includes(id) ? [] : [id]
+    } else {
+      newSelected = localSelectedIds.includes(id)
+        ? localSelectedIds.filter(sid => sid !== id)
+        : [...localSelectedIds, id]
+    }
+    setLocalSelectedIds(newSelected)
+    setSelectedIds?.(newSelected)
+  }
+
   const handleSelectAll = () => {
-    if (selectedIds.length === filteredRows.length) setSelectedIds([])
-    else setSelectedIds(filteredRows.map(row => row.id))
+    if (localSelectedIds.length === filteredRows.length) {
+      setLocalSelectedIds([])
+      setSelectedIds?.([])
+    } else {
+      const allIds = filteredRows.map(row => row.id)
+      setLocalSelectedIds(allIds)
+      setSelectedIds?.(allIds)
+    }
   }
 
   const setFilterValue = (key: keyof T, value: any) => {
@@ -163,20 +195,20 @@ export const TableEdit = <T extends { id: string | number }>({
           <TableEditTable
             columns={columns}
             filteredRows={filteredRows}
-            selectedIds={selectedIds}
             isEdit={isEdit}
-            handleSelectAll={isAllowMultiSelect ? handleSelectAll : undefined}
-            handleSelectRow={handleSelectRow}
             handleCellChange={handleCellChange}
             handleDeleteRow={isAllowDelete ? handleDeleteRow : undefined}
             isAllowMultiSelect={isAllowMultiSelect}
             isAllowDelete={isAllowDelete}
+            selectedIds={localSelectedIds}
+            handleSelectRow={handleSelectRow}
+            handleSelectAll={isAllowMultiSelect ? handleSelectAll : undefined}
           />
         </div>
-        {isEdit && isAllowDelete && selectedIds.length > 0 && (
+        {isEdit && isAllowDelete && localSelectedIds.length > 0 && (
           <TableEditFooter
             totalCount={filteredRows.length}
-            selectedCount={selectedIds.length}
+            selectedCount={localSelectedIds.length}
             onDelete={handleDeleteSelected}
           />
         )}
@@ -184,11 +216,11 @@ export const TableEdit = <T extends { id: string | number }>({
           <div>
             <TableEditAddRow
               ref={addRowRef}
-              columns={columns as TableColumn<{ id: string | number }>[]}
+              columns={columns as TableColumn<{ id: number }>[]}
               newRow={newRow}
               setNewRow={
                 setNewRow as Dispatch<
-                  SetStateAction<Omit<{ id: string | number }, 'id'>>
+                  SetStateAction<Omit<{ id: number }, 'id'>>
                 >
               }
               onClick={handleAddRowClick}

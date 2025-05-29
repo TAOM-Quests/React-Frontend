@@ -13,6 +13,8 @@ import { CustomAlert } from '../../../components/CustomAlert/CustomAlert'
 export const WordleWordsEditor = () => {
   const { id: departmentId } = useParams<{ id: string }>()
   const [words, setWords] = useState<WordleWord[]>([])
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
 
@@ -84,6 +86,41 @@ export const WordleWordsEditor = () => {
     [departmentId, words],
   )
 
+  const handleDeleteWord = useCallback(
+    async (id: number) => {
+      if (!departmentId) return
+
+      try {
+        await wordle.deleteWord(id)
+        setWords(prev => prev.filter(word => word.id !== id))
+      } catch (e) {
+        console.error(`[Wordle] Ошибка удаления слова: ${e}`)
+        setModalMessage('Ошибка при удалении слова')
+        setIsModalOpen(true)
+      }
+    },
+    [departmentId],
+  )
+
+  const handleDeleteSelectedWords = useCallback(async () => {
+    if (!departmentId || selectedIds.length === 0) return
+
+    try {
+      // Параллельно удаляем все выбранные слова на сервере
+      await Promise.all(selectedIds.map(id => wordle.deleteWord(id)))
+
+      // Обновляем локальный стейт, удаляя удалённые слова
+      setWords(prev => prev.filter(word => !selectedIds.includes(word.id)))
+
+      // Очищаем выбранные ID
+      setSelectedIds([])
+    } catch (e) {
+      console.error('[Wordle] Ошибка при удалении слов:', e)
+      setModalMessage('Ошибка при удалении слов')
+      setIsModalOpen(true)
+    }
+  }, [departmentId, selectedIds])
+
   return (
     <div style={{ padding: 20 }}>
       <TableEdit<WordleWord>
@@ -92,6 +129,10 @@ export const WordleWordsEditor = () => {
         initialRows={words}
         addRowTemplate={addRowTemplate}
         onAddRow={handleCreateWord}
+        onDeleteRow={handleDeleteWord}
+        selectedIds={selectedIds}
+        setSelectedIds={setSelectedIds}
+        onDeleteSelected={handleDeleteSelectedWords}
       />
       <CustomAlert
         title="Предупреждение"

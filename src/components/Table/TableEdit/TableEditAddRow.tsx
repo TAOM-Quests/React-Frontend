@@ -7,7 +7,7 @@ interface TableColumn<T> {
   render?: RenderFunction<T>
 }
 
-interface TableEditAddRowProps<T extends { id: string | number }> {
+interface TableEditAddRowProps<T extends { id: number }> {
   columns: TableColumn<T>[]
   newRow: Omit<T, 'id'>
   setNewRow: Dispatch<SetStateAction<Omit<T, 'id'>>>
@@ -15,7 +15,7 @@ interface TableEditAddRowProps<T extends { id: string | number }> {
 }
 
 export const TableEditAddRow = forwardRef(
-  <T extends { id: string | number }>(
+  <T extends { id: number }>(
     { columns, newRow, setNewRow, onClick }: TableEditAddRowProps<T>,
     ref: Ref<HTMLDivElement>,
   ) => (
@@ -29,7 +29,7 @@ export const TableEditAddRow = forwardRef(
         <div key={String(col.key)} className="table-edit__add-row-cell">
           {col.render
             ? col.render(
-                { ...newRow, id: 'new' } as T,
+                { ...newRow, id: 1 } as T,
                 (value: any) =>
                   setNewRow(prev => ({ ...prev, [col.key]: value })),
                 false,
