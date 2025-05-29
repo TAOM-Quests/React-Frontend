@@ -11,12 +11,12 @@ interface TableEditAddRowProps<T extends { id: string | number }> {
   columns: TableColumn<T>[]
   newRow: Omit<T, 'id'>
   setNewRow: Dispatch<SetStateAction<Omit<T, 'id'>>>
-  onAddRow: () => void
+  onClick?: () => void
 }
 
 export const TableEditAddRow = forwardRef(
   <T extends { id: string | number }>(
-    { columns, newRow, setNewRow, onAddRow }: TableEditAddRowProps<T>,
+    { columns, newRow, setNewRow, onClick }: TableEditAddRowProps<T>,
     ref: Ref<HTMLDivElement>,
   ) => (
     <div
@@ -38,7 +38,7 @@ export const TableEditAddRow = forwardRef(
         </div>
       ))}
       <div className="table-edit__add-row-cell table-edit__add-row-cell-button">
-        <Icon onClick={onAddRow} icon="ADD" />
+        <Icon onClick={onClick} icon="ADD" />
       </div>
     </div>
   ),

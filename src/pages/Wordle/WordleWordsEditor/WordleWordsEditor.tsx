@@ -4,20 +4,19 @@ import {
   TableEdit,
 } from '../../../components/Table/TableEdit/TableEdit'
 import Input from '../../../components/UI/Input/Input'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { WordleWord } from '../../../models/wordleWord'
 import { wordle } from '../../../services/api/gamesModule/games/wordle'
 import { Loading } from '../../../components/Loading/Loading'
+import { CustomAlert } from '../../../components/CustomAlert/CustomAlert'
 
 export const WordleWordsEditor = () => {
   const { id: departmentId } = useParams<{ id: string }>()
   const [words, setWords] = useState<WordleWord[]>([])
-  const [newWord, setNewWord] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
 
   useEffect(() => {
-    setIsLoading(true)
-
     const fetchWords = async () => {
       if (!departmentId) return
 
@@ -30,22 +29,32 @@ export const WordleWordsEditor = () => {
     }
 
     fetchWords()
-
-    setIsLoading(false)
   }, [departmentId])
 
   const columns: TableColumn<WordleWord>[] = [
     {
       key: 'word',
       title: 'Слово',
-      render: (row, onChange, isDisabled) => (
-        <Input
-          value={row.word}
-          onChange={e => onChange(e.target.value)}
-          disabled={isDisabled}
-          placeholder="Слово"
-        />
-      ),
+      render: (row, onChange, isDisabled) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          let value = e.target.value.toUpperCase()
+          value = value.replace(/[^А-Я]/g, '')
+          if (value.length > 5) {
+            value = value.slice(0, 5)
+          }
+          onChange(value)
+        }
+
+        return (
+          <Input
+            value={row.word}
+            onChange={handleChange}
+            disabled={isDisabled}
+            placeholder="Слово"
+            maxLength={5}
+          />
+        )
+      },
     },
   ]
 
@@ -53,20 +62,29 @@ export const WordleWordsEditor = () => {
     word: '',
   }
 
-  const handleCreateWord = async () => {
-    if (!newWord.trim() || !departmentId) return
-    setIsLoading(true)
-    try {
-      const addedWord = await wordle.createWord(newWord.trim(), +departmentId)
+  const handleCreateWord = useCallback(
+    async (newWordData: Omit<WordleWord, 'id'>) => {
+      const wordToAdd = newWordData.word?.trim().toUpperCase()
+      if (!wordToAdd || !departmentId) return
 
-      setWords(prev => [...prev, addedWord])
-      setNewWord('')
-    } catch (e) {
-      console.log(`[Wordle] ${e}`)
-    }
-  }
+      const isDuplicate = words.some(w => w.word.toUpperCase() === wordToAdd)
+      if (isDuplicate) {
+        setModalMessage('Такое слово уже существует')
+        setIsModalOpen(true)
+        return
+      }
 
-  return !isLoading ? (
+      try {
+        const addedWord = await wordle.createWord(wordToAdd, +departmentId)
+        setWords(prev => [...prev, addedWord])
+      } catch (e) {
+        console.log(`[Wordle] ${e}`)
+      }
+    },
+    [departmentId, words],
+  )
+
+  return (
     <div style={{ padding: 20 }}>
       <TableEdit<WordleWord>
         title="Редактирование игры «5 букв»"
@@ -75,15 +93,12 @@ export const WordleWordsEditor = () => {
         addRowTemplate={addRowTemplate}
         onAddRow={handleCreateWord}
       />
-
-      <Input
-        value={newWord}
-        onChange={e => setNewWord(e.target.value)}
-        placeholder="Слово"
+      <CustomAlert
+        title="Предупреждение"
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onClose={() => setIsModalOpen(false)}
       />
-      <button onClick={handleCreateWord}>Добавить слово</button>
     </div>
-  ) : (
-    <Loading />
   )
 }

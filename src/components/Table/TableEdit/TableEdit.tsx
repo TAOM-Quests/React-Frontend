@@ -6,6 +6,7 @@ import {
   SetStateAction,
   ReactNode,
   useEffect,
+  useCallback,
 } from 'react'
 import { TableEditHeader } from './TableEditHeader'
 import { TableEditFilters } from './TableEditFilters'
@@ -33,7 +34,7 @@ export interface TableEditProps<T extends { id: string | number }> {
   columns: TableColumn<T>[]
   initialRows: T[]
   addRowTemplate?: Omit<T, 'id'>
-  onAddRow?: () => void
+  onAddRow?: (newRow: Omit<T, 'id'>) => void
   isAllowAddRow?: boolean
   isAllowMultiSelect?: boolean
   isAllowDelete?: boolean
@@ -82,12 +83,12 @@ export const TableEdit = <T extends { id: string | number }>({
     )
   }
 
-  const handleAddRow = () => {
-    // const id = Date.now()
-    // setRows(prev => [...prev, { ...newRow, id } as T])
-    // setNewRow(addRowTemplate)
-    if (onAddRow) onAddRow()
-  }
+  const handleAddRowClick = useCallback(() => {
+    if (onAddRow) {
+      onAddRow(newRow)
+      setNewRow(addRowTemplate ?? ({} as Omit<T, 'id'>))
+    }
+  }, [onAddRow, newRow, addRowTemplate])
 
   const handleDeleteSelected = () => {
     setRows(prev => prev.filter(row => !selectedIds.includes(row.id)))
@@ -190,7 +191,7 @@ export const TableEdit = <T extends { id: string | number }>({
                   SetStateAction<Omit<{ id: string | number }, 'id'>>
                 >
               }
-              onAddRow={handleAddRow}
+              onClick={handleAddRowClick}
             />
           </div>
         )}
