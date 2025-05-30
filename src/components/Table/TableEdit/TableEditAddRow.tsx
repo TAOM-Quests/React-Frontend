@@ -7,16 +7,16 @@ interface TableColumn<T> {
   render?: RenderFunction<T>
 }
 
-interface TableEditAddRowProps<T extends { id: string | number }> {
+interface TableEditAddRowProps<T extends { id: number }> {
   columns: TableColumn<T>[]
   newRow: Omit<T, 'id'>
   setNewRow: Dispatch<SetStateAction<Omit<T, 'id'>>>
-  onAddRow: () => void
+  onClick?: () => void
 }
 
 export const TableEditAddRow = forwardRef(
-  <T extends { id: string | number }>(
-    { columns, newRow, setNewRow, onAddRow }: TableEditAddRowProps<T>,
+  <T extends { id: number }>(
+    { columns, newRow, setNewRow, onClick }: TableEditAddRowProps<T>,
     ref: Ref<HTMLDivElement>,
   ) => (
     <div
@@ -29,7 +29,7 @@ export const TableEditAddRow = forwardRef(
         <div key={String(col.key)} className="table-edit__add-row-cell">
           {col.render
             ? col.render(
-                { ...newRow, id: 'new' } as T,
+                { ...newRow, id: 1 } as T,
                 (value: any) =>
                   setNewRow(prev => ({ ...prev, [col.key]: value })),
                 false,
@@ -38,7 +38,7 @@ export const TableEditAddRow = forwardRef(
         </div>
       ))}
       <div className="table-edit__add-row-cell table-edit__add-row-cell-button">
-        <Icon onClick={onAddRow} icon="ADD" />
+        <Icon onClick={onClick} icon="ADD" />
       </div>
     </div>
   ),

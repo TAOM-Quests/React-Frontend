@@ -4,20 +4,21 @@ import {
   TableEdit,
 } from '../../../components/Table/TableEdit/TableEdit'
 import Input from '../../../components/UI/Input/Input'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { WordleWord } from '../../../models/wordleWord'
 import { wordle } from '../../../services/api/gamesModule/games/wordle'
 import { Loading } from '../../../components/Loading/Loading'
+import { CustomAlert } from '../../../components/CustomAlert/CustomAlert'
 
 export const WordleWordsEditor = () => {
   const { id: departmentId } = useParams<{ id: string }>()
   const [words, setWords] = useState<WordleWord[]>([])
-  const [newWord, setNewWord] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<number[]>([])
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
 
   useEffect(() => {
-    setIsLoading(true)
-
     const fetchWords = async () => {
       if (!departmentId) return
 
@@ -30,22 +31,32 @@ export const WordleWordsEditor = () => {
     }
 
     fetchWords()
-
-    setIsLoading(false)
   }, [departmentId])
 
   const columns: TableColumn<WordleWord>[] = [
     {
       key: 'word',
       title: 'Слово',
-      render: (row, onChange, isDisabled) => (
-        <Input
-          value={row.word}
-          onChange={e => onChange(e.target.value)}
-          disabled={isDisabled}
-          placeholder="Слово"
-        />
-      ),
+      render: (row, onChange, isDisabled) => {
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          let value = e.target.value.toUpperCase()
+          value = value.replace(/[^А-Я]/g, '')
+          if (value.length > 5) {
+            value = value.slice(0, 5)
+          }
+          onChange(value)
+        }
+
+        return (
+          <Input
+            value={row.word}
+            onChange={handleChange}
+            disabled={isDisabled}
+            placeholder="Слово"
+            maxLength={5}
+          />
+        )
+      },
     },
   ]
 
@@ -53,20 +64,64 @@ export const WordleWordsEditor = () => {
     word: '',
   }
 
-  const handleCreateWord = async () => {
-    if (!newWord.trim() || !departmentId) return
-    setIsLoading(true)
+  const handleCreateWord = useCallback(
+    async (newWordData: Omit<WordleWord, 'id'>) => {
+      const wordToAdd = newWordData.word?.trim().toUpperCase()
+      if (!wordToAdd || !departmentId) return
+
+      const isDuplicate = words.some(w => w.word.toUpperCase() === wordToAdd)
+      if (isDuplicate) {
+        setModalMessage('Такое слово уже существует')
+        setIsModalOpen(true)
+        return
+      }
+
+      try {
+        const addedWord = await wordle.createWord(wordToAdd, +departmentId)
+        setWords(prev => [...prev, addedWord])
+      } catch (e) {
+        console.log(`[Wordle] ${e}`)
+      }
+    },
+    [departmentId, words],
+  )
+
+  const handleDeleteWord = useCallback(
+    async (id: number) => {
+      if (!departmentId) return
+
+      try {
+        await wordle.deleteWord(id)
+        setWords(prev => prev.filter(word => word.id !== id))
+      } catch (e) {
+        console.error(`[Wordle] Ошибка удаления слова: ${e}`)
+        setModalMessage('Ошибка при удалении слова')
+        setIsModalOpen(true)
+      }
+    },
+    [departmentId],
+  )
+
+  const handleDeleteSelectedWords = useCallback(async () => {
+    if (!departmentId || selectedIds.length === 0) return
+
     try {
-      const addedWord = await wordle.createWord(newWord.trim(), +departmentId)
+      // Параллельно удаляем все выбранные слова на сервере
+      await Promise.all(selectedIds.map(id => wordle.deleteWord(id)))
 
-      setWords(prev => [...prev, addedWord])
-      setNewWord('')
+      // Обновляем локальный стейт, удаляя удалённые слова
+      setWords(prev => prev.filter(word => !selectedIds.includes(word.id)))
+
+      // Очищаем выбранные ID
+      setSelectedIds([])
     } catch (e) {
-      console.log(`[Wordle] ${e}`)
+      console.error('[Wordle] Ошибка при удалении слов:', e)
+      setModalMessage('Ошибка при удалении слов')
+      setIsModalOpen(true)
     }
-  }
+  }, [departmentId, selectedIds])
 
-  return !isLoading ? (
+  return (
     <div style={{ padding: 20 }}>
       <TableEdit<WordleWord>
         title="Редактирование игры «5 букв»"
@@ -74,16 +129,17 @@ export const WordleWordsEditor = () => {
         initialRows={words}
         addRowTemplate={addRowTemplate}
         onAddRow={handleCreateWord}
+        onDeleteRow={handleDeleteWord}
+        selectedIds={selectedIds}
+        setSelectedIds={setSelectedIds}
+        onDeleteSelected={handleDeleteSelectedWords}
       />
-
-      <Input
-        value={newWord}
-        onChange={e => setNewWord(e.target.value)}
-        placeholder="Слово"
+      <CustomAlert
+        title="Предупреждение"
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onClose={() => setIsModalOpen(false)}
       />
-      <button onClick={handleCreateWord}>Добавить слово</button>
     </div>
-  ) : (
-    <Loading />
   )
 }

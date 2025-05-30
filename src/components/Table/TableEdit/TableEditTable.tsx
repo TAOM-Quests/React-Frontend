@@ -10,20 +10,20 @@ interface TableColumn<T> {
   switcherOptions?: string[]
 }
 
-interface TableEditTableProps<T extends { id: string | number }> {
+interface TableEditTableProps<T extends { id: number }> {
   columns: TableColumn<T>[]
   filteredRows: T[]
-  selectedIds: (string | number)[]
+  selectedIds: number[]
   isEdit: boolean
   handleSelectAll?: () => void
-  handleSelectRow: (id: string | number) => void
-  handleCellChange: (rowId: string | number, key: keyof T, value: any) => void
-  handleDeleteRow?: (id: string | number) => void
+  handleSelectRow: (id: number) => void
+  handleCellChange: (rowId: number, key: keyof T, value: any) => void
+  handleDeleteRow?: (id: number) => void
   isAllowMultiSelect?: boolean
   isAllowDelete?: boolean
 }
 
-export const TableEditTable = <T extends { id: string | number }>({
+export const TableEditTable = <T extends { id: number }>({
   columns,
   filteredRows,
   selectedIds,
