@@ -19,6 +19,10 @@ import { useNavigate } from 'react-router'
 import { Loading } from '../../../components/Loading/Loading'
 import { UserProfile } from '../../../models/userProfile'
 import { users as usersApi } from '../../../services/api/userModule/users/users'
+import { validateName } from '../../../validation/validateName'
+import { validateDateOfBirth } from '../../../validation/validateDateOfBirth'
+import { validateEmail } from '../../../validation/validateEmail'
+import { validatePhone } from '../../../validation/validatePhone'
 
 const sex = [
   {
@@ -33,10 +37,16 @@ const sex = [
 
 export default function AdminTab() {
   const [users, setUsers] = useState<UserProfile[]>([])
+  const [editedUsers, setEditedUsers] = useState<Record<number, UserProfile>>(
+    {},
+  )
   const [roles, setRoles] = useState<UserRole[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [positions, setPositions] = useState<UserPosition[]>([])
   const [departments, setDepartments] = useState<Department[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [validationErrors, setValidationErrors] = useState<
+    Record<number, Record<string, string>>
+  >({})
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
@@ -68,6 +78,106 @@ export default function AdminTab() {
     fetchFilterData()
   }, [])
 
+  const updateUserProfile = async (user: UserProfile) => {
+    setIsLoading(true)
+    try {
+      const updatedFields = await usersApi.updateProfile({
+        id: user.id,
+        sex: user.sex,
+        email: user.email,
+        lastName: user.lastName,
+        firstName: user.firstName,
+        patronymic: user.patronymic,
+        phoneNumber: user.phoneNumber,
+        imageId: user.image?.id ?? null,
+        birthDate:
+          user.birthDate instanceof Date
+            ? user.birthDate.toISOString()
+            : user.birthDate,
+        // roleId: user.role?.id,
+        // departmentId: user.department?.id,
+        // positionId: user.position?.id,
+      })
+
+      // Обновляем пользователя в массиве users
+      setUsers(prev =>
+        prev.map(u =>
+          u.id === user.id
+            ? {
+                ...u,
+                ...updatedFields,
+                birthDate: updatedFields.birthDate
+                  ? new Date(updatedFields.birthDate)
+                  : null,
+              }
+            : u,
+        ),
+      )
+
+      // Удаляем пользователя из editedUsers
+      setEditedUsers(prev => {
+        const newEdited = { ...prev }
+        delete newEdited[user.id]
+        return newEdited
+      })
+    } catch (error) {
+      console.error('Ошибка при обновлении пользователя:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  const handleRowChange = (
+    rowId: number,
+    key: keyof UserProfile,
+    value: any,
+  ) => {
+    setUsers(prev => {
+      const newUsers = prev.map(user =>
+        user.id === rowId ? { ...user, [key]: value } : user,
+      )
+
+      const updatedUser = newUsers.find(user => user.id === rowId)
+      setEditedUsers(prev => ({
+        ...prev,
+        [rowId]: updatedUser!,
+      }))
+
+      // Валидация
+      let error = ''
+      switch (key) {
+        case 'lastName':
+          error = validateName(value, false).error ?? ''
+          break
+        case 'firstName':
+          error = validateName(value, false).error ?? ''
+          break
+        case 'patronymic':
+          error = validateName(value, false).error ?? ''
+          break
+        case 'birthDate':
+          error = validateDateOfBirth(value, false).error ?? ''
+          break
+        case 'email':
+          error = validateEmail(value, false).error ?? ''
+          break
+        case 'phoneNumber':
+          error = validatePhone(value, false).error ?? ''
+          break
+
+        default:
+          error = ''
+      }
+      setValidationErrors(prev => ({
+        ...prev,
+        [rowId]: {
+          ...(prev[rowId] || {}),
+          [key]: error,
+        },
+      }))
+      return newUsers
+    })
+  }
+
   const columns: TableColumn<UserProfile>[] = [
     {
       key: 'image',
@@ -86,6 +196,7 @@ export default function AdminTab() {
           onChange={e => onChange(e.target.value)}
           disabled={isDisabled}
           placeholder="Фамилия"
+          errorText={validationErrors[row.id]?.lastName}
         />
       ),
     },
@@ -98,6 +209,7 @@ export default function AdminTab() {
           onChange={e => onChange(e.target.value)}
           disabled={isDisabled}
           placeholder="Имя"
+          errorText={validationErrors[row.id]?.firstName}
         />
       ),
     },
@@ -110,6 +222,7 @@ export default function AdminTab() {
           onChange={e => onChange(e.target.value)}
           disabled={isDisabled}
           placeholder="Отчество"
+          errorText={validationErrors[row.id]?.patronymic}
         />
       ),
     },
@@ -192,6 +305,7 @@ export default function AdminTab() {
           onChange={e => onChange(e.target.value)}
           disabled={isDisabled}
           placeholder="Почта"
+          errorText={validationErrors[row.id]?.email}
         />
       ),
     },
@@ -205,6 +319,7 @@ export default function AdminTab() {
           onChange={e => onChange(e.target.value)}
           placeholder="+7 (___) ___-__-__"
           disabled={isDisabled}
+          errorText={validationErrors[row.id]?.phoneNumber}
         />
       ),
     },
@@ -243,17 +358,49 @@ export default function AdminTab() {
           disabled={isDisabled}
           onChange={e => onChange(e.target.value)}
           onDateSelect={date => onChange(date)}
+          errorText={validationErrors[row.id]?.birthDate}
         />
       ),
     },
   ]
 
+  const hasValidationErrors = Object.values(validationErrors).some(rowErrors =>
+    Object.values(rowErrors).some(error => !!error),
+  )
+
+  const handleSaveChanges = async () => {
+    if (Object.keys(editedUsers).length === 0) return
+
+    if (hasValidationErrors) {
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      for (const user of Object.values(editedUsers)) {
+        await updateUserProfile(user)
+      }
+    } catch (error) {
+      console.error('Ошибка при сохранении изменений:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <>
       {!isLoading ? (
-        <div className="adminTab">
-          <TableEdit<UserProfile> columns={columns} initialRows={users} />
-        </div>
+        <>
+          <div className="adminTab">
+            <TableEdit<UserProfile>
+              columns={columns}
+              initialRows={users}
+              onCellChange={handleRowChange}
+              onSaveChanges={handleSaveChanges}
+              hasValidationErrors={hasValidationErrors}
+            />
+          </div>
+        </>
       ) : (
         <Loading />
       )}

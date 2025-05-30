@@ -43,6 +43,9 @@ export interface TableEditProps<T extends { id: number }> {
   selectedIds?: number[]
   setSelectedIds?: React.Dispatch<React.SetStateAction<number[]>>
   onDeleteSelected?: () => void
+  onCellChange?: (rowId: number, key: keyof T, value: any) => void
+  onSaveChanges?: () => void
+  hasValidationErrors?: boolean
 }
 
 export const TableEdit = <T extends { id: number }>({
@@ -58,6 +61,9 @@ export const TableEdit = <T extends { id: number }>({
   selectedIds = [],
   setSelectedIds,
   onDeleteSelected,
+  onCellChange,
+  onSaveChanges,
+  hasValidationErrors,
 }: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
   // const [selectedIds, setSelectedIds] = useState<number[]>([])
@@ -75,15 +81,21 @@ export const TableEdit = <T extends { id: number }>({
 
   useSyncedScroll([tableWrapperRef, addRowRef, filtersRef])
 
-  useEffect(() => {
-    if (selectedIds) setLocalSelectedIds(selectedIds)
-  }, [selectedIds])
+  // useEffect(() => {
+  //   if (selectedIds) setLocalSelectedIds(selectedIds)
+  // }, [selectedIds])
 
   useEffect(() => {
     setRows(initialRows)
   }, [initialRows])
 
-  const toggleEdit = () => {
+  const handleEditButtonClick = () => {
+    if (isEdit) {
+      if (hasValidationErrors) {
+        return
+      }
+      onSaveChanges?.()
+    }
     setIsEdit(prev => !prev)
     if (isEdit) setLocalSelectedIds([])
   }
@@ -92,6 +104,7 @@ export const TableEdit = <T extends { id: number }>({
     setRows(prev =>
       prev.map(row => (row.id === rowId ? { ...row, [key]: value } : row)),
     )
+    if (onCellChange) onCellChange(rowId, key, value)
   }
 
   const handleAddRowClick = useCallback(() => {
@@ -184,7 +197,12 @@ export const TableEdit = <T extends { id: number }>({
 
   return (
     <div className="table-edit">
-      <TableEditHeader isEdit={isEdit} toggleEdit={toggleEdit} title={title} />
+      <TableEditHeader
+        isEdit={isEdit}
+        onEditButtonClick={handleEditButtonClick}
+        title={title}
+        disabled={hasValidationErrors}
+      />
       <TableEditFilters
         columns={columns}
         filters={filters}
