@@ -1,7 +1,5 @@
-import { ContentMatch } from '@tiptap/pm/model'
 import { TextEditor } from '../../TextEditor/TextEditor'
 import Input from '../../UI/Input/Input'
-import './FormHeaderEditor.scss'
 import { ContainerBox } from '../../ContainerBox/ContainerBox'
 
 interface FormHeaderEditorProps {

@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import { Icon } from '../../../../UI/Icon/Icon'
-import './StarRating.scss'
+import './FeedbackStarRating.scss'
 
-interface StarRatingProps {
+interface FeedbackStarRatingProps {
   value: number
   maxRating: number
   onChange: (value: number) => void
 }
 
-export const StarRating = ({ value, maxRating, onChange }: StarRatingProps) => {
+export const FeedbackStarRating = ({
+  value,
+  maxRating,
+  onChange,
+}: FeedbackStarRatingProps) => {
   const [hovered, setHovered] = useState<number | null>(null)
 
   const stars = []
