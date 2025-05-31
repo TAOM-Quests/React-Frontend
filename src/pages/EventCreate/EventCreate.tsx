@@ -270,7 +270,7 @@ export const EventCreate = () => {
       case 0:
         return renderEventTab()
       case 1:
-        return <EventCreateFeedbackTab />
+        return <EventCreateFeedbackTab eventId={eventId ? +eventId : null} />
     }
   }
 

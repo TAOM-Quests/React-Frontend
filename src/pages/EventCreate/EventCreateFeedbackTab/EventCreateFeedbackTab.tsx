@@ -1,17 +1,41 @@
-import { useState } from 'react'
-import { FeedbackForm } from '../../../components/FeedbackForm/FeedbackForm'
-import { FeedbackQuestion } from '../../../components/FeedbackForm/feedbackFormConfig'
+import { Question } from '../../../components/FeedbackForm/feedback'
+import { FeedbackFormEditor } from '../../../components/FeedbackForm/FeedbackFormEditor'
 
-export const EventCreateFeedbackTab = () => {
-  const [customQuestions, setCustomQuestions] = useState<FeedbackQuestion[]>([])
+const baseEventQuestions: Question[] = [
+  {
+    type: 'rating',
+    question: 'Оцените мероприятие по шкале от 1 до 5',
+    answers: ['5'],
+  },
+  {
+    type: 'radio',
+    question: 'Вы довольны организацией?',
+    answers: ['Да', 'Нет', 'Возможно'],
+  },
+  {
+    type: 'scale',
+    question: 'Насколько вероятно, что вы порекомендуете мероприятие?',
+    answers: ['1', 'Не возможно', '10', 'Возможно'],
+  },
+  {
+    type: 'text',
+    question: 'Ваши комментарии',
+  },
+]
 
+interface EventCreateFeedbackTabProps {
+  eventId: number | null
+}
+
+export const EventCreateFeedbackTab = ({
+  eventId,
+}: EventCreateFeedbackTabProps) => {
   return (
     <>
-      <FeedbackForm
-        type="event"
-        title="Обратная связь по мероприятию «Название»"
-        subtitle="Спасибо за участие в мероприятии! Пожалуйста, оставьте свой отзыв, чтобы мы могли улучшить нашу платформу!"
-        sections={[]}
+      <FeedbackFormEditor
+        entity="event"
+        entityId={eventId}
+        baseQuestions={baseEventQuestions}
       />
     </>
   )
