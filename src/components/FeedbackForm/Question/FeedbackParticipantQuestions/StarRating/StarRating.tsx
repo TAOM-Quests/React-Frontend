@@ -1,20 +1,14 @@
-import React, { useState } from 'react'
-import './StarRating.scss'
+import { useState } from 'react'
 import { Icon } from '../../../../UI/Icon/Icon'
+import './StarRating.scss'
 
 interface StarRatingProps {
-  maxRating: number
   value: number
+  maxRating: number
   onChange: (value: number) => void
-  readOnly?: boolean // если true — только отображение, без возможности выбора
 }
 
-export const StarRating: React.FC<StarRatingProps> = ({
-  maxRating,
-  value,
-  onChange,
-  readOnly = false,
-}) => {
+export const StarRating = ({ value, maxRating, onChange }: StarRatingProps) => {
   const [hovered, setHovered] = useState<number | null>(null)
 
   const stars = []
@@ -23,28 +17,20 @@ export const StarRating: React.FC<StarRatingProps> = ({
     const isFilled = hovered !== null ? i <= hovered : i <= value
 
     stars.push(
-      <span
+      <Icon
+        icon={isFilled ? 'STAR_SHADED' : 'STAR'}
         key={i}
-        style={{
-          cursor: readOnly ? 'default' : 'pointer',
-          color: isFilled ? '#ffc107' : '#e4e5e9',
-        }}
-        onClick={() => !readOnly && onChange(i)}
-        onMouseEnter={() => !readOnly && setHovered(i)}
-        onMouseLeave={() => !readOnly && setHovered(null)}
+        colorIcon="subdued"
+        className="star-rating__star"
+        onClick={() => onChange(i)}
+        onMouseEnter={() => setHovered(i)}
+        onMouseLeave={() => setHovered(null)}
         aria-label={`${i} звезда`}
         role="button"
-        tabIndex={readOnly ? -1 : 0}
-        onKeyDown={e => {
-          if (!readOnly && (e.key === 'Enter' || e.key === ' ')) {
-            onChange(i)
-          }
-        }}
-      >
-        <Icon icon="STAR" />
-      </span>,
+        tabIndex={0}
+      />,
     )
   }
 
-  return <div>{stars}</div>
+  return <div className="star-rating">{stars}</div>
 }

@@ -48,6 +48,8 @@ import { LOGOUT } from './logout'
 import { DZEN } from './dzen'
 import { VK } from './vk'
 import { USER } from './user'
+import { STAR } from './star'
+import { STAR_SHADED } from './starShaded'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -100,6 +102,8 @@ export const ICON_MAP = {
   DZEN: DZEN,
   VK: VK,
   USER: USER,
+  STAR: STAR,
+  STAR_SHADED: STAR_SHADED,
 }
 
 type IconName = keyof typeof ICON_MAP
