@@ -1,13 +1,17 @@
 import moment from 'moment'
-import { PlaceOffline, PlaceOnline, ScheduleItem } from '../../../models/event'
-import { events } from '../../../services/api/eventModule/events/events'
 import { Dispatch } from 'react'
-import { EventTag } from '../../../models/eventTag'
-import { EventType } from '../../../models/eventType'
-import { ServerFile } from '../../../models/serverFile'
-import { Employee } from '../../../models/user'
-import { EventStatus } from '../../../models/eventStatus'
-import { Comment } from '../../../models/comment'
+import {
+  ScheduleItem,
+  PlaceOffline,
+  PlaceOnline,
+} from '../../../../models/event'
+import { EventStatus } from '../../../../models/eventStatus'
+import { EventTag } from '../../../../models/eventTag'
+import { EventType } from '../../../../models/eventType'
+import { ServerFile } from '../../../../models/serverFile'
+import { Employee } from '../../../../models/user'
+import { events } from '../../../../services/api/eventModule/events/events'
+import { Comment } from '../../../../models/comment'
 
 export interface FetchEventProps {
   setName: Dispatch<React.SetStateAction<string>>

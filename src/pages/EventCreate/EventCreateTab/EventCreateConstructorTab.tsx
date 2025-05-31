@@ -33,11 +33,11 @@ import './EventCreateConstructorTab.scss'
 import { Loading } from '../../../components/Loading/Loading'
 import { ValidationResult } from '../../../validation/validationResult'
 import { EventStatus } from '../../../models/eventStatus'
-import { EventsCreateInspectorComments } from '../EventsCreateInspectorComments/EventsCreateInspectorComments'
 import { fetchCreateEventData } from './utils/fetchCreateEventData'
 import { fetchEventData } from './utils/fetchEventData'
 import { saveEvent } from './utils/saveEvent'
 import { Comment } from '../../../models/comment'
+import { EventsCreateInspectorComments } from './EventsCreateInspectorComments/EventsCreateInspectorComments'
 
 const additionalInfoItems: string[] = [
   '<p>Доставка в Академию и обратно осуществляется корпоративными автобусами (<a target="_blank" rel="noopener noreferrer nofollow" href="https://taom.academy/schedule">График</a>).</p>',
