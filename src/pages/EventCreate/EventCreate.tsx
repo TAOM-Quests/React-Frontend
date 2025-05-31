@@ -10,16 +10,32 @@ import {
   EventCreateFeedbackTab,
   EventFeedbackFormRef,
 } from './EventCreateFeedbackTab/EventCreateFeedbackTab'
+import { Badge, TypeBadge } from '../../components/UI/Badge/Badge'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { EmployeeAuth } from '../../models/userAuth'
+import { selectAuth } from '../../redux/auth/authSlice'
 
 const TABS = ['Мероприятие', 'Обратная связь']
+const STATUS_ID_DRAFT = 1
+const STATUS_ID_WAIT_INSPECTION = 2
+const STATUS_ID_ON_INSPECTION = 3
+const STATUS_ID_REWORK = 4
+const STATUS_ID_ACCEPTED = 5
+const ROLE_ID_INSPECTOR = 2
 
 export const EventCreate = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const eventId = useParams().id
   const navigate = useNavigate()
+  const user = useAppSelector(selectAuth) as EmployeeAuth
   const eventConstructor = createRef<EventCreateConstructorRef>()
   const feedbackForm = createRef<EventFeedbackFormRef>()
+
+  const saveValidate: boolean =
+    eventConstructor.current?.dateValidator.isValid ||
+    eventConstructor.current?.timeValidator.isValid ||
+    !eventConstructor.current?.hasScheduleErrors
 
   const getTabIndex = () => Number(searchParams.get('tab'))
   const getActiveTab = () => {
@@ -38,6 +54,19 @@ export const EventCreate = () => {
     }
   }
 
+  const statusColor: { [key: number]: TypeBadge } = {
+    1: 'neutral',
+    5: 'success',
+    4: 'critical',
+    3: 'caution',
+    2: 'info',
+    6: 'neutral',
+  }
+
+  const getStatusColor = (statusId: number): TypeBadge => {
+    return statusColor[statusId] ?? 'neutral'
+  }
+
   return (
     <div className="event_create">
       <div className="event_create--header">
@@ -48,6 +77,12 @@ export const EventCreate = () => {
           onClick={() => navigate(-1)}
         />
         <div className="event_create--header__buttons">
+          {eventConstructor.current?.status && (
+            <Badge
+              type={getStatusColor(eventConstructor.current?.status.id)}
+              text={`${eventConstructor.current?.status.name}`}
+            />
+          )}
           <Switcher
             options={TABS}
             onChange={option =>
@@ -55,20 +90,52 @@ export const EventCreate = () => {
             }
             activeOption={TABS[getTabIndex()]}
           />
+          {eventId &&
+            eventConstructor.current?.status?.id === STATUS_ID_DRAFT && (
+              <Button
+                text="На проверку"
+                disabled={saveValidate}
+                onClick={() =>
+                  eventConstructor.current?.changeEventStatus(
+                    STATUS_ID_WAIT_INSPECTION,
+                  )
+                }
+              />
+            )}
+          {eventId &&
+            user.roleId === ROLE_ID_INSPECTOR &&
+            eventConstructor.current?.status?.id ===
+              STATUS_ID_ON_INSPECTION && (
+              <>
+                <Button
+                  text="Отклонить"
+                  onClick={() =>
+                    eventConstructor.current?.changeEventStatus(
+                      STATUS_ID_REWORK,
+                    )
+                  }
+                  disabled={
+                    eventConstructor.current?.comments.filter(
+                      comment => !comment.id,
+                    ).length <= 0
+                  }
+                />
+                <Button
+                  text="Утвердить"
+                  onClick={() =>
+                    eventConstructor.current?.changeEventStatus(
+                      STATUS_ID_ACCEPTED,
+                    )
+                  }
+                />
+              </>
+            )}
           <Button
             text="Сохранить"
-            disabled={
-              !eventConstructor.current?.dateValidator.isValid ||
-              !eventConstructor.current.timeValidator.isValid ||
-              eventConstructor.current.hasScheduleErrors
-            }
+            disabled={!saveValidate}
             onClick={() => {
-              if (
-                eventConstructor.current?.dateValidator.isValid &&
-                eventConstructor.current.timeValidator.isValid &&
-                !eventConstructor.current.hasScheduleErrors
-              ) {
-                eventConstructor.current.saveEvent()
+              if (saveValidate) {
+                eventConstructor.current?.saveEvent()
                 feedbackForm.current?.saveFeedbackForm()
               }
             }}
