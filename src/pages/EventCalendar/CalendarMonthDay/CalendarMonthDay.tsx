@@ -2,7 +2,7 @@ import { useState } from 'react'
 import moment, { Moment } from 'moment'
 import { EventMinimize } from '../../../models/eventMinimize'
 import { Modal } from '../../../components/UI/Modal/Modal'
-import EventMinimizeComponent from '../../../components/EventMinimize/EventMinimize'
+import { EventMinimize as EventMinimizeComponent } from '../../../components/EventMinimize/EventMinimize'
 import { ButtonCalendar } from '../../../components/UI/ButtonCalendar/ButtonCalendar'
 import classNames from 'classnames'
 import { PlaceOffline, PlaceOnline } from '../../../models/event'
@@ -74,7 +74,9 @@ export const CalendarMonthDay = ({ day, events }: CalendarMonthDayProps) => {
                   date={event.date ?? null}
                   status={event.status.name}
                   name={event.name ?? ''}
+                  tags={event.tags?.map(tag => tag.name) ?? []}
                   type={event.type?.name ?? ''}
+                  departmentName={event.department.name}
                   address={offlinePlace?.address ?? ''}
                   platform={onlinePlace?.platform ?? ''}
                   imageUrl={event.image?.url ?? ''}

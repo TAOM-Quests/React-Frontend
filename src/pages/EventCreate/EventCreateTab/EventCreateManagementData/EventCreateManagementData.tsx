@@ -8,6 +8,7 @@ import { NumberInput } from '../../../../components/UI/NumberInput/NumberInput'
 import { EventTag } from '../../../../models/eventTag'
 import { Dispatch, SetStateAction } from 'react'
 import { isArray } from 'lodash'
+import './EventCreateManagementData.scss'
 
 interface EventCreateManagementDataProps {
   name: string

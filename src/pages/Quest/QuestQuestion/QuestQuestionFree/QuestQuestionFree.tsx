@@ -10,14 +10,20 @@ export interface QuestQuestionFreeProps {
   question: QuestQuestionFreeInterface
   isCheckMode: boolean
   setIsAnswerReady: (isAnswerReady: boolean) => void
+  userAnswer?: string
 }
 
 export const QuestQuestionFree = forwardRef(
   (
-    { question, isCheckMode, setIsAnswerReady }: QuestQuestionFreeProps,
+    {
+      question,
+      isCheckMode,
+      setIsAnswerReady,
+      userAnswer: userAnswerProp,
+    }: QuestQuestionFreeProps,
     ref,
   ) => {
-    const [userAnswer, setUserAnswer] = useState<string>('')
+    const [userAnswer, setUserAnswer] = useState<string>(userAnswerProp ?? '')
 
     const checkAnswer = (
       userAnswer: string,

@@ -1,3 +1,4 @@
+import { Comment } from './comment'
 import { Department } from './department'
 import { EventStatus } from './eventStatus'
 import { EventTag } from './eventTag'
@@ -20,6 +21,7 @@ export interface Event {
   executors: Employee[]
   department: Department
   schedule: ScheduleItem[]
+  inspectorComments: Comment[]
   places: (PlaceOnline | PlaceOffline)[]
 }
 

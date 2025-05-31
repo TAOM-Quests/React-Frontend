@@ -20,6 +20,7 @@ export type TypeQuestQuestion = 'primary' | 'correct' | 'wrong' | 'activeAnswer'
 export interface QuestQuestionProps {
   question: QuestQuestionInterface
   setNextQuestion: (userAnswer: any, isCorrectAnswer: boolean) => void
+  isCompleted?: boolean
 }
 
 export interface QuestQuestionRefData {
@@ -29,10 +30,11 @@ export interface QuestQuestionRefData {
 
 export const QuestQuestion = ({
   question,
+  isCompleted,
   setNextQuestion,
 }: QuestQuestionProps) => {
-  const [isCheckMode, setIsCheckMode] = useState<boolean>(false)
   const [isAnswerReady, setIsAnswerReady] = useState<boolean>(false)
+  const [isCheckMode, setIsCheckMode] = useState<boolean>(isCompleted ?? false)
 
   const questionRef = useRef<QuestQuestionRefData>(null)
 
@@ -53,6 +55,7 @@ export const QuestQuestion = ({
           ref={questionRef}
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
+          userAnswer={question.answer.userAnswer}
           question={question as QuestQuestionSingleInterface}
         />
       )}
@@ -61,6 +64,7 @@ export const QuestQuestion = ({
           ref={questionRef}
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
+          userAnswer={question.answer.userAnswer}
           question={question as QuestQuestionMultipleInterface}
         />
       )}
@@ -69,6 +73,7 @@ export const QuestQuestion = ({
           ref={questionRef}
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
+          userAnswer={question.answer.userAnswer}
           question={question as QuestQuestionConnectionInterface}
         />
       )}
@@ -77,6 +82,7 @@ export const QuestQuestion = ({
           ref={questionRef}
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
+          userAnswer={question.answer.userAnswer}
           question={question as QuestQuestionBoxSortingInterface}
         />
       )}
@@ -85,6 +91,7 @@ export const QuestQuestion = ({
           ref={questionRef}
           isCheckMode={isCheckMode}
           setIsAnswerReady={setIsAnswerReady}
+          userAnswer={question.answer.userAnswer}
           question={question as QuestQuestionFreeInterface}
         />
       )}

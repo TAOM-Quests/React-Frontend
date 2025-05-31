@@ -8,6 +8,8 @@ import './EventCalendar.scss'
 import { YearView } from './CalendarView/YearView'
 import { MonthView } from './CalendarView/MonthView'
 
+const STATUS_ID_ACCEPTED = 5
+
 export interface EventsFilter {
   type?: number
   department?: number
@@ -30,6 +32,7 @@ export const EventCalendar = () => {
         const events = await eventsApi.getManyByParams({
           dateStart: selectedPeriod.startOf('month').toDate(),
           dateEnd: selectedPeriod.endOf('month').toDate(),
+          status: STATUS_ID_ACCEPTED,
           ...filter,
         })
 
