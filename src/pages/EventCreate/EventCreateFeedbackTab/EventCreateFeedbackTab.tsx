@@ -1,7 +1,11 @@
-import { Question } from '../../../components/FeedbackForm/feedback'
-import { FeedbackFormEditor } from '../../../components/FeedbackForm/FeedbackFormEditor'
+import { createRef, forwardRef, useImperativeHandle } from 'react'
+import {
+  FeedbackFormEditor,
+  FeedbackFormRef,
+} from '../../../components/FeedbackForm/FeedbackFormEditor'
+import { FeedbackQuestion } from '../../../models/feedbackQuestion'
 
-const baseEventQuestions: Question[] = [
+const baseEventQuestions: FeedbackQuestion[] = [
   {
     type: 'rating',
     question: 'Оцените мероприятие по шкале от 1 до 5',
@@ -23,20 +27,33 @@ const baseEventQuestions: Question[] = [
   },
 ]
 
+export interface EventFeedbackFormRef {
+  saveFeedbackForm: () => void
+}
+
 interface EventCreateFeedbackTabProps {
   eventId: number | null
 }
 
-export const EventCreateFeedbackTab = ({
-  eventId,
-}: EventCreateFeedbackTabProps) => {
-  return (
-    <>
-      <FeedbackFormEditor
-        entity="event"
-        entityId={eventId}
-        baseQuestions={baseEventQuestions}
-      />
-    </>
-  )
-}
+export const EventCreateFeedbackTab = forwardRef(
+  ({ eventId }: EventCreateFeedbackTabProps, ref) => {
+    const feedbackForm = createRef<FeedbackFormRef>()
+
+    useImperativeHandle(
+      ref,
+      (): EventFeedbackFormRef => ({
+        saveFeedbackForm: () => feedbackForm.current?.saveForm(),
+      }),
+    )
+
+    return (
+      <>
+        <FeedbackFormEditor
+          entityName="event"
+          entityId={eventId}
+          baseQuestions={baseEventQuestions}
+        />
+      </>
+    )
+  },
+)

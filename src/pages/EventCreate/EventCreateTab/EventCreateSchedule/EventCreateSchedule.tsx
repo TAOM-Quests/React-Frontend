@@ -7,14 +7,14 @@ import {
   useImperativeHandle,
   useState,
 } from 'react'
-import { Button } from '../../../components/UI/Button/Button'
-import { Icon } from '../../../components/UI/Icon/Icon'
-import Input from '../../../components/UI/Input/Input'
-import { ScheduleItem } from '../../../models/event'
+import { Button } from '../../../../components/UI/Button/Button'
+import { Icon } from '../../../../components/UI/Icon/Icon'
+import Input from '../../../../components/UI/Input/Input'
+import { ScheduleItem } from '../../../../models/event'
 import './EventCreateSchedule.scss'
-import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
+import { TimeInput } from '../../../../components/UI/TimeInput/TimeInput'
 import moment from 'moment'
-import { validateTime } from '../../../validation/validateTime'
+import { validateTime } from '../../../../validation/validateTime'
 
 export interface EventCreateScheduleProps {
   schedule: ScheduleItem[]
