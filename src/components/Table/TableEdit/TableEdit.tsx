@@ -118,7 +118,6 @@ export const TableEdit = <T extends { id: number }>({
     if (onDeleteSelected) {
       onDeleteSelected()
     } else {
-      
       setRows(prev => prev.filter(row => !localSelectedIds.includes(row.id)))
       if (setSelectedIds) {
         setSelectedIds([])
@@ -183,7 +182,9 @@ export const TableEdit = <T extends { id: number }>({
         const cellVal = row[col.key]
 
         if (cellVal && typeof cellVal === 'object' && 'id' in cellVal) {
-          return cellVal.id === filterVal
+          return filterVal && typeof filterVal === 'object' && 'id' in filterVal
+            ? cellVal.id === filterVal.id
+            : false
         }
 
         if (typeof cellVal === 'string' && typeof filterVal === 'string') {
