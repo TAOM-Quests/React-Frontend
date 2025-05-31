@@ -5,8 +5,8 @@ interface FadeInWrapperProps {
   children: ReactNode
   style?: CSSProperties
   className?: string
-  threshold?: number // сколько % элемента должно быть видно, чтобы сработать
-  rootMargin?: string // отступы для области видимости
+  threshold?: number
+  rootMargin?: string
 }
 
 export const FadeInWrapper = ({

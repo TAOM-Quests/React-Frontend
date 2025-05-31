@@ -106,13 +106,13 @@ export const WordleWordsEditor = () => {
     if (!departmentId || selectedIds.length === 0) return
 
     try {
-      // Параллельно удаляем все выбранные слова на сервере
+      
       await Promise.all(selectedIds.map(id => wordle.deleteWord(id)))
 
-      // Обновляем локальный стейт, удаляя удалённые слова
+  
       setWords(prev => prev.filter(word => !selectedIds.includes(word.id)))
 
-      // Очищаем выбранные ID
+     
       setSelectedIds([])
     } catch (e) {
       console.error('[Wordle] Ошибка при удалении слов:', e)

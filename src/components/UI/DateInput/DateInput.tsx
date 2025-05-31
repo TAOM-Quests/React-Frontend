@@ -69,7 +69,7 @@ export const DateInput = ({
     if (val === '') {
       setInputValue('')
       setDate(null)
-      onDateSelect(null) // сообщаем, что дата очищена
+      onDateSelect(null)
       return
     }
 

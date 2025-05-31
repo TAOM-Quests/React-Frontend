@@ -118,7 +118,7 @@ export const TableEdit = <T extends { id: number }>({
     if (onDeleteSelected) {
       onDeleteSelected()
     } else {
-      // Локальное удаление, если внешняя функция не передана
+      
       setRows(prev => prev.filter(row => !localSelectedIds.includes(row.id)))
       if (setSelectedIds) {
         setSelectedIds([])

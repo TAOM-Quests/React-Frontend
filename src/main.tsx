@@ -57,7 +57,7 @@ moment.updateLocale('ru', {
 const container = document.getElementById('root')
 const root = createRoot(container!)
 
-document.documentElement.lang = 'ru' // Добавляем атрибут lang
+document.documentElement.lang = 'ru'
 
 root.render(
   <BrowserRouter>

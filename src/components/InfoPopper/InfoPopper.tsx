@@ -27,7 +27,7 @@ export const InfoPopper = ({
       {
         name: 'offset',
         options: {
-          offset: [0, 8], // сдвиг по X и Y: 8px ниже
+          offset: [0, 8],
         },
       },
       {

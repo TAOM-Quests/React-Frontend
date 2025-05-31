@@ -34,13 +34,11 @@ export const TableEditFilters = <T,>({
     <div className="table-edit__filters-empty" />
     {columns.map(col => {
       if (col.disableFilter) {
-        // Фильтр для этого столбца не отображаем
         return (
           <div key={String(col.key)} className="table-edit__filters-cell" />
         )
       }
       if (!col.render) {
-        // Если render нет, используем дефолтный инпут
         return (
           <div key={String(col.key)} className="table-edit__filters-cell">
             <input
@@ -52,7 +50,6 @@ export const TableEditFilters = <T,>({
         )
       }
 
-      // Формируем объект с одним ключом для передачи в render
       const filterRow = { [col.key]: filters[String(col.key)] } as T
 
       return (

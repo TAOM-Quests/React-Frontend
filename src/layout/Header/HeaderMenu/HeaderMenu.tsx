@@ -71,13 +71,11 @@ export const HeaderMenu = ({ onNavigate }: HeaderMenuProps) => {
   }
 
   return (
-    // <nav className="header__nav">
     <ul className="header__nav-list">
       {menuItems
         .filter(item => !item.onlyEmployee || (user && user.isEmployee))
         .map(item => {
           if (item.submenu) {
-            // Для пунктов с подменю используем ContextMenu
             const options = item.submenu.map(sub => ({
               id: sub.id,
               text: sub.label,
@@ -126,6 +124,5 @@ export const HeaderMenu = ({ onNavigate }: HeaderMenuProps) => {
           }
         })}
     </ul>
-    // </nav>
   )
 }
