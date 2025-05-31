@@ -11,8 +11,6 @@ import './Profile.scss'
 import QuestsTab from './QuestsTab/QuestsTab'
 import AdminTab from './AdminTab/AdminTab'
 
-const isAdmin = true
-
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
 
@@ -52,11 +50,11 @@ export default function Profile() {
 
   const TABS = useMemo(() => {
     const baseTabs = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
-    if (isAdmin) {
+    if (user?.isAdmin) {
       baseTabs.push('Панель управления')
     }
     return baseTabs
-  }, [isAdmin])
+  }, [user?.isAdmin])
 
   const getTabIndex = () => Number(searchParams.get('tab'))
 

@@ -23,6 +23,7 @@ import { validateName } from '../../../validation/validateName'
 import { validateDateOfBirth } from '../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../validation/validateEmail'
 import { validatePhone } from '../../../validation/validatePhone'
+import { validateRolePositionDepartment } from '../../../validation/validateRolePositionDepartment'
 
 const sex = [
   {
@@ -99,7 +100,6 @@ export default function AdminTab() {
             : user.birthDate,
       })
 
-      // Обновляем пользователя в массиве users
       setUsers(prev =>
         prev.map(u =>
           u.id === user.id
@@ -114,7 +114,6 @@ export default function AdminTab() {
         ),
       )
 
-      // Удаляем пользователя из editedUsers
       setEditedUsers(prev => {
         const newEdited = { ...prev }
         delete newEdited[user.id]
@@ -142,7 +141,6 @@ export default function AdminTab() {
         [rowId]: updatedUser!,
       }))
 
-      // Валидация
       let error = ''
       switch (key) {
         case 'lastName':
@@ -167,11 +165,25 @@ export default function AdminTab() {
         default:
           error = ''
       }
+
+      const relatedValidation = validateRolePositionDepartment({
+        roleId: updatedUser?.role?.id ?? null,
+        positionId: updatedUser?.position?.id ?? null,
+        departmentId: updatedUser?.department?.id ?? null,
+      })
+
       setValidationErrors(prev => ({
         ...prev,
         [rowId]: {
           ...(prev[rowId] || {}),
           [key]: error,
+          ...(relatedValidation.isValid
+            ? {}
+            : {
+                role: relatedValidation.error,
+                position: relatedValidation.error,
+                department: relatedValidation.error,
+              }),
         },
       }))
       return newUsers
@@ -244,6 +256,7 @@ export default function AdminTab() {
           disabled={isDisabled}
           placeholder="Роль"
           items={roles.map(role => ({ id: role.id, text: role.name }))}
+          errorText={validationErrors[row.id]?.role}
         />
       ),
     },
@@ -269,6 +282,7 @@ export default function AdminTab() {
             id: department.id,
             text: department.name,
           }))}
+          errorText={validationErrors[row.id]?.department}
         />
       ),
     },
@@ -293,6 +307,7 @@ export default function AdminTab() {
             id: position.id,
             text: position.name,
           }))}
+          errorText={validationErrors[row.id]?.position}
         />
       ),
     },
