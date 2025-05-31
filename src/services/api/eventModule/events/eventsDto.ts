@@ -9,6 +9,7 @@ export interface EventsGetDto {
   limit?: number
   dateEnd?: Date
   offset?: number
+  status?: number
   dateStart?: Date
   executor?: number
   department?: number
@@ -54,4 +55,5 @@ export interface EventUpdateDto {
   schedule?: ScheduleItem[]
   tags?: { id?: number; name: string }[]
   places?: (PlaceOnline | PlaceOffline)[]
+  inspectorComments?: { userId: number; text: string; id?: number }[]
 }

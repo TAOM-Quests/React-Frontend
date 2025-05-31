@@ -5,17 +5,25 @@ import { QuestQuestionButton } from '../QuestQuestionButton/QuestQuestionButton'
 import { getOptionColorType } from '../questQuestionUtils'
 
 export interface QuestQuestionSingleProps {
-  question: QuestQuestionSingleInterface
   isCheckMode: boolean
+  question: QuestQuestionSingleInterface
   setIsAnswerReady: (isAnswerReady: boolean) => void
+  userAnswer?: number
 }
 
 export const QuestQuestionSingle = forwardRef(
   (
-    { question, isCheckMode, setIsAnswerReady }: QuestQuestionSingleProps,
+    {
+      question,
+      isCheckMode,
+      setIsAnswerReady,
+      userAnswer: userAnswerProp,
+    }: QuestQuestionSingleProps,
     ref,
   ) => {
-    const [userAnswer, setUserAnswer] = useState<number | null>(null)
+    const [userAnswer, setUserAnswer] = useState<number | null>(
+      userAnswerProp ?? null,
+    )
 
     useImperativeHandle(
       ref,

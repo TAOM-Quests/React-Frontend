@@ -14,6 +14,10 @@ const DEFAULT_TITLE = 'Обратная связь'
 const DEFAULT_DESCRIPTION =
   'Спасибо за участие! Пожалуйста, оставьте свой отзыв, чтобы мы могли улучшить нашу работу!'
 
+export interface FeedbackFormRef {
+  saveForm: () => void
+}
+
 interface FeedbackFormEditorProps {
   entityName: string
   entityId: number | null

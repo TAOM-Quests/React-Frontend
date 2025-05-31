@@ -14,9 +14,9 @@ export const Switcher = ({
 }: SwitcherProps) => {
   return (
     <div className="switcher">
-      {options.map(option => (
+      {options.map((option, index) => (
         <Option
-          key={option}
+          key={index}
           text={option}
           onSelect={() => onChange(option)}
           className={`switcher__option ${activeOption === option ? 'switcher__option--active' : ''}`}

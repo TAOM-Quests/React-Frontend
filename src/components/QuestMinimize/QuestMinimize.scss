@@ -1,0 +1,139 @@
+.questMinimize {
+  position: relative;
+  width: 300px;
+  min-width: 300px;
+  height: 300px;
+  overflow: hidden;
+  flex-basis: calc((100% - 60px) / 4);
+  background-color: #d9ecf9;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  @media (max-width: 1800px) {
+    flex-basis: calc((100% - 40px) / 3);
+  }
+
+  @media (max-width: 1343px) {
+    flex-basis: calc((100% - 20px) / 2);
+  }
+
+  @media (max-width: 1297px) {
+    flex-basis: calc((100% - 40px) / 1);
+  }
+
+  @media (max-width: 600px) {
+    min-width: auto;
+    width: auto;
+  }
+
+  &__image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &__header,
+  &__info,
+  &__name-wrapper {
+    position: relative;
+    // z-index: 1;
+    color: var(--text_c_secondary);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+    &--right {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    &--tags {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      white-space: nowrap;
+      gap: 4px;
+    }
+
+    &--menu {
+      right: 0;
+      top: 24px;
+    }
+  }
+
+  &__name-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+  }
+
+  &__logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    &--line {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      max-width: 50px;
+      width: 10vw;
+      height: 2px;
+      border-radius: 2px;
+      background-color: var(--bg_c_secondary);
+    }
+  }
+
+  &__name {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: center;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+}

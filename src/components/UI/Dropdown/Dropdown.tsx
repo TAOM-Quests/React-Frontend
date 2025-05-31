@@ -12,7 +12,7 @@ import { ICON_MAP } from '../../../assets/icons'
 import { Tag } from '../Tag/Tag'
 import Input from '../Input/Input'
 import { Checkbox } from '../Checkbox/Checkbox'
-import { generateRandomElementId } from '../../../funcs/generateRandomElementId'
+import { generateRandomElementId } from '../../../utils/generateRandomElementId'
 import './Dropdown.scss'
 import { Button } from '../Button/Button'
 
@@ -221,7 +221,7 @@ export const Dropdown = ({
           })}
         </div>
       )}
-      <div className="input-showAddButton">
+      <div className={`${showAddButton ? 'input-showAddButton' : ''} `}>
         <Input
           ref={inputRef}
           label={label}
@@ -284,7 +284,7 @@ export const Dropdown = ({
               isSelected={
                 isMultiple
                   ? selectedItems.map(item => item.id).includes(item.id)
-                  : selectedItems[0].id === item.id
+                  : selectedItems[0]?.id === item.id
               }
               onSelect={() => handleSelect(item)}
             />

@@ -10,6 +10,8 @@ export const eventFullData: EventMinimizeProps = {
   status: 'Ready',
   platform: 'Zoom',
   imageUrl: '',
+  tags: [],
+  departmentName: 'IT',
 }
 
 export const eventEmptyData: EventMinimizeProps = {
@@ -21,4 +23,6 @@ export const eventEmptyData: EventMinimizeProps = {
   status: 'Ready',
   platform: '',
   imageUrl: '',
+  tags: [],
+  departmentName: 'IT',
 }

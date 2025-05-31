@@ -1,13 +1,14 @@
-import { EventType } from '../../../models/eventType'
-import { Employee } from '../../../models/user'
-import { Input } from '../../../components/UI/Input/Input'
-import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
-import { DateInput } from '../../../components/UI/DateInput/DateInput'
-import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
-import { NumberInput } from '../../../components/UI/NumberInput/NumberInput'
-import { EventTag } from '../../../models/eventTag'
+import { EventType } from '../../../../models/eventType'
+import { Employee } from '../../../../models/user'
+import { Input } from '../../../../components/UI/Input/Input'
+import { Dropdown } from '../../../../components/UI/Dropdown/Dropdown'
+import { DateInput } from '../../../../components/UI/DateInput/DateInput'
+import { TimeInput } from '../../../../components/UI/TimeInput/TimeInput'
+import { NumberInput } from '../../../../components/UI/NumberInput/NumberInput'
+import { EventTag } from '../../../../models/eventTag'
 import { Dispatch, SetStateAction } from 'react'
 import { isArray } from 'lodash'
+import './EventCreateManagementData.scss'
 
 interface EventCreateManagementDataProps {
   name: string

@@ -1,9 +1,21 @@
 import { QuestQuestion } from '../../../../models/questQuestion'
 import { QuestResult } from '../../../../models/questResult'
 
+export interface QuestsGetDto {
+  limit?: number
+  offset?: number
+  tags?: number[]
+  completeBy?: number
+  executor?: number[]
+  department?: number[]
+  isCompleted?: boolean
+}
+
 export interface SaveQuestDto {
   executorId: number
   departmentId: number
+  results: (QuestResult & { questId: number })[]
+  questions: (QuestQuestion & { questId: number })[]
   id?: number
   name?: string
   time?: string
@@ -12,8 +24,6 @@ export interface SaveQuestDto {
   tagsIds?: number[]
   description?: string
   difficultId?: number
-  results?: (QuestResult & { questId: number })[]
-  questions?: (QuestQuestion & { questId: number })[]
 }
 
 export interface SaveQuestCompleteDto {
@@ -48,7 +58,6 @@ interface SaveQuestionComplete {
   type: string
   answer: {
     userAnswer: any
-    isCorrect: boolean
     options?: string[]
   }
   imageId?: number
