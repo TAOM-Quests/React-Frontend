@@ -1,7 +1,7 @@
-import { Question } from '../../../components/FeedbackForm/feedback'
-import { FeedbackFormEditor } from '../../../components/FeedbackForm/FeedbackFormEditor'
+import { FeedbackFormEditor } from '../../../components/FeedbackForm/FeedbackForm/FeedbackForm'
+import { FeedbackQuestion } from '../../../models/feedbackQuestion'
 
-const baseEventQuestions: Question[] = [
+const baseEventQuestions: FeedbackQuestion[] = [
   {
     type: 'rating',
     question: 'Оцените мероприятие по шкале от 1 до 5',
@@ -33,7 +33,7 @@ export const EventCreateFeedbackTab = ({
   return (
     <>
       <FeedbackFormEditor
-        entity="event"
+        entityName="event"
         entityId={eventId}
         baseQuestions={baseEventQuestions}
       />

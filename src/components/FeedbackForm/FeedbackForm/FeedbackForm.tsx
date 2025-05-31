@@ -1,10 +1,14 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { FormHeaderEditor } from './FormHeaderEditor'
-import { QuestionList } from './QuestionList'
-import { FeedbackForm } from '../../models/feedbackForm'
-import { FeedbackQuestion } from '../../models/feedbackQuestion'
-import { Loading } from '../Loading/Loading'
-import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
+import { FormHeaderEditor } from '../FormHeaderEditor/FormHeaderEditor'
+import { QuestionList } from '../QuestionList/QuestionList'
+import { FeedbackForm } from '../../../models/feedbackForm'
+import { FeedbackQuestion } from '../../../models/feedbackQuestion'
+import { Loading } from '../../Loading/Loading'
+import { feedback } from '../../../services/api/commonModule/commonEntities/feedback/feedback'
+import './FeedbackFormEditor.scss'
+import { selectAuth } from '../../../redux/auth/authSlice'
+import { useAppSelector } from '../../../hooks/redux/reduxHooks'
+import { ContainerBox } from '../../ContainerBox/ContainerBox'
 
 const DEFAULT_TITLE = 'Обратная связь'
 const DEFAULT_DESCRIPTION =
@@ -31,8 +35,10 @@ export const FeedbackFormEditor = forwardRef(
     const [description, setDescription] = useState<string>(DEFAULT_DESCRIPTION)
     const [questions, setQuestions] =
       useState<FeedbackQuestion[]>(baseQuestions)
-
     const [isLoading, setIsLoading] = useState(false)
+
+    const user = useAppSelector(selectAuth)
+    const isEmployee = user?.isEmployee
 
     let formId: number | null = null
 
@@ -102,13 +108,26 @@ export const FeedbackFormEditor = forwardRef(
     return (
       <>
         {!isLoading ? (
-          <div>
-            <h2>Редактор формы обратной связи</h2>
-            <FormHeaderEditor
-              title={title}
-              description={description}
-              onChange={handleHeaderChange}
-            />
+          <div className="feedback-form-editor">
+            {isEmployee && (
+              <>
+                <h5 className="heading_5 feedback-form-editor__title">
+                  Редактор формы обратной связи
+                </h5>
+                <FormHeaderEditor
+                  title={title}
+                  description={description}
+                  onChange={handleHeaderChange}
+                />
+              </>
+            )}
+            {isEmployee && (
+              <ContainerBox>
+                <h5 className="heading_5 feedback-form__title">{title}</h5>
+                <p className="body_m_r">{description}</p>
+              </ContainerBox>
+            )}
+
             <QuestionList
               questions={questions}
               onChangeQuestions={setQuestions}
