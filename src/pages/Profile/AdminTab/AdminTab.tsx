@@ -85,18 +85,18 @@ export default function AdminTab() {
         id: user.id,
         sex: user.sex,
         email: user.email,
+        roleId: user.role?.id,
         lastName: user.lastName,
         firstName: user.firstName,
         patronymic: user.patronymic,
         phoneNumber: user.phoneNumber,
+        positionId: user.position?.id,
         imageId: user.image?.id ?? null,
+        departmentId: user.department?.id,
         birthDate:
           user.birthDate instanceof Date
             ? user.birthDate.toISOString()
             : user.birthDate,
-        // roleId: user.role?.id,
-        // departmentId: user.department?.id,
-        // positionId: user.position?.id,
       })
 
       // Обновляем пользователя в массиве users
@@ -236,7 +236,7 @@ export default function AdminTab() {
             .map(role => ({ id: role.id, text: role.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
-              onChange(selectedItem.id)
+              onChange(selectedItem)
             } else {
               onChange(undefined)
             }
@@ -258,7 +258,7 @@ export default function AdminTab() {
             .map(department => ({ id: department.id, text: department.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
-              onChange(selectedItem.id)
+              onChange(selectedItem)
             } else {
               onChange(undefined)
             }
@@ -282,7 +282,7 @@ export default function AdminTab() {
             .map(position => ({ id: position.id, text: position.name }))}
           onChangeDropdown={selectedItem => {
             if (selectedItem && !Array.isArray(selectedItem)) {
-              onChange(selectedItem.id)
+              onChange(selectedItem)
             } else {
               onChange(undefined)
             }

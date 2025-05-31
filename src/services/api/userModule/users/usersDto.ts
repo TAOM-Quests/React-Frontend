@@ -6,11 +6,14 @@ export interface ProfileUpdateDto {
   id: number
   sex?: string
   email?: string
+  roleId?: number
   imageId?: number
   lastName?: string
   firstName?: string
+  positionId?: number
   patronymic?: string
   phoneNumber?: string
+  departmentId?: number
   birthDate?: string | null
 }
 
