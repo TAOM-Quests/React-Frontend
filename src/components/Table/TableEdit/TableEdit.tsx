@@ -70,9 +70,7 @@ export const TableEdit = <T extends { id: number }>({
   const [localSelectedIds, setLocalSelectedIds] =
     useState<number[]>(selectedIds)
   const [isEdit, setIsEdit] = useState(false)
-  const [newRow, setNewRow] = useState<Omit<T, 'id'>>(
-    addRowTemplate ?? ({} as Omit<T, 'id'>),
-  )
+
   const [filters, setFilters] = useState<Record<string, any>>({})
 
   const tableWrapperRef = useRef<HTMLDivElement>(null)
@@ -89,12 +87,16 @@ export const TableEdit = <T extends { id: number }>({
     setRows(initialRows)
   }, [initialRows])
 
+  const clearSelection = () => {
+    setLocalSelectedIds([])
+    setSelectedIds?.([])
+  }
+
   const toggleEditMode = () => {
     if (isEdit) {
       if (hasValidationErrors) return
       onSaveChanges?.()
-      setLocalSelectedIds([])
-      setSelectedIds?.([])
+      clearSelection()
     }
     setIsEdit(prev => !prev)
   }
@@ -106,19 +108,12 @@ export const TableEdit = <T extends { id: number }>({
     onCellChange?.(rowId, key, value)
   }
 
-  const addNewRow = useCallback(() => {
-    if (!onAddRow) return
-    onAddRow(newRow)
-    setNewRow(addRowTemplate ?? ({} as Omit<T, 'id'>))
-  }, [onAddRow, newRow, addRowTemplate])
-
   const deleteSelectedRows = () => {
     if (onDeleteSelected) {
       onDeleteSelected()
     } else {
       setRows(prev => prev.filter(row => !localSelectedIds.includes(row.id)))
-      setSelectedIds?.([])
-      setLocalSelectedIds([])
+      clearSelection()
     }
   }
 
@@ -147,8 +142,7 @@ export const TableEdit = <T extends { id: number }>({
 
   const toggleSelectAll = () => {
     if (localSelectedIds.length === filteredRows.length) {
-      setLocalSelectedIds([])
-      setSelectedIds?.([])
+      clearSelection()
     } else {
       const allIds = filteredRows.map(row => row.id)
       setLocalSelectedIds(allIds)
@@ -237,16 +231,11 @@ export const TableEdit = <T extends { id: number }>({
 
         {isAllowAddRow && (
           <div>
-            <TableEditAddRow
-              ref={addRowRef as RefObject<HTMLDivElement>}
-              columns={columns as TableColumn<{ id: number }>[]}
-              newRow={newRow}
-              setNewRow={
-                setNewRow as Dispatch<
-                  SetStateAction<Omit<{ id: number }, 'id'>>
-                >
-              }
-              onAddClick={addNewRow}
+            <TableEditAddRow<T>
+              ref={addRowRef}
+              columns={columns}
+              addRowTemplate={addRowTemplate}
+              onAddRow={onAddRow}
             />
           </div>
         )}
