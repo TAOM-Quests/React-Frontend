@@ -1,9 +1,9 @@
-import { useAppSelector } from '../../../../../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../../../../../redux/auth/authSlice'
-import { Button } from '../../../../../UI/Button/Button'
-import { Icon } from '../../../../../UI/Icon/Icon'
-import Input from '../../../../../UI/Input/Input'
-import { FeedbackRadio } from '../../../FeedbackParticipantQuestions/FeedbackRadio/FeedbackRadio'
+import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../redux/auth/authSlice'
+import { Button } from '../../../../UI/Button/Button'
+import { Icon } from '../../../../UI/Icon/Icon'
+import Input from '../../../../UI/Input/Input'
+import { FeedbackRadio } from '../../FeedbackParticipantQuestions/FeedbackRadio/FeedbackRadio'
 import './FeedbackRadioQuestion.scss'
 
 interface FeedbackRadioQuestionProps {

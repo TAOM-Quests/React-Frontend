@@ -13,6 +13,7 @@ export interface TextEditorProps {
   onChange: (props: EditorEvents['update']) => void
   placeholder?: string
   label?: string
+  disabled?: boolean
 }
 
 export const TextEditor = ({
@@ -20,6 +21,7 @@ export const TextEditor = ({
   onChange,
   placeholder,
   label,
+  disabled,
 }: TextEditorProps) => {
   const extensions = [
     StarterKit,
@@ -33,6 +35,7 @@ export const TextEditor = ({
   const editor = useEditor({
     extensions,
     content: value,
+    editable: !disabled,
     onUpdate: onChange,
   })
 
@@ -44,10 +47,10 @@ export const TextEditor = ({
 
   return (
     editor && (
-      <div className="editor">
+      <div className={`editor ${disabled ? 'editor--disabled' : ''}`}>
         {label && <label className="label body_s_sb">{label}</label>}
         <div>
-          <MenuBar editor={editor} />
+          {!disabled && <MenuBar editor={editor} />}
           <EditorContent editor={editor} />
         </div>
       </div>

@@ -9,8 +9,10 @@ import { selectAuth } from '../../../redux/auth/authSlice'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { FeedbackRadio } from './FeedbackParticipantQuestions/FeedbackRadio/FeedbackRadio'
 import { FeedbackRatingQuestion } from './FeedbackQuestionTypes/FeedbackRatingQuestion/FeedbackRatingQuestion'
-import { FeedbackRadioQuestion } from './FeedbackQuestionTypes/FeedbackRatingQuestion/FeedbackRadioQuestion/FeedbackRadioQuestion'
+import { FeedbackRadioQuestion } from './FeedbackQuestionTypes/FeedbackRadioQuestion/FeedbackRadioQuestion'
 import { FeedbackScale } from './FeedbackParticipantQuestions/FeedbackScale/FeedbackScale'
+import { FeedbackScaleQuestion } from './FeedbackQuestionTypes/FeedbackScaleQuestion/FeedbackScaleQuestion'
+import { TextEditor } from '../../TextEditor/TextEditor'
 
 interface FeedbackQuestionProps {
   question: FeedbackQuestionType
@@ -30,11 +32,10 @@ export const FeedbackQuestion = ({
     string | null
   >(null)
   const [scaleAnswer, setScaleAnswer] = useState(0)
+  const [textAnswer, setTextAnswer] = useState('')
 
   const user = useAppSelector(selectAuth)
   const isEmployee = user?.isEmployee
-
-  console.log(scaleAnswer)
 
   useEffect(() => {
     setLocalQuestion(question)
@@ -117,88 +118,27 @@ export const FeedbackQuestion = ({
       )}
 
       {localQuestion.type === 'scale' && localQuestion.answers && (
-        <>
-          <div className="question-editor__scale">
-            <div className="question-editor__scale--min">
-              <NumberInput
-                value={localQuestion.answers ? +localQuestion.answers[0] : 0}
-                onChange={val => {
-                  if (val === null) return
-                  if (!localQuestion.answers) return
-                  const updatedAnswers = [...localQuestion.answers]
-                  updatedAnswers[0] = val.toString()
-                  const updated = {
-                    ...localQuestion,
-                    answers: updatedAnswers,
-                  }
-                  setLocalQuestion(updated)
-                  onChange(updated)
-                }}
-                placeholder="Минимальное значение"
-              />
-            </div>
-            <div className="question-editor__scale--min-name">
-              <Input
-                value={localQuestion.answers[1]}
-                onChange={e => {
-                  if (!localQuestion.answers) return
-                  const updatedAnswers = [...localQuestion.answers]
-                  updatedAnswers[1] = e.target.value
-                  const updated = {
-                    ...localQuestion,
-                    answers: updatedAnswers,
-                  }
-                  setLocalQuestion(updated)
-                  onChange(updated)
-                }}
-                placeholder="Подпись для минимального значения"
-              />
-            </div>
-            <div className="question-editor__scale--max">
-              <NumberInput
-                value={localQuestion.answers ? +localQuestion.answers[2] : 0}
-                onChange={val => {
-                  if (val === null) return
-                  if (!localQuestion.answers) return
-                  const updatedAnswers = [...localQuestion.answers]
-                  updatedAnswers[2] = val.toString()
-                  const updated = {
-                    ...localQuestion,
-                    answers: updatedAnswers,
-                  }
-                  setLocalQuestion(updated)
-                  onChange(updated)
-                }}
-                placeholder="Максимальное значение"
-              />
-            </div>
-            <div className="question-editor__scale--max-name">
-              <Input
-                value={localQuestion.answers[3]}
-                onChange={e => {
-                  if (!localQuestion.answers) return
-                  const updatedAnswers = [...localQuestion.answers]
-                  updatedAnswers[3] = e.target.value
-                  const updated = {
-                    ...localQuestion,
-                    answers: updatedAnswers,
-                  }
-                  setLocalQuestion(updated)
-                  onChange(updated)
-                }}
-                placeholder="Подпись для максимального значения"
-              />
-            </div>
-          </div>
-          <FeedbackScale
-            min={localQuestion.answers ? +localQuestion.answers[0] : 0}
-            minLabel={localQuestion.answers[1]}
-            max={localQuestion.answers ? +localQuestion.answers[2] : 0}
-            maxLabel={localQuestion.answers[3]}
-            value={scaleAnswer}
-            onChange={setScaleAnswer}
+        <FeedbackScaleQuestion
+          localQuestion={localQuestion}
+          setLocalQuestion={setLocalQuestion}
+          onChange={onChange}
+          scaleAnswer={scaleAnswer}
+          setScaleAnswer={setScaleAnswer}
+        />
+      )}
+
+      {localQuestion.type === 'text' && localQuestion.answers && (
+        <div className={`${isEmployee && 'question-__text--disabled'}`}>
+          <TextEditor
+            value={textAnswer ?? ''}
+            disabled={!isEmployee}
+            placeholder="Введите ответ"
+            onChange={({ editor }) => {
+              const html = editor.getHTML()
+              setTextAnswer(html)
+            }}
           />
-        </>
+        </div>
       )}
 
       <div className="lineDash"></div>
