@@ -23,7 +23,7 @@ import { validateName } from '../../../validation/validateName'
 import { validateDateOfBirth } from '../../../validation/validateDateOfBirth'
 import { validateEmail } from '../../../validation/validateEmail'
 import { validatePhone } from '../../../validation/validatePhone'
-import { validateRolePositionDepartment } from '../../../validation/validateRolePositionDepartment'
+import { validateRolePositionDepartmentSelected } from '../../../validation/validateRolePositionDepartmentSelected'
 
 const sex = [
   {
@@ -125,6 +125,30 @@ export default function AdminTab() {
       setIsLoading(false)
     }
   }
+
+  const hasValidationErrors = Object.values(validationErrors).some(rowErrors =>
+    Object.values(rowErrors).some(error => !!error),
+  )
+
+  const handleSaveChanges = async () => {
+    if (Object.keys(editedUsers).length === 0) return
+
+    if (hasValidationErrors) {
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      for (const user of Object.values(editedUsers)) {
+        await updateUserProfile(user)
+      }
+    } catch (error) {
+      console.error('Ошибка при сохранении изменений:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const handleRowChange = (
     rowId: number,
     key: keyof UserProfile,
@@ -166,10 +190,18 @@ export default function AdminTab() {
           error = ''
       }
 
-      const relatedValidation = validateRolePositionDepartment({
-        roleId: updatedUser?.role?.id ?? null,
-        positionId: updatedUser?.position?.id ?? null,
-        departmentId: updatedUser?.department?.id ?? null,
+      const roleSelected = updatedUser?.role ? [updatedUser.role] : []
+      const positionSelected = updatedUser?.position
+        ? [updatedUser.position]
+        : []
+      const departmentSelected = updatedUser?.department
+        ? [updatedUser.department]
+        : []
+
+      const relatedValidation = validateRolePositionDepartmentSelected({
+        roleSelected,
+        positionSelected,
+        departmentSelected,
       })
 
       setValidationErrors(prev => ({
@@ -177,13 +209,15 @@ export default function AdminTab() {
         [rowId]: {
           ...(prev[rowId] || {}),
           [key]: error,
-          ...(relatedValidation.isValid
-            ? {}
-            : {
-                role: relatedValidation.error,
-                position: relatedValidation.error,
-                department: relatedValidation.error,
-              }),
+          role: relatedValidation.isValid
+            ? ''
+            : (relatedValidation.error ?? ''),
+          position: relatedValidation.isValid
+            ? ''
+            : (relatedValidation.error ?? ''),
+          department: relatedValidation.isValid
+            ? ''
+            : (relatedValidation.error ?? ''),
         },
       }))
       return newUsers
@@ -250,7 +284,7 @@ export default function AdminTab() {
             if (selectedItem && !Array.isArray(selectedItem)) {
               onChange(selectedItem)
             } else {
-              onChange(undefined)
+              onChange(null)
             }
           }}
           disabled={isDisabled}
@@ -273,7 +307,7 @@ export default function AdminTab() {
             if (selectedItem && !Array.isArray(selectedItem)) {
               onChange(selectedItem)
             } else {
-              onChange(undefined)
+              onChange(null)
             }
           }}
           disabled={isDisabled}
@@ -298,7 +332,7 @@ export default function AdminTab() {
             if (selectedItem && !Array.isArray(selectedItem)) {
               onChange(selectedItem)
             } else {
-              onChange(undefined)
+              onChange(null)
             }
           }}
           disabled={isDisabled}
@@ -350,7 +384,7 @@ export default function AdminTab() {
             if (selectedItem && !Array.isArray(selectedItem)) {
               onChange(selectedItem.text)
             } else {
-              onChange(undefined)
+              onChange(null)
             }
           }}
           disabled={isDisabled}
@@ -378,29 +412,6 @@ export default function AdminTab() {
       ),
     },
   ]
-
-  const hasValidationErrors = Object.values(validationErrors).some(rowErrors =>
-    Object.values(rowErrors).some(error => !!error),
-  )
-
-  const handleSaveChanges = async () => {
-    if (Object.keys(editedUsers).length === 0) return
-
-    if (hasValidationErrors) {
-      return
-    }
-
-    setIsLoading(true)
-    try {
-      for (const user of Object.values(editedUsers)) {
-        await updateUserProfile(user)
-      }
-    } catch (error) {
-      console.error('Ошибка при сохранении изменений:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   return (
     <>
