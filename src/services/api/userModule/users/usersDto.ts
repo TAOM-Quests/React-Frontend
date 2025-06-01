@@ -6,15 +6,15 @@ export interface ProfileUpdateDto {
   id: number
   sex?: string
   email?: string
-  roleId?: number
-  imageId?: number
   lastName?: string
   firstName?: string
-  positionId?: number
   patronymic?: string
   phoneNumber?: string
-  departmentId?: number
+  roleId?: number | null
+  imageId?: number | null
   birthDate?: string | null
+  positionId?: number | null
+  departmentId?: number | null
 }
 
 export type UserEnterDto = UserEnter | string

@@ -86,14 +86,13 @@ export default function AdminTab() {
         id: user.id,
         sex: user.sex,
         email: user.email,
-        roleId: user.role?.id,
         lastName: user.lastName,
         firstName: user.firstName,
         patronymic: user.patronymic,
         phoneNumber: user.phoneNumber,
-        positionId: user.position?.id,
-        imageId: user.image?.id ?? null,
-        departmentId: user.department?.id,
+        roleId: user.role?.id ?? null,
+        positionId: user.position?.id ?? null,
+        departmentId: user.department?.id ?? null,
         birthDate:
           user.birthDate instanceof Date
             ? user.birthDate.toISOString()
