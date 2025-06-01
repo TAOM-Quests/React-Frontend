@@ -1,19 +1,31 @@
-import { uniq } from 'lodash'
-import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
 import { DefaultRawDatum, ResponsivePie } from '@nivo/pie'
-import { useEffect, useState } from 'react'
+import { uniq } from 'lodash'
+import { useState, useEffect } from 'react'
+import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
+import moment from 'moment'
 
-export const EventStatisticSexPie = ({
+export const EventStatisticAgePie = ({
   participants,
 }: EventAnalyticElementProps) => {
   const [data, setData] = useState<DefaultRawDatum[]>([])
 
   useEffect(() => {
-    const sexes = participants.map(participant => participant.sex)
-    const newData: DefaultRawDatum[] = uniq(sexes).map(sex => ({
-      id: sex ?? 'Не указан',
-      value: participants.filter(participant => participant.sex === sex).length,
+    const ages = participants.map(participant =>
+      participant.birthDate
+        ? moment().diff(participant.birthDate, 'years')
+        : null,
+    )
+    const newData: DefaultRawDatum[] = uniq(ages).map(age => ({
+      id: age ?? 'Не указан',
+      value: participants.filter(participant =>
+        age
+          ? moment().diff(participant.birthDate, 'years') === age
+          : participant.birthDate === null,
+      ).length,
     }))
+
+    console.log('Ages', ages)
+    console.log('New data', newData)
 
     setData(newData)
   }, [participants])

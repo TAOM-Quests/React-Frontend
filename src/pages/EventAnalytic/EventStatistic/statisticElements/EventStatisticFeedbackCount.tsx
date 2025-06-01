@@ -1,4 +1,4 @@
-import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
+import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
 import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
 
 export const EventStatisticFeedbackCount = ({
