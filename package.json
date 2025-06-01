@@ -16,6 +16,8 @@
   "dependencies": {
     "@dnd-kit/react": "^0.1.4",
     "@mantine/hooks": "^7.17.4",
+    "@nivo/core": "^0.99.0",
+    "@nivo/pie": "^0.99.0",
     "@popperjs/core": "^2.11.8",
     "@react-input/mask": "^2.0.4",
     "@reduxjs/toolkit": "^2.3.0",
