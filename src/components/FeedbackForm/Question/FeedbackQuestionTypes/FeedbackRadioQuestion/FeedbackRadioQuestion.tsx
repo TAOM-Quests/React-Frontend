@@ -22,7 +22,6 @@ interface FeedbackRadioQuestionProps {
 
 export const FeedbackRadioQuestion = ({
   localQuestion,
-
   selectedRadioAnswer,
   setSelectedRadioAnswer,
   handleAnswersChange,

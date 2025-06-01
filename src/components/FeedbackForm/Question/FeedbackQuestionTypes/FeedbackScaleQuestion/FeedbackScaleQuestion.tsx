@@ -3,6 +3,7 @@ import { selectAuth } from '../../../../../redux/auth/authSlice'
 import Input from '../../../../UI/Input/Input'
 import { NumberInput } from '../../../../UI/NumberInput/NumberInput'
 import { FeedbackScale } from '../../FeedbackParticipantQuestions/FeedbackScale/FeedbackScale'
+import './FeedbackScaleQuestion.scss'
 
 interface FeedbackScaleQuestionProps {
   localQuestion: {

@@ -79,22 +79,25 @@ export const FeedbackQuestion = ({
 
   return (
     <div className="question-editor">
-      <div className="question-editor__question">
-        <Input
-          type="text"
-          label="Вопрос"
-          value={localQuestion.question}
-          onChange={handleQuestionTextChange}
-          placeholder="Введите текст вопроса"
-        />
-        <div className="question-editor__delete">
-          <Icon icon="DELETE" onClick={onDelete} />
+      {isEmployee && (
+        <div className="question-editor__question">
+          <Input
+            type="text"
+            label="Вопрос"
+            value={localQuestion.question}
+            onChange={handleQuestionTextChange}
+            placeholder="Введите текст вопроса"
+          />
+          <div className="question-editor__delete">
+            <Icon icon="DELETE" onClick={onDelete} />
+          </div>
         </div>
-      </div>
-
-      <div>
-        <p className="body_l_m">{localQuestion.question}</p>
-      </div>
+      )}
+      {!isEmployee && (
+        <div>
+          <p className="body_l_m">{localQuestion.question}</p>
+        </div>
+      )}
 
       {localQuestion.type === 'rating' && localQuestion.answers && (
         <FeedbackRatingQuestion
@@ -128,17 +131,19 @@ export const FeedbackQuestion = ({
       )}
 
       {localQuestion.type === 'text' && localQuestion.answers && (
-        <div className={`${isEmployee && 'question-__text--disabled'}`}>
-          <TextEditor
-            value={textAnswer ?? ''}
-            disabled={!isEmployee}
-            placeholder="Введите ответ"
-            onChange={({ editor }) => {
-              const html = editor.getHTML()
-              setTextAnswer(html)
-            }}
-          />
-        </div>
+        <>
+          {isEmployee && <p className="body_m_r">Развернутый ответ...</p>}
+          {!isEmployee && (
+            <TextEditor
+              value={textAnswer ?? ''}
+              placeholder="Введите ответ"
+              onChange={({ editor }) => {
+                const html = editor.getHTML()
+                setTextAnswer(html)
+              }}
+            />
+          )}
+        </>
       )}
 
       <div className="lineDash"></div>

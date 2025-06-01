@@ -2,11 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-
-  &--disabled {
-    opacity: 0.5;
-    cursor: not-allowed !important;
-  }
 }
 .ProseMirror {
   border: var(--border_primary) var(--border_c_primary);
