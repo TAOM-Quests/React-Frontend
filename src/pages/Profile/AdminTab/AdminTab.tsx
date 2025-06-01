@@ -228,9 +228,7 @@ export default function AdminTab() {
       key: 'image',
       title: '',
       disableFilter: true,
-      render: (row, onChange, isDisabled) => (
-        <Avatar src={row.image.url} size="small" />
-      ),
+      render: row => <Avatar src={row.image.url} size="small" />,
     },
     {
       key: 'lastName',

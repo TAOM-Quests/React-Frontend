@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { ContainerBox } from '../../ContainerBox/ContainerBox'
+import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import './CardGame.scss'
 
 interface CardGameProps {

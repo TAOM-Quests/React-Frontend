@@ -7,6 +7,7 @@ import {
   ReactNode,
   useEffect,
   useCallback,
+  RefObject,
 } from 'react'
 import { TableEditHeader } from './TableEditHeader'
 import { TableEditFilters } from './TableEditFilters'
@@ -79,11 +80,11 @@ export const TableEdit = <T extends { id: number }>({
   const addRowRef = useRef<HTMLDivElement>(null)
   const filtersRef = useRef<HTMLDivElement>(null)
 
-  useSyncedScroll([tableWrapperRef, addRowRef, filtersRef])
-
-  // useEffect(() => {
-  //   if (selectedIds) setLocalSelectedIds(selectedIds)
-  // }, [selectedIds])
+  useSyncedScroll([
+    tableWrapperRef as RefObject<HTMLDivElement>,
+    addRowRef as RefObject<HTMLDivElement>,
+    filtersRef as RefObject<HTMLDivElement>,
+  ])
 
   useEffect(() => {
     setRows(initialRows)
@@ -205,13 +206,16 @@ export const TableEdit = <T extends { id: number }>({
         disabled={hasValidationErrors}
       />
       <TableEditFilters
-        columns={columns}
+        ref={filtersRef as RefObject<HTMLDivElement>}
+        columns={columns as TableColumn<{ id: number }>[]}
         filters={filters}
         setFilterValue={setFilterValue}
-        filtersRef={filtersRef}
       />
       <div>
-        <div ref={tableWrapperRef} className="table-edit__table-wrapper">
+        <div
+          ref={tableWrapperRef as RefObject<HTMLDivElement>}
+          className="table-edit__table-wrapper"
+        >
           <TableEditTable
             columns={columns}
             filteredRows={filteredRows}
@@ -235,7 +239,7 @@ export const TableEdit = <T extends { id: number }>({
         {isAllowAddRow && (
           <div>
             <TableEditAddRow
-              ref={addRowRef}
+              ref={addRowRef as RefObject<HTMLDivElement>}
               columns={columns as TableColumn<{ id: number }>[]}
               newRow={newRow}
               setNewRow={

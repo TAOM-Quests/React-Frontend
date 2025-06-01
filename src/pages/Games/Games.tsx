@@ -1,5 +1,5 @@
 import { useParams } from 'react-router'
-import { CardGame } from '../../components/Cards/CardGame/CardGame'
+import { CardGame } from './CardGame/CardGame'
 import './Games.scss'
 
 const gamesExample = [
