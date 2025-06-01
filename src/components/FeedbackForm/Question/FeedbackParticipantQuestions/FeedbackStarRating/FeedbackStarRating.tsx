@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Icon } from '../../../../UI/Icon/Icon'
 import './FeedbackStarRating.scss'
+import { selectAuth } from '../../../../../redux/auth/authSlice'
+import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
 
 interface FeedbackStarRatingProps {
   value: number
@@ -15,6 +17,9 @@ export const FeedbackStarRating = ({
 }: FeedbackStarRatingProps) => {
   const [hovered, setHovered] = useState<number | null>(null)
 
+  const user = useAppSelector(selectAuth)
+  const isEmployee = user?.isEmployee
+
   const stars = []
 
   for (let i = 1; i <= maxRating; i++) {
@@ -27,11 +32,12 @@ export const FeedbackStarRating = ({
         colorIcon="subdued"
         className="star-rating__star"
         onClick={() => onChange(i)}
-        onMouseEnter={() => setHovered(i)}
-        onMouseLeave={() => setHovered(null)}
+        onMouseEnter={isEmployee ? undefined : () => setHovered(i)}
+        onMouseLeave={isEmployee ? undefined : () => setHovered(null)}
         aria-label={`${i} звезда`}
         role="button"
         tabIndex={0}
+        disabled={isEmployee}
       />,
     )
   }

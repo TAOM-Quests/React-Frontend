@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import {
-  FeedbackQuestion,
+  FeedbackQuestion as Question,
   FeedbackQuestionType,
 } from '../../../models/feedbackQuestion'
-import { Question } from '../Question/Question'
+import { FeedbackQuestion } from '../Question/FeedbackQuestion'
 import { OptionProps } from '../../UI/Option/Option'
 import { Button } from '../../UI/Button/Button'
 import { ContextMenu } from '../../ContextMenu/ContextMenu'
@@ -13,8 +13,8 @@ import { selectAuth } from '../../../redux/auth/authSlice'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 
 interface QuestionListProps {
-  questions: FeedbackQuestion[]
-  onChangeQuestions: (questions: FeedbackQuestion[]) => void
+  questions: Question[]
+  onChangeQuestions: (questions: Question[]) => void
 }
 
 const QUESTION_TYPES: FeedbackQuestionType[] = [
@@ -40,10 +40,7 @@ export const QuestionList = ({
   const user = useAppSelector(selectAuth)
   const isEmployee = user?.isEmployee
 
-  const handleQuestionChange = (
-    index: number,
-    updatedQuestion: FeedbackQuestion,
-  ) => {
+  const handleQuestionChange = (index: number, updatedQuestion: Question) => {
     const newQuestions = [...questions]
     newQuestions[index] = updatedQuestion
     onChangeQuestions(newQuestions)
@@ -59,7 +56,7 @@ export const QuestionList = ({
     id: index,
     text: TYPE_TRANSLATIONS[type] || type,
     onSelect: () => {
-      let newQuestion: FeedbackQuestion = {
+      let newQuestion: Question = {
         type,
         question: '',
         answers: [],
@@ -89,7 +86,7 @@ export const QuestionList = ({
         <h3 className="heading_6 questionList__title">Вопросы формы</h3>
       )}
       {questions.map((q, i) => (
-        <Question
+        <FeedbackQuestion
           key={i}
           question={q}
           onChange={updatedQ => handleQuestionChange(i, updatedQ)}

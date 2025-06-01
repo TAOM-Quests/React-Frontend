@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import './FeedbackRadio.scss'
 import { generateRandomElementId } from '../../../../../utils/generateRandomElementId'
+import { selectAuth } from '../../../../../redux/auth/authSlice'
+import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
+import classNames from 'classnames'
 
 interface FeedbackRadioProps {
   answers: string[]
@@ -13,11 +16,19 @@ export const FeedbackRadio = ({
   selectedAnswer,
   onChange,
 }: FeedbackRadioProps) => {
-  const radioGroupName = useMemo(() => generateRandomElementId('question'), [])
+  const user = useAppSelector(selectAuth)
+  const isEmployee = user?.isEmployee
+
+  const radioGroupName = useMemo(
+    () => generateRandomElementId('radio-question'),
+    [],
+  )
 
   return (
     <div
-      className="feedbackRadio"
+      className={classNames('feedbackRadio', {
+        'feedbackRadio--disabled': isEmployee,
+      })}
       role="radiogroup"
       aria-labelledby={`${radioGroupName}-label`}
     >
@@ -35,6 +46,7 @@ export const FeedbackRadio = ({
             checked={selectedAnswer === answer}
             onChange={() => onChange(answer)}
             className="feedbackRadio-input"
+            disabled={isEmployee}
           />
           <span className="feedbackRadio-customRadio" />
           <span className="feedbackRadio-labelText">{answer}</span>
