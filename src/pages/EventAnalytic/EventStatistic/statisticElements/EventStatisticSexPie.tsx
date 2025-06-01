@@ -1,5 +1,5 @@
 import { uniq } from 'lodash'
-import { EventStatisticElementProps } from './eventStatisticElementProps'
+import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
 import { ResponsivePie } from '@nivo/pie'
 import { useEffect, useState } from 'react'
 
@@ -11,7 +11,7 @@ interface PieData {
 
 export const EventStatisticSexPie = ({
   participants,
-}: EventStatisticElementProps) => {
+}: EventAnalyticElementProps) => {
   const [data, setData] = useState<PieData[]>([])
 
   useEffect(() => {

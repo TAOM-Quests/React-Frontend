@@ -1,9 +1,9 @@
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
-import { EventStatisticElementProps } from './eventStatisticElementProps'
+import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
 
 export const EventStatisticFeedbackCount = ({
   feedbackAnswers,
-}: EventStatisticElementProps) => {
+}: EventAnalyticElementProps) => {
   return (
     <ContainerBox>
       <p>Количество обратных связей</p>

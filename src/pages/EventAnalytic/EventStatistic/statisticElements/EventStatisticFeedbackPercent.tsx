@@ -1,10 +1,10 @@
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
-import { EventStatisticElementProps } from './eventStatisticElementProps'
+import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
 
 export const EventStatisticFeedbackPercent = ({
   participants,
   feedbackAnswers,
-}: EventStatisticElementProps) => {
+}: EventAnalyticElementProps) => {
   return (
     <ContainerBox>
       <p>Процент обратной связи</p>
