@@ -17,7 +17,7 @@ import { TableEditAddRow } from './TableEditAddRow'
 import { useSyncedScroll } from '../../../hooks/redux/useSyncedScroll'
 import './TableEdit.scss'
 
-export type RenderFunction<T> = (
+export type CellRenderer<T> = (
   row: T,
   onChange: (value: any) => void,
   isDisabled: boolean,
@@ -26,26 +26,26 @@ export type RenderFunction<T> = (
 export interface TableColumn<T> {
   key: keyof T
   title: string
-  render?: RenderFunction<T>
-  switcherOptions?: string[]
+  cellRender?: CellRenderer<T>
   disableFilter?: boolean
+  switcherOptions?: string[]
 }
 
 export interface TableEditProps<T extends { id: number }> {
   columns: TableColumn<T>[]
   initialRows: T[]
   title?: string
-  addRowTemplate?: Omit<T, 'id'>
   onAddRow?: (newRow: Omit<T, 'id'>) => void
   onDeleteRow?: (id: number) => void
-  isAllowAddRow?: boolean
-  isAllowMultiSelect?: boolean
-  isAllowDelete?: boolean
   selectedIds?: number[]
-  setSelectedIds?: React.Dispatch<React.SetStateAction<number[]>>
-  onDeleteSelected?: () => void
   onCellChange?: (rowId: number, key: keyof T, value: any) => void
   onSaveChanges?: () => void
+  isAllowAddRow?: boolean
+  isAllowDelete?: boolean
+  addRowTemplate?: Omit<T, 'id'>
+  setSelectedIds?: React.Dispatch<React.SetStateAction<number[]>>
+  onDeleteSelected?: () => void
+  isAllowMultiSelect?: boolean
   hasValidationErrors?: boolean
 }
 
@@ -67,12 +67,11 @@ export const TableEdit = <T extends { id: number }>({
   hasValidationErrors,
 }: TableEditProps<T>) => {
   const [rows, setRows] = useState<T[]>(initialRows)
-  // const [selectedIds, setSelectedIds] = useState<number[]>([])
   const [localSelectedIds, setLocalSelectedIds] =
     useState<number[]>(selectedIds)
   const [isEdit, setIsEdit] = useState(false)
   const [newRow, setNewRow] = useState<Omit<T, 'id'>>(
-    addRowTemplate ?? (() => ({}) as Omit<T, 'id'>),
+    addRowTemplate ?? ({} as Omit<T, 'id'>),
   )
   const [filters, setFilters] = useState<Record<string, any>>({})
 
@@ -90,67 +89,63 @@ export const TableEdit = <T extends { id: number }>({
     setRows(initialRows)
   }, [initialRows])
 
-  const handleEditButtonClick = () => {
+  const toggleEditMode = () => {
     if (isEdit) {
-      if (hasValidationErrors) {
-        return
-      }
+      if (hasValidationErrors) return
       onSaveChanges?.()
+      setLocalSelectedIds([])
+      setSelectedIds?.([])
     }
     setIsEdit(prev => !prev)
-    if (isEdit) setLocalSelectedIds([])
   }
 
-  const handleCellChange = (rowId: number, key: keyof T, value: any) => {
+  const onCellValueChange = (rowId: number, key: keyof T, value: any) => {
     setRows(prev =>
       prev.map(row => (row.id === rowId ? { ...row, [key]: value } : row)),
     )
-    if (onCellChange) onCellChange(rowId, key, value)
+    onCellChange?.(rowId, key, value)
   }
 
-  const handleAddRowClick = useCallback(() => {
-    if (onAddRow) {
-      onAddRow(newRow)
-      setNewRow(addRowTemplate ?? ({} as Omit<T, 'id'>))
-    }
+  const addNewRow = useCallback(() => {
+    if (!onAddRow) return
+    onAddRow(newRow)
+    setNewRow(addRowTemplate ?? ({} as Omit<T, 'id'>))
   }, [onAddRow, newRow, addRowTemplate])
 
-  const handleDeleteSelected = () => {
+  const deleteSelectedRows = () => {
     if (onDeleteSelected) {
       onDeleteSelected()
     } else {
       setRows(prev => prev.filter(row => !localSelectedIds.includes(row.id)))
-      if (setSelectedIds) {
-        setSelectedIds([])
-      }
+      setSelectedIds?.([])
+      setLocalSelectedIds([])
     }
   }
 
-  const handleDeleteRow = (id: number) => {
+  const deleteRowById = (id: number) => {
     if (onDeleteRow) {
       onDeleteRow(id)
     } else {
       setRows(prev => prev.filter(row => row.id !== id))
-      if (setSelectedIds) {
-        setSelectedIds(prev => prev.filter(sid => sid !== id))
-      }
+      setSelectedIds?.(prev => prev.filter(sid => sid !== id))
+      setLocalSelectedIds(prev => prev.filter(sid => sid !== id))
     }
   }
 
-  const handleSelectRow = (id: number) => {
-    let newSelected: number[]
+  const toggleRowSelection = (id: number) => {
+    let updatedSelection: number[]
     if (!isAllowMultiSelect) {
-      newSelected = localSelectedIds.includes(id) ? [] : [id]
+      updatedSelection = localSelectedIds.includes(id) ? [] : [id]
     } else {
-      newSelected = localSelectedIds.includes(id)
-        ? localSelectedIds.filter(sid => sid !== id)
+      updatedSelection = localSelectedIds.includes(id)
+        ? localSelectedIds.filter(selectedId => selectedId !== id)
         : [...localSelectedIds, id]
     }
-    setLocalSelectedIds(newSelected)
-    setSelectedIds?.(newSelected)
+    setLocalSelectedIds(updatedSelection)
+    setSelectedIds?.(updatedSelection)
   }
 
-  const handleSelectAll = () => {
+  const toggleSelectAll = () => {
     if (localSelectedIds.length === filteredRows.length) {
       setLocalSelectedIds([])
       setSelectedIds?.([])
@@ -161,7 +156,7 @@ export const TableEdit = <T extends { id: number }>({
     }
   }
 
-  const setFilterValue = (key: keyof T, value: any) => {
+  const updateFilter = (key: keyof T, value: any) => {
     setFilters(prev => ({
       ...prev,
       [String(key)]: value,
@@ -171,28 +166,31 @@ export const TableEdit = <T extends { id: number }>({
   const filteredRows = useMemo(() => {
     return rows.filter(row =>
       columns.every(col => {
-        const filterVal = filters[String(col.key)]
+        const filterValue = filters[String(col.key)]
         if (
-          filterVal === undefined ||
-          filterVal === '' ||
-          filterVal === null ||
-          filterVal === 'Все'
+          filterValue === undefined ||
+          filterValue === '' ||
+          filterValue === null ||
+          filterValue === 'Все'
         )
           return true
 
-        const cellVal = row[col.key]
+        const cellValue = row[col.key]
 
-        if (cellVal && typeof cellVal === 'object' && 'id' in cellVal) {
-          return filterVal && typeof filterVal === 'object' && 'id' in filterVal
-            ? cellVal.id === filterVal.id
-            : false
+        if (cellValue && typeof cellValue === 'object' && 'id' in cellValue) {
+          return (
+            filterValue &&
+            typeof filterValue === 'object' &&
+            'id' in filterValue &&
+            cellValue.id === filterValue.id
+          )
         }
 
-        if (typeof cellVal === 'string' && typeof filterVal === 'string') {
-          return cellVal.toLowerCase().includes(filterVal.toLowerCase())
+        if (typeof cellValue === 'string' && typeof filterValue === 'string') {
+          return cellValue.toLowerCase().includes(filterValue.toLowerCase())
         }
 
-        return cellVal === filterVal
+        return cellValue === filterValue
       }),
     )
   }, [rows, filters, columns])
@@ -200,16 +198,16 @@ export const TableEdit = <T extends { id: number }>({
   return (
     <div className="table-edit">
       <TableEditHeader
-        isEdit={isEdit}
-        onEditButtonClick={handleEditButtonClick}
         title={title}
+        isEdit={isEdit}
         disabled={hasValidationErrors}
+        onEditButtonClick={toggleEditMode}
       />
       <TableEditFilters
         ref={filtersRef as RefObject<HTMLDivElement>}
         columns={columns as TableColumn<{ id: number }>[]}
         filters={filters}
-        setFilterValue={setFilterValue}
+        setFilterValue={updateFilter}
       />
       <div>
         <div
@@ -217,25 +215,26 @@ export const TableEdit = <T extends { id: number }>({
           className="table-edit__table-wrapper"
         >
           <TableEditTable
-            columns={columns}
-            filteredRows={filteredRows}
+            columns={columns as TableColumn<{ id: number }>[]}
+            rows={filteredRows}
             isEdit={isEdit}
-            handleCellChange={handleCellChange}
-            handleDeleteRow={isAllowDelete ? handleDeleteRow : undefined}
+            onCellChange={onCellValueChange}
+            onDeleteRow={isAllowDelete ? deleteRowById : undefined}
             isAllowMultiSelect={isAllowMultiSelect}
             isAllowDelete={isAllowDelete}
             selectedIds={localSelectedIds}
-            handleSelectRow={handleSelectRow}
-            handleSelectAll={isAllowMultiSelect ? handleSelectAll : undefined}
+            onSelectRow={toggleRowSelection}
+            onSelectAll={isAllowMultiSelect ? toggleSelectAll : undefined}
           />
         </div>
         {isEdit && isAllowDelete && localSelectedIds.length > 0 && (
           <TableEditFooter
             totalCount={filteredRows.length}
             selectedCount={localSelectedIds.length}
-            onDelete={handleDeleteSelected}
+            onDelete={deleteSelectedRows}
           />
         )}
+
         {isAllowAddRow && (
           <div>
             <TableEditAddRow
@@ -247,7 +246,7 @@ export const TableEdit = <T extends { id: number }>({
                   SetStateAction<Omit<{ id: number }, 'id'>>
                 >
               }
-              onClick={handleAddRowClick}
+              onAddClick={addNewRow}
             />
           </div>
         )}

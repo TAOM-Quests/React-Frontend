@@ -1,21 +1,6 @@
-import { forwardRef, ReactNode, Ref, RefObject } from 'react'
-import { SwitcherFilter } from './Filters/SwitcherFilter'
-import { DefaultColumnFilter } from './Filters/DefaultColumnFilter'
-
-interface FilterTableEditProps {
-  title: string
-  filterValue: any
-  setFilterValue: (value: any) => void
-}
-
-interface TableColumn<T> {
-  render?: any
-  key: keyof T
-  title: string
-  Filter?: (props: FilterTableEditProps) => ReactNode
-  switcherOptions?: string[]
-  disableFilter?: boolean
-}
+import { forwardRef, Ref } from 'react'
+import { TableColumn } from './TableEdit'
+import Input from '../../UI/Input/Input'
 
 interface TableEditFiltersProps<T> {
   columns: TableColumn<T>[]
@@ -27,40 +12,44 @@ export const TableEditFilters = forwardRef(
   <T extends { id: number }>(
     { columns, filters, setFilterValue }: TableEditFiltersProps<T>,
     ref: Ref<HTMLDivElement>,
-  ) => (
-    <div ref={ref} className="table-edit__filters">
-      <div className="table-edit__filters-empty" />
-      {columns.map(col => {
-        if (col.disableFilter) {
-          return (
-            <div key={String(col.key)} className="table-edit__filters-cell" />
-          )
-        }
-        if (!col.render) {
-          return (
-            <div key={String(col.key)} className="table-edit__filters-cell">
-              <input
-                value={filters[String(col.key)] || ''}
-                onChange={e => setFilterValue(col.key, e.target.value)}
-                placeholder={col.title}
-              />
-            </div>
-          )
-        }
+  ) => {
+    const renderFilterCell = (col: TableColumn<T>) => {
+      const keyStr = String(col.key)
+      if (col.disableFilter) {
+        return <div key={keyStr} className="table-edit__filters-cell" />
+      }
 
-        const filterRow = { [col.key]: filters[String(col.key)] } as T
-
+      if (!col.cellRender) {
         return (
-          <div key={String(col.key)} className="table-edit__filters-cell">
-            {col.render(
-              filterRow,
-              (val: any) => setFilterValue(col.key, val),
-              false,
-            )}
+          <div key={keyStr} className="table-edit__filters-cell">
+            <Input
+              value={filters[keyStr] || ''}
+              onChange={e => setFilterValue(col.key, e.target.value)}
+              placeholder={col.title}
+            />
           </div>
         )
-      })}
-      <div className="table-edit__filters-delete-placeholder" />
-    </div>
-  ),
+      }
+
+      const filterRow = { [col.key]: filters[keyStr] } as T
+
+      return (
+        <div key={keyStr} className="table-edit__filters-cell">
+          {col.cellRender(
+            filterRow,
+            val => setFilterValue(col.key, val),
+            false,
+          )}
+        </div>
+      )
+    }
+
+    return (
+      <div ref={ref} className="table-edit__filters">
+        <div className="table-edit__filters-empty" />
+        {columns.map(renderFilterCell)}
+        <div className="table-edit__filters-delete-placeholder" />
+      </div>
+    )
+  },
 )

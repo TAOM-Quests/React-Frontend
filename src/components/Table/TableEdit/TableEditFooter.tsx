@@ -1,15 +1,15 @@
 import { Button } from '../../UI/Button/Button'
 
 interface TableEditFooterProps {
+  onDelete: () => void
   totalCount: number
   selectedCount: number
-  onDelete: () => void
 }
 
 export const TableEditFooter = ({
+  onDelete,
   totalCount,
   selectedCount,
-  onDelete,
 }: TableEditFooterProps) => (
   <div className="table-edit__footer">
     <span className="body_s_m table-edit__footer-text">

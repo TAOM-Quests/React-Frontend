@@ -228,12 +228,12 @@ export default function AdminTab() {
       key: 'image',
       title: '',
       disableFilter: true,
-      render: row => <Avatar src={row.image.url} size="small" />,
+      cellRender: row => <Avatar src={row.image.url} size="small" />,
     },
     {
       key: 'lastName',
       title: 'Фамилия',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Input
           value={row.lastName}
           onChange={e => onChange(e.target.value)}
@@ -246,7 +246,7 @@ export default function AdminTab() {
     {
       key: 'firstName',
       title: 'Имя',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Input
           value={row.firstName}
           onChange={e => onChange(e.target.value)}
@@ -259,7 +259,7 @@ export default function AdminTab() {
     {
       key: 'patronymic',
       title: 'Отчество',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Input
           value={row.patronymic}
           onChange={e => onChange(e.target.value)}
@@ -272,7 +272,7 @@ export default function AdminTab() {
     {
       key: 'role',
       title: 'Роль',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={roles
             .filter(role => role.id === row.role?.id)
@@ -295,7 +295,7 @@ export default function AdminTab() {
     {
       key: 'department',
       title: 'Кафедра',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={departments
             .filter(department => department.id === row.department?.id)
@@ -320,7 +320,7 @@ export default function AdminTab() {
     {
       key: 'position',
       title: 'Должность',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={positions
             .filter(position => position.id === row.position?.id)
@@ -345,7 +345,7 @@ export default function AdminTab() {
     {
       key: 'email',
       title: 'Почта',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Input
           value={row.email}
           onChange={e => onChange(e.target.value)}
@@ -358,7 +358,7 @@ export default function AdminTab() {
     {
       key: 'phoneNumber',
       title: 'Телефон',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <MaskedInput
           mask="+7 (999) 999-99-99"
           value={row.phoneNumber ?? ''}
@@ -372,7 +372,7 @@ export default function AdminTab() {
     {
       key: 'sex',
       title: 'Пол',
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <Dropdown
           selectedItems={sex
             .filter(s => s.name === row.sex)
@@ -397,7 +397,7 @@ export default function AdminTab() {
       key: 'birthDate',
       title: 'Дата рождения',
       disableFilter: true,
-      render: (row, onChange, isDisabled) => (
+      cellRender: (row, onChange, isDisabled) => (
         <DateInput
           placeholder="Дата рождения"
           value={row.birthDate}

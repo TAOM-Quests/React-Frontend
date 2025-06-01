@@ -1,45 +1,47 @@
 import { Dispatch, forwardRef, Ref, SetStateAction } from 'react'
 import { Icon } from '../../UI/Icon/Icon'
-import { RenderFunction } from './TableEdit'
-
-interface TableColumn<T> {
-  key: keyof T
-  render?: RenderFunction<T>
-}
+import { TableColumn } from './TableEdit'
 
 interface TableEditAddRowProps<T extends { id: number }> {
   columns: TableColumn<T>[]
   newRow: Omit<T, 'id'>
   setNewRow: Dispatch<SetStateAction<Omit<T, 'id'>>>
-  onClick?: () => void
+  onAddClick?: () => void
 }
 
 export const TableEditAddRow = forwardRef(
   <T extends { id: number }>(
-    { columns, newRow, setNewRow, onClick }: TableEditAddRowProps<T>,
+    { columns, newRow, setNewRow, onAddClick }: TableEditAddRowProps<T>,
     ref: Ref<HTMLDivElement>,
-  ) => (
-    <div
-      ref={ref}
-      className="table-edit__add-row"
-      style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}
-    >
-      <div className="table-edit__add-row-empty" />
-      {columns.map(col => (
+  ) => {
+    const renderAddRowCell = (col: TableColumn<T>) => {
+      const rowForRender = { ...newRow, id: 1 } as T
+
+      if (!col.cellRender) return null
+
+      return (
         <div key={String(col.key)} className="table-edit__add-row-cell">
-          {col.render
-            ? col.render(
-                { ...newRow, id: 1 } as T,
-                (value: any) =>
-                  setNewRow(prev => ({ ...prev, [col.key]: value })),
-                false,
-              )
-            : null}
+          {col.cellRender(
+            rowForRender,
+            (value: any) => setNewRow(prev => ({ ...prev, [col.key]: value })),
+            false,
+          )}
         </div>
-      ))}
-      <div className="table-edit__add-row-cell table-edit__add-row-cell-button">
-        <Icon onClick={onClick} icon="ADD" />
+      )
+    }
+
+    return (
+      <div
+        ref={ref}
+        className="table-edit__add-row"
+        style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}
+      >
+        <div className="table-edit__add-row-empty" />
+        {columns.map(renderAddRowCell)}
+        <div className="table-edit__add-row-cell table-edit__add-row-cell-button">
+          <Icon onClick={onAddClick} icon="ADD" />
+        </div>
       </div>
-    </div>
-  ),
+    )
+  },
 )
