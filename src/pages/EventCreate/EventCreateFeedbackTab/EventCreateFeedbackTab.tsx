@@ -49,6 +49,7 @@ export const EventCreateFeedbackTab = forwardRef(
     return (
       <>
         <FeedbackFormEditor
+          ref={feedbackForm}
           entityName="event"
           entityId={eventId}
           baseQuestions={baseEventQuestions}

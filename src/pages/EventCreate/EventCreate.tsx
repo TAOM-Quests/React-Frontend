@@ -41,17 +41,19 @@ export const EventCreate = () => {
   const getActiveTab = () => {
     const tabIndex = getTabIndex()
 
-    switch (tabIndex) {
-      case 0:
-        return <EventCreateConstructorTab ref={eventConstructor} />
-      case 1:
-        return (
+    return (
+      <>
+        <div style={tabIndex === 0 ? {} : { display: 'none' }}>
+          <EventCreateConstructorTab ref={eventConstructor} />
+        </div>
+        <div style={tabIndex === 1 ? {} : { display: 'none' }}>
           <EventCreateFeedbackTab
             ref={feedbackForm}
             eventId={eventId ? +eventId : null}
           />
-        )
-    }
+        </div>
+      </>
+    )
   }
 
   const statusColor: { [key: number]: TypeBadge } = {

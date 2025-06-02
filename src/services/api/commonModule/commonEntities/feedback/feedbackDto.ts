@@ -6,7 +6,7 @@ export interface FeedbackFromGetDto {
 }
 
 export interface FeedbackFromCreateDto {
-  title: string
+  name: string
   entityId: number
   entityName: string
   description: string
@@ -16,7 +16,7 @@ export interface FeedbackFromCreateDto {
 export interface FeedbackFromUpdateDto {
   id: number
   questions: FeedbackQuestion[]
-  title?: string
+  name?: string
   description?: string
 }
 

@@ -85,19 +85,20 @@ export const FeedbackFormEditor = forwardRef(
       setIsLoading(true)
       const savedForm = formId
         ? await feedback.updateForm({
-            title,
+            name: title,
             questions,
             id: formId,
             description,
           })
         : await feedback.createFrom({
-            title,
+            name: title,
             entityId,
             questions,
             entityName,
             description,
           })
       onFormSaved?.(savedForm)
+      await fetchForm()
       setIsLoading(false)
     }
 
