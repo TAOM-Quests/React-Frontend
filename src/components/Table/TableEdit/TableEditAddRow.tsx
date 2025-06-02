@@ -4,8 +4,8 @@ import { TableColumn } from './TableEdit'
 
 interface TableEditAddRowProps<T extends { id: number }> {
   columns: TableColumn<T>[]
-  addRowTemplate?: Omit<T, 'id'>
   onAddRow?: (newRow: Omit<T, 'id'>) => void
+  addRowTemplate?: Omit<T, 'id'>
 }
 
 const TableEditAddRowInner = <T extends { id: number }>(

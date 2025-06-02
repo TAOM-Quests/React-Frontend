@@ -17,14 +17,14 @@ interface TableEditTableProps<T extends { id: number }> {
 }
 
 export const TableEditTable = <T extends { id: number }>({
-  columns,
   rows,
-  selectedIds,
   isEdit,
+  columns,
+  selectedIds,
   onSelectAll,
   onSelectRow,
-  onCellChange,
   onDeleteRow,
+  onCellChange,
   isAllowMultiSelect = false,
   isAllowDelete = false,
 }: TableEditTableProps<T>) => {

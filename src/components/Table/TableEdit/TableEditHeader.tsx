@@ -10,8 +10,8 @@ interface TableEditHeaderProps {
 export const TableEditHeader = ({
   title,
   isEdit,
-  onEditButtonClick,
   disabled,
+  onEditButtonClick,
 }: TableEditHeaderProps) => (
   <div className="table-edit__header">
     <h6 className="heading_6">{title}</h6>

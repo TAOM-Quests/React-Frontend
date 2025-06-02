@@ -1,11 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useRef,
-  ReactNode,
-  useEffect,
-  RefObject,
-} from 'react'
+import { useState, useRef, ReactNode, useEffect, RefObject } from 'react'
 import { TableEditHeader } from './TableEditHeader'
 import { TableEditFilters } from './TableEditFilters'
 import { TableEditTable } from './TableEditTable'
@@ -157,33 +150,31 @@ export const TableEdit = <T extends { id: number }>({
       />
       <TableEditFilters<T>
         ref={filtersRef}
-        columns={columns}
         rows={rows}
+        columns={columns}
         onFilterChange={setFilteredRows}
       />
       <div>
-        <div
-          ref={tableWrapperRef as RefObject<HTMLDivElement>}
-          className="table-edit__table-wrapper"
-        >
-          <TableEditTable
-            columns={columns as TableColumn<{ id: number }>[]}
+        <div ref={tableWrapperRef} className="table-edit__table-wrapper">
+          <TableEditTable<T>
             rows={filteredRows}
             isEdit={isEdit}
-            onCellChange={onCellValueChange}
-            onDeleteRow={isAllowDelete ? deleteRowById : undefined}
-            isAllowMultiSelect={isAllowMultiSelect}
-            isAllowDelete={isAllowDelete}
+            columns={columns}
             selectedIds={localSelectedIds}
+            onDeleteRow={isAllowDelete ? deleteRowById : undefined}
             onSelectRow={toggleRowSelection}
             onSelectAll={isAllowMultiSelect ? toggleSelectAll : undefined}
+            onCellChange={onCellValueChange}
+            isAllowDelete={isAllowDelete}
+            isAllowMultiSelect={isAllowMultiSelect}
           />
         </div>
+
         {isEdit && isAllowDelete && localSelectedIds.length > 0 && (
           <TableEditFooter
+            onDelete={deleteSelectedRows}
             totalCount={filteredRows.length}
             selectedCount={localSelectedIds.length}
-            onDelete={deleteSelectedRows}
           />
         )}
 
@@ -192,8 +183,8 @@ export const TableEdit = <T extends { id: number }>({
             <TableEditAddRow<T>
               ref={addRowRef}
               columns={columns}
-              addRowTemplate={addRowTemplate}
               onAddRow={onAddRow}
+              addRowTemplate={addRowTemplate}
             />
           </div>
         )}
