@@ -12,6 +12,7 @@ import { Loading } from '../../components/Loading/Loading'
 import { EventMinimize } from '../../models/eventMinimize'
 import { Event } from '../../models/event'
 import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
+import './EventAnalytic.scss'
 
 const TABS = ['Мероприятие', 'Участники', 'Обратная связь']
 
@@ -57,13 +58,16 @@ export const EventAnalytic = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
-          {event?.name}
-          <Switcher
-            options={TABS}
-            activeOption={activeTab}
-            onChange={setActiveTab}
-          />
+        <div className="eventAnalytic">
+          <div className='eventAnalytic__header'>
+            <h6 className="heading_6">{event?.name}</h6>
+            <Switcher
+              options={TABS}
+              activeOption={activeTab}
+              onChange={setActiveTab}
+            />
+          </div>
+
           {activeTab === 'Мероприятие' && (
             <EventStatistic {...analyticElementParams} />
           )}
