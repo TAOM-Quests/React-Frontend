@@ -2,7 +2,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router'
 import {
   EventCreateConstructorRef,
   EventCreateConstructorTab,
-} from './EventCreateTab/EventCreateConstructorTab'
+} from './EventCreateConstructorTab/EventCreateConstructorTab'
 import { createRef } from 'react'
 import { Button } from '../../components/UI/Button/Button'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
