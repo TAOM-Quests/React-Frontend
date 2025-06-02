@@ -4,7 +4,7 @@ import { TableEditFilters } from './TableEditFilters'
 import { TableEditTable } from './TableEditTable'
 import { TableEditFooter } from './TableEditFooter'
 import { TableEditAddRow } from './TableEditAddRow'
-import { useSyncedScroll } from '../../../hooks/redux/useSyncedScroll'
+import { useSyncedScroll } from '../../../hooks/useSyncedScroll'
 import './TableEdit.scss'
 
 export type CellRenderer<T> = (
