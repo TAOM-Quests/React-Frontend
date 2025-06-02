@@ -2,11 +2,8 @@ import {
   useState,
   useMemo,
   useRef,
-  Dispatch,
-  SetStateAction,
   ReactNode,
   useEffect,
-  useCallback,
   RefObject,
 } from 'react'
 import { TableEditHeader } from './TableEditHeader'
@@ -70,8 +67,7 @@ export const TableEdit = <T extends { id: number }>({
   const [localSelectedIds, setLocalSelectedIds] =
     useState<number[]>(selectedIds)
   const [isEdit, setIsEdit] = useState(false)
-
-  const [filters, setFilters] = useState<Record<string, any>>({})
+  const [filteredRows, setFilteredRows] = useState<T[]>(initialRows)
 
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const addRowRef = useRef<HTMLDivElement>(null)
@@ -85,6 +81,7 @@ export const TableEdit = <T extends { id: number }>({
 
   useEffect(() => {
     setRows(initialRows)
+    setFilteredRows(initialRows)
   }, [initialRows])
 
   const clearSelection = () => {
@@ -150,45 +147,6 @@ export const TableEdit = <T extends { id: number }>({
     }
   }
 
-  const updateFilter = (key: keyof T, value: any) => {
-    setFilters(prev => ({
-      ...prev,
-      [String(key)]: value,
-    }))
-  }
-
-  const filteredRows = useMemo(() => {
-    return rows.filter(row =>
-      columns.every(col => {
-        const filterValue = filters[String(col.key)]
-        if (
-          filterValue === undefined ||
-          filterValue === '' ||
-          filterValue === null ||
-          filterValue === 'Все'
-        )
-          return true
-
-        const cellValue = row[col.key]
-
-        if (cellValue && typeof cellValue === 'object' && 'id' in cellValue) {
-          return (
-            filterValue &&
-            typeof filterValue === 'object' &&
-            'id' in filterValue &&
-            cellValue.id === filterValue.id
-          )
-        }
-
-        if (typeof cellValue === 'string' && typeof filterValue === 'string') {
-          return cellValue.toLowerCase().includes(filterValue.toLowerCase())
-        }
-
-        return cellValue === filterValue
-      }),
-    )
-  }, [rows, filters, columns])
-
   return (
     <div className="table-edit">
       <TableEditHeader
@@ -197,11 +155,11 @@ export const TableEdit = <T extends { id: number }>({
         disabled={hasValidationErrors}
         onEditButtonClick={toggleEditMode}
       />
-      <TableEditFilters
-        ref={filtersRef as RefObject<HTMLDivElement>}
-        columns={columns as TableColumn<{ id: number }>[]}
-        filters={filters}
-        setFilterValue={updateFilter}
+      <TableEditFilters<T>
+        ref={filtersRef}
+        columns={columns}
+        rows={rows}
+        onFilterChange={setFilteredRows}
       />
       <div>
         <div
