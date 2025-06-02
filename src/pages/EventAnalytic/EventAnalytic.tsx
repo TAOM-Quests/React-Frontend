@@ -59,7 +59,7 @@ export const EventAnalytic = () => {
     <>
       {!isLoading ? (
         <div className="eventAnalytic">
-          <div className='eventAnalytic__header'>
+          <div className="eventAnalytic__header">
             <h6 className="heading_6">{event?.name}</h6>
             <Switcher
               options={TABS}
@@ -69,6 +69,12 @@ export const EventAnalytic = () => {
           </div>
 
           {activeTab === 'Мероприятие' && (
+            <EventStatistic {...analyticElementParams} />
+          )}
+          {activeTab === 'Участники' && (
+            <EventStatistic {...analyticElementParams} />
+          )}
+          {activeTab === 'Обратная связь' && (
             <EventStatistic {...analyticElementParams} />
           )}
         </div>
