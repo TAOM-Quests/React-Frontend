@@ -6,12 +6,15 @@ import {
   KeyboardEvent,
   InputHTMLAttributes,
   ReactNode,
+  useLayoutEffect,
 } from 'react'
 import './DateInput.scss'
 import { ButtonCalendar } from '../ButtonCalendar/ButtonCalendar'
 import { Button } from '../Button/Button'
 import Input from '../Input/Input'
 import moment, { Moment } from 'moment'
+import { createPortal } from 'react-dom'
+import { createPopper } from '@popperjs/core'
 
 const DATE_FORMAT = 'DD.MM.YYYY'
 
@@ -43,6 +46,8 @@ export const DateInput = ({
   const [view, setView] = useState<'days' | 'months' | 'years'>('days')
   const [currentDate, setCurrentDate] = useState<Moment>(date || moment())
   const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
+
+  const inputRef = useRef<HTMLInputElement>(null)
   const calendarRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<SVGSVGElement>(null)
 
@@ -60,7 +65,16 @@ export const DateInput = ({
   }, [value])
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 8)
+    const val = e.target.value
+    if (val === '') {
+      setInputValue('')
+      setDate(null)
+      onDateSelect(null)
+      return
+    }
+
+    const value = val.replace(/[^0-9]/g, '').slice(0, 8)
+
     let formattedValue = ''
     if (value.length > 2) {
       formattedValue = value.slice(0, 2) + '.' + value.slice(2)
@@ -156,6 +170,28 @@ export const DateInput = ({
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
+  useLayoutEffect(() => {
+    if (!isOpen) return
+
+    if (inputRef.current && calendarRef.current) {
+      const popperInstance = createPopper(
+        inputRef.current,
+        calendarRef.current,
+        {
+          placement: 'bottom-start',
+          modifiers: [
+            { name: 'offset', options: { offset: [0, 4] } },
+            { name: 'preventOverflow', options: { boundary: 'viewport' } },
+          ],
+        },
+      )
+
+      return () => {
+        popperInstance.destroy()
+      }
     }
   }, [isOpen])
 
@@ -255,6 +291,11 @@ export const DateInput = ({
 
   const handleBlur = () => {
     setErrorFocus(true)
+    if (inputValue.trim() === '') {
+      setDate(null)
+      onDateSelect(null)
+      return
+    }
     const parsed = moment.utc(inputValue, DATE_FORMAT, true)
     if (parsed.isValid()) {
       setDate(parsed)
@@ -270,9 +311,16 @@ export const DateInput = ({
     setErrorFocus(false)
   }
 
+  const handleClearSelection = () => {
+    setDate(null)
+    setInputValue('')
+    setCurrentDate(moment())
+    onDateSelect(null)
+  }
+
   let calendarContent: ReactNode = <></>
   if (isOpen) {
-    calendarContent = (
+    calendarContent = createPortal(
       <div className="calendar" ref={calendarRef}>
         <div className="calendar--header">
           <Button
@@ -317,13 +365,15 @@ export const DateInput = ({
         {view === 'years' && (
           <div className="calendar--grid_years">{renderYears()}</div>
         )}
-      </div>
+      </div>,
+      document.body,
     )
   }
 
   return (
     <div className="calendar-input-container">
       <Input
+        ref={inputRef}
         type="text"
         label={label}
         value={inputValue}
@@ -339,6 +389,7 @@ export const DateInput = ({
         iconRefAfter={iconRef}
         errorText={errorFocus ? errorText : null}
         helperText={helperText}
+        onClearSelection={handleClearSelection}
         {...props}
       />
       {calendarContent}

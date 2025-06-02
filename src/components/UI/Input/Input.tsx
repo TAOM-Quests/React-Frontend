@@ -7,11 +7,23 @@ import {
   InputHTMLAttributes,
   ReactNode,
   useEffect,
-  useImperativeHandle,
   useRef,
   useState,
 } from 'react'
 import React from 'react'
+
+function useMergedRefs<T>(
+  ...refs: (React.Ref<T> | undefined)[]
+): React.RefCallback<T> {
+  return value => {
+    refs.forEach(ref => {
+      if (!ref) return
+      if (typeof ref === 'function') ref(value)
+      else if ('current' in ref)
+        (ref as React.MutableRefObject<T | null>).current = value
+    })
+  }
+}
 
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
@@ -58,7 +70,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [isInputVisible, setIsInputVisible] = useState(true)
 
     const internalInputRef = useRef<HTMLInputElement>(null)
-    const combinedRef = inputRef || ref
+    const mergedRef = useMergedRefs(internalInputRef, ref)
+
     const [errorFocus, setErrorFocus] = useState<boolean | null>(null)
 
     useEffect(() => {
@@ -69,15 +82,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           typeof value === 'number',
       )
     }, [value])
-
-    useImperativeHandle(
-      combinedRef,
-      () =>
-        ({
-          focus: () => internalInputRef.current?.focus(),
-          blur: () => internalInputRef.current?.blur(),
-        }) as HTMLInputElement,
-    )
 
     const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation()
@@ -120,7 +124,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </div>
 
           <input
-            ref={internalInputRef}
+            ref={mergedRef}
             className={classNames(
               'body_m_r',
               'input',
@@ -169,6 +173,23 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 colorIcon="secondary"
               />
             )}
+          {!onClearSelection &&
+            value &&
+            (typeof value === 'string' || typeof value === 'number') && (
+              <Icon
+                icon="CROSS"
+                disabled={disabled}
+                onClick={() => {
+                  const event = {
+                    target: { value: '' },
+                  } as React.ChangeEvent<HTMLInputElement>
+                  onChange?.(event)
+                  internalInputRef.current?.focus()
+                }}
+                colorIcon="secondary"
+              />
+            )}
+
           {iconAfter && (
             <Icon
               iconRef={iconRefAfter}
