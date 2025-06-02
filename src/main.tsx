@@ -19,9 +19,6 @@ import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
-import { WordleWordsEditor } from './pages/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
-import { Games } from './pages/Games/Games.tsx'
-import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -72,13 +69,6 @@ root.render(
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
 
-              <Route path="games/:id" element={<Games />} />
-              <Route path="games/wordle/:id" element={<Wordle />} />
-              <Route
-                path="games/wordle/edit/:id"
-                element={<WordleWordsEditor />}
-              />
-
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
@@ -92,7 +82,6 @@ root.render(
           </ScrollToTop>
           <Footer />
         </main>
-        {/* <WordleWordsEditor /> */}
       </div>
     </Provider>
   </BrowserRouter>,
