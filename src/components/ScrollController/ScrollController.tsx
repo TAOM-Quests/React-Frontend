@@ -17,7 +17,7 @@ export const ScrollController = ({
 
     const { scrollTop, scrollHeight, clientHeight } = container.current
 
-    //Конец скролла
+    
     if (Math.abs(scrollHeight - scrollTop - clientHeight) <= 1) {
       onEndScroll && onEndScroll()
     }

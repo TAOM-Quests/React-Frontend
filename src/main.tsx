@@ -55,7 +55,7 @@ moment.updateLocale('ru', {
 const container = document.getElementById('root')
 const root = createRoot(container!)
 
-document.documentElement.lang = 'ru' // Добавляем атрибут lang
+document.documentElement.lang = 'ru'
 
 root.render(
   <BrowserRouter>
@@ -69,11 +69,13 @@ root.render(
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
+
               <Route path="event/:id" element={<Event />} />
               <Route path="event/:id/statistic" element={<EventAnalytic />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
               <Route path="event/calendar" element={<EventCalendar />} />
+
               <Route path="quest/:id" element={<Quest />} />
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />

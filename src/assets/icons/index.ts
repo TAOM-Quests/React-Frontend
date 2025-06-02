@@ -48,6 +48,7 @@ import { LOGOUT } from './logout'
 import { DZEN } from './dzen'
 import { VK } from './vk'
 import { USER } from './user'
+import { BACKSPACE } from './backspace'
 import { STAR } from './star'
 import { STAR_SHADED } from './starShaded'
 
@@ -102,6 +103,7 @@ export const ICON_MAP = {
   DZEN: DZEN,
   VK: VK,
   USER: USER,
+  BACKSPACE: BACKSPACE,
   STAR: STAR,
   STAR_SHADED: STAR_SHADED,
 }
