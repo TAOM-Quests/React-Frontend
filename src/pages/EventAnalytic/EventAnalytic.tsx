@@ -13,6 +13,7 @@ import { EventMinimize } from '../../models/eventMinimize'
 import { Event } from '../../models/event'
 import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
 import './EventAnalytic.scss'
+import { EventParticipants } from './EventParticipants/EventParticipants'
 
 const TABS = ['Мероприятие', 'Участники', 'Обратная связь']
 
@@ -72,7 +73,7 @@ export const EventAnalytic = () => {
             <EventStatistic {...analyticElementParams} />
           )}
           {activeTab === 'Участники' && (
-            <EventStatistic {...analyticElementParams} />
+            <EventParticipants {...analyticElementParams} />
           )}
           {activeTab === 'Обратная связь' && (
             <EventStatistic {...analyticElementParams} />
