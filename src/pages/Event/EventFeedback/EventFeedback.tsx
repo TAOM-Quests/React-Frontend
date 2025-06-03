@@ -54,7 +54,7 @@ export const EventFeedback = ({ eventId }: EventFeedbackProps) => {
       {!isLoading ? (
         <>
           {!isAnswered && (
-            <div>
+            <div className="eventFeedback">
               <FeedbackFormEditor
                 ref={feedbackForm}
                 entityId={eventId}

@@ -157,7 +157,7 @@ export const FeedbackFormEditor = forwardRef(
                 />
               </>
             )}
-            {isEmployee && (
+            {!isEmployee && (
               <ContainerBox>
                 <h5 className="heading_5 feedback-form__title">{title}</h5>
                 <p className="body_m_r">{description}</p>

@@ -21,6 +21,7 @@
     &-item {
       display: flex;
       flex-direction: row;
+      align-items: center;
       gap: 10px;
 
       .inputWrapper {
@@ -35,6 +36,64 @@
         height: 44px;
         min-height: 44px;
       }
+
+      .feedbackRadio {
+        &-label {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          cursor: pointer;
+          user-select: none;
+          position: relative;
+          color: var(--text_c_primary);
+        }
+
+        &-input {
+          position: absolute;
+          opacity: 0;
+          width: 0;
+          height: 0;
+          margin: 0;
+        }
+
+        &-customRadio {
+          width: 20px;
+          min-width: 20px;
+          max-width: 20px;
+          min-height: 20px;
+          max-height: 20px;
+          height: 20px;
+          border: var(--border_primary) var(--border_c_primary);
+          border-radius: 50%;
+          transition: border-color 0.2s ease;
+          position: relative;
+          flex-shrink: 0;
+        }
+      }
     }
   }
+}
+
+.feedbackRadio-input:checked + .feedbackRadio-customRadio::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--bg_c_accent);
+  border-radius: 50%;
+}
+
+.feedbackRadio-input:checked + .feedbackRadio-customRadio {
+  border-color: var(--border_c_accent);
+}
+
+.feedbackRadio-label:hover .feedbackRadio-customRadio {
+  background-color: var(--bg_c_secondary_hover);
+}
+
+.feedbackRadio-labelText {
+  margin-left: 8px;
+  user-select: none;
 }

@@ -108,8 +108,10 @@ export const Event = () => {
               .map(participant => participant.id)
               .includes(user.id) &&
             moment() > moment(event.date).endOf('day') && (
-              <div>
-                <EventFeedback eventId={+eventId} />
+              <div className="event-feedback">
+                <FadeInWrapper>
+                  <EventFeedback eventId={+eventId} />
+                </FadeInWrapper>
               </div>
             )}
         </div>

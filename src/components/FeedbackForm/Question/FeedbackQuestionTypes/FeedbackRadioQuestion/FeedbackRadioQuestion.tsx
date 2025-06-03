@@ -39,7 +39,10 @@ export const FeedbackRadioQuestion = ({
     <div className="question-editor__radio">
       {
         <div className="question-editor__radio-editor">
-          <label className="body_s_sb label">Варианты ответов</label>
+          {isEmployee && (
+            <label className="body_s_sb label">Варианты ответов</label>
+          )}
+
           <div
             className={`question-editor__radio-answers
               ${classNames('feedbackRadio', {
@@ -51,27 +54,45 @@ export const FeedbackRadioQuestion = ({
           >
             {localQuestion?.answers?.map((answer, i) => (
               <div key={i} className="question-editor__radio-answers-item">
-                <input
-                  type="radio"
-                  id={`${radioGroupName}-${i}`}
-                  name={radioGroupName}
-                  value={answer}
-                  checked={selectedRadioAnswer === answer}
-                  onChange={() => setSelectedRadioAnswer(answer)}
-                  className="feedbackRadio-input"
-                  disabled={isEmployee}
-                />
-                <Input
-                  type="text"
-                  value={answer}
-                  onChange={e => handleAnswersChange(e, i)}
-                  placeholder="Вариант ответа"
-                  disabled={!isEmployee}
-                />
+                <label
+                  className="body_m_r feedbackRadio-label"
+                  htmlFor={`${radioGroupName}-${i}`}
+                >
+                  <input
+                    type="radio"
+                    id={`${radioGroupName}-${i}`}
+                    name={radioGroupName}
+                    value={answer}
+                    checked={selectedRadioAnswer === answer}
+                    onChange={() => setSelectedRadioAnswer(answer)}
+                    className="feedbackRadio-input"
+                    disabled={isEmployee}
+                  />
+                  <span className="feedbackRadio-customRadio" />
+                  {!isEmployee && (
+                    <span className="body_m_r feedbackRadio-labelText">
+                      {answer}
+                    </span>
+                  )}
+                </label>
+
                 {isEmployee && (
-                  <div className="question-editor__radio-answers-item__delete">
-                    <Icon icon="CROSS" onClick={() => removeAnswerOption(i)} />
-                  </div>
+                  <>
+                    <Input
+                      type="text"
+                      value={answer}
+                      onChange={e => handleAnswersChange(e, i)}
+                      placeholder="Вариант ответа"
+                      disabled={!isEmployee}
+                    />
+
+                    <div className="question-editor__radio-answers-item__delete">
+                      <Icon
+                        icon="CROSS"
+                        onClick={() => removeAnswerOption(i)}
+                      />
+                    </div>
+                  </>
                 )}
               </div>
             ))}
