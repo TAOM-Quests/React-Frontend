@@ -2,6 +2,7 @@ import {
   TableColumn,
   TableEdit,
 } from '../../../components/Table/TableEdit/TableEdit'
+import { Button } from '../../../components/UI/Button/Button'
 import { UserAvatarInfo } from '../../../components/User/UserAvatarInfo/UserAvatarInfo'
 import { UserProfile } from '../../../models/userProfile'
 import { EventAnalyticElementProps } from '../eventAnalyticElementProps'
@@ -43,6 +44,10 @@ const columns: TableColumn<UserProfile>[] = [
 export const EventParticipants = (analyticData: EventAnalyticElementProps) => {
   return (
     <div className="container_min_width event-participants">
+      <div className="event-participants__header">
+        <Button text="Скачать Excel" iconBefore="EXCEL" />
+      </div>
+
       <TableEdit<UserProfile>
         columns={columns}
         initialRows={analyticData.participants}
