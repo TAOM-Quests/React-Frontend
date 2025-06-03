@@ -3,7 +3,7 @@ import {
   EventCreateConstructorRef,
   EventCreateConstructorTab,
 } from './EventCreateConstructorTab/EventCreateConstructorTab'
-import { createRef } from 'react'
+import { createRef, useRef } from 'react'
 import { Button } from '../../components/UI/Button/Button'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import {
@@ -29,8 +29,8 @@ export const EventCreate = () => {
   const eventId = useParams().id
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth) as EmployeeAuth
-  const eventConstructor = createRef<EventCreateConstructorRef>()
-  const feedbackForm = createRef<EventFeedbackFormRef>()
+  const eventConstructor = useRef<EventCreateConstructorRef>(null)
+  const feedbackForm = useRef<EventFeedbackFormRef>(null)
 
   const saveValidate: boolean =
     eventConstructor.current?.dateValidator.isValid ||

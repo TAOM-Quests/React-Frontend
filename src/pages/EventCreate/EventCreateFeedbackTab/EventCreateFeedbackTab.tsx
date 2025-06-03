@@ -1,4 +1,4 @@
-import { createRef, forwardRef, useImperativeHandle } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import {
   FeedbackFormEditor,
   FeedbackFormRef,
@@ -37,7 +37,7 @@ interface EventCreateFeedbackTabProps {
 
 export const EventCreateFeedbackTab = forwardRef(
   ({ eventId }: EventCreateFeedbackTabProps, ref) => {
-    const feedbackForm = createRef<FeedbackFormRef>()
+    const feedbackForm = useRef<FeedbackFormRef>(null)
 
     useImperativeHandle(
       ref,

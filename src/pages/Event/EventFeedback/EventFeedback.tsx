@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { feedback } from '../../../services/api/commonModule/commonEntities/feedback/feedback'
@@ -18,7 +18,7 @@ export const EventFeedback = ({ eventId }: EventFeedbackProps) => {
   const [isAnswered, setIsAnswered] = useState(false)
 
   const user = useAppSelector(selectAuth)
-  const feedbackForm = createRef<FeedbackFormRef>()
+  const feedbackForm = useRef<FeedbackFormRef>(null)
 
   useEffect(() => {
     setIsLoading(true)

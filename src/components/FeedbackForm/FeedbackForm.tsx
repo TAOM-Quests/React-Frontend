@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -59,7 +60,7 @@ export const FeedbackFormEditor = forwardRef(
     const isEmployee = user?.isEmployee
     const questionListRef = useRef<FeedbackQuestionListRef>(null)
 
-    let formId: number | null = null
+    let formIdRef = useRef<number | null>(null)
 
     useImperativeHandle(
       ref,
@@ -67,7 +68,7 @@ export const FeedbackFormEditor = forwardRef(
         saveForm,
         saveAnswer,
       }),
-      [],
+      [title, questions, formIdRef.current, description],
     )
 
     useEffect(() => {
@@ -88,8 +89,8 @@ export const FeedbackFormEditor = forwardRef(
         entityId,
         entityName,
       })
-      formId = form.id
-      setTitle(form.title)
+      formIdRef.current = form.id
+      setTitle(form.name)
       setQuestions(form.questions)
       setDescription(form.description)
     }
@@ -99,11 +100,11 @@ export const FeedbackFormEditor = forwardRef(
         throw Error("Couldn't save feedback form: EntityId is required")
 
       setIsLoading(true)
-      const savedForm = formId
+      const savedForm = formIdRef.current
         ? await feedback.updateForm({
             name: title,
             questions,
-            id: formId,
+            id: formIdRef.current,
             description,
           })
         : await feedback.createFrom({
@@ -120,12 +121,12 @@ export const FeedbackFormEditor = forwardRef(
 
     const saveAnswer = async () => {
       if (!user) throw Error('User not found')
-      if (!formId) throw Error('Form id not found')
+      if (!formIdRef.current) throw Error('Form id not found')
       if (!questionListRef.current) throw Error('Questions answers not found')
 
       setIsLoading(true)
       const savedAnswer = await feedback.createAnswer({
-        formId,
+        formId: formIdRef.current,
         userId: user.id,
         answers: questionListRef.current?.getAnswers(),
       })
