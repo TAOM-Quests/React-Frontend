@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { NumberInput } from '../../../../UI/NumberInput/NumberInput'
-import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../../../../redux/auth/authSlice'
-import { Icon } from '../../../../UI/Icon/Icon'
+import { NumberInput } from '../../../../../UI/NumberInput/NumberInput'
+import { useAppSelector } from '../../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../../redux/auth/authSlice'
+import { Icon } from '../../../../../UI/Icon/Icon'
 import './FeedbackQuestionRating.scss'
 
 interface FeedbackQuestionRatingProps {

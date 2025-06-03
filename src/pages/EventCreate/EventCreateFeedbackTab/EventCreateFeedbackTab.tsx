@@ -2,7 +2,7 @@ import { createRef, forwardRef, useImperativeHandle } from 'react'
 import {
   FeedbackFormEditor,
   FeedbackFormRef,
-} from '../../../components/FeedbackForm/FeedbackForm/FeedbackForm'
+} from '../../../components/FeedbackForm/FeedbackForm'
 import { FeedbackQuestion } from '../../../models/feedbackQuestion'
 
 const baseEventQuestions: FeedbackQuestion[] = [

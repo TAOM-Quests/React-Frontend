@@ -1,7 +1,7 @@
-import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../../../../redux/auth/authSlice'
-import { TextEditor } from '../../../../TextEditor/TextEditor'
-import './FeedbackQuestionScale.scss'
+import { useAppSelector } from '../../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../../redux/auth/authSlice'
+import { TextEditor } from '../../../../../TextEditor/TextEditor'
+import './FeedbackQuestionText.scss'
 
 interface FeedbackQuestionTextProps {
   textAnswer: string

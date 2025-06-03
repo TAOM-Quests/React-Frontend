@@ -5,20 +5,20 @@ import {
   useRef,
   useState,
 } from 'react'
-import { FormHeaderEditor } from '../FormHeaderEditor/FormHeaderEditor'
+import { FormHeaderEditor } from './FormHeaderEditor/FormHeaderEditor'
 import {
   FeedbackQuestionList,
   FeedbackQuestionListRef,
-} from '../QuestionList/FeedbackQuestionList'
-import { FeedbackEntity, FeedbackForm } from '../../../models/feedbackForm'
-import { FeedbackQuestion } from '../../../models/feedbackQuestion'
-import { Loading } from '../../Loading/Loading'
-import { feedback } from '../../../services/api/commonModule/commonEntities/feedback/feedback'
+} from './FeedbackQuestionList/FeedbackQuestionList'
+import { FeedbackEntity, FeedbackForm } from '../../models/feedbackForm'
+import { FeedbackQuestion } from '../../models/feedbackQuestion'
+import { Loading } from '../Loading/Loading'
+import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
 import './FeedbackForm.scss'
-import { selectAuth } from '../../../redux/auth/authSlice'
-import { useAppSelector } from '../../../hooks/redux/reduxHooks'
-import { ContainerBox } from '../../ContainerBox/ContainerBox'
-import { FeedbackAnswer } from '../../../models/feedbackAnswer'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { ContainerBox } from '../ContainerBox/ContainerBox'
+import { FeedbackAnswer } from '../../models/feedbackAnswer'
 
 const DEFAULT_TITLE = 'Обратная связь'
 const DEFAULT_DESCRIPTION =

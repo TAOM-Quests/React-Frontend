@@ -1,8 +1,8 @@
 import Slider from '@mui/material/Slider'
 import classNames from 'classnames'
 import './FeedbackScaleSlider.scss'
-import { selectAuth } from '../../../../../../redux/auth/authSlice'
-import { useAppSelector } from '../../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../../../redux/auth/authSlice'
+import { useAppSelector } from '../../../../../../../hooks/redux/reduxHooks'
 
 interface FeedbackScaleSliderProps {
   min: number

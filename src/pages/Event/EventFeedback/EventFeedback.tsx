@@ -5,7 +5,7 @@ import { feedback } from '../../../services/api/commonModule/commonEntities/feed
 import {
   FeedbackFormEditor,
   FeedbackFormRef,
-} from '../../../components/FeedbackForm/FeedbackForm/FeedbackForm'
+} from '../../../components/FeedbackForm/FeedbackForm'
 import { Loading } from '../../../components/Loading/Loading'
 import { Button } from '../../../components/UI/Button/Button'
 

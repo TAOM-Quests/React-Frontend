@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { FeedbackQuestion as FeedbackQuestionType } from '../../../models/feedbackQuestion'
-import { Icon } from '../../UI/Icon/Icon'
-import Input from '../../UI/Input/Input'
-import './FeedbackQuestion.scss'
-import { selectAuth } from '../../../redux/auth/authSlice'
-import { useAppSelector } from '../../../hooks/redux/reduxHooks'
+import { FeedbackQuestion as FeedbackQuestionType } from '../../../../models/feedbackQuestion'
+import { Icon } from '../../../UI/Icon/Icon'
+import Input from '../../../UI/Input/Input'
+import { selectAuth } from '../../../../redux/auth/authSlice'
+import { useAppSelector } from '../../../../hooks/redux/reduxHooks'
 import { FeedbackQuestionRating } from './FeedbackQuestionTypes/FeedbackQuestionRating/FeedbackRatingQuestion'
 import { FeedbackQuestionRadio } from './FeedbackQuestionTypes/FeedbackQuestionRadio/FeedbackQuestionRadio'
 import { FeedbackQuestionScale } from './FeedbackQuestionTypes/FeedbackQuestionScale/FeedbackQuestionScale'
 import { FeedbackQuestionText } from './FeedbackQuestionTypes/FeedbackQuestionText/FeedbackQuestionText'
+import './FeedbackQuestion.scss'
 
 interface FeedbackQuestionProps {
   question: FeedbackQuestionType

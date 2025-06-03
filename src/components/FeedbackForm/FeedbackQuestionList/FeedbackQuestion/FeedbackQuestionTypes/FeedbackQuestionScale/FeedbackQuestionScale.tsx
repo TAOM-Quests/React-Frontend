@@ -1,7 +1,7 @@
-import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../../../../redux/auth/authSlice'
-import Input from '../../../../UI/Input/Input'
-import { NumberInput } from '../../../../UI/NumberInput/NumberInput'
+import { useAppSelector } from '../../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../../redux/auth/authSlice'
+import Input from '../../../../../UI/Input/Input'
+import { NumberInput } from '../../../../../UI/NumberInput/NumberInput'
 import { FeedbackScaleSlider } from './FeedbackScaleSlider/FeedbackScaleSlider'
 import './FeedbackQuestionScale.scss'
 
