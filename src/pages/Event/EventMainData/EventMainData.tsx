@@ -130,7 +130,11 @@ export const EventMainData = ({
           </div>
         ) : (
           <div>
-            <Button text="Участвовать" onClick={addParticipant} />
+            <Button
+              text="Участвовать"
+              onClick={addParticipant}
+              disabled={moment() > moment(date).endOf('day')}
+            />
           </div>
         )}
       </div>

@@ -3,7 +3,6 @@ import {
   EventCreateConstructorRef,
   EventCreateConstructorTab,
 } from './EventCreateConstructorTab/EventCreateConstructorTab'
-import { createRef, useRef } from 'react'
 import { Button } from '../../components/UI/Button/Button'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import {
@@ -14,6 +13,7 @@ import { Badge, TypeBadge } from '../../components/UI/Badge/Badge'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { EmployeeAuth } from '../../models/userAuth'
 import { selectAuth } from '../../redux/auth/authSlice'
+import { useRef } from 'react'
 
 const TABS = ['Мероприятие', 'Обратная связь']
 const STATUS_ID_DRAFT = 1
