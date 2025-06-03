@@ -3,17 +3,16 @@ import { Switcher } from '../../components/UI/Switcher/Switcher'
 import { FeedbackAnswer } from '../../models/feedbackAnswer'
 import { FeedbackForm } from '../../models/feedbackForm'
 import { UserProfile } from '../../models/userProfile'
-import { current } from '@reduxjs/toolkit'
 import { EventStatistic } from './EventStatistic/EventStatistic'
 import { useParams } from 'react-router'
 import { events } from '../../services/api/eventModule/events/events'
 import { EventAnalyticElementProps } from './eventAnalyticElementProps'
 import { Loading } from '../../components/Loading/Loading'
-import { EventMinimize } from '../../models/eventMinimize'
 import { Event } from '../../models/event'
 import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
 import './EventAnalytic.scss'
 import { EventParticipants } from './EventParticipants/EventParticipants'
+import { EventFeedbackAnswers } from './EventFeedbackAnswers/EventFeedbackAnswers'
 
 const TABS = ['Мероприятие', 'Участники', 'Обратная связь']
 
@@ -30,7 +29,7 @@ export const EventAnalytic = () => {
 
   const analyticElementParams: EventAnalyticElementProps = {
     participants,
-    feedbackAnswers: [],
+    feedbackAnswers,
   }
 
   useEffect(() => {
@@ -76,7 +75,10 @@ export const EventAnalytic = () => {
             <EventParticipants {...analyticElementParams} />
           )}
           {activeTab === 'Обратная связь' && (
-            <EventStatistic {...analyticElementParams} />
+            <EventFeedbackAnswers
+              feedbackForm={feedbackForm ?? undefined}
+              analyticData={analyticElementParams}
+            />
           )}
         </div>
       ) : (

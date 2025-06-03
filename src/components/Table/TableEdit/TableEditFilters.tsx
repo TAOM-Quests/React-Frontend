@@ -1,6 +1,7 @@
 import { forwardRef, JSX, Ref, useEffect, useMemo, useState } from 'react'
 import { TableColumn } from './TableEdit'
 import Input from '../../UI/Input/Input'
+import { UserProfile } from '../../../models/userProfile'
 
 interface TableEditFiltersProps<T extends { id: number }> {
   rows: T[]
@@ -47,6 +48,17 @@ const TableEditFiltersInner = <T extends { id: number }>(
           return fullName.includes(filterValue.toLowerCase())
         }
 
+        if (
+          col.key === 'user' &&
+          'user' in row &&
+          typeof filterValue === 'string'
+        ) {
+          const user = row.user as UserProfile
+          const fullName =
+            `${user.lastName} ${user.firstName} ${user.patronymic}`.toLowerCase()
+          return fullName.includes(filterValue.toLowerCase())
+        }
+
         const cellValue = row[col.key]
 
         if (cellValue && typeof cellValue === 'object' && 'id' in cellValue) {
@@ -80,7 +92,8 @@ const TableEditFiltersInner = <T extends { id: number }>(
     if (
       col.key === 'lastName' ||
       col.key === 'firstName' ||
-      col.key === 'patronymic'
+      col.key === 'patronymic' ||
+      col.key === 'user'
     ) {
       return (
         <div key={keyStr} className="table-edit__filters-cell">
