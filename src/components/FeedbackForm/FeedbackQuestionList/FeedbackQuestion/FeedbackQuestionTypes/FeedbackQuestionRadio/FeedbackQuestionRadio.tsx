@@ -63,7 +63,9 @@ export const FeedbackQuestionRadio = ({
                     id={`${radioGroupName}-${i}`}
                     name={radioGroupName}
                     value={answer}
-                    checked={selectedRadioAnswer === answer}
+                    checked={
+                      !user?.isEmployee && selectedRadioAnswer === answer
+                    }
                     onChange={() => setSelectedRadioAnswer(answer)}
                     className="feedbackRadio-input"
                     disabled={isEmployee}
