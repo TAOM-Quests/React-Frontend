@@ -145,16 +145,16 @@ export const EventMainData = ({
         {!user?.isEmployee && (
           <>
             {user && isParticipant ? (
-              <div>
+              <div className="event-banner__buttons">
                 <Button
                   colorType="secondary"
                   text="Вы зарегистрированы"
                   disabled
                 />
-                <Button
-                  colorType="secondary"
-                  isIconOnly
-                  iconBefore="CROSS"
+                <Icon
+                  icon="CROSS"
+                  size="large"
+                  colorIcon="subdued"
                   onClick={removeParticipant}
                 />
               </div>
