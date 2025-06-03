@@ -2,7 +2,7 @@ import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../../../redux/auth/authSlice'
 import Input from '../../../../UI/Input/Input'
 import { NumberInput } from '../../../../UI/NumberInput/NumberInput'
-import { FeedbackScale } from '../../FeedbackParticipantQuestions/FeedbackScale/FeedbackScale'
+import { FeedbackScaleSlider } from './FeedbackScaleSlider/FeedbackScaleSliderSlider'
 import './FeedbackScaleQuestion.scss'
 
 interface FeedbackScaleQuestionProps {
@@ -102,7 +102,7 @@ export const FeedbackScaleQuestion = ({
         </div>
       )}
 
-      <FeedbackScale
+      <FeedbackScaleSlider
         min={localQuestion.answers ? +localQuestion.answers[0] : 0}
         minLabel={localQuestion.answers ? localQuestion.answers[1] : ''}
         max={localQuestion.answers ? +localQuestion.answers[2] : 0}

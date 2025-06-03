@@ -1,9 +1,10 @@
 import Slider from '@mui/material/Slider'
-import './FeedbackScale.scss'
-import { selectAuth } from '../../../../../redux/auth/authSlice'
-import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../../redux/auth/authSlice'
+import { useAppSelector } from '../../../../../../hooks/redux/reduxHooks'
 import classNames from 'classnames'
-interface FeedbackScaleProps {
+import './FeedbackScaleSlider.scss'
+
+interface FeedbackScaleSliderProps {
   min: number
   minLabel: string
   max: number
@@ -12,14 +13,14 @@ interface FeedbackScaleProps {
   onChange: (val: number) => void
 }
 
-export const FeedbackScale = ({
+export const FeedbackScaleSlider = ({
   min,
   minLabel,
   max,
   maxLabel,
   value,
   onChange,
-}: FeedbackScaleProps) => {
+}: FeedbackScaleSliderProps) => {
   const user = useAppSelector(selectAuth)
   const isEmployee = user?.isEmployee
 
