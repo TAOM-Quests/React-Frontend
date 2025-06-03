@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { EmployeeAuth, UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import {
@@ -12,7 +12,6 @@ import { Dropdown } from '../../../components/UI/Dropdown/Dropdown'
 import './EventsTab.scss'
 import { Button } from '../../../components/UI/Button/Button'
 import { useNavigate } from 'react-router'
-import { ScrollController } from '../../../components/ScrollController/ScrollController'
 import { EventType } from '../../../models/eventType'
 import { EventStatus } from '../../../models/eventStatus'
 import { Loading } from '../../../components/Loading/Loading'
@@ -21,6 +20,7 @@ import { Switcher } from '../../../components/UI/Switcher/Switcher'
 import { isArray } from 'lodash'
 
 const TABS = ['Мероприятия', 'Проверка мероприятий']
+const EVENTS_COUNT_ON_SCREEN = 12
 const STATUS_ID_WAIT_INSPECTION = 2
 const ROLE_ID_INSPECTOR = 2
 
@@ -47,37 +47,76 @@ export default function EventsTab({ user }: EventsTabProps) {
   )
   const [userEvents, setEvents] = useState<EventMinimize[]>([])
 
+  const [isEndOfEventsList, setIsEndOfEventsList] = useState(false)
+  const [isAllEventsLoaded, setIsAllEventsLoaded] = useState(false)
+
   const navigate = useNavigate()
+  const eventsListEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsLoading(true)
-    fetchFilterData()
+    tryCallback(fetchFilterData)
+    tryCallback(setEventsListObserver)
     setIsLoading(false)
   }, [])
 
   useEffect(() => {
+    console.log('Is end of events list:', isEndOfEventsList)
+    if (
+      isEndOfEventsList &&
+      !isAllEventsLoaded &&
+      userEvents.length >= EVENTS_COUNT_ON_SCREEN
+    ) {
+      tryCallback(fetchEvents)
+    }
+  }, [isEndOfEventsList])
+
+  useEffect(() => {
     setIsLoading(true)
     setEvents([])
-    fetchEvents()
+    setIsAllEventsLoaded(false)
+    tryCallback(() => fetchEvents(0))
     setIsLoading(false)
   }, [filter])
 
-  const fetchFilterData = async () => {
+  const tryCallback = (callback: () => void) => {
     try {
-      setEventTypes(await events.getTypes())
-      setEventStatuses(await events.getStatuses())
+      callback()
     } catch (e) {
       console.log(`[EventsTab] ${e}`)
     }
   }
 
-  const fetchEvents = async () => {
+  const setEventsListObserver = () => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsEndOfEventsList(entry.isIntersecting),
+      { threshold: 0.1 },
+    )
+
+    if (eventsListEndRef.current) {
+      observer.observe(eventsListEndRef.current)
+    }
+
+    return () => observer.disconnect()
+  }
+
+  const fetchFilterData = async () => {
+    setEventTypes(await events.getTypes())
+    setEventStatuses(await events.getStatuses())
+  }
+
+  const fetchEvents = async (offset?: number) => {
     const fetchedEvents = await events.getManyByParams({
-      offset: userEvents?.length,
+      offset: offset ?? userEvents.length,
+      limit: EVENTS_COUNT_ON_SCREEN,
       ...filter,
     })
 
-    setEvents([...(userEvents ?? []), ...fetchedEvents])
+    if (fetchedEvents.length < EVENTS_COUNT_ON_SCREEN) {
+      setIsAllEventsLoaded(true)
+    }
+
+    setEvents(prevEvent => [...prevEvent, ...fetchedEvents])
   }
 
   const changeTab = (option: string) => {
@@ -125,8 +164,8 @@ export default function EventsTab({ user }: EventsTabProps) {
                 placeholder="Тип мероприятия"
                 onChangeDropdown={selected =>
                   setFilter(state =>
-                    !isArray(selected) && selected
-                      ? { ...state, type: selected.id }
+                    !isArray(selected)
+                      ? { ...state, type: selected?.id }
                       : state,
                   )
                 }
@@ -141,8 +180,8 @@ export default function EventsTab({ user }: EventsTabProps) {
                     placeholder="Статус"
                     onChangeDropdown={selected =>
                       setFilter(state =>
-                        !isArray(selected) && selected
-                          ? { ...state, status: selected.id }
+                        !isArray(selected)
+                          ? { ...state, status: selected?.id }
                           : state,
                       )
                     }
@@ -155,11 +194,7 @@ export default function EventsTab({ user }: EventsTabProps) {
                 </>
               )}
             </div>
-            <ScrollController
-              onEndScroll={fetchEvents}
-              className="profile_events--events"
-              style={{ overflow: 'scroll' }}
-            >
+            <div className="profile_events--events">
               {userEvents && userEvents.length
                 ? userEvents.map(event => {
                     const onlinePlace: PlaceOnline | null =
@@ -197,7 +232,8 @@ export default function EventsTab({ user }: EventsTabProps) {
                     )
                   })
                 : 'Мероприятий нет'}
-            </ScrollController>
+            </div>
+            <div ref={eventsListEndRef} />
           </div>
         </>
       ) : (
