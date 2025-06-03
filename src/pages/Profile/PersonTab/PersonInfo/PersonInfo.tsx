@@ -122,7 +122,6 @@ export default function PersonInfo({
 
   const handleSaveNotificationSettings = (settings: NotificationSettings) => {
     setNotificationSettings(settings)
-    // Здесь нужно добавить сохранение на сервер
   }
 
   const handleDateSelect = (date: Date | null) => {

@@ -28,7 +28,6 @@ export const ChangePasswordModal = ({
 
   useEffect(() => {
     if (!isOpen) {
-      // Сброс полей и ошибок при закрытии
       setOldPassword('')
       setNewPassword('')
       setConfirmPassword('')

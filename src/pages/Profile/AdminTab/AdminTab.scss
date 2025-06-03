@@ -1,0 +1,20 @@
+.adminTab {
+  width: 100%;
+
+  .table-edit__filters-cell {
+    min-width: auto;
+
+    .inputWrapper {
+      width: 260px;
+    }
+  }
+
+  .table-edit__table th,
+  .table-edit__table td {
+    min-width: 40px;
+
+    .inputWrapper {
+      width: 260px;
+    }
+  }
+}

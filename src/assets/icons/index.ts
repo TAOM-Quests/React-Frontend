@@ -50,6 +50,7 @@ import { VK } from './vk'
 import { USER } from './user'
 import { STAR } from './star'
 import { STAR_SHADED } from './starShaded'
+import { BACKSPACE } from './backspace'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -104,6 +105,7 @@ export const ICON_MAP = {
   USER: USER,
   STAR: STAR,
   STAR_SHADED: STAR_SHADED,
+  BACKSPACE: BACKSPACE,
 }
 
 type IconName = keyof typeof ICON_MAP
