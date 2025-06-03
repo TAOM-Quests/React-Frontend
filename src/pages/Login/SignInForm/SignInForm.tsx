@@ -19,6 +19,7 @@ export default function SignInForm() {
   const [repeatPassword, setRepeatPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [signInError, setSignInError] = useState('')
 
   const emailValidator = validateEmail(email)
   const passwordValidator = validatePassword(password)
@@ -30,6 +31,7 @@ export default function SignInForm() {
   const tryCreateUser = async (event: React.FormEvent) => {
     event.preventDefault()
     setIsSubmitted(true)
+    setSignInError('')
 
     if (
       !emailValidator.isValid ||
@@ -44,7 +46,11 @@ export default function SignInForm() {
       localStorage.setItem('token', createdUser.token)
       dispatch(setUser(createdUser))
       navigate('/')
-    } catch (e) {}
+    } catch (e) {
+      if (e instanceof Error) {
+        setSignInError('Пользователь с таким email уже существует')
+      }
+    }
   }
 
   const toggleShowPassword = () => {
@@ -61,7 +67,7 @@ export default function SignInForm() {
         className="email-input"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        errorText={isSubmitted ? emailValidator.error : ''}
+        errorText={isSubmitted ? emailValidator.error || signInError : ''}
       />
       <Input
         type={showPassword ? 'text' : 'password'}
