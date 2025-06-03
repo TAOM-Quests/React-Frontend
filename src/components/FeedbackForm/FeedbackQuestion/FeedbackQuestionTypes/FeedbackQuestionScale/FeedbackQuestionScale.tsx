@@ -2,10 +2,10 @@ import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../../../redux/auth/authSlice'
 import Input from '../../../../UI/Input/Input'
 import { NumberInput } from '../../../../UI/NumberInput/NumberInput'
-import { FeedbackScaleSlider } from './FeedbackScaleSlider/FeedbackScaleSliderSlider'
-import './FeedbackScaleQuestion.scss'
+import { FeedbackScaleSlider } from './FeedbackScaleSlider/FeedbackScaleSlider'
+import './FeedbackQuestionScale.scss'
 
-interface FeedbackScaleQuestionProps {
+interface FeedbackQuestionScaleProps {
   localQuestion: {
     answers?: string[]
   }
@@ -15,13 +15,13 @@ interface FeedbackScaleQuestionProps {
   setScaleAnswer: (val: number) => void
 }
 
-export const FeedbackScaleQuestion = ({
+export const FeedbackQuestionScale = ({
   localQuestion,
   setLocalQuestion,
   onChange,
   scaleAnswer,
   setScaleAnswer,
-}: FeedbackScaleQuestionProps) => {
+}: FeedbackQuestionScaleProps) => {
   const user = useAppSelector(selectAuth)
   const isEmployee = user?.isEmployee
 

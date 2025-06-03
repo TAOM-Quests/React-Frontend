@@ -5,10 +5,10 @@ import { generateRandomElementId } from '../../../../../utils/generateRandomElem
 import { Button } from '../../../../UI/Button/Button'
 import { Icon } from '../../../../UI/Icon/Icon'
 import Input from '../../../../UI/Input/Input'
-import './FeedbackRadioQuestion.scss'
+import './FeedbackQuestionRadio.scss'
 import classNames from 'classnames'
 
-interface FeedbackRadioQuestionProps {
+interface FeedbackQuestionRadioProps {
   localQuestion: {
     answers?: string[]
   }
@@ -19,14 +19,14 @@ interface FeedbackRadioQuestionProps {
   addAnswerOption: () => void
 }
 
-export const FeedbackRadioQuestion = ({
+export const FeedbackQuestionRadio = ({
   localQuestion,
   selectedRadioAnswer,
   setSelectedRadioAnswer,
   handleAnswersChange,
   removeAnswerOption,
   addAnswerOption,
-}: FeedbackRadioQuestionProps) => {
+}: FeedbackQuestionRadioProps) => {
   const user = useAppSelector(selectAuth)
   const isEmployee = user?.isEmployee
 

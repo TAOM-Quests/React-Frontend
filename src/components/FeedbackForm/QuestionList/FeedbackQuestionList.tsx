@@ -9,7 +9,7 @@ import { selectAuth } from '../../../redux/auth/authSlice'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { ContainerBox } from '../../ContainerBox/ContainerBox'
 import { ContextMenu } from '../../ContextMenu/ContextMenu'
-import { FeedbackQuestion } from '../Question/FeedbackQuestion'
+import { FeedbackQuestion } from '../FeedbackQuestion/FeedbackQuestion'
 import { Button } from '../../UI/Button/Button'
 
 export interface FeedbackQuestionListRef {

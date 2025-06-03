@@ -3,9 +3,9 @@ import { NumberInput } from '../../../../UI/NumberInput/NumberInput'
 import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../../../redux/auth/authSlice'
 import { Icon } from '../../../../UI/Icon/Icon'
-import './FeedbackRatingQuestion.scss'
+import './FeedbackQuestionRating.scss'
 
-interface FeedbackRatingQuestionProps {
+interface FeedbackQuestionRatingProps {
   localQuestion: {
     answers?: string[]
   }
@@ -15,13 +15,13 @@ interface FeedbackRatingQuestionProps {
   onChange: (q: any) => void
 }
 
-export const FeedbackRatingQuestion = ({
+export const FeedbackQuestionRating = ({
   localQuestion,
   ratingAnswer,
   setRatingAnswer,
   setLocalQuestion,
   onChange,
-}: FeedbackRatingQuestionProps) => {
+}: FeedbackQuestionRatingProps) => {
   const [hovered, setHovered] = useState<number | null>(null)
 
   const user = useAppSelector(selectAuth)

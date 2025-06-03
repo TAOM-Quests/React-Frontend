@@ -5,10 +5,10 @@ import Input from '../../UI/Input/Input'
 import './FeedbackQuestion.scss'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
-import { FeedbackRatingQuestion } from './FeedbackQuestionTypes/FeedbackRatingQuestion/FeedbackRatingQuestion'
-import { FeedbackRadioQuestion } from './FeedbackQuestionTypes/FeedbackRadioQuestion/FeedbackRadioQuestion'
-import { FeedbackScaleQuestion } from './FeedbackQuestionTypes/FeedbackScaleQuestion/FeedbackScaleQuestion'
-import { TextEditor } from '../../TextEditor/TextEditor'
+import { FeedbackQuestionRating } from './FeedbackQuestionTypes/FeedbackQuestionRating/FeedbackRatingQuestion'
+import { FeedbackQuestionRadio } from './FeedbackQuestionTypes/FeedbackQuestionRadio/FeedbackQuestionRadio'
+import { FeedbackQuestionScale } from './FeedbackQuestionTypes/FeedbackQuestionScale/FeedbackQuestionScale'
+import { FeedbackQuestionText } from './FeedbackQuestionTypes/FeedbackQuestionText/FeedbackQuestionText'
 
 interface FeedbackQuestionProps {
   question: FeedbackQuestionType
@@ -112,7 +112,7 @@ export const FeedbackQuestion = ({
       )}
 
       {localQuestion.type === 'rating' && localQuestion.answers && (
-        <FeedbackRatingQuestion
+        <FeedbackQuestionRating
           localQuestion={localQuestion}
           ratingAnswer={ratingAnswer}
           setRatingAnswer={setRatingAnswer}
@@ -122,7 +122,7 @@ export const FeedbackQuestion = ({
       )}
 
       {localQuestion.type === 'radio' && localQuestion.answers && (
-        <FeedbackRadioQuestion
+        <FeedbackQuestionRadio
           localQuestion={localQuestion}
           selectedRadioAnswer={selectedRadioAnswer}
           setSelectedRadioAnswer={setSelectedRadioAnswer}
@@ -133,7 +133,7 @@ export const FeedbackQuestion = ({
       )}
 
       {localQuestion.type === 'scale' && localQuestion.answers && (
-        <FeedbackScaleQuestion
+        <FeedbackQuestionScale
           localQuestion={localQuestion}
           setLocalQuestion={setLocalQuestion}
           onChange={onChangeQuestion}
@@ -143,19 +143,10 @@ export const FeedbackQuestion = ({
       )}
 
       {localQuestion.type === 'text' && (
-        <>
-          {isEmployee && <p className="body_m_r">Развернутый ответ...</p>}
-          {!isEmployee && (
-            <TextEditor
-              value={textAnswer ?? ''}
-              placeholder="Введите ответ"
-              onChange={({ editor }) => {
-                const html = editor.getHTML()
-                setTextAnswer(html)
-              }}
-            />
-          )}
-        </>
+        <FeedbackQuestionText
+          textAnswer={textAnswer}
+          setTextAnswer={setTextAnswer}
+        />
       )}
 
       <div className="lineDash"></div>
