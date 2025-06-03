@@ -16,12 +16,17 @@ import { EventOnlinePlace } from './EventOnlinePlace/EventOnlinePlace'
 import './Event.scss'
 import { FadeInWrapper } from '../../components/FadeInWrapper/FadeInWrapper'
 import { Loading } from '../../components/Loading/Loading'
+import moment from 'moment'
+import { EventFeedback } from './EventFeedback/EventFeedback'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../redux/auth/authSlice'
 
 export const Event = () => {
   const [event, setEvent] = useState<EventInterface | null>(null)
 
-  const eventId = useParams().id
+  const user = useAppSelector(selectAuth)
   const navigate = useNavigate()
+  const { id: eventId } = useParams()
 
   const placeOnline: PlaceOnline = event?.places?.find(
     place => place.is_online,
@@ -49,9 +54,9 @@ export const Event = () => {
 
   return (
     <>
-      {event ? (
+      {eventId && event ? (
         <div>
-          <EventMainData eventId={+eventId!} {...event} />
+          <EventMainData eventId={+eventId} {...event} />
           <div className="event-details">
             <div className="event-details__left">
               {event.description ? (
@@ -98,6 +103,15 @@ export const Event = () => {
               )}
             </div>
           </div>
+          {user?.id &&
+            event.participants
+              .map(participant => participant.id)
+              .includes(user.id) &&
+            moment() > moment(event.date).endOf('day') && (
+              <div>
+                <EventFeedback eventId={+eventId} />
+              </div>
+            )}
         </div>
       ) : (
         <Loading />

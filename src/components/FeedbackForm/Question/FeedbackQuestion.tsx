@@ -1,36 +1,32 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FeedbackQuestion as FeedbackQuestionType } from '../../../models/feedbackQuestion'
 import { Icon } from '../../UI/Icon/Icon'
 import Input from '../../UI/Input/Input'
-import { Button } from '../../UI/Button/Button'
-import { NumberInput } from '../../UI/NumberInput/NumberInput'
 import './FeedbackQuestion.scss'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
-import { FeedbackRadio } from './FeedbackParticipantQuestions/FeedbackRadio/FeedbackRadio'
 import { FeedbackRatingQuestion } from './FeedbackQuestionTypes/FeedbackRatingQuestion/FeedbackRatingQuestion'
 import { FeedbackRadioQuestion } from './FeedbackQuestionTypes/FeedbackRadioQuestion/FeedbackRadioQuestion'
-import { FeedbackScale } from './FeedbackParticipantQuestions/FeedbackScale/FeedbackScale'
 import { FeedbackScaleQuestion } from './FeedbackQuestionTypes/FeedbackScaleQuestion/FeedbackScaleQuestion'
 import { TextEditor } from '../../TextEditor/TextEditor'
 
 interface FeedbackQuestionProps {
   question: FeedbackQuestionType
-  onChange: (updatedQuestion: FeedbackQuestionType) => void
   onDelete: () => void
+  onChangeAnswer: (answer: string) => void
+  onChangeQuestion: (updatedQuestion: FeedbackQuestionType) => void
 }
 
 export const FeedbackQuestion = ({
   question,
-  onChange,
   onDelete,
+  onChangeAnswer,
+  onChangeQuestion,
 }: FeedbackQuestionProps) => {
   const [localQuestion, setLocalQuestion] =
     useState<FeedbackQuestionType>(question)
-  const [ratingAnswer, setRatingAnswer] = React.useState(0)
-  const [selectedRadioAnswer, setSelectedRadioAnswer] = React.useState<
-    string | null
-  >(null)
+  const [ratingAnswer, setRatingAnswer] = useState(0)
+  const [selectedRadioAnswer, setSelectedRadioAnswer] = useState('')
   const [scaleAnswer, setScaleAnswer] = useState(0)
   const [textAnswer, setTextAnswer] = useState('')
 
@@ -41,10 +37,26 @@ export const FeedbackQuestion = ({
     setLocalQuestion(question)
   }, [question])
 
+  useEffect(() => {
+    let newUserAnswer = ''
+
+    if (localQuestion.type === 'radio') {
+      newUserAnswer = selectedRadioAnswer
+    } else if (localQuestion.type === 'rating') {
+      newUserAnswer = `${ratingAnswer}`
+    } else if (localQuestion.type === 'scale') {
+      newUserAnswer = `${scaleAnswer}`
+    } else if (localQuestion.type === 'text') {
+      newUserAnswer = textAnswer
+    }
+
+    onChangeAnswer(newUserAnswer)
+  }, [selectedRadioAnswer, ratingAnswer, scaleAnswer, textAnswer])
+
   const handleQuestionTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updated = { ...localQuestion, question: e.target.value }
     setLocalQuestion(updated)
-    onChange(updated)
+    onChangeQuestion(updated)
   }
 
   const handleAnswersChange = (
@@ -56,7 +68,7 @@ export const FeedbackQuestion = ({
     newAnswers[index] = e.target.value
     const updated = { ...localQuestion, answers: newAnswers }
     setLocalQuestion(updated)
-    onChange(updated)
+    onChangeQuestion(updated)
   }
 
   const addAnswerOption = () => {
@@ -65,7 +77,7 @@ export const FeedbackQuestion = ({
       : ['']
     const updated = { ...localQuestion, answers: newAnswers }
     setLocalQuestion(updated)
-    onChange(updated)
+    onChangeQuestion(updated)
   }
 
   const removeAnswerOption = (index: number) => {
@@ -74,7 +86,7 @@ export const FeedbackQuestion = ({
     newAnswers.splice(index, 1)
     const updated = { ...localQuestion, answers: newAnswers }
     setLocalQuestion(updated)
-    onChange(updated)
+    onChangeQuestion(updated)
   }
 
   return (
@@ -105,7 +117,7 @@ export const FeedbackQuestion = ({
           ratingAnswer={ratingAnswer}
           setRatingAnswer={setRatingAnswer}
           setLocalQuestion={setLocalQuestion}
-          onChange={onChange}
+          onChange={onChangeQuestion}
         />
       )}
 
@@ -124,13 +136,13 @@ export const FeedbackQuestion = ({
         <FeedbackScaleQuestion
           localQuestion={localQuestion}
           setLocalQuestion={setLocalQuestion}
-          onChange={onChange}
+          onChange={onChangeQuestion}
           scaleAnswer={scaleAnswer}
           setScaleAnswer={setScaleAnswer}
         />
       )}
 
-      {localQuestion.type === 'text' && localQuestion.answers && (
+      {localQuestion.type === 'text' && (
         <>
           {isEmployee && <p className="body_m_r">Развернутый ответ...</p>}
           {!isEmployee && (

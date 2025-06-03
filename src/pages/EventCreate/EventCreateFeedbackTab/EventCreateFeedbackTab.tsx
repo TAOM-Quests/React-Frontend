@@ -50,7 +50,7 @@ export const EventCreateFeedbackTab = forwardRef(
       <>
         <FeedbackFormEditor
           ref={feedbackForm}
-          entityName="event"
+          entityName="events"
           entityId={eventId}
           baseQuestions={baseEventQuestions}
         />

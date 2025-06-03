@@ -53,7 +53,7 @@ export const EventMainData = ({
       return
     }
 
-    events.changeParticipant(+eventId!, {
+    events.changeParticipant(+eventId, {
       add: [user.id],
     })
   }

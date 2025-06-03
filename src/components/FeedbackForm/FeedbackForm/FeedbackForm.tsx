@@ -1,7 +1,16 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { FormHeaderEditor } from '../FormHeaderEditor/FormHeaderEditor'
-import { QuestionList } from '../QuestionList/QuestionList'
-import { FeedbackForm } from '../../../models/feedbackForm'
+import {
+  FeedbackQuestionList,
+  FeedbackQuestionListRef,
+} from '../QuestionList/FeedbackQuestionList'
+import { FeedbackEntity, FeedbackForm } from '../../../models/feedbackForm'
 import { FeedbackQuestion } from '../../../models/feedbackQuestion'
 import { Loading } from '../../Loading/Loading'
 import { feedback } from '../../../services/api/commonModule/commonEntities/feedback/feedback'
@@ -9,6 +18,7 @@ import './FeedbackForm.scss'
 import { selectAuth } from '../../../redux/auth/authSlice'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { ContainerBox } from '../../ContainerBox/ContainerBox'
+import { FeedbackAnswer } from '../../../models/feedbackAnswer'
 
 const DEFAULT_TITLE = 'Обратная связь'
 const DEFAULT_DESCRIPTION =
@@ -16,13 +26,15 @@ const DEFAULT_DESCRIPTION =
 
 export interface FeedbackFormRef {
   saveForm: () => void
+  saveAnswer: () => void
 }
 
 interface FeedbackFormEditorProps {
-  entityName: string
   entityId: number | null
-  baseQuestions: FeedbackQuestion[]
+  entityName: FeedbackEntity
+  baseQuestions?: FeedbackQuestion[]
   onFormSaved?: (form: FeedbackForm) => void
+  onAnswerSaved?: (answer: FeedbackAnswer) => void
 }
 
 export const FeedbackFormEditor = forwardRef(
@@ -32,24 +44,28 @@ export const FeedbackFormEditor = forwardRef(
       entityName,
       baseQuestions,
       onFormSaved,
+      onAnswerSaved,
     }: FeedbackFormEditorProps,
     ref,
   ) => {
     const [title, setTitle] = useState<string>(DEFAULT_TITLE)
     const [description, setDescription] = useState<string>(DEFAULT_DESCRIPTION)
-    const [questions, setQuestions] =
-      useState<FeedbackQuestion[]>(baseQuestions)
+    const [questions, setQuestions] = useState<FeedbackQuestion[]>(
+      baseQuestions ?? [],
+    )
     const [isLoading, setIsLoading] = useState(false)
 
     const user = useAppSelector(selectAuth)
     const isEmployee = user?.isEmployee
+    const questionListRef = useRef<FeedbackQuestionListRef>(null)
 
     let formId: number | null = null
 
     useImperativeHandle(
       ref,
-      () => ({
+      (): FeedbackFormRef => ({
         saveForm,
+        saveAnswer,
       }),
       [],
     )
@@ -102,6 +118,21 @@ export const FeedbackFormEditor = forwardRef(
       setIsLoading(false)
     }
 
+    const saveAnswer = async () => {
+      if (!user) throw Error('User not found')
+      if (!formId) throw Error('Form id not found')
+      if (!questionListRef.current) throw Error('Questions answers not found')
+
+      setIsLoading(true)
+      const savedAnswer = await feedback.createAnswer({
+        formId,
+        userId: user.id,
+        answers: questionListRef.current?.getAnswers(),
+      })
+      onAnswerSaved?.(savedAnswer)
+      setIsLoading(false)
+    }
+
     const handleHeaderChange = (changes: {
       title?: string
       description?: string
@@ -133,7 +164,8 @@ export const FeedbackFormEditor = forwardRef(
               </ContainerBox>
             )}
 
-            <QuestionList
+            <FeedbackQuestionList
+              ref={questionListRef}
               questions={questions}
               onChangeQuestions={setQuestions}
             />
