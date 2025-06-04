@@ -24,8 +24,8 @@ export const FeedbackQuestionText = ({
           value={textAnswer ?? ''}
           placeholder="Введите ответ"
           onChange={({ editor }) => {
-            const html = editor.getHTML()
-            setTextAnswer(html)
+            const text = editor.getText()
+            setTextAnswer(text)
           }}
         />
       )}
