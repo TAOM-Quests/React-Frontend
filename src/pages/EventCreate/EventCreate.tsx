@@ -13,7 +13,7 @@ import { Badge, TypeBadge } from '../../components/UI/Badge/Badge'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { EmployeeAuth } from '../../models/userAuth'
 import { selectAuth } from '../../redux/auth/authSlice'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 const TABS = ['Мероприятие', 'Обратная связь']
 const STATUS_ID_DRAFT = 1
@@ -26,16 +26,35 @@ const ROLE_ID_INSPECTOR = 2
 export const EventCreate = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const eventId = useParams().id
   const navigate = useNavigate()
+  const { id: eventId } = useParams()
   const user = useAppSelector(selectAuth) as EmployeeAuth
   const eventConstructor = useRef<EventCreateConstructorRef>(null)
   const feedbackForm = useRef<EventFeedbackFormRef>(null)
+  const isFirstRender = useRef(true)
 
   const saveValidate: boolean =
     eventConstructor.current?.dateValidator.isValid ||
     eventConstructor.current?.timeValidator.isValid ||
     !eventConstructor.current?.hasScheduleErrors
+
+  /*
+    Костыль для сохранения формы обратной связи при создании нового мероприятия
+    При вызове сохранения формы в onClick кнопки сохранения
+    useParams еще не обновится, так как не все рендеры закончатся
+    Поэтому ждем пока рендеры закончатся и вызываем сохранение
+    И чтобы сохранение не происходило при каждом рендере
+    конструктора мероприятия используем isFirstRender
+  */
+  useEffect(() => {
+    if (saveValidate && !isFirstRender.current) {
+      feedbackForm.current?.saveFeedbackForm()
+    }
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+    }
+  }, [eventId])
 
   const getTabIndex = () => Number(searchParams.get('tab'))
   const getActiveTab = () => {
@@ -135,10 +154,13 @@ export const EventCreate = () => {
           <Button
             text="Сохранить"
             disabled={!saveValidate}
-            onClick={() => {
+            onClick={async () => {
               if (saveValidate) {
-                eventConstructor.current?.saveEvent()
-                feedbackForm.current?.saveFeedbackForm()
+                await eventConstructor.current?.saveEvent()
+
+                if (eventId) {
+                  await feedbackForm.current?.saveFeedbackForm()
+                }
               }
             }}
           />

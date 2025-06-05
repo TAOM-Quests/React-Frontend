@@ -67,7 +67,7 @@ export const FeedbackFormEditor = forwardRef(
         saveForm,
         saveAnswer,
       }),
-      [title, questions, formIdRef.current, description],
+      [title, questions, formIdRef.current, description, entityId, entityName],
     )
 
     useEffect(() => {
