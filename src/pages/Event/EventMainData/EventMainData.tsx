@@ -13,17 +13,18 @@ import { EventType } from '../../../models/eventType'
 import './EventMainData.scss'
 import { EventTag } from '../../../models/eventTag'
 import { Tag } from '../../../components/UI/Tag/Tag'
+import { useEffect, useState } from 'react'
 
 export interface EventMainDataProps {
   eventId: number
+  tags: EventTag[]
   department: Department
+  participants: Participant[]
+  places: (PlaceOnline | PlaceOffline)[]
   date?: Date
-  tags?: EventTag[]
   name?: string
   type?: EventType
   image?: ServerFile
-  places?: (PlaceOnline | PlaceOffline)[]
-  participants?: Participant[]
 }
 
 export const EventMainData = ({
@@ -37,6 +38,8 @@ export const EventMainData = ({
   department,
   participants,
 }: EventMainDataProps) => {
+  const [isParticipant, setIsParticipants] = useState(false)
+
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
 
@@ -47,6 +50,12 @@ export const EventMainData = ({
     place => !place.is_online,
   ) as PlaceOffline
 
+  useEffect(() => {
+    setIsParticipants(
+      participants?.some(participant => participant.id === user?.id),
+    )
+  }, [participants, user])
+
   const addParticipant = () => {
     if (!user) {
       navigate('/login')
@@ -56,6 +65,16 @@ export const EventMainData = ({
     events.changeParticipant(+eventId!, {
       add: [user.id],
     })
+    setIsParticipants(true)
+  }
+
+  const removeParticipant = () => {
+    if (!user) return
+
+    events.changeParticipant(+eventId!, {
+      remove: [user.id],
+    })
+    setIsParticipants(false)
   }
 
   return (
@@ -123,15 +142,28 @@ export const EventMainData = ({
           </div>
         ) : null}
 
-        {user &&
-        participants?.map(participant => participant.id).includes(user.id) ? (
-          <div>
-            <Button colorType="secondary" text="Вы зарегистрированы" disabled />
-          </div>
-        ) : (
-          <div>
-            <Button text="Участвовать" onClick={addParticipant} />
-          </div>
+        {!user?.isEmployee && (
+          <>
+            {user && isParticipant ? (
+              <div className="event-banner__buttons">
+                <Button
+                  colorType="secondary"
+                  text="Вы зарегистрированы"
+                  disabled
+                />
+                <Icon
+                  icon="CROSS"
+                  size="large"
+                  colorIcon="subdued"
+                  onClick={removeParticipant}
+                />
+              </div>
+            ) : (
+              <div>
+                <Button text="Участвовать" onClick={addParticipant} />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
