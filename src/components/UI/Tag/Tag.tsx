@@ -1,4 +1,4 @@
-import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
+import { UserAvatarInfo } from '../../User/UserAvatarInfo/UserAvatarInfo'
 import './Tag.scss'
 import { Icon } from '../Icon/Icon'
 import classNames from 'classnames'
@@ -39,7 +39,7 @@ export const Tag = ({
     >
       {iconBefore && <Icon icon={iconBefore} colorIcon={type} />}
       {avatarSrc ? (
-        <OptionAvatar
+        <UserAvatarInfo
           size="extraSmall"
           avatarSrc={avatarSrc}
           text={text}

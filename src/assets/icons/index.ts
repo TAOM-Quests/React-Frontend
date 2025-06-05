@@ -49,6 +49,8 @@ import { DZEN } from './dzen'
 import { VK } from './vk'
 import { USER } from './user'
 import { BACKSPACE } from './backspace'
+import { STAR } from './star'
+import { STAR_SHADED } from './starShaded'
 
 export const ICON_MAP = {
   ADD_IMAGE: ADD_IMAGE,
@@ -102,6 +104,8 @@ export const ICON_MAP = {
   VK: VK,
   USER: USER,
   BACKSPACE: BACKSPACE,
+  STAR: STAR,
+  STAR_SHADED: STAR_SHADED,
 }
 
 type IconName = keyof typeof ICON_MAP

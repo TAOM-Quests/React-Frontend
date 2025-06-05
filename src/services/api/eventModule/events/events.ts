@@ -12,6 +12,7 @@ import {
   EventUpdateDto,
 } from './eventsDto'
 import { EventTag } from '../../../../models/eventTag'
+import { UserProfile } from '../../../../models/userProfile'
 
 export const events = {
   getManyByParams: (params: EventsGetDto): Promise<EventMinimize[]> => {
@@ -29,6 +30,9 @@ export const events = {
 
   getOne: (params: EventGetDto): Promise<Event> =>
     eventModule<Event, null>(`events/${params.id}`),
+
+  getParticipants: (params: EventGetDto): Promise<UserProfile[]> =>
+    eventModule<UserProfile[], null>(`events/${params.id}/participants`),
 
   create: (params: EventCreateDto): Promise<Event> =>
     eventModule<Event, EventCreateDto>('events', params),

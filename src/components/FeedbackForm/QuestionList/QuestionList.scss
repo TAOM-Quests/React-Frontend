@@ -1,0 +1,16 @@
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__title {
+    color: var(--text_c_primary);
+  }
+
+  &__add {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -4,7 +4,6 @@ import Login from './pages/Login/Login.tsx'
 import { Provider } from 'react-redux'
 import { setupStore } from './redux/store.ts'
 import Profile from './pages/Profile/Profile.tsx'
-import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import '../src/assets/styles/style.scss'
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -19,6 +18,8 @@ import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
+import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
+import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -70,6 +71,7 @@ root.render(
               <Route path="/profile" element={<Profile />} />
 
               <Route path="event/:id" element={<Event />} />
+              <Route path="event/:id/statistic" element={<EventAnalytic />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
               <Route path="event/calendar" element={<EventCalendar />} />

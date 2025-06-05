@@ -25,6 +25,7 @@ export interface TableEditProps<T extends { id: number }> {
   columns: TableColumn<T>[]
   initialRows: T[]
   title?: string
+  isEditing?: boolean
   onAddRow?: (newRow: Omit<T, 'id'>) => void
   onDeleteRow?: (id: number) => void
   selectedIds?: number[]
@@ -42,6 +43,7 @@ export interface TableEditProps<T extends { id: number }> {
 export const TableEdit = <T extends { id: number }>({
   title,
   columns,
+  isEditing = true,
   initialRows,
   addRowTemplate,
   onAddRow,
@@ -142,12 +144,14 @@ export const TableEdit = <T extends { id: number }>({
 
   return (
     <div className="table-edit">
-      <TableEditHeader
-        title={title}
-        isEdit={isEdit}
-        disabled={hasValidationErrors}
-        onEditButtonClick={toggleEditMode}
-      />
+      {isEditing && (
+        <TableEditHeader
+          title={title}
+          isEdit={isEdit}
+          disabled={hasValidationErrors}
+          onEditButtonClick={toggleEditMode}
+        />
+      )}
       <TableEditFilters<T>
         ref={filtersRef}
         rows={rows}

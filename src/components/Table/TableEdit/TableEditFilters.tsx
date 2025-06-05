@@ -1,6 +1,7 @@
 import { forwardRef, JSX, Ref, useEffect, useMemo, useState } from 'react'
 import { TableColumn } from './TableEdit'
 import Input from '../../UI/Input/Input'
+import { UserProfile } from '../../../models/userProfile'
 
 interface TableEditFiltersProps<T extends { id: number }> {
   rows: T[]
@@ -33,6 +34,31 @@ const TableEditFiltersInner = <T extends { id: number }>(
         )
           return true
 
+        if (
+          (col.key === 'lastName' ||
+            col.key === 'firstName' ||
+            col.key === 'patronymic') &&
+          'lastName' in row &&
+          'firstName' in row &&
+          'patronymic' in row &&
+          typeof filterValue === 'string'
+        ) {
+          const fullName =
+            `${row.lastName} ${row.firstName} ${row.patronymic}`.toLowerCase()
+          return fullName.includes(filterValue.toLowerCase())
+        }
+
+        if (
+          col.key === 'user' &&
+          'user' in row &&
+          typeof filterValue === 'string'
+        ) {
+          const user = row.user as UserProfile
+          const fullName =
+            `${user.lastName} ${user.firstName} ${user.patronymic}`.toLowerCase()
+          return fullName.includes(filterValue.toLowerCase())
+        }
+
         const cellValue = row[col.key]
 
         if (cellValue && typeof cellValue === 'object' && 'id' in cellValue) {
@@ -61,6 +87,23 @@ const TableEditFiltersInner = <T extends { id: number }>(
     const keyStr = String(col.key)
     if (col.disableFilter) {
       return <div key={keyStr} className="table-edit__filters-cell" />
+    }
+
+    if (
+      col.key === 'lastName' ||
+      col.key === 'firstName' ||
+      col.key === 'patronymic' ||
+      col.key === 'user'
+    ) {
+      return (
+        <div key={keyStr} className="table-edit__filters-cell">
+          <Input
+            value={filters[keyStr] || ''}
+            onChange={e => setFilterValue(col.key, e.target.value)}
+            placeholder={col.title}
+          />
+        </div>
+      )
     }
 
     if (!col.cellRender) {
