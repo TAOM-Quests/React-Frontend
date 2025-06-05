@@ -13,7 +13,7 @@ import { Badge, TypeBadge } from '../../components/UI/Badge/Badge'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { EmployeeAuth } from '../../models/userAuth'
 import { selectAuth } from '../../redux/auth/authSlice'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const TABS = ['Мероприятие', 'Обратная связь']
 const STATUS_ID_DRAFT = 1
@@ -24,19 +24,16 @@ const STATUS_ID_ACCEPTED = 5
 const ROLE_ID_INSPECTOR = 2
 
 export const EventCreate = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [isSaveValid, setIsSaveValid] = useState(true)
+
+  const isFirstRender = useRef(true)
+  const feedbackForm = useRef<EventFeedbackFormRef>(null)
+  const eventConstructor = useRef<EventCreateConstructorRef>(null)
 
   const navigate = useNavigate()
   const { id: eventId } = useParams()
   const user = useAppSelector(selectAuth) as EmployeeAuth
-  const eventConstructor = useRef<EventCreateConstructorRef>(null)
-  const feedbackForm = useRef<EventFeedbackFormRef>(null)
-  const isFirstRender = useRef(true)
-
-  const saveValidate: boolean =
-    eventConstructor.current?.dateValidator.isValid ||
-    eventConstructor.current?.timeValidator.isValid ||
-    !eventConstructor.current?.hasScheduleErrors
+  const [searchParams, setSearchParams] = useSearchParams()
 
   /*
     Костыль для сохранения формы обратной связи при создании нового мероприятия
@@ -47,7 +44,7 @@ export const EventCreate = () => {
     конструктора мероприятия используем isFirstRender
   */
   useEffect(() => {
-    if (saveValidate && !isFirstRender.current) {
+    if (isSaveValid && !isFirstRender.current) {
       feedbackForm.current?.saveFeedbackForm()
     }
 
@@ -63,7 +60,10 @@ export const EventCreate = () => {
     return (
       <>
         <div style={tabIndex === 0 ? {} : { display: 'none' }}>
-          <EventCreateConstructorTab ref={eventConstructor} />
+          <EventCreateConstructorTab
+            ref={eventConstructor}
+            changeIsValid={isValid => setIsSaveValid(isValid)}
+          />
         </div>
         <div style={tabIndex === 1 ? {} : { display: 'none' }}>
           <EventCreateFeedbackTab
@@ -115,7 +115,7 @@ export const EventCreate = () => {
             eventConstructor.current?.status?.id === STATUS_ID_DRAFT && (
               <Button
                 text="На проверку"
-                disabled={saveValidate}
+                disabled={!isSaveValid}
                 onClick={() =>
                   eventConstructor.current?.changeEventStatus(
                     STATUS_ID_WAIT_INSPECTION,
@@ -153,9 +153,9 @@ export const EventCreate = () => {
             )}
           <Button
             text="Сохранить"
-            disabled={!saveValidate}
+            disabled={!isSaveValid}
             onClick={async () => {
-              if (saveValidate) {
+              if (isSaveValid) {
                 await eventConstructor.current?.saveEvent()
 
                 if (eventId) {
