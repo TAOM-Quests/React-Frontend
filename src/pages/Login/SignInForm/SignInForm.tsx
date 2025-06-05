@@ -6,6 +6,9 @@ import { setUser } from '../../../redux/auth/authSlice'
 import './SignInForm.scss'
 import Input from '../../../components/UI/Input/Input'
 import { Button } from '../../../components/UI/Button/Button'
+import { validateEmail } from '../../../validation/validateEmail'
+import { validatePassword } from '../../../validation/validatePassword'
+import { validateRepeatPassword } from '../../../validation/validateRepeatPassword'
 
 export default function SignInForm() {
   const navigate = useNavigate()
@@ -14,22 +17,27 @@ export default function SignInForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
-  const [errorsMessage, setErrorsMessage] = useState<{
-    email?: string
-    password?: string
-    repeatPassword?: string
-  }>({})
   const [showPassword, setShowPassword] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [signInError, setSignInError] = useState('')
+
+  const emailValidator = validateEmail(email)
+  const passwordValidator = validatePassword(password)
+  const repeatPasswordValidator = validateRepeatPassword(
+    password,
+    repeatPassword,
+  )
 
   const tryCreateUser = async (event: React.FormEvent) => {
     event.preventDefault()
-    setErrorsMessage({})
+    setIsSubmitted(true)
+    setSignInError('')
 
-    if (password !== repeatPassword) {
-      setErrorsMessage({
-        password: 'Пароли не совпадают',
-        repeatPassword: 'Пароли не совпадают',
-      })
+    if (
+      !emailValidator.isValid ||
+      !passwordValidator.isValid ||
+      !repeatPasswordValidator.isValid
+    ) {
       return
     }
 
@@ -40,26 +48,7 @@ export default function SignInForm() {
       navigate('/')
     } catch (e) {
       if (e instanceof Error) {
-        const message = e.message.toLowerCase()
-        if (message.includes('email')) {
-          setErrorsMessage({ email: e.message })
-        } else if (message.includes('password')) {
-          setErrorsMessage({ password: e.message })
-        } else if (message.includes('repeatPassword')) {
-          setErrorsMessage({ repeatPassword: e.message })
-        } else {
-          setErrorsMessage({
-            email: e.message,
-            password: e.message,
-            repeatPassword: e.message,
-          })
-        }
-      } else {
-        setErrorsMessage({
-          email: String(e),
-          password: String(e),
-          repeatPassword: String(e),
-        })
+        setSignInError('Пользователь с таким email уже существует')
       }
     }
   }
@@ -78,7 +67,7 @@ export default function SignInForm() {
         className="email-input"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        errorText={errorsMessage.email}
+        errorText={isSubmitted ? emailValidator.error || signInError : ''}
       />
       <Input
         type={showPassword ? 'text' : 'password'}
@@ -89,7 +78,7 @@ export default function SignInForm() {
         onClickIconAfter={toggleShowPassword}
         value={password}
         onChange={e => setPassword(e.target.value)}
-        errorText={errorsMessage.password}
+        errorText={isSubmitted ? passwordValidator.error : ''}
       />
 
       <Input
@@ -101,7 +90,7 @@ export default function SignInForm() {
         onClickIconAfter={toggleShowPassword}
         value={repeatPassword}
         onChange={e => setRepeatPassword(e.target.value)}
-        errorText={errorsMessage.repeatPassword}
+        errorText={isSubmitted ? repeatPasswordValidator.error : ''}
       />
       <Button type="submit" text="Зарегистрироваться" />
     </form>
