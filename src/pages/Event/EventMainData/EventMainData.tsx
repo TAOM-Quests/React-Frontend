@@ -60,7 +60,7 @@ export const EventMainData = ({
 
   return (
     <div
-      className="event-banner"
+      className="container_min_width event-banner"
       style={{
         backgroundImage: image ? `url(${image.url})` : undefined,
       }}

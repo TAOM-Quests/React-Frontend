@@ -160,7 +160,10 @@ export const FeedbackFormEditor = forwardRef(
             {!isEmployee && (
               <ContainerBox>
                 <h5 className="heading_5 feedback-form__title">{title}</h5>
-                <p className="body_m_r">{description}</p>
+                <p
+                  dangerouslySetInnerHTML={{ __html: description }}
+                  className="body_m_r"
+                />
               </ContainerBox>
             )}
 
