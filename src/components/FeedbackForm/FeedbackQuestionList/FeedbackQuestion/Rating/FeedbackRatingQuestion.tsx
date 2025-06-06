@@ -57,7 +57,7 @@ export const FeedbackQuestionRating = ({
     <div className="question-editor__rating">
       {isEmployee && (
         <NumberInput
-          label="Минимальное значение рейтинга"
+          label="Максимальное значение рейтинга"
           value={localQuestion.answers ? +localQuestion.answers[0] : 5}
           max={500}
           min={1}
