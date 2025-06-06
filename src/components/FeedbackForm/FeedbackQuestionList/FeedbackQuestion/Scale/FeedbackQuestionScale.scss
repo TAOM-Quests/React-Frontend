@@ -1,0 +1,20 @@
+.question-editor__scale {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  &--min,
+  &--max {
+    max-width: 100px;
+  }
+
+  &--min-name,
+  &--max-name {
+    display: flex;
+    width: 100%;
+
+    .inputWrapper {
+      width: 100%;
+    }
+  }
+}

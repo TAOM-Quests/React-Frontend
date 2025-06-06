@@ -1,13 +1,13 @@
 import { Dispatch, useEffect, useState } from 'react'
-import { Comment as CommentModel } from '../../../models/comment'
-import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
-import { Comment } from '../../../components/Comment/Comment'
-import { TextEditor } from '../../../components/TextEditor/TextEditor'
-import { useAppSelector } from '../../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../../redux/auth/authSlice'
-import { Button } from '../../../components/UI/Button/Button'
-import { EmployeeAuth } from '../../../models/userAuth'
 import './EventsCreateInspectorComments.scss'
+import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
+import { TextEditor } from '../../../../components/TextEditor/TextEditor'
+import { Button } from '../../../../components/UI/Button/Button'
+import { useAppSelector } from '../../../../hooks/redux/reduxHooks'
+import { EmployeeAuth } from '../../../../models/userAuth'
+import { selectAuth } from '../../../../redux/auth/authSlice'
+import { Comment as CommentModel } from '../../../../models/comment'
+import { Comment } from '../../../../components/Comment/Comment'
 
 export interface EventsCreateInspectorCommentsProps {
   comments: CommentModel[]

@@ -1,0 +1,19 @@
+.question-editor__rating {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .star-rating {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+
+    &__star {
+      cursor: pointer;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}

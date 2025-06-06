@@ -62,7 +62,7 @@ export const EventMainData = ({
       return
     }
 
-    events.changeParticipant(+eventId!, {
+    events.changeParticipant(+eventId, {
       add: [user.id],
     })
     setIsParticipants(true)
@@ -79,7 +79,7 @@ export const EventMainData = ({
 
   return (
     <div
-      className="event-banner"
+      className="container_min_width event-banner"
       style={{
         backgroundImage: image ? `url(${image.url})` : undefined,
       }}
@@ -160,7 +160,11 @@ export const EventMainData = ({
               </div>
             ) : (
               <div>
-                <Button text="Участвовать" onClick={addParticipant} />
+                <Button
+                  text="Участвовать"
+                  onClick={addParticipant}
+                  disabled={moment() > moment(date).endOf('day')}
+                />
               </div>
             )}
           </>

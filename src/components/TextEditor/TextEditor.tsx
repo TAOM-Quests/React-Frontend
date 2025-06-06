@@ -7,6 +7,8 @@ import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import './TextEditor.scss'
 import { useEffect } from 'react'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
 
 export interface TextEditorProps {
   value: string
@@ -21,6 +23,9 @@ export const TextEditor = ({
   placeholder,
   label,
 }: TextEditorProps) => {
+  const user = useAppSelector(selectAuth)
+  const isEmployee = user?.isEmployee
+
   const extensions = [
     StarterKit,
     Placeholder.configure({
@@ -47,7 +52,8 @@ export const TextEditor = ({
       <div className="editor">
         {label && <label className="label body_s_sb">{label}</label>}
         <div>
-          <MenuBar editor={editor} />
+          {isEmployee && <MenuBar editor={editor} />}
+
           <EditorContent editor={editor} />
         </div>
       </div>

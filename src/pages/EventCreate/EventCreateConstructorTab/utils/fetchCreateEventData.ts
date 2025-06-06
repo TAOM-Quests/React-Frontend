@@ -1,9 +1,9 @@
-import { EventTag } from '../../../models/eventTag'
-import { EventType } from '../../../models/eventType'
-import { Employee } from '../../../models/user'
-import { events } from '../../../services/api/eventModule/events/events'
-import { users } from '../../../services/api/userModule/users/users'
-import { user } from '../../Profile/EventsTab/test/eventsTabEnvironment'
+import { EventTag } from '../../../../models/eventTag'
+import { EventType } from '../../../../models/eventType'
+import { Employee } from '../../../../models/user'
+import { events } from '../../../../services/api/eventModule/events/events'
+import { users } from '../../../../services/api/userModule/users/users'
+import { user } from '../../../Profile/EventsTab/test/eventsTabEnvironment'
 
 export interface FetchCreateEventDataProps {
   setEventTags: React.Dispatch<React.SetStateAction<EventTag[]>>

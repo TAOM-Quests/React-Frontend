@@ -12,6 +12,12 @@
   background: #fff;
   overflow-y: auto;
 
+  width: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
   &-focused {
     outline: none;
   }
