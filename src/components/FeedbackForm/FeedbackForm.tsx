@@ -146,16 +146,11 @@ export const FeedbackFormEditor = forwardRef(
         {!isLoading ? (
           <div className="feedback-form-editor">
             {isEmployee && (
-              <>
-                <h5 className="heading_5 feedback-form-editor__title">
-                  Редактор формы обратной связи
-                </h5>
-                <FormHeaderEditor
-                  title={title}
-                  description={description}
-                  onChange={handleHeaderChange}
-                />
-              </>
+              <FormHeaderEditor
+                title={title}
+                description={description}
+                onChange={handleHeaderChange}
+              />
             )}
             {!isEmployee && (
               <ContainerBox>

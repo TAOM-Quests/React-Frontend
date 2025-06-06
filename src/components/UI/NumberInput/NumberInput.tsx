@@ -33,11 +33,16 @@ export const NumberInput = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = +e.target.value
-    if (val === 0) {
+    if (
+      val === 0 ||
+      (min !== undefined && val < min) ||
+      (max !== undefined && val > max)
+    ) {
       onChange?.(null)
       setValueInput(null)
       return
     }
+
     setValueInput(val)
     onChange?.(val)
   }

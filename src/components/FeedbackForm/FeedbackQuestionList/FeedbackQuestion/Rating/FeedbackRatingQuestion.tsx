@@ -59,6 +59,8 @@ export const FeedbackQuestionRating = ({
         <NumberInput
           label="Минимальное значение рейтинга"
           value={localQuestion.answers ? +localQuestion.answers[0] : 5}
+          max={500}
+          min={1}
           onChange={val => {
             if (val === null) return
             if (val >= 1) {
