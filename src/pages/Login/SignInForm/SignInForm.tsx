@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { users } from '../../../services/api/userModule/users/users'
 import { useNavigate } from 'react-router'
-import { useAppDispatch } from '../../../hooks/redux/reduxHooks'
-import { setUser } from '../../../redux/auth/authSlice'
 import './SignInForm.scss'
 import Input from '../../../components/UI/Input/Input'
 import { Button } from '../../../components/UI/Button/Button'
@@ -12,7 +10,6 @@ import { validateRepeatPassword } from '../../../validation/validateRepeatPasswo
 
 export default function SignInForm() {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -41,16 +38,15 @@ export default function SignInForm() {
       return
     }
 
-    try {
-      const createdUser = await users.create({ email, password })
-      localStorage.setItem('token', createdUser.token)
-      dispatch(setUser(createdUser))
-      navigate('/')
-    } catch (e) {
-      if (e instanceof Error) {
-        setSignInError('Пользователь с таким email уже существует')
-      }
+    const foundUser = await users.getUsers({ email })
+
+    if (foundUser.length) {
+      setSignInError('Пользователь с таким email уже существует')
+      return
     }
+
+    localStorage.setItem('user', JSON.stringify({ email, password }))
+    navigate('/email/confirm')
   }
 
   const toggleShowPassword = () => {
