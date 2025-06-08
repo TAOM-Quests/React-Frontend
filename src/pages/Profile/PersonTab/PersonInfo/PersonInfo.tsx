@@ -69,7 +69,7 @@ export default function PersonInfo({
   const firstNameValidator = validateName(firstName, false)
   const patronymicValidator = validateName(patronymic, false)
   const birthDateValidator = validateDateOfBirth(birthDate, false)
-  const emailValidator = validateEmail(email, false)
+  const emailValidator = validateEmail(email)
   const phoneNumberValidator = validatePhone(phoneNumber, false)
 
   const personFieldsNames: ProfileField[] = [
@@ -200,6 +200,14 @@ export default function PersonInfo({
         <Button
           text={changingMode ? 'Сохранить' : 'Изменить профиль'}
           colorType={changingMode ? 'primary' : 'secondary'}
+          disabled={
+            !birthDateValidator.isValid ||
+            !firstNameValidator.isValid ||
+            !lastNameValidator.isValid ||
+            !patronymicValidator.isValid ||
+            !emailValidator.isValid ||
+            !phoneNumberValidator.isValid
+          }
           onClick={() => {
             if (
               birthDateValidator.isValid &&
