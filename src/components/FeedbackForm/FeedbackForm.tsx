@@ -1,14 +1,24 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { FormHeaderEditor } from '../FormHeaderEditor/FormHeaderEditor'
-import { QuestionList } from '../QuestionList/QuestionList'
-import { FeedbackForm } from '../../../models/feedbackForm'
-import { FeedbackQuestion } from '../../../models/feedbackQuestion'
-import { Loading } from '../../Loading/Loading'
-import { feedback } from '../../../services/api/commonModule/commonEntities/feedback/feedback'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
+import { FormHeaderEditor } from './FormHeaderEditor/FormHeaderEditor'
+import {
+  FeedbackQuestionList,
+  FeedbackQuestionListRef,
+} from './FeedbackQuestionList/FeedbackQuestionList'
+import { FeedbackEntity, FeedbackForm } from '../../models/feedbackForm'
+import { FeedbackQuestion } from '../../models/feedbackQuestion'
+import { Loading } from '../Loading/Loading'
+import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
 import './FeedbackForm.scss'
-import { selectAuth } from '../../../redux/auth/authSlice'
-import { useAppSelector } from '../../../hooks/redux/reduxHooks'
-import { ContainerBox } from '../../ContainerBox/ContainerBox'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { ContainerBox } from '../ContainerBox/ContainerBox'
+import { FeedbackAnswer } from '../../models/feedbackAnswer'
 
 const DEFAULT_TITLE = 'Обратная связь'
 const DEFAULT_DESCRIPTION =
@@ -16,13 +26,15 @@ const DEFAULT_DESCRIPTION =
 
 export interface FeedbackFormRef {
   saveForm: () => void
+  saveAnswer: () => void
 }
 
 interface FeedbackFormEditorProps {
-  entityName: string
   entityId: number | null
-  baseQuestions: FeedbackQuestion[]
+  entityName: FeedbackEntity
+  baseQuestions?: FeedbackQuestion[]
   onFormSaved?: (form: FeedbackForm) => void
+  onAnswerSaved?: (answer: FeedbackAnswer) => void
 }
 
 export const FeedbackFormEditor = forwardRef(
@@ -32,26 +44,30 @@ export const FeedbackFormEditor = forwardRef(
       entityName,
       baseQuestions,
       onFormSaved,
+      onAnswerSaved,
     }: FeedbackFormEditorProps,
     ref,
   ) => {
     const [title, setTitle] = useState<string>(DEFAULT_TITLE)
     const [description, setDescription] = useState<string>(DEFAULT_DESCRIPTION)
-    const [questions, setQuestions] =
-      useState<FeedbackQuestion[]>(baseQuestions)
+    const [questions, setQuestions] = useState<FeedbackQuestion[]>(
+      baseQuestions ?? [],
+    )
     const [isLoading, setIsLoading] = useState(false)
 
     const user = useAppSelector(selectAuth)
     const isEmployee = user?.isEmployee
+    const questionListRef = useRef<FeedbackQuestionListRef>(null)
 
-    let formId: number | null = null
+    let formIdRef = useRef<number | null>(null)
 
     useImperativeHandle(
       ref,
-      () => ({
+      (): FeedbackFormRef => ({
         saveForm,
+        saveAnswer,
       }),
-      [],
+      [title, questions, formIdRef.current, description, entityId, entityName],
     )
 
     useEffect(() => {
@@ -72,8 +88,8 @@ export const FeedbackFormEditor = forwardRef(
         entityId,
         entityName,
       })
-      formId = form.id
-      setTitle(form.title)
+      formIdRef.current = form.id
+      setTitle(form.name)
       setQuestions(form.questions)
       setDescription(form.description)
     }
@@ -83,21 +99,37 @@ export const FeedbackFormEditor = forwardRef(
         throw Error("Couldn't save feedback form: EntityId is required")
 
       setIsLoading(true)
-      const savedForm = formId
+      const savedForm = formIdRef.current
         ? await feedback.updateForm({
-            title,
+            name: title,
             questions,
-            id: formId,
+            id: formIdRef.current,
             description,
           })
         : await feedback.createFrom({
-            title,
+            name: title,
             entityId,
             questions,
             entityName,
             description,
           })
       onFormSaved?.(savedForm)
+      await fetchForm()
+      setIsLoading(false)
+    }
+
+    const saveAnswer = async () => {
+      if (!user) throw Error('User not found')
+      if (!formIdRef.current) throw Error('Form id not found')
+      if (!questionListRef.current) throw Error('Questions answers not found')
+
+      setIsLoading(true)
+      const savedAnswer = await feedback.createAnswer({
+        formId: formIdRef.current,
+        userId: user.id,
+        answers: questionListRef.current?.getAnswers(),
+      })
+      onAnswerSaved?.(savedAnswer)
       setIsLoading(false)
     }
 
@@ -114,25 +146,24 @@ export const FeedbackFormEditor = forwardRef(
         {!isLoading ? (
           <div className="feedback-form-editor">
             {isEmployee && (
-              <>
-                <h5 className="heading_5 feedback-form-editor__title">
-                  Редактор формы обратной связи
-                </h5>
-                <FormHeaderEditor
-                  title={title}
-                  description={description}
-                  onChange={handleHeaderChange}
-                />
-              </>
+              <FormHeaderEditor
+                title={title}
+                description={description}
+                onChange={handleHeaderChange}
+              />
             )}
-            {isEmployee && (
+            {!isEmployee && (
               <ContainerBox>
                 <h5 className="heading_5 feedback-form__title">{title}</h5>
-                <p className="body_m_r">{description}</p>
+                <p
+                  dangerouslySetInnerHTML={{ __html: description }}
+                  className="body_m_r"
+                />
               </ContainerBox>
             )}
 
-            <QuestionList
+            <FeedbackQuestionList
+              ref={questionListRef}
               questions={questions}
               onChangeQuestions={setQuestions}
             />

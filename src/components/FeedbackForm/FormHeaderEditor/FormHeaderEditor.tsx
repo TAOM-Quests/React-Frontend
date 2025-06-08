@@ -15,6 +15,9 @@ export const FormHeaderEditor = ({
 }: FormHeaderEditorProps) => {
   return (
     <ContainerBox>
+      <h5 className="heading_5 feedback-form-editor__title">
+        Редактор формы обратной связи
+      </h5>
       <Input
         type="text"
         label="Название формы"

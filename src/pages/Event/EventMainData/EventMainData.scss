@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   padding: 80px 15vw;
-  height: 100vh;
   background-color: var(--bg_c_image); // запасной цвет, если нет фона
   background-repeat: no-repeat;
   background-size: cover;
@@ -60,5 +59,11 @@
     &__content {
       max-width: 100%;
     }
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 }

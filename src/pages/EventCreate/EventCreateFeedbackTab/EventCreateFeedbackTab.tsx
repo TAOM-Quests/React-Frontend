@@ -1,8 +1,8 @@
-import { createRef, forwardRef, useImperativeHandle } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import {
   FeedbackFormEditor,
   FeedbackFormRef,
-} from '../../../components/FeedbackForm/FeedbackForm/FeedbackForm'
+} from '../../../components/FeedbackForm/FeedbackForm'
 import { FeedbackQuestion } from '../../../models/feedbackQuestion'
 
 const baseEventQuestions: FeedbackQuestion[] = [
@@ -37,7 +37,7 @@ interface EventCreateFeedbackTabProps {
 
 export const EventCreateFeedbackTab = forwardRef(
   ({ eventId }: EventCreateFeedbackTabProps, ref) => {
-    const feedbackForm = createRef<FeedbackFormRef>()
+    const feedbackForm = useRef<FeedbackFormRef>(null)
 
     useImperativeHandle(
       ref,
@@ -49,7 +49,8 @@ export const EventCreateFeedbackTab = forwardRef(
     return (
       <>
         <FeedbackFormEditor
-          entityName="event"
+          ref={feedbackForm}
+          entityName="events"
           entityId={eventId}
           baseQuestions={baseEventQuestions}
         />

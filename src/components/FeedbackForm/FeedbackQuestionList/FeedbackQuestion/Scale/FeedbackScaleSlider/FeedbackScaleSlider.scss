@@ -1,0 +1,63 @@
+.feedback-scale {
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__labels {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__label {
+    color: var(--text_c_subdued);
+  }
+
+  &-slider {
+    height: 4px !important;
+
+    .MuiSlider-rail {
+      color: var(--bg_c_gray_secondary);
+      opacity: 1;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    .MuiSlider-track {
+      color: var(--text_c_accent);
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    .MuiSlider-thumb {
+      width: 16px;
+      height: 16px;
+      background-color: #fff;
+      border: 3px solid var(--border_c_accent);
+      box-shadow: none;
+    }
+
+    .MuiSlider-mark {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--bg_c_secondary);
+      border: 2px solid var(--border_c_accent);
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 1;
+    }
+
+    .MuiSlider-markActive {
+      background-color: var(--bg_c_accent);
+    }
+
+    .MuiSlider-markLabel {
+      color: var(--text_c_subdued);
+      font-size: 14px;
+      font-weight: 500;
+      top: 28px;
+      transform: translateX(-50%);
+    }
+  }
+}
