@@ -128,10 +128,6 @@ export const EmailConfirm = () => {
           </div>
 
           <div className="email_confirm__code">
-            {/* <label className="body_s_sb email_confirm__code--label">
-              Код из сообщения
-            </label> */}
-
             <div className="email_confirm__code--inputs">
               {codeDigits.map((digit, index) => (
                 <input

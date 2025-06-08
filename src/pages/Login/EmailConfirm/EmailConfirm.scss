@@ -40,10 +40,6 @@
     flex-direction: column;
     gap: 6px;
 
-    &--label {
-      color: var(--text_c_subdued);
-    }
-
     &--inputs {
       display: flex;
       flex-direction: row;
