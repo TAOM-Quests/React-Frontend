@@ -1,11 +1,15 @@
 import moment from 'moment'
-import { PlaceOnline, PlaceOffline, ScheduleItem } from '../../../models/event'
-import { events } from '../../../services/api/eventModule/events/events'
-import { EventUpdateDto } from '../../../services/api/eventModule/events/eventsDto'
-import { EventTag } from '../../../models/eventTag'
-import { EventType } from '../../../models/eventType'
-import { ServerFile } from '../../../models/serverFile'
-import { Employee } from '../../../models/user'
+import {
+  ScheduleItem,
+  PlaceOnline,
+  PlaceOffline,
+} from '../../../../models/event'
+import { EventTag } from '../../../../models/eventTag'
+import { EventType } from '../../../../models/eventType'
+import { ServerFile } from '../../../../models/serverFile'
+import { Employee } from '../../../../models/user'
+import { events } from '../../../../services/api/eventModule/events/events'
+import { EventUpdateDto } from '../../../../services/api/eventModule/events/eventsDto'
 
 export interface SaveEventProps {
   name: string

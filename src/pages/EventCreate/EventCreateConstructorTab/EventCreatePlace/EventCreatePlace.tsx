@@ -1,5 +1,5 @@
-import Input from '../../../components/UI/Input/Input'
-import { NumberInput } from '../../../components/UI/NumberInput/NumberInput'
+import Input from '../../../../components/UI/Input/Input'
+import { NumberInput } from '../../../../components/UI/NumberInput/NumberInput'
 
 interface EventCreatePlaceProps {
   address: string

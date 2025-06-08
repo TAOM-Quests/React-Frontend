@@ -1,10 +1,10 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react'
-import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
-import { ServerFile } from '../../../models/serverFile'
+import { serverFiles } from '../../../../services/api/commonModule/serverFiles/serverFiles'
+import { ServerFile } from '../../../../models/serverFile'
 import classNames from 'classnames'
-import { Icon } from '../../../components/UI/Icon/Icon'
+import { Icon } from '../../../../components/UI/Icon/Icon'
 import './EventCreateFiles.scss'
-import { CardFile } from '../../../components/Cards/CardFile/CardFile'
+import { CardFile } from '../../../../components/Cards/CardFile/CardFile'
 
 export interface EventCreateFilesProps {
   files: ServerFile[]
