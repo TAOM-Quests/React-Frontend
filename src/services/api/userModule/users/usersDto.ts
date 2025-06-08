@@ -30,6 +30,13 @@ export interface UsersGetDto {
   departmentId?: number
 }
 
+export interface UpdateUserNotificationsSettingsItemDto {
+  userId: number
+  typeId: number
+  email?: boolean
+  telegram?: boolean
+}
+
 interface UserEnter {
   email: string
   password: string

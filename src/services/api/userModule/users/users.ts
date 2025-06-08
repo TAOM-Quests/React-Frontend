@@ -1,5 +1,6 @@
 import { Employee, User } from '../../../../models/user'
 import { UserAuth } from '../../../../models/userAuth'
+import { UserNotificationsSettingsItem } from '../../../../models/userNotificationsSettings'
 import { UserPosition } from '../../../../models/userPoistion'
 import { UserProfile, UserProfileUpdated } from '../../../../models/userProfile'
 import { UserRole } from '../../../../models/userRole'
@@ -7,6 +8,7 @@ import { userModule } from '../userModule'
 import {
   ProfileGetDto,
   ProfileUpdateDto,
+  UpdateUserNotificationsSettingsItemDto,
   UserEnterDto,
   UsersGetDto,
 } from './usersDto'
@@ -32,6 +34,14 @@ export const users = {
     )
   },
 
+  updateNotificationsSettings: (
+    params: UpdateUserNotificationsSettingsItemDto,
+  ): Promise<UserNotificationsSettingsItem[]> =>
+    userModule<
+      UserNotificationsSettingsItem[],
+      UpdateUserNotificationsSettingsItemDto
+    >(`users/${params.userId}/notifications/settings`, params),
+
   getUsers: (params: UsersGetDto): Promise<User[]> => {
     const queryString = Object.entries(params)
       .map(([key, value]) => `${key}=${value}`)
@@ -52,7 +62,6 @@ export const users = {
     oldPassword: string
     newPassword: string
   }): Promise<void> =>
-    
     userModule<void, { oldPassword: string; newPassword: string }>(
       'users/change-password',
       params,
