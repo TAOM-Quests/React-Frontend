@@ -6,6 +6,7 @@ export interface ProfileUpdateDto {
   id: number
   sex?: string
   email?: string
+  password?: string
   lastName?: string
   firstName?: string
   patronymic?: string

@@ -3,6 +3,8 @@ import { Modal } from '../../../../../components/UI/Modal/Modal'
 import { Input } from '../../../../../components/UI/Input/Input'
 import { users } from '../../../../../services/api/userModule/users/users'
 import './ChangePasswordModal.scss'
+import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../redux/auth/authSlice'
 
 interface ChangePasswordModalProps {
   isOpen: boolean
@@ -25,6 +27,8 @@ export const ChangePasswordModal = ({
     newPassword: '',
     confirmPassword: '',
   })
+
+  const user = useAppSelector(selectAuth)
 
   useEffect(() => {
     if (!isOpen) {
@@ -71,15 +75,17 @@ export const ChangePasswordModal = ({
     if (!validate()) return
 
     try {
-      await users.changePassword({
-        oldPassword,
-        newPassword,
+      if (!user) throw Error('User not found')
+
+      await users.updateProfile({
+        id: user.id,
+        password: newPassword,
       })
 
       onSuccess?.()
       onClose()
     } catch (e) {
-      console.error(e)
+      console.log(`[ChangePasswordModal] ${e}`)
     }
   }
 
