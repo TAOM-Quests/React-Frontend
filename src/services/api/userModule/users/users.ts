@@ -5,8 +5,10 @@ import { UserProfile, UserProfileUpdated } from '../../../../models/userProfile'
 import { UserRole } from '../../../../models/userRole'
 import { userModule } from '../userModule'
 import {
+  ConfirmEmailDto,
   ProfileGetDto,
   ProfileUpdateDto,
+  SendEmailConfirmCodeDto,
   UserEnterDto,
   UsersGetDto,
 } from './usersDto'
@@ -16,6 +18,12 @@ export const users = {
     typeof params === 'string'
       ? userModule<UserAuth, UserEnterDto>(`user/auth?token=${params}`)
       : userModule<UserAuth, UserEnterDto>('user/auth', params),
+
+  sendEmailConfirmCode: ({ email }: SendEmailConfirmCodeDto): Promise<void> =>
+    userModule<void, SendEmailConfirmCodeDto>('email/confirm/send', { email }),
+
+  confirmEmail: (confirmDto: ConfirmEmailDto): Promise<boolean> =>
+    userModule<boolean, ConfirmEmailDto>('email/confirm', confirmDto),
 
   create: (params: UserEnterDto): Promise<UserAuth> =>
     userModule<UserAuth, UserEnterDto>('users', params),
@@ -52,7 +60,6 @@ export const users = {
     oldPassword: string
     newPassword: string
   }): Promise<void> =>
-    
     userModule<void, { oldPassword: string; newPassword: string }>(
       'users/change-password',
       params,

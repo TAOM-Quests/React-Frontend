@@ -19,6 +19,7 @@ import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
+import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -65,9 +66,10 @@ root.render(
           <ScrollToTop>
             <NotificationToaster />
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="" element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="email/confirm" element={<EmailConfirm />} />
 
               <Route path="event/:id" element={<Event />} />
               <Route path="event/create" element={<EventCreate />} />
