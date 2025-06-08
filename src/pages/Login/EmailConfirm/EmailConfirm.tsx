@@ -1,20 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
-import { NumberInput } from '../../../components/UI/NumberInput/NumberInput'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth, setUser } from '../../../redux/auth/authSlice'
 import { users } from '../../../services/api/userModule/users/users'
 import { Button } from '../../../components/UI/Button/Button'
 import { useNavigate } from 'react-router'
-
+import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
+import './EmailConfirm.scss'
 /**
  * Для работы страницы подтверждения пароля
  * необходимо в localStorage сохранить email и пароль
  */
 
 export const EmailConfirm = () => {
-  const [code, setCode] = useState(0)
   const [time, setTime] = useState(1000 * 60)
   const [errorText, setErrorText] = useState('')
+  const [codeDigits, setCodeDigits] = useState<string[]>(['', '', '', ''])
+  const isCodeComplete = () => codeDigits.every(digit => digit !== '')
+
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([])
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -47,10 +50,19 @@ export const EmailConfirm = () => {
     await users.sendEmailConfirmCode({ email })
   }
 
-  const confirmEmail = async (): Promise<void> => {
+  const confirmEmail = async (e: FormEvent): Promise<void> => {
+    e.preventDefault()
+
     if (!email) throw new Error('Email not found')
 
-    const isConfirmed = await users.confirmEmail({ email, code })
+    const codeStr = codeDigits.join('')
+    if (codeStr.length < 4) {
+      setErrorText('Введите полный 4-значный код')
+      return
+    }
+    const codeNum = Number(codeStr)
+
+    const isConfirmed = await users.confirmEmail({ email, code: codeNum })
 
     if (isConfirmed) {
       if (user?.id) {
@@ -69,16 +81,98 @@ export const EmailConfirm = () => {
     }
   }
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    setErrorText('')
+
+    const val = e.target.value
+
+    if (!/^\d?$/.test(val)) return
+
+    const newCodeDigits = [...codeDigits]
+    newCodeDigits[index] = val
+    setCodeDigits(newCodeDigits)
+
+    if (val && index < 3) {
+      inputRefs.current[index + 1]?.focus()
+    }
+  }
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    if (e.key === 'Backspace' && codeDigits[index] === '' && index > 0) {
+      inputRefs.current[index - 1]?.focus()
+    }
+
+    if (e.key === 'Enter') {
+      if (isCodeComplete()) {
+        e.preventDefault()
+        confirmEmail(e)
+      }
+    }
+  }
+
   return (
-    <div>
-      <NumberInput value={code} onChange={newCode => setCode(newCode ?? 0)} />
-      {time === 0 ? (
-        <Button onClick={sendCode} text="Отправить код повторно" />
-      ) : (
-        <span>Отправить код повторно можно через {time / 1000}</span>
-      )}
-      <Button onClick={confirmEmail} />
-      {errorText && <span>{errorText}</span>}
+    <div className="container_min_width email_confirm">
+      <ContainerBox className="email_confirm__container">
+        <form onSubmit={confirmEmail} className="email_confirm__form">
+          <div className="email_confirm__heading">
+            <h4 className="heading_4">Введите код из сообщения</h4>
+            <p className="body_m_r">
+              На почту {email} отправлен код подтверждения
+            </p>
+          </div>
+
+          <div className="email_confirm__code">
+            {/* <label className="body_s_sb email_confirm__code--label">
+              Код из сообщения
+            </label> */}
+
+            <div className="email_confirm__code--inputs">
+              {codeDigits.map((digit, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={e => handleChange(e, index)}
+                  onKeyDown={e => handleKeyDown(e, index)}
+                  ref={el => {
+                    inputRefs.current[index] = el
+                  }}
+                  className="email_confirm__code--input"
+                  inputMode="numeric"
+                  pattern="\d*"
+                  autoComplete="one-time-code"
+                />
+              ))}
+            </div>
+            {errorText && (
+              <p className="body_s_m email_confirm__error">{errorText}</p>
+            )}
+          </div>
+
+          {time === 0 ? (
+            <div>
+              <Button
+                size="small"
+                colorType="secondary"
+                onClick={sendCode}
+                text="Отправить код повторно"
+              />
+            </div>
+          ) : (
+            <p className="body_m_r">
+              Отправить код повторно можно через {time / 1000}
+            </p>
+          )}
+          <Button type="submit" text="Подтвердить" />
+        </form>
+      </ContainerBox>
     </div>
   )
 }
