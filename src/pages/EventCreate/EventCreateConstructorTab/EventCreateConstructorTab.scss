@@ -1,0 +1,142 @@
+.event_create {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 80px 15vw;
+  background-color: var(--bg_body_primary);
+  &--header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+
+    &__buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      @media (max-width: 770px) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  &--container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+
+    .event_create--content {
+      &__left {
+        display: flex;
+        flex-direction: column;
+        flex: 1.2;
+        gap: 10px;
+      }
+
+      &__right {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 10px;
+        max-width: 580px;
+      }
+    }
+
+    @media (max-width: 1436px) {
+      flex-direction: column;
+
+      .event_create--content {
+        &__left,
+        &__right {
+          flex: 1;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  .additional-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &_checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .checkbox_wrapper {
+        align-items: start;
+      }
+      p {
+        white-space: normal;
+      }
+
+      a {
+        color: var(--text_c_accent);
+      }
+    }
+  }
+}
+
+.places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  .inputWrapper,
+  .calendar-input-container,
+  .dropdown-container {
+    flex-basis: calc((100% - 10px) / 2);
+    min-width: 250px;
+  }
+  @media (max-width: 420px) {
+    .inputWrapper,
+    .calendar-input-container,
+    .dropdown-container {
+      min-width: 100% !important;
+    }
+  }
+
+  @media (max-width: 1690px) {
+    .inputWrapper,
+    .calendar-input-container,
+    .dropdown-container {
+      flex-basis: 100%;
+    }
+  }
+
+  &__miniInput {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-basis: calc((100% - 10px) / 2);
+
+    @media (max-width: 1690px) {
+      flex-basis: 100%;
+    }
+    @media (max-width: 420px) {
+      flex-direction: column;
+    }
+
+    @media (max-width: 420px) {
+      .inputWrapper,
+      .inputWrapperNumber {
+        min-width: 100%;
+      }
+    }
+
+    .inputWrapper,
+    .inputWrapperNumber {
+      min-width: 120px;
+    }
+  }
+}

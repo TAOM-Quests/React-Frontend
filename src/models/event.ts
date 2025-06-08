@@ -4,7 +4,7 @@ import { EventStatus } from './eventStatus'
 import { EventTag } from './eventTag'
 import { EventType } from './eventType'
 import { ServerFile } from './serverFile'
-import { Employee } from './user'
+import { Employee, Participant } from './user'
 
 export interface Event {
   id: number
@@ -21,6 +21,7 @@ export interface Event {
   executors: Employee[]
   department: Department
   schedule: ScheduleItem[]
+  participants: Participant[]
   inspectorComments: Comment[]
   places: (PlaceOnline | PlaceOffline)[]
 }
