@@ -24,6 +24,10 @@ import { NotificationsModal } from './NotificationsModal/NotificationsModal'
 import { NotificationSettings } from './NotificationsModal/notificationSettingsConfig'
 import { ChangePasswordModal } from './ChangePasswordModal/ChangePasswordModal'
 import { Level } from '../../Level/Level'
+import { useAppSelector } from '../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../redux/auth/authSlice'
+import { Modal } from '../../../../components/UI/Modal/Modal'
+import { useNavigate } from 'react-router'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -47,6 +51,7 @@ export default function PersonInfo({
 
   const [changingMode, setChangingMode] = useState(false)
   const [openMenu, setOpenMenu] = useState<boolean>(false)
+  const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false)
 
   const [isNotificationsModalOpen, setNotificationsModalOpen] = useState(false)
   const [notificationSettings, setNotificationSettings] =
@@ -54,6 +59,9 @@ export default function PersonInfo({
 
   const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
     useState(false)
+
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
 
   const role = isEmployee ? 'teacher' : 'applicant'
 
@@ -140,10 +148,13 @@ export default function PersonInfo({
 
   const toggleChangingMode = async () => {
     if (changingMode) {
+      if (user?.email !== email) {
+        setIsChangeEmailModalOpen(true)
+      }
+
       const updatedFields = await users.updateProfile({
         id: profile.id,
         sex,
-        email,
         lastName,
         firstName,
         patronymic,
@@ -205,6 +216,27 @@ export default function PersonInfo({
         />
       </div>
       <div className="personInfo_containerBoxs">
+        {isChangeEmailModalOpen && (
+          <Modal
+            isOpen={isChangeEmailModalOpen}
+            onClose={() => {
+              setIsChangeEmailModalOpen(false)
+              setEmail(user?.email ?? '')
+            }}
+            title="Изменение почты"
+            isShowFooter
+            textButtonSave="Изменить"
+            onSave={() => {
+              localStorage.setItem('user', JSON.stringify({ email }))
+              navigate('/email/confirm')
+            }}
+          >
+            <span>
+              Для изменения электронной почты необходимо её подтверждение.
+              Текущие изменения будут сохранены.
+            </span>
+          </Modal>
+        )}
         <ContainerBox>
           <div className="personInfo--info">
             <ImageContainer
