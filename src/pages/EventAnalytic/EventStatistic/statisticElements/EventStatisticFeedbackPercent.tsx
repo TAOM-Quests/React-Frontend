@@ -11,7 +11,10 @@ export const EventStatisticFeedbackPercent = ({
         Процент обратной связи
       </p>
       <p className="heading_4">
-        {(feedbackAnswers.length / participants.length).toFixed(3)}
+        {feedbackAnswers.length > 0 && participants.length > 0
+          ? (feedbackAnswers.length / participants.length).toFixed(3)
+          : 0}
+        %
       </p>
     </ContainerBox>
   )
