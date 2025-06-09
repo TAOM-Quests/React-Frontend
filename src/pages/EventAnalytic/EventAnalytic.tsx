@@ -27,10 +27,10 @@ export const EventAnalytic = () => {
 
   const { id: eventId } = useParams<{ id: string }>()
 
-  const analyticElementParams: EventAnalyticElementProps = {
+  const getAnalyticElementParams = (): EventAnalyticElementProps => ({
     participants,
     feedbackAnswers,
-  }
+  })
 
   useEffect(() => {
     setIsLoading(true)
@@ -69,15 +69,15 @@ export const EventAnalytic = () => {
           </div>
 
           {activeTab === 'Мероприятие' && (
-            <EventStatistic {...analyticElementParams} />
+            <EventStatistic {...getAnalyticElementParams()} />
           )}
           {activeTab === 'Участники' && (
-            <EventParticipants {...analyticElementParams} />
+            <EventParticipants {...getAnalyticElementParams()} />
           )}
           {activeTab === 'Обратная связь' && (
             <EventFeedbackAnswers
               feedbackForm={feedbackForm ?? undefined}
-              analyticData={analyticElementParams}
+              analyticData={getAnalyticElementParams()}
             />
           )}
         </div>
