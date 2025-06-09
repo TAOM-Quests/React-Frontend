@@ -1,5 +1,5 @@
 import { Icon } from '../Icon/Icon'
-import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
+import { UserAvatarInfo } from '../../User/UserAvatarInfo/UserAvatarInfo'
 import classNames from 'classnames'
 import { ICON_MAP } from '../../../assets/icons'
 import { Checkbox } from '../Checkbox/Checkbox'
@@ -46,7 +46,7 @@ export const Option = ({
   const renderContent = () => {
     if (avatar) {
       return (
-        <OptionAvatar
+        <UserAvatarInfo
           size="extraSmall"
           avatarSrc={avatar.src}
           text={text}

@@ -21,9 +21,9 @@ export interface FeedbackFromUpdateDto {
 }
 
 export interface FeedbackAnswerGetDto {
-  userId: number
-  entityId: number
-  entityName: string
+  userId?: number
+  entityId?: number
+  entityName?: string
 }
 
 export interface FeedbackAnswerCreateDto {

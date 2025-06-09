@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { OptionAvatar } from './OptionAvatar'
+import { UserAvatarInfo } from './UserAvatarInfo'
 
-const meta: Meta<typeof OptionAvatar> = {
-  title: 'Components/OptionAvatar',
-  component: OptionAvatar,
+const meta: Meta<typeof UserAvatarInfo> = {
+  title: 'Components/UserAvatarInfo',
+  component: UserAvatarInfo,
   parameters: {
     layout: 'centered',
     docs: {
@@ -37,9 +37,9 @@ const meta: Meta<typeof OptionAvatar> = {
 
 export default meta
 
-type Story = StoryObj<typeof OptionAvatar>
+type Story = StoryObj<typeof UserAvatarInfo>
 
-export const DefaultOptionAvatar: Story = {
+export const DefaultUserAvatarInfo: Story = {
   args: {
     text: 'Иванов Иван',
     description: 'Заведующий кафедры ПИ',
@@ -47,7 +47,7 @@ export const DefaultOptionAvatar: Story = {
   },
 }
 
-export const ExtraSmallOptionAvatar: Story = {
+export const ExtraSmallUserAvatarInfo: Story = {
   args: {
     text: 'Петров Петр',
     description: 'Программист',
@@ -55,7 +55,7 @@ export const ExtraSmallOptionAvatar: Story = {
   },
 }
 
-export const SmallOptionAvatar: Story = {
+export const SmallUserAvatarInfo: Story = {
   args: {
     text: 'Петров Петр',
     description: 'Программист',
@@ -63,7 +63,7 @@ export const SmallOptionAvatar: Story = {
   },
 }
 
-export const WithoutDescriptionOptionAvatar: Story = {
+export const WithoutDescriptionUserAvatarInfo: Story = {
   args: {
     text: 'Сидоров Сидор',
   },

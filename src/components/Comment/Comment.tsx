@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { Employee } from '../../models/user'
-import { OptionAvatar } from '../User/OptionAvatar/OptionAvatar'
+import { UserAvatarInfo } from '../User/UserAvatarInfo/UserAvatarInfo'
 import './Comment.scss'
 
 export interface CommentProps {
@@ -12,7 +12,7 @@ export interface CommentProps {
 export const Comment = ({ text, user, createdAt }: CommentProps) => {
   return (
     <div className="comment">
-      <OptionAvatar
+      <UserAvatarInfo
         text={user.name}
         size="extraSmall"
         description={user.position}
