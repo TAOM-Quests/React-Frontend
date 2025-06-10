@@ -9,7 +9,7 @@ import { wordle } from '../../../services/api/gamesModule/games/wordle'
 import { Button } from '../../../components/UI/Button/Button'
 import { useAppSelector } from '../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../redux/auth/authSlice'
-import { upperCase } from 'lodash'
+import { last, upperCase } from 'lodash'
 import { Loading } from '../../../components/Loading/Loading'
 import moment from 'moment'
 import { WordleRulesModal } from './WordleRulesModal/WordleRulesModal'
@@ -49,6 +49,7 @@ const RUSSIAN_ALPHABET = [
   'Ю',
 ]
 
+const WORD_FOR_NON_AUTH_USER = 'СЛОВО'
 const MAX_ATTEMPTS = 6
 const WORD_LENGTH = 5
 
@@ -61,48 +62,10 @@ export const Wordle = () => {
   const [keyboardStatus, setKeyboardStatus] = useState<
     Record<string, WordleAttemptLetterStatus>
   >({})
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isRulesModalOpen, setIsRulesModalOpen] = useState(false)
 
   const user = useAppSelector(selectAuth)
   const { id: departmentId } = useParams<{ id: string }>()
-
-  useEffect(() => {
-    setIsLoading(true)
-
-    const fetchAttempts = async () => {
-      if (!user || !departmentId) return
-
-      const attempts = await wordle.getAttempts(
-        user.id,
-        moment().format('YYYY-MM-DD'),
-        +departmentId!,
-      )
-
-      setPrevAttempts(attempts)
-      setKeyboardStatus(prevKeyboard => {
-        attempts.forEach(attempt => {
-          attempt.letters.forEach(({ name, status }) => {
-            const prevLetterStatus = prevKeyboard[name]
-            if (status === 'correct' || prevLetterStatus === 'correct') {
-              prevKeyboard[name] = 'correct'
-            } else if (status === 'present' || prevLetterStatus === 'present') {
-              prevKeyboard[name] = 'present'
-            } else if (!prevLetterStatus) {
-              prevKeyboard[name] = 'absent'
-            }
-          })
-        })
-
-        return prevKeyboard
-      })
-    }
-
-    fetchAttempts()
-
-    setIsLoading(false)
-  }, [departmentId])
-
-  const openRulesModal = () => setIsModalOpen(true)
 
   const handleLetterInput = useCallback(
     (letter: string) => {
@@ -128,13 +91,13 @@ export const Wordle = () => {
     try {
       setError(null)
 
-      if (!user) throw new Error('User not found')
       if (!departmentId) throw new Error('Department id not found')
 
-      const newAttempt = await wordle.addAttempt(
-        upperCase(currentGuess),
-        user.id,
-        +departmentId,
+      const newAttempt = user
+        ? await getUserAttempt()
+        : await getNonAuthUserAttempt()
+      const isCorrect = newAttempt.letters.every(
+        letter => letter.status === 'correct',
       )
 
       setCurrentGuess('')
@@ -153,10 +116,6 @@ export const Wordle = () => {
         return prevKeyboard
       })
 
-      const isCorrect = newAttempt.letters.every(
-        letter => letter.status === 'correct',
-      )
-
       if (isCorrect) {
         setIsGameOver(true)
       } else if (prevAttempts.length + 1 === MAX_ATTEMPTS) {
@@ -170,6 +129,16 @@ export const Wordle = () => {
       console.log(`[Wordle] ${e}`)
     }
   }
+
+  useEffect(() => {
+    setIsLoading(true)
+
+    if (user) {
+      fetchAttempts()
+    }
+
+    setIsLoading(false)
+  }, [departmentId])
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -189,6 +158,71 @@ export const Wordle = () => {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [handleBackspace, handleEnter, handleLetterInput])
+
+  const openRulesModal = () => setIsRulesModalOpen(true)
+
+  const fetchAttempts = async () => {
+    if (!user || !departmentId) return
+
+    const attempts = await wordle.getAttempts(
+      user.id,
+      moment().format('YYYY-MM-DD'),
+      +departmentId!,
+    )
+    const lastAttempt = last(attempts)
+
+    if (lastAttempt?.letters.every(letter => letter.status === 'correct')) {
+      setIsGameOver(true)
+    }
+
+    setPrevAttempts(attempts)
+    setKeyboardStatus(prevKeyboard => {
+      attempts.forEach(attempt => {
+        attempt.letters.forEach(({ name, status }) => {
+          const prevLetterStatus = prevKeyboard[name]
+          if (status === 'correct' || prevLetterStatus === 'correct') {
+            prevKeyboard[name] = 'correct'
+          } else if (status === 'present' || prevLetterStatus === 'present') {
+            prevKeyboard[name] = 'present'
+          } else if (!prevLetterStatus) {
+            prevKeyboard[name] = 'absent'
+          }
+        })
+      })
+
+      return prevKeyboard
+    })
+  }
+
+  const getUserAttempt = async (): Promise<WordleAttempt> => {
+    if (!user) throw new Error('User not found')
+    if (!departmentId) throw new Error('Department id not found')
+
+    return await wordle.addAttempt(
+      upperCase(currentGuess),
+      user.id,
+      +departmentId,
+    )
+  }
+
+  const getNonAuthUserAttempt = (): WordleAttempt => ({
+    letters: currentGuess.split('').map((letter, index) => {
+      let status: WordleAttemptLetterStatus
+
+      if (index === 0 && letter === 'С') status = 'correct'
+      else if (index === 1 && letter === 'Л') status = 'correct'
+      else if (index === 2 && letter === 'О') status = 'correct'
+      else if (index === 3 && letter === 'В') status = 'correct'
+      else if (index === 4 && letter === 'О') status = 'correct'
+      else if (WORD_FOR_NON_AUTH_USER.includes(letter)) status = 'present'
+      else status = 'absent'
+
+      return {
+        name: letter,
+        status,
+      }
+    }),
+  })
 
   return !isLoading ? (
     <div className="container_min_width wordle">
@@ -287,10 +321,10 @@ export const Wordle = () => {
             : 'Игра окончена!'}
         </div>
       )}
-      {isModalOpen && (
+      {isRulesModalOpen && (
         <WordleRulesModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={isRulesModalOpen}
+          onClose={() => setIsRulesModalOpen(false)}
         />
       )}
     </div>
