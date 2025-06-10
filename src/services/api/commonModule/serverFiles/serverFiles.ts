@@ -2,8 +2,8 @@ import { ServerFile } from '../../../../models/serverFile'
 import { commonModule } from '../commonModule'
 
 export const serverFiles = {
-  getFile: async (fileName: string): Promise<ServerFile> =>
-    await commonModule<ServerFile>(`file/stats?fileName=${fileName}`),
+  getFile: async (id: number): Promise<ServerFile> =>
+    await commonModule<ServerFile>(`file/${id}/stats`),
 
   uploadFile: async (file: File): Promise<ServerFile> => {
     const formData = new FormData()
