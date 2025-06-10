@@ -274,7 +274,7 @@ export default function PersonInfo({
                     label={field.name}
                     placeholder={field.placeholder}
                     value={field.value}
-                    disabled={!changingMode}
+                    disabled={!changingMode || field.name !== 'Имя'}
                     onChange={e => field.onChange?.(e)}
                     errorText={field.error}
                   />
