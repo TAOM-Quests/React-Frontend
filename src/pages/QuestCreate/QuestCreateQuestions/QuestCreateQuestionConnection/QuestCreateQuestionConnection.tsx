@@ -48,13 +48,17 @@ export const QuestCreateQuestionConnection = ({
     })
   }
 
-  const removeOptionPair = (index: number) =>
-    setQuestions(
-      questions.filter(
-        (_, questionIndex) =>
-          questionIndex !== index || questionIndex !== index + 1,
-      ),
+  const removeOptionPair = (index: number) => {
+    const questionAnswer = clone(connectionQuestion.answer)
+    questionAnswer.options = questionAnswer.options.filter(
+      (_, i) => i !== index && i !== index + 1,
     )
+
+    updateQuestion({
+      ...connectionQuestion,
+      answer: questionAnswer,
+    })
+  }
 
   return (
     <div className="connection-questions">
