@@ -93,11 +93,22 @@ export const QuestCreate = () => {
 
     if (name) saveQuest.name = name
     if (time) saveQuest.time = time
-    if (group) saveQuest.groupId = group.id
     if (image) saveQuest.imageId = image.id
     if (description) saveQuest.description = description
     if (difficulty) saveQuest.difficultId = difficulty.id
-    if (tags.length) saveQuest.tagsIds = tags.map(tag => tag.id)
+    if (group) {
+      saveQuest.group = group.isUserAdded
+        ? { name: group.name }
+        : { id: group.id, name: group.name }
+    }
+    if (tags.length) {
+      saveQuest.tags = [
+        ...tags
+          .filter(tag => !tag.isUserAdded)
+          .map(tag => ({ id: tag.id, name: tag.name })),
+        ...tags.filter(tag => tag.isUserAdded).map(tag => ({ name: tag.name })),
+      ]
+    }
 
     const { id } = questId
       ? await quests.update(+questId, saveQuest)
