@@ -134,6 +134,10 @@ export const QuestCreateQuestionBoxSorting = ({
                       <Icon
                         icon="CROSS"
                         onClick={() => removeOption(boxIndex, optionIndex)}
+                        disabled={
+                          boxSortingQuestion.answer.correctAnswer[boxIndex]
+                            .options.length === 1
+                        }
                       />
                     </div>
                   ),
