@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import './Wordle.scss'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import {
   WordleAttempt,
   WordleAttemptLetterStatus,
@@ -64,6 +64,7 @@ export const Wordle = () => {
   >({})
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false)
 
+  const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
   const { id: departmentId } = useParams<{ id: string }>()
 
@@ -236,11 +237,14 @@ export const Wordle = () => {
             size="small"
             onClick={() => openRulesModal()}
           />
-          <Button
-            text="Редактировать игру"
-            iconBefore="EDIT"
-            colorType="secondary"
-          />
+          {user?.isGameMaster && (
+            <Button
+              text="Редактировать игру"
+              iconBefore="EDIT"
+              colorType="secondary"
+              onClick={() => navigate(`/games/wordle/${departmentId}/edit`)}
+            />
+          )}
         </div>
       </div>
 
