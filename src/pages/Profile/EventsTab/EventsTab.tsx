@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { EmployeeAuth, UserAuth } from '../../../models/userAuth'
+import { UserAuth } from '../../../models/userAuth'
 import { events } from '../../../services/api/eventModule/events/events'
 import {
   EventMinimizeProps,
@@ -22,7 +22,6 @@ import { isArray } from 'lodash'
 
 const TABS = ['Мероприятия', 'Проверка мероприятий']
 const STATUS_ID_WAIT_INSPECTION = 2
-const ROLE_ID_INSPECTOR = 2
 
 interface EventsFilter {
   name?: string
@@ -98,7 +97,7 @@ export default function EventsTab({ user }: EventsTabProps) {
       {!isLoading ? (
         <>
           <div className="profile_events--tabs">
-            {(user as EmployeeAuth).roleId === ROLE_ID_INSPECTOR && (
+            {user.isInspector && (
               <Switcher
                 options={TABS}
                 activeOption={tab}
@@ -183,7 +182,7 @@ export default function EventsTab({ user }: EventsTabProps) {
 
                     if (
                       event.status.id === STATUS_ID_WAIT_INSPECTION &&
-                      (user as EmployeeAuth).roleId === ROLE_ID_INSPECTOR
+                      user.isInspector
                     ) {
                       eventData.isInspectorView = true
                     } else if (user.isEmployee) {
