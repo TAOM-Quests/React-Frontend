@@ -2,13 +2,16 @@ import { QuestQuestion } from '../../../../models/questQuestion'
 import { QuestResult } from '../../../../models/questResult'
 
 export interface QuestsGetDto {
+  name?: string
   limit?: number
   offset?: number
-  tags?: number[]
   completeBy?: number
-  executor?: number[]
-  department?: number[]
   isCompleted?: boolean
+  tags?: number | number[]
+  group?: number | number[]
+  executor?: number | number[]
+  difficult?: number | number[]
+  department?: number | number[]
 }
 
 export interface SaveQuestDto {

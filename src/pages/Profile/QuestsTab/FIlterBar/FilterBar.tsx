@@ -1,5 +1,5 @@
 import { isArray } from 'lodash'
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 import { Department } from '../../../../models/department'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
@@ -15,13 +15,14 @@ import { Button } from '../../../../components/UI/Button/Button'
 
 export interface QuestsTabFilter {
   name?: string
-  groupId?: number
-  tagsIds?: number[]
+  limit?: number
+  group?: number
+  tags?: number[]
+  difficult?: number
   completeBy?: number
-  difficultId?: number
+  executor?: number[]
+  department?: number
   isCompleted?: boolean
-  departmentId?: number
-  executorsIds?: number[]
 }
 
 export interface QuestTabFilterBarRef {
@@ -50,16 +51,6 @@ export const QuestTabFilterBar = forwardRef(
       }),
       [],
     )
-
-    useEffect(() => {
-      if (!user) throw Error('User not found')
-
-      setFilter(
-        user.isEmployee
-          ? { executorsIds: [user.id] }
-          : { isCompleted: true, completeBy: user.id },
-      )
-    }, [])
 
     const fetchFilterData = async () => {
       const [tags, groups, difficulties, departments] = await Promise.all([
@@ -91,9 +82,7 @@ export const QuestTabFilterBar = forwardRef(
           }))}
           onChangeDropdown={selected =>
             setFilter(
-              !isArray(selected)
-                ? { ...filter, groupId: selected?.id }
-                : filter,
+              !isArray(selected) ? { ...filter, group: selected?.id } : filter,
             )
           }
         />
@@ -107,7 +96,7 @@ export const QuestTabFilterBar = forwardRef(
           onChangeDropdown={selected =>
             setFilter(
               isArray(selected)
-                ? { ...filter, tagsIds: selected.map(tag => tag.id) }
+                ? { ...filter, tags: selected.map(tag => tag.id) }
                 : filter,
             )
           }
@@ -121,7 +110,7 @@ export const QuestTabFilterBar = forwardRef(
           onChangeDropdown={selected =>
             setFilter(
               !isArray(selected)
-                ? { ...filter, departmentId: selected?.id }
+                ? { ...filter, department: selected?.id }
                 : filter,
             )
           }
@@ -135,7 +124,7 @@ export const QuestTabFilterBar = forwardRef(
           onChangeDropdown={selected =>
             setFilter(
               !isArray(selected)
-                ? { ...filter, difficultId: selected?.id }
+                ? { ...filter, difficult: selected?.id }
                 : filter,
             )
           }

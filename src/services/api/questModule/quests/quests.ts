@@ -14,6 +14,7 @@ import {
 export const quests = {
   getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
     let queryString = Object.entries(params)
+      .filter(([_, value]) => value)
       .map(([key, value]) => `${key}=${value}`)
       .join('&')
 

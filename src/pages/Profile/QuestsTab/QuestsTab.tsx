@@ -20,7 +20,11 @@ export interface QuestsTabProps {
 const QUESTS_COUNT_ON_SCREEN = 12
 
 export default function QuestsTab({ user }: QuestsTabProps) {
-  const [filter, setFilter] = useState<QuestsTabFilter>({})
+  const [filter, setFilter] = useState<QuestsTabFilter>(
+    user.isEmployee
+      ? { executor: [user.id] }
+      : { isCompleted: true, completeBy: user.id },
+  )
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [userQuests, setQuests] = useState<QuestMinimize[]>([])
 
@@ -31,6 +35,15 @@ export default function QuestsTab({ user }: QuestsTabProps) {
   const questsListEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!filterBarRef.current) return
+
+    setIsLoading(true)
+    tryCallback(filterBarRef.current?.fetchFilterData)
+    tryCallback(setQuestsListObserver)
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
     if (
       isEndOfEventsList &&
       !isAllQuestsLoaded &&
@@ -39,15 +52,6 @@ export default function QuestsTab({ user }: QuestsTabProps) {
       tryCallback(fetchQuests)
     }
   }, [isEndOfEventsList])
-
-  useEffect(() => {
-    if (!filterBarRef.current) return
-
-    setIsLoading(true)
-    tryCallback(filterBarRef.current?.fetchFilterData)
-    tryCallback(setQuestsListObserver)
-    setIsLoading(false)
-  }, [filter])
 
   useEffect(() => {
     setIsLoading(true)
