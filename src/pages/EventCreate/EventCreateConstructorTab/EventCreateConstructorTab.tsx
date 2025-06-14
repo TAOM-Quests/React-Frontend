@@ -31,7 +31,6 @@ import {
 } from './EventCreateSchedule/EventCreateSchedule'
 import './EventCreateConstructorTab.scss'
 import { Loading } from '../../../components/Loading/Loading'
-import { ValidationResult } from '../../../validation/validationResult'
 import { EventStatus } from '../../../models/eventStatus'
 import { fetchCreateEventData } from './utils/fetchCreateEventData'
 import { fetchEventData } from './utils/fetchEventData'

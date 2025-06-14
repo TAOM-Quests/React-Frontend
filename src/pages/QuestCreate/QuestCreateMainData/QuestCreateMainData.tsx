@@ -14,6 +14,7 @@ import { TextEditor } from '../../../components/TextEditor/TextEditor'
 import { TimeInput } from '../../../components/UI/TimeInput/TimeInput'
 import './QuestCreateMainData.scss'
 import { EmployeeAuth } from '../../../models/userAuth'
+import { ImageContainer } from '../../../components/UI/ImageContainer/ImageContainer'
 
 export interface QuestCreateMainDataProps {
   name: string
@@ -37,9 +38,11 @@ export const QuestCreateMainData = ({
   time,
   tags,
   group,
+  image,
   setName,
   setTime,
   setTags,
+  setImage,
   setGroup,
   difficulty,
   description,
@@ -80,6 +83,11 @@ export const QuestCreateMainData = ({
 
   return (
     <ContainerBox className="questCreateMainData">
+      <ImageContainer
+        selectedImages={image ? [image] : []}
+        onSelectImages={images => setImage(images[0] ?? null)}
+      />
+
       <div className="questCreateMainData--left">
         <Input
           label="Название квеста"
