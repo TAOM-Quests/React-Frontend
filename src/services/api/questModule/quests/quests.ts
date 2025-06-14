@@ -59,13 +59,13 @@ export const quests = {
   getDifficulties: (): Promise<QuestDifficult[]> =>
     questModule<QuestDifficult[], null>('difficulties'),
 
-  getGroups: (query: QuestGroupsGetDto): Promise<QuestGroup[]> =>
+  getGroups: (query?: QuestGroupsGetDto): Promise<QuestGroup[]> =>
     questModule<QuestGroup[], null>(
-      `groups${query.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
+      `groups${query?.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
     ),
 
-  getTags: (query: QuestTagsGetDto): Promise<QuestGroup[]> =>
+  getTags: (query?: QuestTagsGetDto): Promise<QuestGroup[]> =>
     questModule<QuestGroup[], null>(
-      `tags${query.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
+      `tags${query?.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
     ),
 }
