@@ -46,10 +46,6 @@ export const QuestCreate = () => {
   }, [user])
 
   useEffect(() => {
-    console.log(tags)
-  }, [tags])
-
-  useEffect(() => {
     const fetchQuestData = async () => {
       setIsLoading(true)
 
