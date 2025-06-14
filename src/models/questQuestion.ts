@@ -18,7 +18,7 @@ export interface QuestQuestionSingle extends QuestQuestion {
   answer: {
     options: string[]
     correctAnswer: number
-    optionsImages: ServerFile[]
+    optionsImages: (ServerFile | null)[]
   }
 }
 
@@ -27,7 +27,7 @@ export interface QuestQuestionMultiple extends QuestQuestion {
   answer: {
     options: string[]
     correctAnswer: number[]
-    optionsImages: ServerFile[]
+    optionsImages: (ServerFile | null)[]
   }
 }
 
@@ -36,7 +36,7 @@ export interface QuestQuestionConnection extends QuestQuestion {
   answer: {
     options: string[]
     correctAnswer: string[]
-    optionsImages: ServerFile[]
+    optionsImages: (ServerFile | null)[]
   }
 }
 
@@ -44,7 +44,7 @@ export interface QuestQuestionBoxSorting extends QuestQuestion {
   type: 'boxSorting'
   answer: {
     options: string[]
-    optionsImages: ServerFile[]
+    optionsImages: (ServerFile | null)[]
     correctAnswer: QuestQuestionBoxSortingAnswer[]
   }
 }
@@ -52,7 +52,6 @@ export interface QuestQuestionBoxSorting extends QuestQuestion {
 export interface QuestQuestionBoxSortingAnswer {
   name: string
   options: number[]
-  optionsImages: ServerFile[]
 }
 
 export interface QuestQuestionFree extends QuestQuestion {

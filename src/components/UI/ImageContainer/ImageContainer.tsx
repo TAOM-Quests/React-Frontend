@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ServerFile } from '../../../models/serverFile'
 import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
 import { Icon } from '../Icon/Icon'
@@ -27,12 +27,6 @@ export const ImageContainer = ({
     selectedImagesProps ?? [],
   )
 
-  useEffect(() => {
-    if (!onSelectImages) return
-
-    onSelectImages(selectedImages ?? [])
-  }, [selectedImages, selectedImagesProps])
-
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
 
@@ -42,6 +36,10 @@ export const ImageContainer = ({
 
       setSelectedImages(prev =>
         isMultiple ? [...prev, imageStat] : [imageStat],
+      )
+
+      onSelectImages?.(
+        isMultiple ? [...selectedImages, imageStat] : [imageStat],
       )
     }
   }

@@ -7,6 +7,8 @@ import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
 import './QuestCreateQuestionBoxSorting.scss'
+import { ServerFile } from '../../../../models/serverFile'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
 
 export interface QuestCreateQuestionBoxSortingProps {
   questions: QuestQuestion[]
@@ -102,6 +104,18 @@ export const QuestCreateQuestionBoxSorting = ({
     })
   }
 
+  const setImage = (index: number, image: ServerFile | null) => {
+    const questionAnswer = clone(boxSortingQuestion.answer)
+    questionAnswer.optionsImages = questionAnswer.optionsImages.map(
+      (optionImage, i) => (i === index ? image : optionImage),
+    )
+
+    updateQuestion({
+      ...boxSortingQuestion,
+      answer: questionAnswer,
+    })
+  }
+
   return (
     <div className="boxSorting-questions">
       <div className="boxSorting-questions__boxes">
@@ -124,6 +138,21 @@ export const QuestCreateQuestionBoxSorting = ({
                 {boxSortingQuestion.answer.correctAnswer[boxIndex].options.map(
                   optionIndex => (
                     <div className="boxSorting-questions__item">
+                      <ImageContainer
+                        key={`question-box-sorting-option-${optionIndex}`}
+                        selectedImages={
+                          boxSortingQuestion.answer.optionsImages[optionIndex]
+                            ? [
+                                boxSortingQuestion.answer.optionsImages[
+                                  optionIndex
+                                ],
+                              ]
+                            : []
+                        }
+                        onSelectImages={([image]) =>
+                          setImage(optionIndex, image ?? null)
+                        }
+                      />
                       <Input
                         value={boxSortingQuestion.answer.options[optionIndex]}
                         placeholder="Введите вариант ответа"
