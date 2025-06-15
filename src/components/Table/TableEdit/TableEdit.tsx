@@ -1,4 +1,14 @@
-import { useState, useRef, ReactNode, useEffect, RefObject } from 'react'
+import {
+  useState,
+  useRef,
+  ReactNode,
+  useEffect,
+  RefObject,
+  forwardRef,
+  useImperativeHandle,
+  Ref,
+  ForwardedRef,
+} from 'react'
 import { TableEditHeader } from './TableEditHeader'
 import { TableEditFilters } from './TableEditFilters'
 import { TableEditTable } from './TableEditTable'
@@ -40,24 +50,31 @@ export interface TableEditProps<T extends { id: number }> {
   hasValidationErrors?: boolean
 }
 
-export const TableEdit = <T extends { id: number }>({
-  title,
-  columns,
-  isEditing = true,
-  initialRows,
-  addRowTemplate,
-  onAddRow,
-  onDeleteRow,
-  isAllowAddRow = false,
-  isAllowMultiSelect = false,
-  isAllowDelete = false,
-  selectedIds = [],
-  setSelectedIds,
-  onDeleteSelected,
-  onCellChange,
-  onSaveChanges,
-  hasValidationErrors,
-}: TableEditProps<T>) => {
+export interface TableEditRef<T> {
+  getRows: () => T[]
+}
+
+const TableEditComponent = <T extends { id: number }>(
+  {
+    title,
+    columns,
+    isEditing = true,
+    initialRows,
+    addRowTemplate,
+    onAddRow,
+    onDeleteRow,
+    isAllowAddRow = false,
+    isAllowMultiSelect = false,
+    isAllowDelete = false,
+    selectedIds = [],
+    setSelectedIds,
+    onDeleteSelected,
+    onCellChange,
+    onSaveChanges,
+    hasValidationErrors,
+  }: TableEditProps<T>,
+  ref: ForwardedRef<TableEditRef<T>>,
+) => {
   const [rows, setRows] = useState<T[]>(initialRows)
   const [localSelectedIds, setLocalSelectedIds] =
     useState<number[]>(selectedIds)
@@ -67,6 +84,14 @@ export const TableEdit = <T extends { id: number }>({
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const addRowRef = useRef<HTMLDivElement>(null)
   const filtersRef = useRef<HTMLDivElement>(null)
+
+  useImperativeHandle(
+    ref,
+    (): TableEditRef<T> => ({
+      getRows: () => filteredRows,
+    }),
+    [filteredRows],
+  )
 
   useSyncedScroll([
     tableWrapperRef as RefObject<HTMLDivElement>,
@@ -196,3 +221,9 @@ export const TableEdit = <T extends { id: number }>({
     </div>
   )
 }
+
+export const TableEdit = forwardRef(TableEditComponent) as <
+  T extends { id: number },
+>(
+  props: TableEditProps<T> & { ref?: Ref<TableEditRef<T>> },
+) => ReturnType<typeof TableEditComponent>
