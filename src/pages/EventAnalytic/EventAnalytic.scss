@@ -1,0 +1,22 @@
+.eventAnalytic {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+
+  padding: 80px 15vw;
+  background-color: var(--bg_body_primary);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+
+    @media (max-width: 900px) {
+      flex-direction: column-reverse;
+    }
+  }
+}

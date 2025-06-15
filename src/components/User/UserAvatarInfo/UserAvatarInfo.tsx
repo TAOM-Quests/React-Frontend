@@ -1,11 +1,11 @@
 import classNames from 'classnames'
 import { Avatar } from '../../UI/Avatar/Avatar'
 import image from '../../../assets/images/mem.png'
-import './OptionAvatar.scss'
+import './UserAvatarInfo.scss'
 
 export type Size = 'small' | 'extraSmall'
 
-export interface OptionAvatarProps {
+export interface UserAvatarInfoProps {
   text: string
   size?: Size
   avatarSrc?: string
@@ -13,13 +13,13 @@ export interface OptionAvatarProps {
   description?: string
 }
 
-export const OptionAvatar = ({
+export const UserAvatarInfo = ({
   avatarSrc = image,
   text,
   description,
   size = 'small',
   className,
-}: OptionAvatarProps) => {
+}: UserAvatarInfoProps) => {
   return (
     <div className={classNames('option-avatar', className)}>
       {avatarSrc && (
