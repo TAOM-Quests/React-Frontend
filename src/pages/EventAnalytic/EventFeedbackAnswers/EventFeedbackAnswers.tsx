@@ -1,6 +1,7 @@
 import {
   TableColumn,
   TableEdit,
+  TableEditRef,
 } from '../../../components/Table/TableEdit/TableEdit'
 import { Button } from '../../../components/UI/Button/Button'
 import { UserAvatarInfo } from '../../../components/User/UserAvatarInfo/UserAvatarInfo'
@@ -8,6 +9,9 @@ import { EventAnalyticElementProps } from '../eventAnalyticElementProps'
 import { FeedbackForm } from '../../../models/feedbackForm'
 import { UserProfile } from '../../../models/userProfile'
 import './EventFeedbackAnswers.scss'
+import { CreateExcelColumns } from '../../../services/api/commonModule/serverFiles/dto/createExcelDto'
+import { useRef } from 'react'
+import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
 
 interface EventFeedbackAnswersProps {
   analyticData: EventAnalyticElementProps
@@ -18,6 +22,8 @@ export const EventFeedbackAnswers = ({
   feedbackForm,
   analyticData,
 }: EventFeedbackAnswersProps) => {
+  const table = useRef<TableEditRef<UserProfile>>(null)
+
   if (!feedbackForm) {
     return <div>Форма не загружена</div>
   }
@@ -64,13 +70,45 @@ export const EventFeedbackAnswers = ({
     })),
   ]
 
+  const excelColumns: CreateExcelColumns<any>[] = [
+    {
+      key: 'user',
+      header: 'Участник',
+      format: 'string',
+      width: 60,
+    },
+    ...feedbackForm.questions.map((q, idx) => ({
+      key: `answers[${idx}]`,
+      header: q.question,
+      format: 'string' as const,
+      width: 60,
+    })),
+  ]
+
+  const createExcel = async () => {
+    const rows = table.current?.getRows()
+
+    const { url } = await serverFiles.createExcel({
+      data: rows || [],
+      fileName: 'feedback',
+      columns: excelColumns,
+    })
+
+    window.open(url, '_blank')
+  }
+
   return (
     <div className="container_min_width event-FeedbackAnswers">
       <div className="event-FeedbackAnswers__header">
-        <Button text="Скачать Excel" iconBefore="EXCEL" />
+        <Button text="Скачать Excel" iconBefore="EXCEL" onClick={createExcel} />
       </div>
 
-      <TableEdit columns={columns} initialRows={tableRows} isEditing={false} />
+      <TableEdit
+        ref={table}
+        columns={columns}
+        initialRows={tableRows}
+        isEditing={false}
+      />
     </div>
   )
 }
