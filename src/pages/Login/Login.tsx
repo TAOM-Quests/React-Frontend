@@ -9,7 +9,7 @@ export default function Login() {
   const [isLogInForm, setIsLogInForm] = useState(true)
 
   return (
-    <div className="login_page">
+    <div className="container_min_width login_page">
       <div className="login_page__left">
         <div className="login_page__logo">
           <img src={Logo} alt="Логотип Тольяттинской академии управления" />
