@@ -4,7 +4,7 @@ import { FeedbackAnswer } from '../../models/feedbackAnswer'
 import { FeedbackForm } from '../../models/feedbackForm'
 import { UserProfile } from '../../models/userProfile'
 import { EventStatistic } from './EventStatistic/EventStatistic'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { events } from '../../services/api/eventModule/events/events'
 import { EventAnalyticElementProps } from './eventAnalyticElementProps'
 import { Loading } from '../../components/Loading/Loading'
@@ -13,6 +13,8 @@ import { feedback } from '../../services/api/commonModule/commonEntities/feedbac
 import './EventAnalytic.scss'
 import { EventParticipants } from './EventParticipants/EventParticipants'
 import { EventFeedbackAnswers } from './EventFeedbackAnswers/EventFeedbackAnswers'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
 
 const TABS = ['Мероприятие', 'Участники', 'Обратная связь']
 
@@ -25,6 +27,8 @@ export const EventAnalytic = () => {
   const [feedbackForm, setFeedbackForm] = useState<FeedbackForm | null>(null)
   const [feedbackAnswers, setFeedbackAnswers] = useState<FeedbackAnswer[]>([])
 
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
   const { id: eventId } = useParams<{ id: string }>()
 
   const getAnalyticElementParams = (): EventAnalyticElementProps => ({
@@ -33,6 +37,8 @@ export const EventAnalytic = () => {
   })
 
   useEffect(() => {
+    if (!user) navigate('/login')
+
     setIsLoading(true)
     try {
       fetchEventData()
