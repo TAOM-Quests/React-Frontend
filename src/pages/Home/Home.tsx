@@ -7,6 +7,9 @@ export const Home = () => {
   return (
     <div className="home">
       <div className="banner">
+        <img src="" alt="Banner" className="banner__image" />
+        <div className="banner__overlay" />
+
         <div className="banner__content">
           <div className="banner__header">
             <h1 className="heading_1 banner__title">{bannerData.title}</h1>
