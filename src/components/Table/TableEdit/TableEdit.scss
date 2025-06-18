@@ -9,8 +9,10 @@
     border-bottom: 1px solid #eee;
     text-align: left;
     min-width: 240px;
+    max-width: 350px;
     background: #fff;
     z-index: 1;
+    word-break: break-word;
   }
 
   thead th {
