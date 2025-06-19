@@ -134,6 +134,10 @@ export const Dropdown = ({
     }
   }, [])
 
+  useEffect(() => {
+    setSelectedItems(selectedItemsProp ?? [])
+  }, [selectedItemsProp])
+
   useLayoutEffect(() => {
     if (!isOpen) return
 

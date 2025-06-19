@@ -208,6 +208,7 @@ export const EventCreateConstructorTab = forwardRef(
           : [...prev, text],
       )
     }
+
     const saveEventHandler = async () => {
       setIsLoading(true)
       try {
