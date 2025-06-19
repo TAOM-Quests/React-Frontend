@@ -5,7 +5,7 @@ import { bannerData } from './HomeData/bannerData'
 import { UpcomingEvents } from './UpcomingEvents/UpcomingEvents'
 import { serverFiles } from '../../services/api/commonModule/serverFiles/serverFiles'
 
-const BANNER_IMAGE_ID = 15
+const BANNER_IMAGE_ID = 16
 
 export const Home = () => {
   const [bannerImageUrl, setBannerImageUrl] = useState('')

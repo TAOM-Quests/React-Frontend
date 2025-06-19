@@ -4,8 +4,8 @@ import SignInForm from './SignInForm/SignInForm'
 import './Login.scss'
 import { serverFiles } from '../../services/api/commonModule/serverFiles/serverFiles'
 
-const LOGO_IMAGE_ID = 13
-const LOGIN_IMAGE_ID = 14
+const LOGO_IMAGE_ID = 14
+const LOGIN_IMAGE_ID = 15
 
 export default function Login() {
   const [isLogInForm, setIsLogInForm] = useState(true)

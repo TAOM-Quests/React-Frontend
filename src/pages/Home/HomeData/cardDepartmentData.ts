@@ -9,11 +9,11 @@ export interface CardDepartmentData {
 }
 
 const DEPARTMENT_IMAGES_MAP = {
-  PUBLIC_RELATIONS: 8,
-  INFORMATICS: 9,
-  ECONOMICS: 10,
-  MANAGEMENT: 11,
-  DESIGN: 12,
+  PUBLIC_RELATIONS: 9,
+  INFORMATICS: 10,
+  ECONOMICS: 11,
+  MANAGEMENT: 12,
+  DESIGN: 13,
 }
 
 const getImageUrl = async (
