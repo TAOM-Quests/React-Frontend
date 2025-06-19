@@ -12,6 +12,7 @@ import './EventFeedbackAnswers.scss'
 import { CreateExcelColumns } from '../../../services/api/commonModule/serverFiles/dto/createExcelDto'
 import { useRef } from 'react'
 import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
+import { FeedbackAnswer } from '../../../models/feedbackAnswer'
 
 interface EventFeedbackAnswersProps {
   analyticData: EventAnalyticElementProps
@@ -22,7 +23,8 @@ export const EventFeedbackAnswers = ({
   feedbackForm,
   analyticData,
 }: EventFeedbackAnswersProps) => {
-  const table = useRef<TableEditRef<UserProfile>>(null)
+  const table =
+    useRef<TableEditRef<FeedbackAnswer & { user: UserProfile }>>(null)
 
   if (!feedbackForm) {
     return <div>Форма не загружена</div>
@@ -78,7 +80,7 @@ export const EventFeedbackAnswers = ({
       width: 60,
     },
     ...feedbackForm.questions.map((q, idx) => ({
-      key: `answers[${idx}]`,
+      key: `q_${idx}`,
       header: q.question,
       format: 'string' as const,
       width: 60,
@@ -86,7 +88,10 @@ export const EventFeedbackAnswers = ({
   ]
 
   const createExcel = async () => {
-    const rows = table.current?.getRows()
+    const rows = table.current?.getRows().map(row => ({
+      ...row,
+      user: `${row.user?.lastName ?? ''} ${row.user?.firstName ?? ''} ${row.user?.patronymic ?? ''}`.trim(),
+    }))
 
     const { url } = await serverFiles.createExcel({
       data: rows || [],
