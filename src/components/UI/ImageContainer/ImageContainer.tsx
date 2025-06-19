@@ -38,10 +38,9 @@ export const ImageContainer = ({
 
     for (const file of files ?? []) {
       const uploadedImage = await serverFiles.uploadFile(file)
-      const imageStat = await serverFiles.getFile(uploadedImage.name)
 
       setSelectedImages(prev =>
-        isMultiple ? [...prev, imageStat] : [imageStat],
+        isMultiple ? [...prev, uploadedImage] : [uploadedImage],
       )
     }
   }
