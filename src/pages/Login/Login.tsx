@@ -28,7 +28,7 @@ export default function Login() {
   })
 
   return (
-    <div className="login_page">
+    <div className="container_min_width login_page">
       <div className="login_page__left">
         <div className="login_page__logo">
           <img
