@@ -274,7 +274,7 @@ export default function PersonInfo({
                     label={field.name}
                     placeholder={field.placeholder}
                     value={field.value}
-                    disabled={!changingMode}
+                    disabled={!changingMode || field.name !== 'Имя'}
                     onChange={e => field.onChange?.(e)}
                     errorText={field.error}
                   />
@@ -286,14 +286,14 @@ export default function PersonInfo({
                   value={sex}
                   label="Пол"
                   placeholder="Выберите вариант"
-                  disabled={!changingMode}
+                  disabled
                   onChangeDropdown={handleChangeSex}
                 />
                 <DateInput
                   label="Дата рождения"
                   placeholder="Введите дату рождения"
                   value={birthDate}
-                  disabled={!changingMode}
+                  disabled
                   onDateSelect={handleDateSelect}
                   errorText={birthDateValidator.error}
                 />
@@ -322,7 +322,7 @@ export default function PersonInfo({
             onChange={e => setPhoneNumber(e.target.value)}
             label="Телефон"
             placeholder="+7 (___) ___-__-__"
-            disabled={!changingMode}
+            disabled
             errorText={phoneNumberValidator.error}
           />
         </ContainerBox>
