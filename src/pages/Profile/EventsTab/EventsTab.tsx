@@ -205,7 +205,7 @@ export default function EventsTab({ user }: EventsTabProps) {
                     const eventData: EventMinimizeProps = {
                       id: event.id,
                       date: event.date ?? null,
-                      status: event.status.name,
+                      status: event.status,
                       name: event.name ?? '',
                       type: event.type?.name ?? '',
                       tags: event.tags?.map(tag => tag.name) ?? [],

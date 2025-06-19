@@ -1,21 +1,46 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LogInForm from './LogInForm/LogInForm'
 import SignInForm from './SignInForm/SignInForm'
-import Logo from '../../assets/images/logo.svg'
-import TaomLogin from '../../assets/images/taomLogin.svg'
 import './Login.scss'
+import { serverFiles } from '../../services/api/commonModule/serverFiles/serverFiles'
+
+const LOGO_IMAGE_ID = 13
+const LOGIN_IMAGE_ID = 14
 
 export default function Login() {
   const [isLogInForm, setIsLogInForm] = useState(true)
+  const [logoImageUrl, setLogoImageUrl] = useState('')
+  const [loginImageUrl, setLoginImageUrl] = useState('')
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const logoImage = await serverFiles.getFile(LOGO_IMAGE_ID)
+        const loginImage = await serverFiles.getFile(LOGIN_IMAGE_ID)
+        setLogoImageUrl(logoImage.url)
+        setLoginImageUrl(loginImage.url)
+      } catch (e) {
+        console.log(`[Login] ${e}`)
+      }
+    }
+
+    fetchImages()
+  })
 
   return (
     <div className="container_min_width login_page">
       <div className="login_page__left">
         <div className="login_page__logo">
-          <img src={Logo} alt="Логотип Тольяттинской академии управления" />
+          <img
+            src={logoImageUrl}
+            alt="Логотип Тольяттинской академии управления"
+          />
         </div>
         <div className="login_page__taom_login">
-          <img src={TaomLogin} alt="Баннер Тольяттинской академии управления" />
+          <img
+            src={loginImageUrl}
+            alt="Баннер Тольяттинской академии управления"
+          />
         </div>
       </div>
       <div className="login_page__right">
