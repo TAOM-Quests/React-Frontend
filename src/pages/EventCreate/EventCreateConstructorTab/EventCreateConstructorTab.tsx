@@ -252,6 +252,12 @@ export const EventCreateConstructorTab = forwardRef(
           if (!window.location.pathname.includes(`${savedEvent.id}`)) {
             navigate(`/event/${savedEvent.id}/edit`)
           }
+
+          await fetchEventData(
+            +savedEvent.id,
+            ADDITIONAL_INFO_SEPARATOR,
+            setEventState,
+          )
         }
       } catch (e) {
         console.log(`[EventCreate] ${e}`)
