@@ -5,7 +5,7 @@ export interface QuestsGetDto {
   limit?: number
   offset?: number
   tags?: number[]
-  groupsIds?: number[]
+  group?: number[]
   completeBy?: number
   executor?: number[]
   department?: number[]

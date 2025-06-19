@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { QuestMinimize } from '../../models/questMinimize'
 import { quests as questsApi } from '../../services/api/questModule/quests/quests'
 import { Loading } from '../../components/Loading/Loading'
+import { QuestHomeGroup } from './Group/Group'
 
 const GROUPS_COUNT_ON_SCREEN = 5
 const QUESTS_COUNT_IN_GROUP = 7
@@ -18,7 +19,7 @@ export const QuestsHome = () => {
   const [isAllGroupsLoaded, setIsAllGroupsLoaded] = useState(false)
 
   const { id: departmentId } = useParams()
-  const eventsListEndRef = useRef<HTMLDivElement>(null)
+  const groupsListEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (
@@ -58,8 +59,8 @@ export const QuestsHome = () => {
       { threshold: 0.1 },
     )
 
-    if (eventsListEndRef.current) {
-      observer.observe(eventsListEndRef.current)
+    if (groupsListEndRef.current) {
+      observer.observe(groupsListEndRef.current)
     }
 
     return () => observer.disconnect()
@@ -78,7 +79,7 @@ export const QuestsHome = () => {
 
     for (let group of fetchedGroups) {
       const fetchedQuests = await questsApi.getManyByParams({
-        groupsIds: [group.id],
+        group: [group.id],
         limit: QUESTS_COUNT_IN_GROUP,
       })
 
@@ -90,6 +91,7 @@ export const QuestsHome = () => {
     }
 
     setGroups(prevGroups => [...prevGroups, ...fetchedGroups])
+    setQuests(prevQuests => [...prevQuests, ...newQuests])
   }
 
   return (
@@ -97,8 +99,13 @@ export const QuestsHome = () => {
       {!isLoading ? (
         <div>
           {groups.map(group => (
-            <></>
+            <QuestHomeGroup
+              key={group.id}
+              group={group}
+              quests={quests.filter(quest => quest.group?.id === group.id)}
+            />
           ))}
+          <div ref={groupsListEndRef} />
         </div>
       ) : (
         <Loading />
