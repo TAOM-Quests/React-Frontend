@@ -21,8 +21,7 @@ export const EventCreateFiles = ({
 
     for (const file of filesToUpload || []) {
       const uploadedFile = await serverFiles.uploadFile(file)
-      const fileStat = await serverFiles.getFile(uploadedFile.name)
-      uploadedFiles.push(fileStat)
+      uploadedFiles.push(uploadedFile)
     }
 
     setFiles(prevFiles => [...prevFiles, ...uploadedFiles])

@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 import { Avatar } from '../../UI/Avatar/Avatar'
-import image from '../../../assets/images/mem.png'
 import './UserAvatarInfo.scss'
 
 export type Size = 'small' | 'extraSmall'
@@ -14,7 +13,7 @@ export interface UserAvatarInfoProps {
 }
 
 export const UserAvatarInfo = ({
-  avatarSrc = image,
+  avatarSrc,
   text,
   description,
   size = 'small',

@@ -9,4 +9,20 @@
     text-align: center;
     color: var(--text_c_primary);
   }
+
+  &__checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .text_ellipsis,
+    .text_ellipsis p {
+      display: block;
+      white-space: normal;
+    }
+
+    a {
+      color: var(--text_c_accent);
+    }
+  }
 }
