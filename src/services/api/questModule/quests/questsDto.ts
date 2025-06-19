@@ -5,6 +5,7 @@ export interface QuestsGetDto {
   limit?: number
   offset?: number
   tags?: number[]
+  groupsIds?: number[]
   completeBy?: number
   executor?: number[]
   department?: number[]
@@ -40,6 +41,8 @@ export interface SaveQuestCompleteDto {
 }
 
 export interface QuestGroupsGetDto {
+  limit?: number
+  offset?: number
   departmentId?: number
 }
 

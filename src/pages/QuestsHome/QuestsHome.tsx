@@ -1,0 +1,108 @@
+import { useParams } from 'react-router'
+import { QuestGroup } from '../../models/questGroup'
+import { useEffect, useRef, useState } from 'react'
+import { QuestMinimize } from '../../models/questMinimize'
+import { quests as questsApi } from '../../services/api/questModule/quests/quests'
+import { Loading } from '../../components/Loading/Loading'
+
+const GROUPS_COUNT_ON_SCREEN = 5
+const QUESTS_COUNT_IN_GROUP = 7
+
+export const QuestsHome = () => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [groups, setGroups] = useState<QuestGroup[]>([])
+  const [quests, setQuests] = useState<QuestMinimize[]>([])
+
+  const [isEndOGroupsList, setIsEndOfGroupsList] = useState(false)
+  const [isAllGroupsLoaded, setIsAllGroupsLoaded] = useState(false)
+
+  const { id: departmentId } = useParams()
+  const eventsListEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (
+      isEndOGroupsList &&
+      !isAllGroupsLoaded &&
+      quests.length >= GROUPS_COUNT_ON_SCREEN
+    ) {
+      tryCallback(fetchQuests)
+    }
+  }, [isEndOGroupsList])
+
+  useEffect(() => {
+    setIsLoading(true)
+    tryCallback(setEventsListObserver)
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    setIsLoading(true)
+    setQuests([])
+    setIsAllGroupsLoaded(false)
+    tryCallback(() => fetchQuests(0))
+    setIsLoading(false)
+  }, [])
+
+  const tryCallback = (callback: () => void) => {
+    try {
+      callback()
+    } catch (e) {
+      console.log(`[EventsTab] ${e}`)
+    }
+  }
+
+  const setEventsListObserver = () => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsEndOfGroupsList(entry.isIntersecting),
+      { threshold: 0.1 },
+    )
+
+    if (eventsListEndRef.current) {
+      observer.observe(eventsListEndRef.current)
+    }
+
+    return () => observer.disconnect()
+  }
+
+  const fetchQuests = async (offset?: number) => {
+    if (!departmentId) throw Error('No department id')
+
+    const newQuests: QuestMinimize[] = []
+
+    const fetchedGroups = await questsApi.getGroups({
+      departmentId: +departmentId,
+      offset: offset ?? groups.length,
+      limit: GROUPS_COUNT_ON_SCREEN,
+    })
+
+    for (let group of fetchedGroups) {
+      const fetchedQuests = await questsApi.getManyByParams({
+        groupsIds: [group.id],
+        limit: QUESTS_COUNT_IN_GROUP,
+      })
+
+      newQuests.push(...fetchedQuests)
+    }
+
+    if (fetchedGroups.length < GROUPS_COUNT_ON_SCREEN) {
+      setIsAllGroupsLoaded(true)
+    }
+
+    setGroups(prevGroups => [...prevGroups, ...fetchedGroups])
+  }
+
+  return (
+    <>
+      {!isLoading ? (
+        <div>
+          {groups.map(group => (
+            <></>
+          ))}
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </>
+  )
+}
