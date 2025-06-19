@@ -60,9 +60,7 @@ export const QuestCreateQuestionConnection = ({
 
   const setImage = (index: number, image: ServerFile | null) => {
     const questionAnswer = clone(connectionQuestion.answer)
-    questionAnswer.optionsImages = questionAnswer.optionsImages.map(
-      (optionImage, i) => (i === index ? image : optionImage),
-    )
+    questionAnswer.optionsImages[index] = image
 
     updateQuestion({
       ...connectionQuestion,

@@ -75,9 +75,7 @@ export const QuestCreateQuestionSingle = ({
 
   const setImage = (index: number, image: ServerFile | null) => {
     const questionAnswer = clone(singleQuestion.answer)
-    questionAnswer.optionsImages = questionAnswer.optionsImages.map(
-      (optionImage, i) => (i === index ? image : optionImage),
-    )
+    questionAnswer.optionsImages[index] = image
 
     updateQuestion({
       ...singleQuestion,

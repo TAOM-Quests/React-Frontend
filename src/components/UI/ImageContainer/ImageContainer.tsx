@@ -44,6 +44,11 @@ export const ImageContainer = ({
     }
   }
 
+  const removeImage = (image: ServerFile) => {
+    setSelectedImages(prev => prev.filter(i => i.id !== image.id))
+    onSelectImages?.(selectedImages.filter(i => i.id !== image.id))
+  }
+
   const renderPlaceholder = () => {
     return (
       <>
@@ -72,9 +77,7 @@ export const ImageContainer = ({
                 icon="DELETE"
                 disabled={disabled}
                 className="upload-area__delete-icon"
-                onClick={() =>
-                  setSelectedImages(prev => prev.filter(i => i.id !== image.id))
-                }
+                onClick={() => removeImage(image)}
               />
             </div>
           </>
@@ -103,9 +106,7 @@ export const ImageContainer = ({
               size={image.size}
               imageName={image.originalName}
               extension={image.extension}
-              onRemove={() =>
-                setSelectedImages(prev => prev.filter(i => i.id !== image.id))
-              }
+              onRemove={() => removeImage(image)}
             />
           ))}
         </div>

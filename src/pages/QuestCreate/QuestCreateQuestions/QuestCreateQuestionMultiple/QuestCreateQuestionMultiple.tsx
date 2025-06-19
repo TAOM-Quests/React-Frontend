@@ -92,9 +92,7 @@ export const QuestCreateQuestionMultiple = ({
 
   const setImage = (index: number, image: ServerFile | null) => {
     const questionAnswer = clone(multipleQuestion.answer)
-    questionAnswer.optionsImages = questionAnswer.optionsImages.map(
-      (optionImage, i) => (i === index ? image : optionImage),
-    )
+    questionAnswer.optionsImages[index] = image
 
     updateQuestion({
       ...multipleQuestion,
