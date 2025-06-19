@@ -111,7 +111,7 @@ export const QuestCreateQuestionMultiple = ({
                     optionIndex,
                   )}
                   disabled={
-                    multipleQuestion.answer.options.length === 1 &&
+                    multipleQuestion.answer.correctAnswer.length === 1 &&
                     multipleQuestion.answer.correctAnswer.includes(optionIndex)
                   }
                   onChange={() => updateCorrectAnswer(optionIndex)}
