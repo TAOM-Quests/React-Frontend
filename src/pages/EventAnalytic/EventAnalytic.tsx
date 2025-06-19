@@ -37,7 +37,7 @@ export const EventAnalytic = () => {
   })
 
   useEffect(() => {
-    if (!user) navigate('/login')
+    if (!user || !user.isEmployee) navigate('/login')
 
     setIsLoading(true)
     try {
