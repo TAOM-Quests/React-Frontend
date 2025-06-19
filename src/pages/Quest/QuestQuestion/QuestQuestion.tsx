@@ -50,6 +50,9 @@ export const QuestQuestion = ({
   return (
     <div className="quest-question">
       <p className="body_xl_sb quest-question__title">{question.text}</p>
+      {question.images.map(image => (
+        <img src={image.url} />
+      ))}
       {question.type === 'single' && (
         <QuestQuestionSingle
           ref={questionRef}

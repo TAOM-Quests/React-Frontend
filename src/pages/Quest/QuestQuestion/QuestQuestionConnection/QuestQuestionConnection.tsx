@@ -6,6 +6,7 @@ import { Icon } from '../../../../components/UI/Icon/Icon'
 import { isEqual } from 'lodash'
 import './QuestQuestionConnection.scss'
 import { TypeQuestQuestion } from '../QuestQuestion'
+import { ServerFile } from '../../../../models/serverFile'
 
 export interface QuestQuestionConnectionProps {
   question: QuestQuestionConnectionInterface
@@ -18,6 +19,7 @@ interface DndOption {
   id: number
   text: string
   target: number | null
+  image: ServerFile | null
 }
 
 export const QuestQuestionConnection = forwardRef(
@@ -39,11 +41,13 @@ export const QuestQuestionConnection = forwardRef(
             acc.push({
               id: +firstPart,
               text: question.answer.options[+firstPart],
+              image: question.answer.optionsImages[+firstPart],
               target: +secondPart,
             })
             acc.push({
               id: +secondPart,
               text: question.answer.options[+secondPart],
+              image: question.answer.optionsImages[+secondPart],
               target: null,
             })
 
@@ -52,6 +56,7 @@ export const QuestQuestionConnection = forwardRef(
         : question.answer.options.map((option, optionIndex) => ({
             id: optionIndex,
             text: option,
+            image: question.answer.optionsImages[optionIndex],
             target: null,
           })),
     )
@@ -126,6 +131,7 @@ export const QuestQuestionConnection = forwardRef(
         <span className="body_m_sb connected-child-option__text">
           {option.text}
         </span>
+        {option.image && <img src={option.image.url} />}
       </div>
     )
 
@@ -143,6 +149,7 @@ export const QuestQuestionConnection = forwardRef(
               <span className="body_m_sb droppable-area__text">
                 {option.text}
               </span>
+              {option.image && <img src={option.image.url} />}
               {dndOptions.some(o => o.target === option.id) && (
                 <div className="connected-child-option__icon">
                   <Icon

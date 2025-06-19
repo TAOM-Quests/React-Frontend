@@ -106,7 +106,7 @@ export const QuestCreateQuestionConnection = ({
                         : []
                     }
                     onSelectImages={([image]) =>
-                      setImage(optionIndex, image ?? null)
+                      setImage(optionIndex + 1, image ?? null)
                     }
                   />
                   <Input
