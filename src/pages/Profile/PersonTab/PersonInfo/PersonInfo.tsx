@@ -163,11 +163,6 @@ export default function PersonInfo({
     setOpenMenu(!openMenu)
   }
 
-  const handlePasswordChangeSuccess = () => {
-    alert('Пароль успешно изменён')
-    // Можно добавить дополнительную логику, например, разлогинить пользователя
-  }
-
   return (
     <div className="personInfo">
       <div className="personInfo--header">
@@ -310,7 +305,6 @@ export default function PersonInfo({
         <ChangePasswordModal
           isOpen={isChangePasswordModalOpen}
           onClose={() => setChangePasswordModalOpen(false)}
-          onSuccess={handlePasswordChangeSuccess}
         />
       )}
     </div>

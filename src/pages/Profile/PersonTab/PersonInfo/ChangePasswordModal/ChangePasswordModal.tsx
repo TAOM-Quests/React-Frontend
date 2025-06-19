@@ -70,7 +70,7 @@ export const ChangePasswordModal = ({
       valid = false
     } else {
       try {
-        users.auth({ email: user.email, password: oldPassword })
+        await users.auth({ email: user.email, password: oldPassword })
       } catch (e) {
         newErrors.oldPassword = 'Неверный текущий пароль'
         valid = false
@@ -95,7 +95,8 @@ export const ChangePasswordModal = ({
   }
 
   const handleSubmit = async () => {
-    if (!validate()) return
+    const isValid = await validate()
+    if (!isValid) return
 
     try {
       if (!user) throw Error('User not found')
