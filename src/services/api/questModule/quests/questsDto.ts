@@ -12,18 +12,18 @@ export interface QuestsGetDto {
 }
 
 export interface SaveQuestDto {
+  name: string
+  time: string
+  tagsIds: number[]
   executorId: number
+  description: string
   departmentId: number
+  groupId: number | null
+  imageId: number | null
+  difficultId: number | null
   results: (QuestResult & { questId: number })[]
   questions: (QuestQuestion & { questId: number })[]
   id?: number
-  name?: string
-  time?: string
-  groupId?: number
-  imageId?: number
-  tagsIds?: number[]
-  description?: string
-  difficultId?: number
 }
 
 export interface SaveQuestCompleteDto {
