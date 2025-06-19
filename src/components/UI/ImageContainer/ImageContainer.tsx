@@ -31,7 +31,11 @@ export const ImageContainer = ({
     if (!onSelectImages) return
 
     onSelectImages(selectedImages ?? [])
-  }, [selectedImages, selectedImagesProps])
+  }, [selectedImages])
+
+  useEffect(() => {
+    setSelectedImages(selectedImagesProps ?? [])
+  }, [selectedImagesProps])
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
