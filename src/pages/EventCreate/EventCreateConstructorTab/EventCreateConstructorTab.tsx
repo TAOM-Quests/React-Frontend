@@ -5,6 +5,8 @@ import {
   useEffect,
   forwardRef,
   useImperativeHandle,
+  Dispatch,
+  SetStateAction,
 } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
@@ -19,7 +21,6 @@ import { ServerFile } from '../../../models/serverFile'
 import { Employee } from '../../../models/user'
 import { EmployeeAuth } from '../../../models/userAuth'
 import { selectAuth } from '../../../redux/auth/authSlice'
-import { events } from '../../../services/api/eventModule/events/events'
 import { validateDate } from '../../../validation/validateDate'
 import { validateTime } from '../../../validation/validateTime'
 import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
@@ -31,7 +32,6 @@ import {
 } from './EventCreateSchedule/EventCreateSchedule'
 import './EventCreateConstructorTab.scss'
 import { Loading } from '../../../components/Loading/Loading'
-import { ValidationResult } from '../../../validation/validationResult'
 import { EventStatus } from '../../../models/eventStatus'
 import { fetchCreateEventData } from './utils/fetchCreateEventData'
 import { fetchEventData } from './utils/fetchEventData'
@@ -44,36 +44,41 @@ const additionalInfoItems: string[] = [
   '<p>Следите за новостями на <a target="_blank" rel="noopener noreferrer nofollow" href="https://taom.academy">сайте Академии</a> и в социальных сетях <a target="_blank" rel="noopener noreferrer nofollow" href="https://vk.com/taom_ru">https://vk.com/taom_ru</a>, <a target="_blank" rel="noopener noreferrer nofollow" href="https://dzen.ru/taom">https://dzen.ru/taom</a> и <a target="_blank" rel="noopener noreferrer nofollow" href="https://t.me/taomacademyabitur">https://t.me/taomacademyabitur</a>.</p>',
 ]
 const ADDITIONAL_INFO_SEPARATOR = '<!-- Additional info -->'
-const STATUS_ID_WAIT_INSPECTION = 2
 const STATUS_ID_ON_INSPECTION = 3
-const STATUS_ID_ACCEPTED = 5
 const ROLE_ID_INSPECTOR = 2
 
 export interface EventCreateConstructorRef {
-  comments: Comment[]
-  status: EventStatus | null
   saveEvent: () => Promise<void>
-  changeEventStatus: (statusId: number) => void
 }
 
 interface EventCreateConstructorProps {
+  status: EventStatus | null
+  setStatus: Dispatch<SetStateAction<EventStatus | null>>
+  comments: Comment[]
+  setComments: Dispatch<SetStateAction<Comment[]>>
   changeIsValid: (isValid: boolean) => void
 }
 
 export const EventCreateConstructorTab = forwardRef(
-  ({ changeIsValid }: EventCreateConstructorProps, ref) => {
+  (
+    {
+      changeIsValid,
+      status,
+      setStatus,
+      comments,
+      setComments,
+    }: EventCreateConstructorProps,
+    ref,
+  ) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const [eventTags, setEventTags] = useState<EventTag[]>([])
     const [eventTypes, setEventTypes] = useState<EventType[]>([])
     const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
 
-    const [status, setStatus] = useState<EventStatus | null>(null)
-
     const [name, setName] = useState<string>('')
     const [time, setTime] = useState<string>('')
     const [date, setDate] = useState<Date | null>(null)
-    const [comments, setComments] = useState<Comment[]>([])
     const [type, setType] = useState<EventType | null>(null)
     const [description, setDescription] = useState<string>('')
     const [executors, setExecutors] = useState<Employee[]>([])
@@ -115,12 +120,31 @@ export const EventCreateConstructorTab = forwardRef(
     useImperativeHandle(
       ref,
       (): EventCreateConstructorRef => ({
-        status,
-        comments,
-        changeEventStatus,
         saveEvent: saveEventHandler,
       }),
-      [status, comments],
+      [
+        name,
+        time,
+        date,
+        type,
+        description,
+        executors,
+        seatsNumber,
+        tags,
+        address,
+        floor,
+        officeNumber,
+        platform,
+        connectionLink,
+        recordLink,
+        identifier,
+        accessCode,
+        schedule,
+        image,
+        files,
+        additionalInfoTexts,
+        status,
+      ],
     )
 
     useEffect(() => {
@@ -184,6 +208,7 @@ export const EventCreateConstructorTab = forwardRef(
           : [...prev, text],
       )
     }
+
     const saveEventHandler = async () => {
       setIsLoading(true)
       try {
@@ -227,37 +252,17 @@ export const EventCreateConstructorTab = forwardRef(
           if (!window.location.pathname.includes(`${savedEvent.id}`)) {
             navigate(`/event/${savedEvent.id}/edit`)
           }
+
+          await fetchEventData(
+            +savedEvent.id,
+            ADDITIONAL_INFO_SEPARATOR,
+            setEventState,
+          )
         }
       } catch (e) {
         console.log(`[EventCreate] ${e}`)
       }
       setIsLoading(false)
-    }
-
-    const navigateBack = () => navigate(-1)
-
-    const changeEventStatus = async (statusId: number) => {
-      try {
-        if (!user) throw new Error('User not authenticated')
-        if (!eventId) throw new Error('Event not found')
-
-        await events.update(+eventId, {
-          statusId,
-          inspectorComments: comments.map(comment => ({
-            ...comment,
-            userId: comment.user.id,
-          })),
-        })
-
-        if (
-          statusId === STATUS_ID_WAIT_INSPECTION ||
-          statusId === STATUS_ID_ACCEPTED
-        ) {
-          navigateBack()
-        }
-      } catch (e) {
-        console.log(`[EventCreate] ${e}`)
-      }
     }
 
     return (

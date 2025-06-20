@@ -14,6 +14,9 @@ import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { EmployeeAuth } from '../../models/userAuth'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { useEffect, useRef, useState } from 'react'
+import { EventStatus } from '../../models/eventStatus'
+import { events } from '../../services/api/eventModule/events/events'
+import { Comment } from '../../models/comment'
 
 const TABS = ['Мероприятие', 'Обратная связь']
 const STATUS_ID_DRAFT = 1
@@ -25,6 +28,8 @@ const ROLE_ID_INSPECTOR = 2
 
 export const EventCreate = () => {
   const [isSaveValid, setIsSaveValid] = useState(true)
+  const [status, setStatus] = useState<EventStatus | null>(null)
+  const [comments, setComments] = useState<Comment[]>([])
 
   const isFirstRender = useRef(true)
   const feedbackForm = useRef<EventFeedbackFormRef>(null)
@@ -61,6 +66,10 @@ export const EventCreate = () => {
       <>
         <div style={tabIndex === 0 ? {} : { display: 'none' }}>
           <EventCreateConstructorTab
+            status={status}
+            setStatus={setStatus}
+            comments={comments}
+            setComments={setComments}
             ref={eventConstructor}
             changeIsValid={isValid => setIsSaveValid(isValid)}
           />
@@ -88,6 +97,30 @@ export const EventCreate = () => {
     return statusColor[statusId] ?? 'neutral'
   }
 
+  const changeEventStatus = async (statusId: number) => {
+    try {
+      if (!user) throw new Error('User not authenticated')
+      if (!eventId) throw new Error('Event not found')
+
+      await events.update(+eventId, {
+        statusId,
+        inspectorComments: comments.map(comment => ({
+          ...comment,
+          userId: comment.user.id,
+        })),
+      })
+
+      if (
+        statusId === STATUS_ID_WAIT_INSPECTION ||
+        statusId === STATUS_ID_ACCEPTED
+      ) {
+        navigate(-1)
+      }
+    } catch (e) {
+      console.log(`[EventCreate] ${e}`)
+    }
+  }
+
   return (
     <div className="event_create">
       <div className="event_create--header">
@@ -98,11 +131,8 @@ export const EventCreate = () => {
           onClick={() => navigate(-1)}
         />
         <div className="event_create--header__buttons">
-          {eventConstructor.current?.status && (
-            <Badge
-              type={getStatusColor(eventConstructor.current?.status.id)}
-              text={`${eventConstructor.current?.status.name}`}
-            />
+          {status && (
+            <Badge type={getStatusColor(status.id)} text={`${status.name}`} />
           )}
           <Switcher
             options={TABS}
@@ -111,43 +141,25 @@ export const EventCreate = () => {
             }
             activeOption={TABS[getTabIndex()]}
           />
-          {eventId &&
-            eventConstructor.current?.status?.id === STATUS_ID_DRAFT && (
-              <Button
-                text="На проверку"
-                disabled={!isSaveValid}
-                onClick={() =>
-                  eventConstructor.current?.changeEventStatus(
-                    STATUS_ID_WAIT_INSPECTION,
-                  )
-                }
-              />
-            )}
+          {eventId && status?.id === STATUS_ID_DRAFT && (
+            <Button
+              text="На проверку"
+              disabled={!isSaveValid}
+              onClick={() => changeEventStatus(STATUS_ID_WAIT_INSPECTION)}
+            />
+          )}
           {eventId &&
             user.roleId === ROLE_ID_INSPECTOR &&
-            eventConstructor.current?.status?.id ===
-              STATUS_ID_ON_INSPECTION && (
+            status?.id === STATUS_ID_ON_INSPECTION && (
               <>
                 <Button
                   text="Отклонить"
-                  onClick={() =>
-                    eventConstructor.current?.changeEventStatus(
-                      STATUS_ID_REWORK,
-                    )
-                  }
-                  disabled={
-                    eventConstructor.current?.comments.filter(
-                      comment => !comment.id,
-                    ).length <= 0
-                  }
+                  onClick={() => changeEventStatus(STATUS_ID_REWORK)}
+                  disabled={comments.filter(comment => !comment.id).length <= 0}
                 />
                 <Button
                   text="Утвердить"
-                  onClick={() =>
-                    eventConstructor.current?.changeEventStatus(
-                      STATUS_ID_ACCEPTED,
-                    )
-                  }
+                  onClick={() => changeEventStatus(STATUS_ID_ACCEPTED)}
                 />
               </>
             )}

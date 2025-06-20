@@ -1,12 +1,24 @@
 import { CardDepartmentData } from '../HomeData/cardDepartmentData'
 import './CardDepartment.scss'
 import { Button } from '../../../components/UI/Button/Button'
+import { useEffect, useState } from 'react'
 
 interface CardDepartmentProps {
   data: CardDepartmentData
 }
 
 export const CardDepartment = ({ data }: CardDepartmentProps) => {
+  const [imageUrl, setImageUrl] = useState('')
+
+  useEffect(() => {
+    const getImageUrl = async () => {
+      const imageUrl = await data.getImageUrl()
+      setImageUrl(imageUrl)
+    }
+
+    getImageUrl()
+  }, [data])
+
   const handleClick = () => {
     window.location.href = data.buttonLink ?? ''
   }
@@ -14,7 +26,7 @@ export const CardDepartment = ({ data }: CardDepartmentProps) => {
   return (
     <div className="card">
       <div className="card__image-wrapper">
-        <img src={data.imageUrl} alt={data.title} className="card__image" />
+        <img src={imageUrl} alt={data.title} className="card__image" />
       </div>
       <div className="card__content">
         <p className="body_l_sb card__title">{data.title}</p>
