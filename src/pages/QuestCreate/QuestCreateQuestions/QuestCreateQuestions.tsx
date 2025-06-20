@@ -132,7 +132,7 @@ export const QuestCreateQuestions = ({
   }
 
   const renderQuestion = (question: QuestQuestion, index: number) => (
-    <div>
+    <div className="quest-create-questions__question">
       <Input
         label="Вопрос"
         value={question.text}
