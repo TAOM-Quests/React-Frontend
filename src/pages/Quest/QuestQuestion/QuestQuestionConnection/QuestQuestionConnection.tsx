@@ -131,7 +131,11 @@ export const QuestQuestionConnection = forwardRef(
         <span className="body_m_sb connected-child-option__text">
           {option.text}
         </span>
-        {option.image && <img src={option.image.url} />}
+        {option.image && (
+          <div className="connected-child-option__image">
+            <img src={option.image.url} />
+          </div>
+        )}
       </div>
     )
 
@@ -149,7 +153,11 @@ export const QuestQuestionConnection = forwardRef(
               <span className="body_m_sb droppable-area__text">
                 {option.text}
               </span>
-              {option.image && <img src={option.image.url} />}
+              {option.image && (
+                <div className="droppable-area__image">
+                  <img src={option.image.url} />
+                </div>
+              )}
               {dndOptions.some(o => o.target === option.id) && (
                 <div className="connected-child-option__icon">
                   <Icon
