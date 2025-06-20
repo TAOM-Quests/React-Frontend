@@ -85,8 +85,6 @@ export const QuestCreate = () => {
       description: description ?? '',
       departmentId: user.departmentId,
       imageId: image ? image.id : null,
-      groupId: group ? group.id : null,
-      tagsIds: tags.map(tag => tag.id),
       difficultId: difficulty ? difficulty.id : null,
       questions: questions.map(question => ({
         ...question,
@@ -96,6 +94,18 @@ export const QuestCreate = () => {
         ...result,
         questId: +questId!,
       })),
+      group:
+        group === null
+          ? null
+          : group.isUserAdded
+            ? { name: group.name }
+            : { id: group.id, name: group.name },
+      tags: [
+        ...tags
+          .filter(tag => !tag.isUserAdded)
+          .map(tag => ({ id: tag.id, name: tag.name })),
+        ...tags.filter(tag => tag.isUserAdded).map(tag => ({ name: tag.name })),
+      ],
     }
 
     const { id } = questId

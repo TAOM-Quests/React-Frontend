@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ServerFile } from '../../../models/serverFile'
 import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
 import { Icon } from '../Icon/Icon'
@@ -27,19 +27,22 @@ export const ImageContainer = ({
     selectedImagesProps ?? [],
   )
 
+  useEffect(() => {
+    setSelectedImages(selectedImagesProps ?? [])
+  }, [selectedImagesProps])
+
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
 
     for (const file of files ?? []) {
       const uploadedImage = await serverFiles.uploadFile(file)
-      const imageStat = await serverFiles.getFile(uploadedImage.name)
 
       setSelectedImages(prev =>
-        isMultiple ? [...prev, imageStat] : [imageStat],
+        isMultiple ? [...prev, uploadedImage] : [uploadedImage],
       )
 
       onSelectImages?.(
-        isMultiple ? [...selectedImages, imageStat] : [imageStat],
+        isMultiple ? [...selectedImages, uploadedImage] : [uploadedImage],
       )
     }
   }

@@ -2,7 +2,6 @@ import classNames from 'classnames'
 import { ImgHTMLAttributes, MouseEventHandler } from 'react'
 import { Icon } from '../Icon/Icon'
 import { ICON_MAP } from '../../../assets/icons'
-import image from '../../../assets/images/mem.png'
 import './Avatar.scss'
 
 export type Size = 'extraLarge' | 'large' | 'small' | 'extraSmall'
@@ -15,7 +14,7 @@ export interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 export const Avatar = ({
-  src = image,
+  src,
   alt = 'Avatar',
   size = 'small',
   icon,

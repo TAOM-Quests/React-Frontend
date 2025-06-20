@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
 import './NumberInput.scss'
 import { Icon } from '../Icon/Icon'
 import classNames from 'classnames'
@@ -30,6 +30,10 @@ export const NumberInput = ({
   const showHelperText = helperText && !errorText
   const inputRef = useRef<HTMLInputElement>(null)
   const [valueInput, setValueInput] = useState(value ?? null)
+
+  useEffect(() => {
+    setValueInput(value ?? null)
+  }, [value])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value

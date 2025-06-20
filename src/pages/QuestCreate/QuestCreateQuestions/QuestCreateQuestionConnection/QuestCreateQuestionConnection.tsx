@@ -50,13 +50,17 @@ export const QuestCreateQuestionConnection = ({
     })
   }
 
-  const removeOptionPair = (index: number) =>
-    setQuestions(
-      questions.filter(
-        (_, questionIndex) =>
-          questionIndex !== index || questionIndex !== index + 1,
-      ),
+  const removeOptionPair = (index: number) => {
+    const questionAnswer = clone(connectionQuestion.answer)
+    questionAnswer.options = questionAnswer.options.filter(
+      (_, i) => i !== index && i !== index + 1,
     )
+
+    updateQuestion({
+      ...connectionQuestion,
+      answer: questionAnswer,
+    })
+  }
 
   const setImage = (index: number, image: ServerFile | null) => {
     const questionAnswer = clone(connectionQuestion.answer)
@@ -79,7 +83,6 @@ export const QuestCreateQuestionConnection = ({
                 <div key={optionIndex} className="connection-question-option">
                   <ImageContainer
                     key={`question-connection-option-${optionIndex}`}
-                    className="connection-question-option__image"
                     selectedImages={
                       connectionQuestion.answer.optionsImages[optionIndex]
                         ? [connectionQuestion.answer.optionsImages[optionIndex]]
@@ -97,7 +100,6 @@ export const QuestCreateQuestionConnection = ({
                   –
                   <ImageContainer
                     key={`question-connection-option-${optionIndex}`}
-                    className="connection-question-option__image"
                     selectedImages={
                       connectionQuestion.answer.optionsImages[optionIndex + 1]
                         ? [
@@ -108,7 +110,7 @@ export const QuestCreateQuestionConnection = ({
                         : []
                     }
                     onSelectImages={([image]) =>
-                      setImage(optionIndex + 1, image ?? null)
+                      setImage(optionIndex, image ?? null)
                     }
                   />
                   <Input
