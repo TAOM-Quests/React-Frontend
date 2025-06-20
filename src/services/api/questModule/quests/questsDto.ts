@@ -5,10 +5,18 @@ export interface QuestsGetDto {
   limit?: number
   offset?: number
   tags?: number[]
+  executor?: number[]
+  department?: number[]
+}
+
+export interface QuestsCompleteGetDto {
+  ids?: number[] // id квестов
+  limit?: number
+  offset?: number
+  tags?: number[]
   completeBy?: number
   executor?: number[]
   department?: number[]
-  isCompleted?: boolean
 }
 
 export interface SaveQuestDto {

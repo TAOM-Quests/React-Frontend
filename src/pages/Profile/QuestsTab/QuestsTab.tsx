@@ -30,18 +30,17 @@ export default function QuestsTab({ user }: QuestsTabProps) {
   }, [filter])
 
   const fetchQuests = async () => {
-    const fetchedQuests = user.isEmployee
+    const fetchedQuests: QuestMinimize[] = user.isEmployee
       ? await quests.getManyByParams({
           executor: [user.id],
           offset: userQuests?.length,
           ...filter,
         })
-      : await quests.getManyByParams({
+      : ((await quests.getManyCompleteByParams({
           completeBy: user.id,
           offset: userQuests?.length,
-          isCompleted: true,
           ...filter,
-        })
+        })) as QuestMinimize[])
 
     setQuests([...(userQuests ?? []), ...fetchedQuests])
   }
