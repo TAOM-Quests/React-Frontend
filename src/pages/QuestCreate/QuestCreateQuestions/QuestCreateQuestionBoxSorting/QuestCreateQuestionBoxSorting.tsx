@@ -49,6 +49,10 @@ export const QuestCreateQuestionBoxSorting = ({
     questionAnswer.correctAnswer = questionAnswer.correctAnswer.filter(
       (_, index) => index !== boxIndex,
     )
+    questionAnswer.options = questionAnswer.options.filter(
+      (_, index) =>
+        !questionAnswer.correctAnswer[boxIndex].options.includes(index),
+    )
 
     updateQuestion({
       ...boxSortingQuestion,
