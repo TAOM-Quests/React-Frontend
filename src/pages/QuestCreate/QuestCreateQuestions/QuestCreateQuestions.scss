@@ -13,6 +13,12 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  &__question {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .add-question-context-menu {

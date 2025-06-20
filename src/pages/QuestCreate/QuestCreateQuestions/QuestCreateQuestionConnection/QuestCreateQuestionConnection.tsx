@@ -7,6 +7,8 @@ import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
 import './QuestCreateQuestionConnection.scss'
+import { ServerFile } from '../../../../models/serverFile'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
 
 export interface QuestCreateQuestionConnectionProps {
   questions: QuestQuestion[]
@@ -48,13 +50,27 @@ export const QuestCreateQuestionConnection = ({
     })
   }
 
-  const removeOptionPair = (index: number) =>
-    setQuestions(
-      questions.filter(
-        (_, questionIndex) =>
-          questionIndex !== index || questionIndex !== index + 1,
-      ),
+  const removeOptionPair = (index: number) => {
+    const questionAnswer = clone(connectionQuestion.answer)
+    questionAnswer.options = questionAnswer.options.filter(
+      (_, i) => i !== index && i !== index + 1,
     )
+
+    updateQuestion({
+      ...connectionQuestion,
+      answer: questionAnswer,
+    })
+  }
+
+  const setImage = (index: number, image: ServerFile | null) => {
+    const questionAnswer = clone(connectionQuestion.answer)
+    questionAnswer.optionsImages[index] = image
+
+    updateQuestion({
+      ...connectionQuestion,
+      answer: questionAnswer,
+    })
+  }
 
   return (
     <div className="connection-questions">
@@ -65,12 +81,38 @@ export const QuestCreateQuestionConnection = ({
             if (optionIndex % 2 === 0) {
               return (
                 <div key={optionIndex} className="connection-question-option">
+                  <ImageContainer
+                    key={`question-connection-option-${optionIndex}`}
+                    selectedImages={
+                      connectionQuestion.answer.optionsImages[optionIndex]
+                        ? [connectionQuestion.answer.optionsImages[optionIndex]]
+                        : []
+                    }
+                    onSelectImages={([image]) =>
+                      setImage(optionIndex, image ?? null)
+                    }
+                  />
                   <Input
                     value={option}
                     onChange={e => updateOption(e.target.value, optionIndex)}
                     placeholder="Элемент 1"
                   />
                   –
+                  <ImageContainer
+                    key={`question-connection-option-${optionIndex}`}
+                    selectedImages={
+                      connectionQuestion.answer.optionsImages[optionIndex + 1]
+                        ? [
+                            connectionQuestion.answer.optionsImages[
+                              optionIndex + 1
+                            ]!,
+                          ]
+                        : []
+                    }
+                    onSelectImages={([image]) =>
+                      setImage(optionIndex, image ?? null)
+                    }
+                  />
                   <Input
                     value={connectionQuestion.answer.options[optionIndex + 1]}
                     onChange={e =>

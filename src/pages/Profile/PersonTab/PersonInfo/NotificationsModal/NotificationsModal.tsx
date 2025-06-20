@@ -1,83 +1,57 @@
 import { Modal } from '../../../../../components/UI/Modal/Modal'
-import {
-  NotificationChannel,
-  NotificationRole,
-  NotificationSettings,
-  notificationSettingsConfig,
-} from './notificationSettingsConfig'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Checkbox } from '../../../../../components/UI/Checkbox/Checkbox'
 import './NotificationsModal.scss'
+import { UserNotificationsSettingsItem } from '../../../../../models/userNotificationsSettings'
 
 interface NotificationsModalProps {
-  role: NotificationRole
   isOpen: boolean
-  onClose: () => void
-  onSave?: (settings: NotificationSettings) => void
-  initialSettings?: NotificationSettings
+  onClose: (settings: UserNotificationsSettingsItem[]) => void
+  notificationsSettings: UserNotificationsSettingsItem[]
 }
 
 export const NotificationsModal = ({
-  role,
   isOpen,
-  onSave,
   onClose,
-  initialSettings = {},
+  notificationsSettings,
 }: NotificationsModalProps) => {
-  const settingsList = notificationSettingsConfig[role] || []
-  const [settings, setSettings] =
-    useState<NotificationSettings>(initialSettings)
+  const [settings, setSettings] = useState<UserNotificationsSettingsItem[]>(
+    notificationsSettings,
+  )
 
-  useEffect(() => {
-    setSettings(initialSettings)
-  }, [initialSettings])
-
-  const handleCheckbox = (key: string, channel: NotificationChannel) => {
+  const handleCheckbox = async (
+    index: number,
+    channel: 'email' | 'telegram',
+    value: boolean,
+  ) => {
     setSettings(prev => {
-      const currentChannels = prev[key] || []
-      const hasChannel = currentChannels.includes(channel)
-
-      return {
-        ...prev,
-        [key]: hasChannel
-          ? currentChannels.filter(ch => ch !== channel)
-          : [...currentChannels, channel],
-      }
+      prev[index][channel] = value
+      return [...prev]
     })
   }
-
-  const handleSave = () => {
-    onSave?.(settings)
-    onClose()
-  }
-
-  if (!isOpen) return null
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => onClose(settings)}
       title="Настройки уведомлений"
-      textButtonSave="Сохранить изменения"
-      onSave={handleSave}
-      isShowFooter
     >
       <div className="notifications-modal">
-        {settingsList.map(setting => (
-          <div key={setting.key} className="notifications-modal__setting">
-            <span className="body_l_r">{setting.label}</span>
+        {settings.map((setting, index) => (
+          <div key={index} className="notifications-modal__setting">
+            <span className="body_l_r">{setting.name}</span>
             <div className="notifications-modal__channels">
               <Checkbox
-                isSelected={settings[setting.key]?.includes('email') || false}
+                isSelected={setting.email}
                 label="Email"
-                onChange={() => handleCheckbox(setting.key, 'email')}
+                onChange={() => handleCheckbox(index, 'email', !setting.email)}
               />
               <Checkbox
-                isSelected={
-                  settings[setting.key]?.includes('telegram') || false
-                }
+                isSelected={setting.telegram}
                 label="Telegram"
-                onChange={() => handleCheckbox(setting.key, 'telegram')}
+                onChange={() =>
+                  handleCheckbox(index, 'telegram', !setting.telegram)
+                }
               />
             </div>
           </div>
