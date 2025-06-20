@@ -97,7 +97,14 @@ export const QuestsHome = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
+        <div className="quests-home">
+          <section className="quests-home__banner">
+            <div className="quests-home__overlay">
+              <h2>Название Кафедры</h2>
+              <p>Описание кафедры</p>
+            </div>
+          </section>
+
           {groups.map(group => (
             <QuestHomeGroup
               key={group.id}

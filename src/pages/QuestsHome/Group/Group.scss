@@ -1,0 +1,299 @@
+.group__questGrid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 20px;
+  min-height: 700px;
+  width: 100%;
+  position: relative;
+  background: transparent;
+  margin-bottom: 4rem;
+}
+
+.titleGroupTests {
+  grid-area: 3 / 1 / 4 / 3;
+  align-self: center;
+  z-index: 2;
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 8px;
+  }
+  p {
+    color: #555;
+    font-size: 1rem;
+  }
+}
+
+// Индивидуальные позиции и формы карточек
+.groupTest-right .index-0-of-test-in-group {
+  grid-area: 1 / 3 / 5 / 6;
+  position: relative;
+  // left: 2.4rem;
+  .back-gray {
+    background: #8090b8;
+    clip-path: polygon(0px 0px, 0px 100%, 40% 100%, 100% 0px);
+  }
+}
+.groupTest-right .index-1-of-test-in-group {
+  // grid-area: 1/5/4/6;
+  grid-area: 1/6/5/9;
+  .back-gray {
+    background: #223344;
+  }
+}
+.groupTest-right .index-2-of-test-in-group {
+  grid-area: 1 / 9 / 6 / 11;
+  .back-gray {
+    background: #1a2b3c;
+  }
+}
+.groupTest-right .index-3-of-test-in-group {
+  grid-area: 5 / 5 / 7 / 9;
+  .back-gray {
+    background: #b8a080;
+  }
+}
+.groupTest-right .index-4-of-test-in-group {
+  grid-area: 7 / 4 / 9 / 7;
+  .back-gray {
+    background: #a0b880;
+  }
+}
+.groupTest-right .index-5-of-test-in-group {
+  grid-area: 7 / 7/ 11/ 9;
+  .back-gray {
+    background: #80b8b8;
+  }
+}
+.groupTest-right .index-6-of-test-in-group {
+  grid-area: 6 / 9 / 11 / 11;
+  .back-gray {
+    background: #b880a0;
+  }
+}
+.groupTest-right .index-7-of-test-in-group {
+  grid-area: 9 / 7 / 11 / 2;
+  .back-gray {
+    background: #e0e0e0;
+  }
+}
+
+// Для четных/нечетных групп можно сделать зеркальное отображение
+.groupTest-left .index-0-of-test-in-group {
+  grid-area: 1 / 4 / 3 / 2;
+  left: 0;
+  .back-gray {
+    background: #8090b8;
+    clip-path: polygon(100% 0px, 100% 100%, 60% 100%, 0px 0px);
+  }
+}
+.groupTest-left .index-1-of-test-in-group {
+  grid-area: 1 / 1 / 2 / 3;
+  .back-gray {
+    background: #223344;
+  }
+}
+.groupTest-left .index-2-of-test-in-group {
+  grid-area: 2 / 1 / 4 / 3;
+  .back-gray {
+    background: #1a2b3c;
+  }
+}
+.groupTest-left .index-3-of-test-in-group {
+  grid-area: 3 / 4 / 4 / 2;
+  .back-gray {
+    background: #b8a080;
+  }
+}
+.groupTest-left .index-4-of-test-in-group {
+  grid-area: 4 / 5 / 6 / 3;
+  .back-gray {
+    background: #a0b880;
+  }
+}
+.groupTest-left .index-5-of-test-in-group {
+  grid-area: 4 / 3 / 6 / 1;
+  .back-gray {
+    background: #80b8b8;
+  }
+}
+.groupTest-left .index-6-of-test-in-group {
+  grid-area: 4 / 1 / 6 / 2;
+  .back-gray {
+    background: #b880a0;
+  }
+}
+.groupTest-left .index-7-of-test-in-group {
+  grid-area: 3 / 1 / 4 / 2;
+  .back-gray {
+    background: #e0e0e0;
+  }
+}
+
+// Общие стили для карточек
+.group__questItem {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #23242d;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  padding: 20px;
+
+  &--overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &--tags {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    padding: 20px;
+  }
+
+  &--name-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 76%;
+    position: relative;
+    color: var(--text_c_secondary);
+    padding: 20px;
+  }
+
+  &--logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &--line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    max-width: 50px;
+    width: 10vw;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--bg_c_secondary);
+  }
+
+  &--title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: center;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  }
+  &--empty {
+    background: #3a3a4d !important;
+    cursor: default;
+  }
+  .back-gray {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
+
+// Внутри карточки (пример)
+.test-img-wrapper {
+  width: 100%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.test-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.test-title-items {
+  padding: 12px;
+  text-align: center;
+  .test-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .line {
+      border: 0.1px solid white;
+      width: 50px;
+      z-index: 2;
+      height: 0;
+      margin: 0 8px;
+    }
+    .taom-logo {
+      width: 28px;
+      height: 28px;
+      margin: 0 8px;
+    }
+    p {
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 600;
+      margin: 0;
+      margin-top: 8px;
+    }
+  }
+}
+.test-title-items-back {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 0;
+  .position-test-title {
+    width: 100%;
+    text-align: center;
+    p {
+      color: #fff;
+      font-size: 1rem;
+      margin: 0;
+      font-family: serif;
+    }
+  }
+}
+
+// Адаптив под мобильные
+@media (max-width: 900px) {
+  .group__questGrid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    min-height: 420px;
+    gap: 12px;
+  }
+  // Можно переопределить grid-area для мобильных, если нужно
+}

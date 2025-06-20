@@ -1,5 +1,9 @@
+import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
+import { Icon } from '../../../components/UI/Icon/Icon'
+import { Tag } from '../../../components/UI/Tag/Tag'
 import { QuestGroup } from '../../../models/questGroup'
 import { QuestMinimize } from '../../../models/questMinimize'
+import './Group.scss'
 
 export interface QuestHomeGroupProps {
   group: QuestGroup
@@ -7,12 +11,92 @@ export interface QuestHomeGroupProps {
 }
 
 export const QuestHomeGroup = ({ group, quests }: QuestHomeGroupProps) => {
-  return (
-    <div>
-      <h1>{group.name}</h1>
+  function splitToChunks<T>(arr: T[], chunkSize: number): (T | null)[][] {
+    const result: (T | null)[][] = []
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      const chunk: (T | null)[] = arr.slice(i, i + chunkSize)
+      while (chunk.length < chunkSize) {
+        chunk.push(null)
+      }
+      result.push(chunk)
+    }
+    // Если квестов вообще нет, всё равно возвращаем одну пустую группу
+    if (result.length === 0) result.push(Array(chunkSize).fill(null))
+    return result
+  }
 
-      {quests.map((quest, index) => (
-        <div key={index}>{quest.name}</div>
+  const questChunks = splitToChunks(quests, 8)
+
+  return (
+    // <div className="group">
+    //   <div className="group__header">
+    //     <h1>{group.name}</h1>
+    //     {/* <p>{group.description}</p> */}
+    //   </div>
+
+    //   <div className="group__questGrid">
+    //     {questChunks.map((quest, index) => (
+    //       <div className="group__questItem" key={index}>
+    //         {quest.name}
+    //       </div>
+    //     ))}
+    //   </div>
+    // </div>
+    <div className="group">
+      <div className="group__header">
+        <h1>{group.name}</h1>
+      </div>
+      {questChunks.map((chunk, chunkIdx) => (
+        <div
+          className={`group__questGrid groupTest-${chunkIdx % 2 === 0 ? 'right' : 'left'}`}
+          key={chunkIdx}
+        >
+          <div className="titleGroupTests" />
+          {chunk.map((quest, index) =>
+            quest ? (
+              <div
+                className={`group__questItem index-${index}-of-test-in-group`}
+                style={{
+                  backgroundImage: `url(${quest.image?.url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <div className="group__questItem--overlay">
+                  <div className="group__questItem--tags">
+                    {quest.tags?.map(tag => (
+                      <span className="group__questItem--tag" key={tag.id}>
+                        {tag.name}
+
+                        <Tag text={tag.name} type="secondary" size="small" />
+                      </span>
+                    ))}
+
+                    <Tag text={'Тест'} type="secondary" size="small" />
+                    <Tag text={'Тест'} type="secondary" size="small" />
+                    <Tag text={'Тест'} type="secondary" size="small" />
+                  </div>
+
+                  <div className="group__questItem--name-wrapper">
+                    <div className="group__questItem--logo">
+                      <div className="group__questItem--line"></div>
+                      <Icon icon="TAOM" colorIcon="primary" size="large" />
+                      <div className="group__questItem--line"></div>
+                    </div>
+                    <p className="body_xl_sb group__questItem--title">
+                      {quest.name}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`group__questItem group__questItem--empty index-${index}-of-test-in-group`}
+                key={`empty-${index}`}
+              />
+            ),
+          )}
+        </div>
       ))}
     </div>
   )
