@@ -46,12 +46,14 @@ export const QuestQuestionButton = ({
     >
       {children && children}
       {!children && (
-        <>
-          {text && <span className="quest-question-button__text">{text}</span>}
+        <div className="quest-question-button__content">
           {image && (
-            <img className="quest-question-button__image" src={image.url} />
+            <div className="quest-question-button__image">
+              <img src={image.url} />
+            </div>
           )}
-        </>
+          {text && <span className="quest-question-button__text">{text}</span>}
+        </div>
       )}
     </button>
   )
