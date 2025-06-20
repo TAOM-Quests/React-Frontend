@@ -23,7 +23,7 @@ export const validateDateOfBirth = (
   if (parsedDate.isAfter(now)) {
     return { isValid: false, error: 'Дата рождения не может быть в будущем' }
   }
-  const minAge = 8
+  const minAge = 14
   const age = now.diff(parsedDate, 'years')
   if (age < minAge) {
     return {

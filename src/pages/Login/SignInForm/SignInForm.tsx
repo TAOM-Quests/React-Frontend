@@ -7,6 +7,31 @@ import { Button } from '../../../components/UI/Button/Button'
 import { validateEmail } from '../../../validation/validateEmail'
 import { validatePassword } from '../../../validation/validatePassword'
 import { validateRepeatPassword } from '../../../validation/validateRepeatPassword'
+import { Checkbox } from '../../../components/UI/Checkbox/Checkbox'
+
+const CHECKBOX_DATA = [
+  {
+    label: 'Мне уже есть 14 лет',
+  },
+  {
+    label:
+      'Согласен(на) на обработку персональных данных в соответствии с Федеральным законом от 27 июля 2006 года № 152-ФЗ «О персональных данных»',
+  },
+  {
+    label: (
+      <>
+        Согласен(на) с{' '}
+        <a
+          href="https://taom.academy/upload/%E2%84%9611_13_02_2023.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Политикой в отношении обработки персональных данных
+        </a>
+      </>
+    ),
+  },
+]
 
 export default function SignInForm() {
   const navigate = useNavigate()
@@ -17,6 +42,9 @@ export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [signInError, setSignInError] = useState('')
+  const [checkboxes, setCheckboxes] = useState([false, false, false])
+
+  const allCheckboxesChecked = checkboxes.every(Boolean)
 
   const emailValidator = validateEmail(email)
   const passwordValidator = validatePassword(password)
@@ -51,6 +79,12 @@ export default function SignInForm() {
 
   const toggleShowPassword = () => {
     setShowPassword(prev => !prev)
+  }
+
+  const handleCheckboxChange = (idx: number) => {
+    setCheckboxes(prev =>
+      prev.map((checked, i) => (i === idx ? !checked : checked)),
+    )
   }
 
   return (
@@ -88,7 +122,21 @@ export default function SignInForm() {
         onChange={e => setRepeatPassword(e.target.value)}
         errorText={isSubmitted ? repeatPasswordValidator.error : ''}
       />
-      <Button type="submit" text="Зарегистрироваться" />
+      <Button
+        type="submit"
+        text="Зарегистрироваться"
+        disabled={!allCheckboxesChecked}
+      />
+      <div className="signIn_form__checkboxes">
+        {CHECKBOX_DATA.map((item, idx) => (
+          <Checkbox
+            key={idx}
+            isSelected={checkboxes[idx]}
+            onChange={() => handleCheckboxChange(idx)}
+            label={item.label}
+          />
+        ))}
+      </div>
     </form>
   )
 }

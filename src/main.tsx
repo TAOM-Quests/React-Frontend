@@ -20,6 +20,9 @@ import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
 import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
+import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
+import { Games } from './pages/Games/Games.tsx'
+import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -72,6 +75,7 @@ root.render(
               <Route path="email/confirm" element={<EmailConfirm />} />
 
               <Route path="event/:id" element={<Event />} />
+              <Route path="event/:id/statistic" element={<EventAnalytic />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
               <Route path="event/calendar" element={<EventCalendar />} />
@@ -80,6 +84,13 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
+
+              <Route path="games/:id" element={<Games />} />
+              <Route path="games/wordle/:id" element={<Wordle />} />
+              {/* <Route
+                path="games/wordle/edit/:id"
+                element={<WordleWordsEditor />}
+              /> */}
             </Routes>
           </ScrollToTop>
           <Footer />
