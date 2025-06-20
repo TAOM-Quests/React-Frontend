@@ -14,18 +14,18 @@ export interface QuestsGetDto {
 }
 
 export interface SaveQuestDto {
+  name: string
+  time: string
   executorId: number
+  description: string
   departmentId: number
+  imageId: number | null
+  difficultId: number | null
+  tags: (QuestTag | Omit<QuestTag, 'id'>)[]
   results: (QuestResult & { questId: number })[]
+  group: QuestGroup | Omit<QuestGroup, 'id'> | null
   questions: (QuestQuestion & { questId: number })[]
   id?: number
-  name?: string
-  time?: string
-  imageId?: number
-  tags?: (QuestTag | Omit<QuestTag, 'id'>)[]
-  group?: QuestGroup | Omit<QuestGroup, 'id'>
-  description?: string
-  difficultId?: number
 }
 
 export interface SaveQuestCompleteDto {

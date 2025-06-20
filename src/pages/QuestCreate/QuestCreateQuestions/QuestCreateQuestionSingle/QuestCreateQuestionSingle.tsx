@@ -8,6 +8,8 @@ import { Toggle } from '../../../../components/UI/Toggle/Toggle'
 import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import './QuestCreateQuestionSingle.scss'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
+import { ServerFile } from '../../../../models/serverFile'
 
 export interface QuestCreateQuestionSingleProps {
   questions: QuestQuestion[]
@@ -71,6 +73,16 @@ export const QuestCreateQuestionSingle = ({
     })
   }
 
+  const setImage = (index: number, image: ServerFile | null) => {
+    const questionAnswer = clone(singleQuestion.answer)
+    questionAnswer.optionsImages[index] = image
+
+    updateQuestion({
+      ...singleQuestion,
+      answer: questionAnswer,
+    })
+  }
+
   return (
     <div className="single-questions">
       <div className="single-questions__options">
@@ -78,6 +90,18 @@ export const QuestCreateQuestionSingle = ({
         <div className="single-questions__options-list">
           {singleQuestion.answer.options.map((option, optionIndex) => (
             <div key={optionIndex} className="single-question-option">
+              <ImageContainer
+                key={`question-single-option-${optionIndex}`}
+                className="single-question-option__image"
+                selectedImages={
+                  singleQuestion.answer.optionsImages[optionIndex]
+                    ? [singleQuestion.answer.optionsImages[optionIndex]]
+                    : []
+                }
+                onSelectImages={([image]) =>
+                  setImage(optionIndex, image ?? null)
+                }
+              />
               <Input
                 value={option}
                 placeholder="Введите вариант ответа"

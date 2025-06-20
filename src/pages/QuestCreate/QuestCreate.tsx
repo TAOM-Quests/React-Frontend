@@ -79,8 +79,13 @@ export const QuestCreate = () => {
     setIsLoading(true)
 
     const saveQuest: SaveQuestDto = {
+      time: time ?? '',
+      name: name ?? '',
       executorId: user.id,
+      description: description ?? '',
       departmentId: user.departmentId,
+      imageId: image ? image.id : null,
+      difficultId: difficulty ? difficulty.id : null,
       questions: questions.map(question => ({
         ...question,
         questId: +questId!,
@@ -89,25 +94,18 @@ export const QuestCreate = () => {
         ...result,
         questId: +questId!,
       })),
-    }
-
-    if (name) saveQuest.name = name
-    if (time) saveQuest.time = time
-    if (image) saveQuest.imageId = image.id
-    if (description) saveQuest.description = description
-    if (difficulty) saveQuest.difficultId = difficulty.id
-    if (group) {
-      saveQuest.group = group.isUserAdded
-        ? { name: group.name }
-        : { id: group.id, name: group.name }
-    }
-    if (tags.length) {
-      saveQuest.tags = [
+      group:
+        group === null
+          ? null
+          : group.isUserAdded
+            ? { name: group.name }
+            : { id: group.id, name: group.name },
+      tags: [
         ...tags
           .filter(tag => !tag.isUserAdded)
           .map(tag => ({ id: tag.id, name: tag.name })),
         ...tags.filter(tag => tag.isUserAdded).map(tag => ({ name: tag.name })),
-      ]
+      ],
     }
 
     const { id } = questId

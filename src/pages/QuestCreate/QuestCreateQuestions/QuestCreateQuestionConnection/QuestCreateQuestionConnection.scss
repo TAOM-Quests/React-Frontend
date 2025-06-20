@@ -25,6 +25,26 @@
     align-items: center;
     gap: 10px;
 
+    &__image {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 60px;
+      width: 80px;
+
+      .preview .upload-area__add-icon {
+        display: flex;
+      }
+
+      .upload-area__add-icon {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        display: none;
+      }
+    }
+
     .inputWrapper {
       width: 100%;
     }
