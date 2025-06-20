@@ -163,6 +163,14 @@ export const QuestQuestionBoxSorting = forwardRef(
                     })}
                   >
                     {option}
+                    {question.answer.optionsImages[optionIndex] && (
+                      <div className="quest-question-box-sorting__box--container">
+                        <img
+                          alt={question.answer.options[optionIndex]}
+                          src={question.answer.optionsImages[optionIndex].url}
+                        />
+                      </div>
+                    )}
                   </Draggable>
                 )
               }
