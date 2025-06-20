@@ -110,6 +110,10 @@ export const QuestCreateQuestionMultiple = ({
                   checked={multipleQuestion.answer.correctAnswer.includes(
                     optionIndex,
                   )}
+                  disabled={
+                    multipleQuestion.answer.correctAnswer.length === 1 &&
+                    multipleQuestion.answer.correctAnswer.includes(optionIndex)
+                  }
                   onChange={() => updateCorrectAnswer(optionIndex)}
                 />
               </div>

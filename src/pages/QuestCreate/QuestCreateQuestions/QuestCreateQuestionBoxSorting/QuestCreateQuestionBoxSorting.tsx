@@ -79,12 +79,15 @@ export const QuestCreateQuestionBoxSorting = ({
   const removeOption = (boxIndex: number, optionIndex: number) => {
     const questionAnswer = clone(boxSortingQuestion.answer)
     const box = questionAnswer.correctAnswer[boxIndex]
-    questionAnswer.options = questionAnswer.options.filter(
-      (_, index) => index !== optionIndex,
-    )
-    questionAnswer.correctAnswer[boxIndex].options = box.options.filter(
-      (_, index) => index !== optionIndex,
-    )
+    const globalOptionIndex = box.options[optionIndex]
+
+    questionAnswer.options.splice(globalOptionIndex, 1)
+    box.options.splice(optionIndex, 1)
+    questionAnswer.correctAnswer.forEach(box => {
+      box.options = box.options.map(index =>
+        index > globalOptionIndex ? index - 1 : index,
+      )
+    })
 
     updateQuestion({
       ...boxSortingQuestion,
@@ -134,6 +137,10 @@ export const QuestCreateQuestionBoxSorting = ({
                       <Icon
                         icon="CROSS"
                         onClick={() => removeOption(boxIndex, optionIndex)}
+                        disabled={
+                          boxSortingQuestion.answer.correctAnswer[boxIndex]
+                            .options.length === 1
+                        }
                       />
                     </div>
                   ),
