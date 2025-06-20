@@ -35,6 +35,7 @@ export const QuestAnalytic = () => {
     participants,
     questAnswers,
     feedbackAnswers,
+    quest: quest as Quest,
   })
 
   useEffect(() => {
