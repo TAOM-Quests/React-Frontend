@@ -1,3 +1,12 @@
+export interface SendEmailConfirmCodeDto {
+  email: string
+}
+
+export interface ConfirmEmailDto {
+  code: number
+  email: string
+}
+
 export interface ProfileGetDto {
   id: number
 }
@@ -22,6 +31,7 @@ export type UserEnterDto = UserEnter | string
 
 export interface UsersGetDto {
   id?: number
+  email?: string
   limit?: number
   offset?: number
   roleId?: number

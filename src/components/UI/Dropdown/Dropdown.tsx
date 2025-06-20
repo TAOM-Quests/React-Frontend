@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import { Icon } from '../Icon/Icon'
-import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
+import { UserAvatarInfo } from '../../User/UserAvatarInfo/UserAvatarInfo'
 import { Option } from '../Option/Option'
 import { ICON_MAP } from '../../../assets/icons'
 import { Tag } from '../Tag/Tag'
@@ -134,6 +134,10 @@ export const Dropdown = ({
     }
   }, [])
 
+  useEffect(() => {
+    setSelectedItems(selectedItemsProp ?? [])
+  }, [selectedItemsProp])
+
   useLayoutEffect(() => {
     if (!isOpen) return
 
@@ -199,7 +203,7 @@ export const Dropdown = ({
     if (!selectedItem) return searchValue
     if (selectedItem.avatar) {
       return (
-        <OptionAvatar
+        <UserAvatarInfo
           size="extraSmall"
           avatarSrc={selectedItem.avatar.src}
           description={selectedItem.avatar.description}

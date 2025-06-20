@@ -31,17 +31,20 @@ export const ImageContainer = ({
     if (!onSelectImages) return
 
     onSelectImages(selectedImages ?? [])
-  }, [selectedImages, selectedImagesProps])
+  }, [selectedImages])
+
+  useEffect(() => {
+    setSelectedImages(selectedImagesProps ?? [])
+  }, [selectedImagesProps])
 
   const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
 
     for (const file of files ?? []) {
       const uploadedImage = await serverFiles.uploadFile(file)
-      const imageStat = await serverFiles.getFile(uploadedImage.name)
 
       setSelectedImages(prev =>
-        isMultiple ? [...prev, imageStat] : [imageStat],
+        isMultiple ? [...prev, uploadedImage] : [uploadedImage],
       )
     }
   }

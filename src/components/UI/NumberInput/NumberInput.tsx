@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useRef, useState } from 'react'
+import React, { InputHTMLAttributes, useEffect, useRef, useState } from 'react'
 import './NumberInput.scss'
 import { Icon } from '../Icon/Icon'
 import classNames from 'classnames'
@@ -31,20 +31,26 @@ export const NumberInput = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [valueInput, setValueInput] = useState(value ?? null)
 
+  useEffect(() => {
+    setValueInput(value ?? null)
+  }, [value])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = +e.target.value
+    const val = e.target.value
     if (
-      val === 0 ||
-      (min !== undefined && val < min) ||
-      (max !== undefined && val > max)
+      val === '' ||
+      (min !== undefined && +val < min) ||
+      (max !== undefined && +val > max)
     ) {
       onChange?.(null)
       setValueInput(null)
       return
     }
-
-    setValueInput(val)
-    onChange?.(val)
+    const num = Number(val)
+    if (!isNaN(num)) {
+      setValueInput(num)
+      onChange?.(num)
+    }
   }
 
   const handleIncrement = () => {
@@ -60,11 +66,11 @@ export const NumberInput = ({
     setValueInput(prev => {
       if (prev === null) return null
       const next = prev - 1
-      if (min !== undefined && next < min) return null
-      if (next === 0) {
+      if (min !== undefined && next < min) {
         onChange?.(null)
         return null
       }
+
       onChange?.(next)
       return next
     })
