@@ -172,7 +172,10 @@ export const Wordle = () => {
     )
     const lastAttempt = last(attempts)
 
-    if (lastAttempt?.letters.every(letter => letter.status === 'correct')) {
+    if (
+      lastAttempt?.letters.every(letter => letter.status === 'correct') ||
+      attempts.length === MAX_ATTEMPTS
+    ) {
       setIsGameOver(true)
     }
 
