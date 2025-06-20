@@ -109,6 +109,7 @@ export const QuestCreateQuestionMultiple = ({
             <div key={optionIndex} className="multiple-question-option">
               <ImageContainer
                 key={`question-multiple-option-${optionIndex}`}
+                className="multiple-question-option__image"
                 selectedImages={
                   multipleQuestion.answer.optionsImages[optionIndex]
                     ? [multipleQuestion.answer.optionsImages[optionIndex]]

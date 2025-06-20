@@ -79,6 +79,7 @@ export const QuestCreateQuestionConnection = ({
                 <div key={optionIndex} className="connection-question-option">
                   <ImageContainer
                     key={`question-connection-option-${optionIndex}`}
+                    className="connection-question-option__image"
                     selectedImages={
                       connectionQuestion.answer.optionsImages[optionIndex]
                         ? [connectionQuestion.answer.optionsImages[optionIndex]]
@@ -96,6 +97,7 @@ export const QuestCreateQuestionConnection = ({
                   –
                   <ImageContainer
                     key={`question-connection-option-${optionIndex}`}
+                    className="connection-question-option__image"
                     selectedImages={
                       connectionQuestion.answer.optionsImages[optionIndex + 1]
                         ? [

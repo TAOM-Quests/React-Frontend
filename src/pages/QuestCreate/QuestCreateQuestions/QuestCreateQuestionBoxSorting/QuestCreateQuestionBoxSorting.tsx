@@ -138,6 +138,7 @@ export const QuestCreateQuestionBoxSorting = ({
                     <div className="boxSorting-questions__item">
                       <ImageContainer
                         key={`question-box-sorting-option-${optionIndex}`}
+                        className="boxSorting-questions__item__image"
                         selectedImages={
                           boxSortingQuestion.answer.optionsImages[optionIndex]
                             ? [
