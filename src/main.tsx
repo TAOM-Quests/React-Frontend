@@ -21,6 +21,8 @@ import { NotificationToaster } from './layout/NotificationToaster/NotificationTo
 import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
+import { Games } from './pages/Games/Games.tsx'
+import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -82,6 +84,13 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
+
+              <Route path="games/:id" element={<Games />} />
+              <Route path="games/wordle/:id" element={<Wordle />} />
+              {/* <Route
+                path="games/wordle/edit/:id"
+                element={<WordleWordsEditor />}
+              /> */}
             </Routes>
           </ScrollToTop>
           <Footer />

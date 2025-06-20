@@ -49,7 +49,7 @@ export const Games = () => {
             key={index}
             path={game.path + `/${departmentId}`}
             name={game.name}
-            imageUrl={images[index].url}
+            imageUrl={images[index]?.url}
           />
         ))}
       </div>
