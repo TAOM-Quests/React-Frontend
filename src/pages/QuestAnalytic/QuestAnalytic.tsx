@@ -13,6 +13,7 @@ import { QuestAnalyticElementProps } from './questAnalyticElementProps'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import { QuestParticipants } from './QuestParticipants/QuestParticipants'
 import { QuestFeedbackAnswers } from './QuestFeedbackAnswers/QuestFeedbackAnswers'
+import { QuestStatistic } from './Statistic/Statistic'
 
 const TABS = ['Квест', 'Ответы', 'Участники', 'Обратная связь']
 
@@ -76,7 +77,7 @@ export const QuestAnalytic = () => {
           </div>
 
           {activeTab === 'Квест' && (
-            <EventStatistic {...getAnalyticElementParams()} />
+            <QuestStatistic {...getAnalyticElementParams()} />
           )}
           {activeTab === 'Участники' && (
             <QuestParticipants {...getAnalyticElementParams()} />
