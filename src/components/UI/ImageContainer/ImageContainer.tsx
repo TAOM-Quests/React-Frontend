@@ -52,7 +52,11 @@ export const ImageContainer = ({
   const renderPlaceholder = () => {
     return (
       <>
-        <Icon size="extraLarge" icon="ADD_IMAGE" />
+        <Icon
+          size="extraLarge"
+          className="upload-area__add-icon"
+          icon="ADD_IMAGE"
+        />
         {placeholder && <span className="body_m_r">{placeholder}</span>}
       </>
     )

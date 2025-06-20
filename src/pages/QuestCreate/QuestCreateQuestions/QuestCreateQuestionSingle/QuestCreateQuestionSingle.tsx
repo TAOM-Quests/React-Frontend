@@ -92,6 +92,7 @@ export const QuestCreateQuestionSingle = ({
             <div key={optionIndex} className="single-question-option">
               <ImageContainer
                 key={`question-single-option-${optionIndex}`}
+                className="single-question-option__image"
                 selectedImages={
                   singleQuestion.answer.optionsImages[optionIndex]
                     ? [singleQuestion.answer.optionsImages[optionIndex]]
