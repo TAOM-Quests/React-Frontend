@@ -15,7 +15,9 @@ export const QuestStatistic = (analyticData: QuestAnalyticElementProps) => {
         <QuestStatisticFeedbackPercent {...analyticData} />
         <QuestStatisticAverageCorrectAnswerCount {...analyticData} />
         <QuestStatisticCorrectAnswerPercent {...analyticData} />
-        <QuestStatisticAverageTime {...analyticData} />
+        {analyticData.quest.time && (
+          <QuestStatisticAverageTime {...analyticData} />
+        )}
       </div>
 
       <div className="quest-statistic__charts "></div>

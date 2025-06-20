@@ -32,6 +32,7 @@ export const QuestAnalyticAnswers = ({
 
       {questionIndex !== null && (
         <>
+          <h2>{quest.questions?.[questionIndex].text}</h2>
           {quest.questions?.[questionIndex].type === 'single' && (
             <QuestAnalyticAnswerSingle
               questAnswers={questAnswers}
