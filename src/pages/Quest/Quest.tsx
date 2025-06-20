@@ -90,6 +90,7 @@ export const Quest = () => {
           answer: {
             ...question.answer,
             userAnswer: userAnswers[index].answer,
+            isCorrectAnswer: userAnswers[index].isCorrectAnswer,
           },
         })),
       }

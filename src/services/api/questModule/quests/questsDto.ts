@@ -10,7 +10,7 @@ export interface QuestsGetDto {
 }
 
 export interface QuestsCompleteGetDto {
-  ids?: number[] // id квестов
+  id?: number[] // id квестов
   limit?: number
   offset?: number
   tags?: number[]

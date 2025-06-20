@@ -14,8 +14,9 @@ import { Switcher } from '../../components/UI/Switcher/Switcher'
 import { QuestParticipants } from './QuestParticipants/QuestParticipants'
 import { QuestFeedbackAnswers } from './QuestFeedbackAnswers/QuestFeedbackAnswers'
 import { QuestStatistic } from './Statistic/Statistic'
+import { QuestAnalyticAnswers } from './QuestAnswers/QuestAnswers'
 
-const TABS = ['Квест', 'Ответы', 'Участники', 'Обратная связь']
+const TABS = ['Квест', 'Анализ результатов', 'Участники', 'Обратная связь']
 
 export const QuestAnalytic = () => {
   const [activeTab, setActiveTab] = useState('Квест')
@@ -54,13 +55,13 @@ export const QuestAnalytic = () => {
     if (!questId) throw new Error('Quest id not found')
 
     setQuest(await quests.getById(+questId))
-    setQuestAnswers(await quests.getManyCompleteByParams({ ids: [+questId] }))
-    setFeedbackForm(
-      await feedback.getForm({ entityName: 'quests', entityId: +questId }),
-    )
-    setFeedbackAnswers(
-      await feedback.getAnswers({ entityName: 'quests', entityId: +questId }),
-    )
+    setQuestAnswers(await quests.getManyCompleteByParams({ id: [+questId] }))
+    // setFeedbackForm(
+    //   await feedback.getForm({ entityName: 'quests', entityId: +questId }),
+    // )
+    // setFeedbackAnswers(
+    //   await feedback.getAnswers({ entityName: 'quests', entityId: +questId }),
+    // )
     setParticipants(await quests.getParticipants(+questId))
   }
 
@@ -79,6 +80,9 @@ export const QuestAnalytic = () => {
 
           {activeTab === 'Квест' && (
             <QuestStatistic {...getAnalyticElementParams()} />
+          )}
+          {activeTab === 'Анализ результатов' && (
+            <QuestAnalyticAnswers {...getAnalyticElementParams()} />
           )}
           {activeTab === 'Участники' && (
             <QuestParticipants {...getAnalyticElementParams()} />

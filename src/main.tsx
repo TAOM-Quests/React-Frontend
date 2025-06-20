@@ -21,6 +21,7 @@ import { NotificationToaster } from './layout/NotificationToaster/NotificationTo
 import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
+import { QuestAnalytic } from './pages/QuestAnalytic/QuestAnalytic.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -82,6 +83,7 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
+              <Route path="quest/:id/statistic" element={<QuestAnalytic />} />
             </Routes>
           </ScrollToTop>
           <Footer />

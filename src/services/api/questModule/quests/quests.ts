@@ -26,7 +26,7 @@ export const quests = {
 
   getManyCompleteByParams: (params: QuestsCompleteGetDto): Promise<Quest[]> => {
     let queryString =
-      'isCompleted=true' +
+      'isCompleted=true&' +
       Object.entries(params)
         .map(([key, value]) => `${key}=${value}`)
         .join('&')
