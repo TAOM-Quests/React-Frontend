@@ -4,7 +4,6 @@ import {
   QuestQuestionBoxSorting as QuestQuestionBoxSortingInterface,
 } from '../../../../models/questQuestion'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
-import { isEqual } from 'lodash'
 import './QuestQuestionBoxSorting.scss'
 import classNames from 'classnames'
 import { getOptionColorAnswerBoxSorting } from '../questQuestionUtils'
@@ -40,7 +39,11 @@ export const QuestQuestionBoxSorting = forwardRef(
       ref,
       () => ({
         userAnswer,
-        isCorrectAnswer: isEqual(userAnswer, question.answer.correctAnswer),
+        isCorrectAnswer: userAnswer.every((box, boxIndex) =>
+          box.options.every(option =>
+            question.answer.correctAnswer[boxIndex].options.includes(option),
+          ),
+        ),
       }),
       [userAnswer],
     )
