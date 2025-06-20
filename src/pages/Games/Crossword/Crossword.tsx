@@ -170,6 +170,7 @@ export const Crossword = () => {
   useEffect(() => {
     setIsLoading(true)
     fetchCrossword()
+    setStatuses({})
     setUserAnswers(getUserAnswerFromStorage())
     setIsLoading(false)
   }, [currentDifficulty])
@@ -305,6 +306,7 @@ export const Crossword = () => {
         }
       })
       setStatuses(newStatuses)
+      fetchAllowedDifficulties()
     } catch (e) {
       console.log(`[Crossword] ${e}`)
     }
