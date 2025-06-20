@@ -15,6 +15,7 @@ export interface ProfileUpdateDto {
   id: number
   sex?: string
   email?: string
+  password?: string
   lastName?: string
   firstName?: string
   patronymic?: string
@@ -38,6 +39,13 @@ export interface UsersGetDto {
   positionId?: number
   isEmployee?: boolean
   departmentId?: number
+}
+
+export interface UpdateUserNotificationsSettingsItemDto {
+  userId: number
+  typeId: number
+  email?: boolean
+  telegram?: boolean
 }
 
 interface UserEnter {

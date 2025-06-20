@@ -19,6 +19,7 @@ import { QuestCreateQuestionFree } from './QuestCreateQuestionFree/QuestCreateQu
 import { Icon } from '../../../components/UI/Icon/Icon'
 import { useEffect, useRef, useState } from 'react'
 import './QuestCreateQuestions.scss'
+import { ImageContainer } from '../../../components/UI/ImageContainer/ImageContainer'
 
 export interface QuestCreateQuestionsProps {
   questions: QuestQuestion[]
@@ -42,7 +43,7 @@ export const QuestCreateQuestions = ({
           {
             text: '',
             type: 'single',
-            answer: { options: [''], correctAnswer: 0 },
+            answer: { options: [''], correctAnswer: 0, optionsImages: [null] },
           } as QuestQuestionSingle,
         ])
       },
@@ -55,7 +56,11 @@ export const QuestCreateQuestions = ({
           {
             text: '',
             type: 'multiple',
-            answer: { options: [''], correctAnswer: [0] },
+            answer: {
+              options: [''],
+              correctAnswer: [0],
+              optionsImages: [null],
+            },
           } as QuestQuestionMultiple,
         ])
       },
@@ -68,7 +73,11 @@ export const QuestCreateQuestions = ({
           {
             text: '',
             type: 'connection',
-            answer: { options: ['', ''], correctAnswer: ['0 - 1'] },
+            answer: {
+              options: ['', ''],
+              correctAnswer: ['0 - 1'],
+              optionsImages: [null, null],
+            },
           } as QuestQuestionConnection,
         ])
       },
@@ -83,6 +92,7 @@ export const QuestCreateQuestions = ({
             type: 'boxSorting',
             answer: {
               options: [''],
+              optionsImages: [null],
               correctAnswer: [{ name: '', options: [0] }],
             },
           } as QuestQuestionBoxSorting,
@@ -122,7 +132,7 @@ export const QuestCreateQuestions = ({
   }
 
   const renderQuestion = (question: QuestQuestion, index: number) => (
-    <div>
+    <div className="quest-create-questions__question">
       <Input
         label="Вопрос"
         value={question.text}
@@ -133,6 +143,18 @@ export const QuestCreateQuestions = ({
               indexQuestion === index
                 ? { ...question, text: e.target.value }
                 : question,
+            ),
+          )
+        }
+      />
+      <ImageContainer
+        key={`question-${index}`}
+        isMultiple
+        selectedImages={question.images}
+        onSelectImages={images =>
+          setQuestions(
+            questions.map((question, indexQuestion) =>
+              indexQuestion === index ? { ...question, images } : question,
             ),
           )
         }

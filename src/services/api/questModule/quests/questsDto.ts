@@ -1,5 +1,7 @@
+import { QuestGroup } from '../../../../models/questGroup'
 import { QuestQuestion } from '../../../../models/questQuestion'
 import { QuestResult } from '../../../../models/questResult'
+import { QuestTag } from '../../../../models/questTag'
 
 export interface QuestsGetDto {
   limit?: number
@@ -12,18 +14,18 @@ export interface QuestsGetDto {
 }
 
 export interface SaveQuestDto {
+  name: string
+  time: string
   executorId: number
+  description: string
   departmentId: number
+  imageId: number | null
+  difficultId: number | null
+  tags: (QuestTag | Omit<QuestTag, 'id'>)[]
   results: (QuestResult & { questId: number })[]
+  group: QuestGroup | Omit<QuestGroup, 'id'> | null
   questions: (QuestQuestion & { questId: number })[]
   id?: number
-  name?: string
-  time?: string
-  groupId?: number
-  imageId?: number
-  tagsIds?: number[]
-  description?: string
-  difficultId?: number
 }
 
 export interface SaveQuestCompleteDto {

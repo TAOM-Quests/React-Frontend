@@ -28,12 +28,6 @@ export const ImageContainer = ({
   )
 
   useEffect(() => {
-    if (!onSelectImages) return
-
-    onSelectImages(selectedImages ?? [])
-  }, [selectedImages])
-
-  useEffect(() => {
     setSelectedImages(selectedImagesProps ?? [])
   }, [selectedImagesProps])
 
@@ -46,13 +40,26 @@ export const ImageContainer = ({
       setSelectedImages(prev =>
         isMultiple ? [...prev, uploadedImage] : [uploadedImage],
       )
+
+      onSelectImages?.(
+        isMultiple ? [...selectedImages, uploadedImage] : [uploadedImage],
+      )
     }
+  }
+
+  const removeImage = (image: ServerFile) => {
+    setSelectedImages(prev => prev.filter(i => i.id !== image.id))
+    onSelectImages?.(selectedImages.filter(i => i.id !== image.id))
   }
 
   const renderPlaceholder = () => {
     return (
       <>
-        <Icon size="extraLarge" icon="ADD_IMAGE" />
+        <Icon
+          size="extraLarge"
+          className="upload-area__add-icon"
+          icon="ADD_IMAGE"
+        />
         {placeholder && <span className="body_m_r">{placeholder}</span>}
       </>
     )
@@ -77,9 +84,7 @@ export const ImageContainer = ({
                 icon="DELETE"
                 disabled={disabled}
                 className="upload-area__delete-icon"
-                onClick={() =>
-                  setSelectedImages(prev => prev.filter(i => i.id !== image.id))
-                }
+                onClick={() => removeImage(image)}
               />
             </div>
           </>
@@ -108,9 +113,7 @@ export const ImageContainer = ({
               size={image.size}
               imageName={image.originalName}
               extension={image.extension}
-              onRemove={() =>
-                setSelectedImages(prev => prev.filter(i => i.id !== image.id))
-              }
+              onRemove={() => removeImage(image)}
             />
           ))}
         </div>
