@@ -24,6 +24,10 @@ import { NotificationsModal } from './NotificationsModal/NotificationsModal'
 import { NotificationSettings } from './NotificationsModal/notificationSettingsConfig'
 import { ChangePasswordModal } from './ChangePasswordModal/ChangePasswordModal'
 import { Level } from '../../Level/Level'
+import { useAppSelector } from '../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../redux/auth/authSlice'
+import { Modal } from '../../../../components/UI/Modal/Modal'
+import { useNavigate } from 'react-router'
 
 export interface PersonInfoProps {
   profile: UserProfile
@@ -47,6 +51,7 @@ export default function PersonInfo({
 
   const [changingMode, setChangingMode] = useState(false)
   const [openMenu, setOpenMenu] = useState<boolean>(false)
+  const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false)
 
   const [isNotificationsModalOpen, setNotificationsModalOpen] = useState(false)
   const [notificationSettings, setNotificationSettings] =
@@ -55,13 +60,16 @@ export default function PersonInfo({
   const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
     useState(false)
 
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
+
   const role = isEmployee ? 'teacher' : 'applicant'
 
   const lastNameValidator = validateName(lastName, false)
   const firstNameValidator = validateName(firstName, false)
   const patronymicValidator = validateName(patronymic, false)
   const birthDateValidator = validateDateOfBirth(birthDate, false)
-  const emailValidator = validateEmail(email, false)
+  const emailValidator = validateEmail(email)
   const phoneNumberValidator = validatePhone(phoneNumber, false)
 
   const personFieldsNames: ProfileField[] = [
@@ -122,7 +130,6 @@ export default function PersonInfo({
 
   const handleSaveNotificationSettings = (settings: NotificationSettings) => {
     setNotificationSettings(settings)
-    // Здесь нужно добавить сохранение на сервер
   }
 
   const handleDateSelect = (date: Date | null) => {
@@ -141,10 +148,13 @@ export default function PersonInfo({
 
   const toggleChangingMode = async () => {
     if (changingMode) {
+      if (user?.email !== email) {
+        setIsChangeEmailModalOpen(true)
+      }
+
       const updatedFields = await users.updateProfile({
         id: profile.id,
         sex,
-        email,
         lastName,
         firstName,
         patronymic,
@@ -190,6 +200,14 @@ export default function PersonInfo({
         <Button
           text={changingMode ? 'Сохранить' : 'Изменить профиль'}
           colorType={changingMode ? 'primary' : 'secondary'}
+          disabled={
+            !birthDateValidator.isValid ||
+            !firstNameValidator.isValid ||
+            !lastNameValidator.isValid ||
+            !patronymicValidator.isValid ||
+            !emailValidator.isValid ||
+            !phoneNumberValidator.isValid
+          }
           onClick={() => {
             if (
               birthDateValidator.isValid &&
@@ -206,6 +224,27 @@ export default function PersonInfo({
         />
       </div>
       <div className="personInfo_containerBoxs">
+        {isChangeEmailModalOpen && (
+          <Modal
+            isOpen={isChangeEmailModalOpen}
+            onClose={() => {
+              setIsChangeEmailModalOpen(false)
+              setEmail(user?.email ?? '')
+            }}
+            title="Изменение почты"
+            isShowFooter
+            textButtonSave="Изменить"
+            onSave={() => {
+              localStorage.setItem('user', JSON.stringify({ email }))
+              navigate('/email/confirm')
+            }}
+          >
+            <span>
+              Для изменения электронной почты необходимо её подтверждение.
+              Текущие изменения будут сохранены.
+            </span>
+          </Modal>
+        )}
         <ContainerBox>
           <div className="personInfo--info">
             <ImageContainer
@@ -235,7 +274,7 @@ export default function PersonInfo({
                     label={field.name}
                     placeholder={field.placeholder}
                     value={field.value}
-                    disabled={!changingMode}
+                    disabled={!changingMode || field.name !== 'Имя'}
                     onChange={e => field.onChange?.(e)}
                     errorText={field.error}
                   />
@@ -247,14 +286,14 @@ export default function PersonInfo({
                   value={sex}
                   label="Пол"
                   placeholder="Выберите вариант"
-                  disabled={!changingMode}
+                  disabled
                   onChangeDropdown={handleChangeSex}
                 />
                 <DateInput
                   label="Дата рождения"
                   placeholder="Введите дату рождения"
                   value={birthDate}
-                  disabled={!changingMode}
+                  disabled
                   onDateSelect={handleDateSelect}
                   errorText={birthDateValidator.error}
                 />
@@ -283,7 +322,7 @@ export default function PersonInfo({
             onChange={e => setPhoneNumber(e.target.value)}
             label="Телефон"
             placeholder="+7 (___) ___-__-__"
-            disabled={!changingMode}
+            disabled
             errorText={phoneNumberValidator.error}
           />
         </ContainerBox>

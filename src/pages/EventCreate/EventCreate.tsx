@@ -1,44 +1,24 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useAppSelector } from '../../hooks/redux/reduxHooks'
-import { selectAuth } from '../../redux/auth/authSlice'
-import { useNavigate, useParams } from 'react-router'
-import { EventType } from '../../models/eventType'
-import { Employee } from '../../models/user'
-import { Button } from '../../components/UI/Button/Button'
-import { events } from '../../services/api/eventModule/events/events'
-import { ScheduleItem } from '../../models/event'
+import { useNavigate, useParams, useSearchParams } from 'react-router'
 import {
-  EventCreateSchedule,
-  EventCreateScheduleRef,
-} from './EventCreateSchedule/EventCreateSchedule'
-import { TextEditor } from '../../components/TextEditor/TextEditor'
-import { EventCreateFiles } from './EventCreateFiles/EventCreateFiles'
-import { ServerFile } from '../../models/serverFile'
-import './EventCreate.scss'
-import { ContainerBox } from '../../components/ContainerBox/ContainerBox'
-
-import { Checkbox } from '../../components/UI/Checkbox/Checkbox'
-import { EventCreatePlace } from './EventCreatePlace/EventCreatePlace'
-import { EventCreateManagementData } from './EventCreateManagementData/EventCreateManagementData'
-import { validateDate } from '../../validation/validateDate'
-import { validateTime } from '../../validation/validateTime'
-import { EventTag } from '../../models/eventTag'
-import { ImageContainer } from '../../components/UI/ImageContainer/ImageContainer'
-import { EmployeeAuth } from '../../models/userAuth'
-import { fetchEventData } from './utils/fetchEventData'
-import { fetchCreateEventData } from './utils/fetchCreateEventData'
-import { Loading } from '../../components/Loading/Loading'
-import { saveEvent } from './utils/saveEvent'
-import { EventsCreateInspectorComments } from './EventsCreateInspectorComments/EventsCreateInspectorComments'
-import { Comment } from '../../models/comment'
-import { EventStatus } from '../../models/eventStatus'
+  EventCreateConstructorRef,
+  EventCreateConstructorTab,
+} from './EventCreateConstructorTab/EventCreateConstructorTab'
+import { Button } from '../../components/UI/Button/Button'
+import { Switcher } from '../../components/UI/Switcher/Switcher'
+import {
+  EventCreateFeedbackTab,
+  EventFeedbackFormRef,
+} from './EventCreateFeedbackTab/EventCreateFeedbackTab'
 import { Badge, TypeBadge } from '../../components/UI/Badge/Badge'
+import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { EmployeeAuth } from '../../models/userAuth'
+import { selectAuth } from '../../redux/auth/authSlice'
+import { useEffect, useRef, useState } from 'react'
+import { EventStatus } from '../../models/eventStatus'
+import { events } from '../../services/api/eventModule/events/events'
+import { Comment } from '../../models/comment'
 
-const additionalInfoItems: string[] = [
-  '<p>Доставка в Академию и обратно осуществляется корпоративными автобусами (<a target="_blank" rel="noopener noreferrer nofollow" href="https://taom.academy/schedule">График</a>).</p>',
-  '<p>Следите за новостями на <a target="_blank" rel="noopener noreferrer nofollow" href="https://taom.academy">сайте Академии</a> и в социальных сетях <a target="_blank" rel="noopener noreferrer nofollow" href="https://vk.com/taom_ru">https://vk.com/taom_ru</a>, <a target="_blank" rel="noopener noreferrer nofollow" href="https://dzen.ru/taom">https://dzen.ru/taom</a> и <a target="_blank" rel="noopener noreferrer nofollow" href="https://t.me/taomacademyabitur">https://t.me/taomacademyabitur</a>.</p>',
-]
-const ADDITIONAL_INFO_SEPARATOR = '<!-- Additional info -->'
+const TABS = ['Мероприятие', 'Обратная связь']
 const STATUS_ID_DRAFT = 1
 const STATUS_ID_WAIT_INSPECTION = 2
 const STATUS_ID_ON_INSPECTION = 3
@@ -46,152 +26,75 @@ const STATUS_ID_REWORK = 4
 const STATUS_ID_ACCEPTED = 5
 
 export const EventCreate = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const eventId = useParams().id
-  const navigate = useNavigate()
-  const user = useAppSelector(selectAuth) as EmployeeAuth
-
-  const [eventTags, setEventTags] = useState<EventTag[]>([])
-  const [eventTypes, setEventTypes] = useState<EventType[]>([])
-  const [eventExecutors, setEventExecutors] = useState<Employee[]>([])
-
+  const [isSaveValid, setIsSaveValid] = useState(true)
   const [status, setStatus] = useState<EventStatus | null>(null)
-
-  const [name, setName] = useState<string>('')
-  const [time, setTime] = useState<string>('')
-  const [date, setDate] = useState<Date | null>(null)
   const [comments, setComments] = useState<Comment[]>([])
-  const [type, setType] = useState<EventType | null>(null)
-  const [description, setDescription] = useState<string>('')
-  const [executors, setExecutors] = useState<Employee[]>([])
-  const [seatsNumber, setSeatsNumber] = useState<number | null>(null)
-  const [tags, setTags] = useState<(EventTag & { isUserAdded?: boolean })[]>([])
 
-  const [address, setAddress] = useState<string>('')
-  const [floor, setFloor] = useState<number | null>(null)
-  const [officeNumber, setOfficeNumber] = useState<string>('')
-  const [platform, setPlatform] = useState<string>('')
-  const [connectionLink, setConnectionLink] = useState<string>('')
-  const [recordLink, setRecordLink] = useState<string>('')
-  const [identifier, setIdentifier] = useState<string>('')
-  const [accessCode, setAccessCode] = useState<string>('')
+  const isFirstRender = useRef(true)
+  const feedbackForm = useRef<EventFeedbackFormRef>(null)
+  const eventConstructor = useRef<EventCreateConstructorRef>(null)
 
-  const [schedule, setSchedule] = useState<ScheduleItem[]>([])
-  const scheduleRef = useRef<EventCreateScheduleRef>(null)
-  const [hasScheduleErrors, setHasScheduleErrors] = useState(false)
+  const navigate = useNavigate()
+  const { id: eventId } = useParams()
+  const user = useAppSelector(selectAuth) as EmployeeAuth
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const [image, setImage] = useState<ServerFile | null>(null)
-  const [files, setFiles] = useState<ServerFile[]>([])
-  const [additionalInfoTexts, setAdditionalInfoTexts] = useState<string[]>([])
-
-  const dateValidator = useMemo(() => validateDate(date, !!time), [date, time])
-  const timeValidator = useMemo(() => validateTime(time, !!date), [time, date])
-
-  const setCreateEventState = {
-    setEventTags,
-    setEventTypes,
-    setEventExecutors,
-  }
-
-  const setEventState = {
-    setDate,
-    setName,
-    setTags,
-    setTime,
-    setType,
-    setFiles,
-    setFloor,
-    setImage,
-    setStatus,
-    setAddress,
-    setComments,
-    setPlatform,
-    setSchedule,
-    setExecutors,
-    setAccessCode,
-    setIdentifier,
-    setRecordLink,
-    setDescription,
-    setSeatsNumber,
-    setOfficeNumber,
-    setConnectionLink,
-    setAdditionalInfoTexts,
-  }
-
-  const saveValidate: boolean =
-    !dateValidator.isValid || !timeValidator.isValid || hasScheduleErrors
-
+  /*
+    Костыль для сохранения формы обратной связи при создании нового мероприятия
+    При вызове сохранения формы в onClick кнопки сохранения
+    useParams еще не обновится, так как не все рендеры закончатся
+    Поэтому ждем пока рендеры закончатся и вызываем сохранение
+    И чтобы сохранение не происходило при каждом рендере
+    конструктора мероприятия используем isFirstRender
+  */
   useEffect(() => {
-    setIsLoading(true)
-
-    fetchCreateEventData(user.departmentId, setCreateEventState)
-    if (eventId) {
-      fetchEventData(+eventId, ADDITIONAL_INFO_SEPARATOR, setEventState)
+    if (isSaveValid && !isFirstRender.current) {
+      feedbackForm.current?.saveFeedbackForm()
     }
 
-    setIsLoading(false)
-  }, [])
-
-  useEffect(() => {
-    if (!user?.isEmployee) {
-      navigate('/')
+    if (isFirstRender.current) {
+      isFirstRender.current = false
     }
-  }, [user])
+  }, [eventId])
 
-  const handleChange = (text: string) => {
-    setAdditionalInfoTexts(prev =>
-      prev.includes(text)
-        ? prev.filter(item => item !== text)
-        : [...prev, text],
+  const getTabIndex = () => Number(searchParams.get('tab'))
+  const getActiveTab = () => {
+    const tabIndex = getTabIndex()
+
+    return (
+      <>
+        <div style={tabIndex === 0 ? {} : { display: 'none' }}>
+          <EventCreateConstructorTab
+            status={status}
+            setStatus={setStatus}
+            comments={comments}
+            setComments={setComments}
+            ref={eventConstructor}
+            changeIsValid={isValid => setIsSaveValid(isValid)}
+          />
+        </div>
+        <div style={tabIndex === 1 ? {} : { display: 'none' }}>
+          <EventCreateFeedbackTab
+            ref={feedbackForm}
+            eventId={eventId ? +eventId : null}
+          />
+        </div>
+      </>
     )
   }
-  const saveEventHandler = async () => {
-    setIsLoading(true)
-    try {
-      const savedEvent = await saveEvent(
-        eventId ? +eventId : undefined,
-        user.departmentId,
-        ADDITIONAL_INFO_SEPARATOR,
-        user.id,
-        {
-          date,
-          name,
-          tags,
-          time,
-          type,
-          files,
-          floor,
-          image,
-          address,
-          platform,
-          schedule,
-          executors,
-          accessCode,
-          identifier,
-          recordLink,
-          description,
-          seatsNumber,
-          officeNumber,
-          connectionLink,
-          additionalInfoTexts,
-        },
-      )
 
-      if (eventId) {
-        await fetchCreateEventData(user.departmentId, setCreateEventState)
-        await fetchEventData(+eventId, ADDITIONAL_INFO_SEPARATOR, setEventState)
-      } else {
-        if (!window.location.pathname.includes(`${savedEvent.id}`)) {
-          navigate(`/event/${savedEvent.id}/edit`)
-        }
-      }
-    } catch (e) {
-      console.log(`[EventCreate] ${e}`)
-    }
-    setIsLoading(false)
+  const statusColor: { [key: number]: TypeBadge } = {
+    1: 'neutral',
+    5: 'success',
+    4: 'critical',
+    3: 'caution',
+    2: 'info',
+    6: 'neutral',
   }
 
-  const navigateBack = () => navigate(-1)
+  const getStatusColor = (statusId: number): TypeBadge => {
+    return statusColor[statusId] ?? 'neutral'
+  }
 
   const changeEventStatus = async (statusId: number) => {
     try {
@@ -210,169 +113,72 @@ export const EventCreate = () => {
         statusId === STATUS_ID_WAIT_INSPECTION ||
         statusId === STATUS_ID_ACCEPTED
       ) {
-        navigateBack()
+        navigate(-1)
       }
     } catch (e) {
       console.log(`[EventCreate] ${e}`)
     }
   }
 
-  const statusColor: { [key: number]: TypeBadge } = {
-    1: 'neutral',
-    5: 'success',
-    4: 'critical',
-    3: 'caution',
-    2: 'info',
-    6: 'neutral',
-  }
-
-  const getStatusColor = (statusId: number): TypeBadge => {
-    return statusColor[statusId] ?? 'neutral'
-  }
-
-  const renderStateButtons = () => (
-    <div className="event_create--header">
-      <Button
-        text="Назад"
-        colorType="secondary"
-        iconBefore="ARROW_SMALL_LEFT"
-        onClick={navigateBack}
-      />
-
-      <div className="event_create--header__buttons">
-        {status && (
-          <Badge type={getStatusColor(status.id)} text={`${status.name}`} />
-        )}
-        {eventId && status?.id === STATUS_ID_DRAFT && (
-          <Button
-            text="На проверку"
-            disabled={saveValidate}
-            onClick={() => changeEventStatus(STATUS_ID_WAIT_INSPECTION)}
-          />
-        )}
-        {eventId &&
-          user.isInspector &&
-          status?.id === STATUS_ID_ON_INSPECTION && (
-            <>
-              <Button
-                text="Отклонить"
-                onClick={() => changeEventStatus(STATUS_ID_REWORK)}
-                disabled={comments.filter(comment => !comment.id).length <= 0}
-              />
-              <Button
-                text="Утвердить"
-                onClick={() => changeEventStatus(STATUS_ID_ACCEPTED)}
-              />
-            </>
-          )}
-        <Button
-          text="Сохранить"
-          colorType="secondary"
-          disabled={saveValidate}
-          onClick={saveEventHandler}
-        />
-      </div>
-    </div>
-  )
-
   return (
-    <>
-      {!isLoading ? (
-        <div className="event_create">
-          {renderStateButtons()}
-          {(comments.length > 0 ||
-            (user.isInspector && status?.id === STATUS_ID_ON_INSPECTION)) && (
-            <EventsCreateInspectorComments
-              comments={comments}
-              setComments={setComments}
+    <div className="event_create">
+      <div className="event_create--header">
+        <Button
+          text="Назад"
+          colorType="secondary"
+          iconBefore="ARROW_SMALL_LEFT"
+          onClick={() => navigate(-1)}
+        />
+        <div className="event_create--header__buttons">
+          {status && (
+            <Badge type={getStatusColor(status.id)} text={`${status.name}`} />
+          )}
+          <Switcher
+            options={TABS}
+            onChange={option =>
+              setSearchParams({ tab: `${TABS.indexOf(option)}` })
+            }
+            activeOption={TABS[getTabIndex()]}
+          />
+          {eventId && status?.id === STATUS_ID_DRAFT && (
+            <Button
+              text="На проверку"
+              disabled={!isSaveValid}
+              onClick={() => changeEventStatus(STATUS_ID_WAIT_INSPECTION)}
             />
           )}
-          <ContainerBox>
-            <ImageContainer
-              selectedImages={image ? [image] : []}
-              onSelectImages={images => setImage(images[0] ?? null)}
-              placeholder="Перетащите изображение в эту область для загрузки или нажмите на неё"
-            />
-            <div className="event_create--container">
-              <div className="event_create--content__left">
-                <EventCreateManagementData
-                  name={name}
-                  setName={setName}
-                  eventTypes={eventTypes}
-                  tags={tags}
-                  setTags={setTags}
-                  eventTags={eventTags}
-                  type={type}
-                  setType={setType}
-                  date={date}
-                  setDate={setDate}
-                  dateValidator={dateValidator}
-                  time={time}
-                  setTime={setTime}
-                  timeValidator={timeValidator}
-                  seatsNumber={seatsNumber}
-                  setSeatsNumber={setSeatsNumber}
-                  eventExecutors={eventExecutors}
-                  executors={executors}
-                  setExecutors={setExecutors}
+          {eventId &&
+            user.isInspector &&
+            status?.id === STATUS_ID_ON_INSPECTION && (
+              <>
+                <Button
+                  text="Отклонить"
+                  onClick={() => changeEventStatus(STATUS_ID_REWORK)}
+                  disabled={comments.filter(comment => !comment.id).length <= 0}
                 />
-                <TextEditor
-                  value={description ?? ''}
-                  label="Описание мероприятия"
-                  placeholder="Описание мероприятия"
-                  onChange={e => setDescription(e.editor.getHTML())}
+                <Button
+                  text="Утвердить"
+                  onClick={() => changeEventStatus(STATUS_ID_ACCEPTED)}
                 />
-                <EventCreatePlace
-                  address={address}
-                  setAddress={setAddress}
-                  floor={floor}
-                  setFloor={setFloor}
-                  officeNumber={officeNumber}
-                  setOfficeNumber={setOfficeNumber}
-                  platform={platform}
-                  setPlatform={setPlatform}
-                  connectionLink={connectionLink}
-                  setConnectionLink={setConnectionLink}
-                  recordLink={recordLink}
-                  setRecordLink={setRecordLink}
-                  identifier={identifier}
-                  setIdentifier={setIdentifier}
-                  accessCode={accessCode}
-                  setAccessCode={setAccessCode}
-                />
-                <EventCreateSchedule
-                  ref={scheduleRef}
-                  schedule={schedule}
-                  setSchedule={setSchedule}
-                  onErrorsChange={setHasScheduleErrors}
-                />
-              </div>
-              <div className="event_create--content__right">
-                <EventCreateFiles files={files} setFiles={setFiles} />
-                <div className="additional-info">
-                  <label className="body_s_sb label">
-                    Дополнительная информация
-                  </label>
-                  <div className="additional-info_checkboxes">
-                    {additionalInfoItems.map((text, index) => (
-                      <Checkbox
-                        key={index}
-                        isSelected={additionalInfoTexts.includes(text)}
-                        onChange={() => handleChange(text)}
-                        label={
-                          <span dangerouslySetInnerHTML={{ __html: text }} />
-                        }
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ContainerBox>
+              </>
+            )}
+          <Button
+            text="Сохранить"
+            disabled={!isSaveValid}
+            onClick={async () => {
+              if (isSaveValid) {
+                await eventConstructor.current?.saveEvent()
+
+                if (eventId) {
+                  await feedbackForm.current?.saveFeedbackForm()
+                }
+              }
+            }}
+          />
         </div>
-      ) : (
-        <Loading />
-      )}
-    </>
+      </div>
+
+      {getActiveTab()}
+    </div>
   )
 }

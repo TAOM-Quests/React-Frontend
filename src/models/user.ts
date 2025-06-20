@@ -1,6 +1,6 @@
 import { ServerFile } from './serverFile'
 
-interface User {
+export interface User {
   id: number
   name: string
   image?: ServerFile

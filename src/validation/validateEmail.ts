@@ -24,7 +24,6 @@ export const validateEmail = (
     return { isValid: false, error: 'Между @ и . должны быть символы' }
   }
 
-  // Можно добавить дополнительную проверку на пробелы и общую структуру
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
   if (!regex.test(email)) {
     return { isValid: false, error: 'Неверный формат почты' }

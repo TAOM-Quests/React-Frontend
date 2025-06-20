@@ -1,10 +1,25 @@
+import { serverFiles } from '../../../services/api/commonModule/serverFiles/serverFiles'
+
 export interface CardDepartmentData {
   title: string
-  imageUrl: string
   description: string
+  getImageUrl: () => Promise<string>
   buttonText?: string
   buttonLink?: string
 }
+
+const DEPARTMENT_IMAGES_MAP = {
+  PUBLIC_RELATIONS: 9,
+  INFORMATICS: 10,
+  ECONOMICS: 11,
+  MANAGEMENT: 12,
+  DESIGN: 13,
+}
+
+const getImageUrl = async (
+  department: keyof typeof DEPARTMENT_IMAGES_MAP,
+): Promise<string> =>
+  (await serverFiles.getFile(DEPARTMENT_IMAGES_MAP[department])).url
 
 export const cardDepartmentData: CardDepartmentData[] = [
   {
@@ -13,7 +28,7 @@ export const cardDepartmentData: CardDepartmentData[] = [
       'Формируем профессионалов в области коммуникаций, PR и корпоративных медиа для эффективного взаимодействия с аудиторией и построения репутации организаций.',
     buttonText: 'Подробнее',
     buttonLink: 'https://taom.academy/vuz/faculty_publicrelations',
-    imageUrl: 'src/assets/images/publicRelations.png',
+    getImageUrl: () => getImageUrl('PUBLIC_RELATIONS'),
   },
   {
     title: 'Кафедра прикладной информатики и высшей математики',
@@ -21,7 +36,7 @@ export const cardDepartmentData: CardDepartmentData[] = [
       'Обучаем созданию и внедрению современных IT-решений, цифровой трансформации и аналитике данных с опорой на фундаментальные математические знания.',
     buttonText: 'Подробнее',
     buttonLink: 'https://taom.academy/vuz/faculty_informatics',
-    imageUrl: 'src/assets/images/informatics.png',
+    getImageUrl: () => getImageUrl('INFORMATICS'),
   },
   {
     title: 'Кафедра экономики и финансов',
@@ -29,7 +44,7 @@ export const cardDepartmentData: CardDepartmentData[] = [
       'Готовим специалистов для анализа, планирования и управления финансовыми потоками в бизнесе и государственном секторе с учётом современных экономических реалий.',
     buttonText: 'Подробнее',
     buttonLink: 'https://taom.academy/vuz/faculty_economics',
-    imageUrl: 'src/assets/images/economics.png',
+    getImageUrl: () => getImageUrl('ECONOMICS'),
   },
   {
     title: 'Кафедра управления',
@@ -37,7 +52,7 @@ export const cardDepartmentData: CardDepartmentData[] = [
       'Развиваем управленческие компетенции для эффективного руководства проектами, командами и организациями в условиях динамичного рынка.',
     buttonText: 'Подробнее',
     buttonLink: 'https://taom.academy/vuz/faculty_managment',
-    imageUrl: 'src/assets/images/management.png',
+    getImageUrl: () => getImageUrl('MANAGEMENT'),
   },
   {
     title: 'Кафедра дизайна',
@@ -45,6 +60,6 @@ export const cardDepartmentData: CardDepartmentData[] = [
       'Формируем творческих профессионалов в области графического, цифрового и коммуникационного дизайна, способных создавать современные визуальные решения.',
     buttonText: 'Подробнее',
     buttonLink: 'https://taom.academy/vuz/faculty_design',
-    imageUrl: 'src/assets/images/design.png',
+    getImageUrl: () => getImageUrl('DESIGN'),
   },
 ]

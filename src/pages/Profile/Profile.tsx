@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { users } from '../../services/api/userModule/users/users'
 import { selectAuth, setUser } from '../../redux/auth/authSlice'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux/reduxHooks'
@@ -9,8 +9,7 @@ import EventsTab from './EventsTab/EventsTab'
 import { Switcher } from '../../components/UI/Switcher/Switcher'
 import './Profile.scss'
 import QuestsTab from './QuestsTab/QuestsTab'
-
-const TABS = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
+import AdminTab from './AdminTab/AdminTab'
 
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
@@ -49,6 +48,14 @@ export default function Profile() {
     setProfile(updatedProfile)
   }
 
+  const TABS = useMemo(() => {
+    const baseTabs = ['Персональные данные', 'Мои мероприятия', 'Мои квесты']
+    if (user?.isAdmin) {
+      baseTabs.push('Панель управления')
+    }
+    return baseTabs
+  }, [user?.isAdmin])
+
   const getTabIndex = () => Number(searchParams.get('tab'))
 
   const getActiveTab = () => {
@@ -61,6 +68,8 @@ export default function Profile() {
         return <EventsTab user={user!} />
       case 2:
         return <QuestsTab user={user!} />
+      case 3:
+        return <AdminTab />
     }
   }
 

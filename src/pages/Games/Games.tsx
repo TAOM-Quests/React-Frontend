@@ -1,25 +1,44 @@
 import { useParams } from 'react-router'
-import { CardGame } from '../../components/Cards/CardGame/CardGame'
 import './Games.scss'
+import { ServerFile } from '../../models/serverFile'
+import { useEffect, useState } from 'react'
+import { serverFiles } from '../../services/api/commonModule/serverFiles/serverFiles'
+import { CardGame } from '../../components/Cards/CardGame/CardGame'
+
+const WORDLE_IMAGE_ID = 18
+const CROSSWORD_IMAGE_ID = 19
 
 const gamesExample = [
   {
     name: '5 букв',
     path: '/games/wordle',
-    imageUrl:
-      'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
+    imageId: WORDLE_IMAGE_ID,
   },
   {
     name: 'Кроссворд',
     path: '/games/crossword',
-    imageUrl:
-      'https://lifehacker.ru/special/fujifilm/dist/static/img/5.2410a2d.jpg',
+    imageId: CROSSWORD_IMAGE_ID,
   },
 ]
 
 export const Games = () => {
+  const [images, setImages] = useState<ServerFile[]>([])
+
   const { id } = useParams<{ id: string }>()
   const departmentId = Number(id)
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      setImages(
+        await Promise.all(
+          gamesExample.map(
+            async game => await serverFiles.getFile(game.imageId),
+          ),
+        ),
+      )
+    }
+    fetchImages()
+  }, [])
 
   return (
     <div className="container_min_width games">
@@ -30,7 +49,7 @@ export const Games = () => {
             key={index}
             path={game.path + `/${departmentId}`}
             name={game.name}
-            imageUrl={game.imageUrl}
+            imageUrl={images[index].url}
           />
         ))}
       </div>

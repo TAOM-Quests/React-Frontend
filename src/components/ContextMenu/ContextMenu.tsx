@@ -34,7 +34,7 @@ export const ContextMenu = ({
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        onToggle && onToggle() // Закрываем меню снаружи
+        onToggle && onToggle()
       }
     }
 

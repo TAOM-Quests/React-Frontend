@@ -2,11 +2,12 @@ import {
   InputHTMLAttributes,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
 import { Icon } from '../Icon/Icon'
-import { OptionAvatar } from '../../User/OptionAvatar/OptionAvatar'
+import { UserAvatarInfo } from '../../User/UserAvatarInfo/UserAvatarInfo'
 import { Option } from '../Option/Option'
 import { ICON_MAP } from '../../../assets/icons'
 import { Tag } from '../Tag/Tag'
@@ -15,6 +16,8 @@ import { Checkbox } from '../Checkbox/Checkbox'
 import { generateRandomElementId } from '../../../utils/generateRandomElementId'
 import './Dropdown.scss'
 import { Button } from '../Button/Button'
+import { createPortal } from 'react-dom'
+import { createPopper } from '@popperjs/core'
 
 export interface DropdownItemType {
   id: number
@@ -67,6 +70,7 @@ export const Dropdown = ({
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const showAddButton =
     isAllowAddNewItem &&
@@ -109,16 +113,48 @@ export const Dropdown = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        menuRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        !menuRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
       }
     }
+
+    const handleScroll = () => {
+      setIsOpen(false)
+    }
+
     document.addEventListener('mousedown', handleClickOutside)
+    window.addEventListener('scroll', handleScroll, true) // true — capture phase, ловим скролл на всех уровнях
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+      window.removeEventListener('scroll', handleScroll, true)
     }
   }, [])
+
+  useEffect(() => {
+    setSelectedItems(selectedItemsProp ?? [])
+  }, [selectedItemsProp])
+
+  useLayoutEffect(() => {
+    if (!isOpen) return
+
+    if (inputRef.current && menuRef.current) {
+      const popperInstance = createPopper(inputRef.current, menuRef.current, {
+        placement: 'bottom-start',
+        modifiers: [
+          { name: 'offset', options: { offset: [0, 4] } },
+          { name: 'preventOverflow', options: { boundary: 'viewport' } },
+        ],
+      })
+
+      return () => {
+        popperInstance.destroy()
+      }
+    }
+  }, [isOpen])
 
   const handleSelect = useCallback(
     (selectedItem: DropdownItemType, isRemoveAction = false) => {
@@ -167,7 +203,7 @@ export const Dropdown = ({
     if (!selectedItem) return searchValue
     if (selectedItem.avatar) {
       return (
-        <OptionAvatar
+        <UserAvatarInfo
           size="extraSmall"
           avatarSrc={selectedItem.avatar.src}
           description={selectedItem.avatar.description}
@@ -259,38 +295,47 @@ export const Dropdown = ({
         )}
       </div>
 
-      {isOpen && (
-        <div className="dropdown-menu">
-          {isMultiple && (
-            <Checkbox
-              id="selectAll"
-              className="dropdown-checkbox"
-              label="Выбрать все"
-              isSelected={
-                setSelectedItems.length === items.length && items.length > 0
-              }
-              onChange={handleCheckboxSelectAll}
-            />
-          )}
-          {filteredItems.map(item => (
-            <Option
-              key={item.id}
-              id={item.id}
-              text={item.text}
-              iconBefore={item.iconBefore}
-              iconAfter={item.iconAfter}
-              avatar={item.avatar}
-              isMultiple={isMultiple}
-              isSelected={
-                isMultiple
-                  ? selectedItems.map(item => item.id).includes(item.id)
-                  : selectedItems[0]?.id === item.id
-              }
-              onSelect={() => handleSelect(item)}
-            />
-          ))}
-        </div>
-      )}
+      {isOpen &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className="dropdown-menu"
+            style={{
+              zIndex: 9999,
+              minWidth: dropdownRef.current?.offsetWidth || 240,
+            }}
+          >
+            {isMultiple && (
+              <Checkbox
+                id="selectAll"
+                className="dropdown-checkbox"
+                label="Выбрать все"
+                isSelected={
+                  setSelectedItems.length === items.length && items.length > 0
+                }
+                onChange={handleCheckboxSelectAll}
+              />
+            )}
+            {filteredItems.map(item => (
+              <Option
+                key={item.id}
+                id={item.id}
+                text={item.text}
+                iconBefore={item.iconBefore}
+                iconAfter={item.iconAfter}
+                avatar={item.avatar}
+                isMultiple={isMultiple}
+                isSelected={
+                  isMultiple
+                    ? selectedItems.map(item => item.id).includes(item.id)
+                    : selectedItems[0]?.id === item.id
+                }
+                onSelect={() => handleSelect(item)}
+              />
+            ))}
+          </div>,
+          document.body,
+        )}
     </div>
   )
 }

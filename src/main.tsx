@@ -4,7 +4,6 @@ import Login from './pages/Login/Login.tsx'
 import { Provider } from 'react-redux'
 import { setupStore } from './redux/store.ts'
 import Profile from './pages/Profile/Profile.tsx'
-import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import '../src/assets/styles/style.scss'
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -19,8 +18,9 @@ import { Home } from './pages/Home/Home.tsx'
 import { Quest } from './pages/Quest/Quest.tsx'
 import { ScrollToTop } from './layout/ScrollToTop.tsx'
 import { NotificationToaster } from './layout/NotificationToaster/NotificationToaster.tsx'
-import { Games } from './pages/Games/Games.tsx'
-import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
+import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
+import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
+import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -56,7 +56,7 @@ moment.updateLocale('ru', {
 const container = document.getElementById('root')
 const root = createRoot(container!)
 
-document.documentElement.lang = 'ru' // Добавляем атрибут lang
+document.documentElement.lang = 'ru'
 
 root.render(
   <BrowserRouter>
@@ -67,14 +67,13 @@ root.render(
           <ScrollToTop>
             <NotificationToaster />
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={<Profile />} />
-
-              <Route path="games/:id" element={<Games />} />
-              <Route path="games/wordle/:id" element={<Wordle />} />
+              <Route path="" element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="email/confirm" element={<EmailConfirm />} />
 
               <Route path="event/:id" element={<Event />} />
+              <Route path="event/:id/statistic" element={<EventAnalytic />} />
               <Route path="event/create" element={<EventCreate />} />
               <Route path="event/:id/edit" element={<EventCreate />} />
               <Route path="event/calendar" element={<EventCalendar />} />
