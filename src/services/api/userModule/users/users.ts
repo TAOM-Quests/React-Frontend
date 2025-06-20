@@ -1,5 +1,6 @@
 import { Employee, User } from '../../../../models/user'
 import { UserAuth } from '../../../../models/userAuth'
+import { UserNotificationsSettingsItem } from '../../../../models/userNotificationsSettings'
 import { UserPosition } from '../../../../models/userPoistion'
 import { UserProfile, UserProfileUpdated } from '../../../../models/userProfile'
 import { UserRole } from '../../../../models/userRole'
@@ -8,6 +9,7 @@ import {
   ConfirmEmailDto,
   ProfileGetDto,
   ProfileUpdateDto,
+  UpdateUserNotificationsSettingsItemDto,
   SendEmailConfirmCodeDto,
   UserEnterDto,
   UsersGetDto,
@@ -39,6 +41,14 @@ export const users = {
       updateProfile,
     )
   },
+
+  updateNotificationsSettings: (
+    params: UpdateUserNotificationsSettingsItemDto,
+  ): Promise<UserNotificationsSettingsItem[]> =>
+    userModule<
+      UserNotificationsSettingsItem[],
+      UpdateUserNotificationsSettingsItemDto
+    >(`users/${params.userId}/notifications/settings`, params),
 
   getUsers: (params: UsersGetDto): Promise<User[]> => {
     const queryString = Object.entries(params)
