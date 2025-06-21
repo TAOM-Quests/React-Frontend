@@ -60,7 +60,6 @@ export default function EventsTab({ user }: EventsTabProps) {
   }, [])
 
   useEffect(() => {
-    console.log('Is end of events list:', isEndOfEventsList)
     if (
       isEndOfEventsList &&
       !isAllEventsLoaded &&
