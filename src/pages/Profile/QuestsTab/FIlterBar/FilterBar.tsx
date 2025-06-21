@@ -68,24 +68,66 @@ export const QuestTabFilterBar = forwardRef(
 
     return (
       <div className="profile_quests--filters">
-        <Input
-          value={filter.name}
-          iconBefore="SEARCH"
-          placeholder="Поиск по названию"
-          onChange={e => setFilter({ ...filter, name: e.target.value })}
-        />
-        <Dropdown
-          placeholder="Группа"
-          items={groups.map(group => ({
-            id: group.id,
-            text: group.name,
-          }))}
-          onChangeDropdown={selected =>
-            setFilter(
-              !isArray(selected) ? { ...filter, group: selected?.id } : filter,
-            )
-          }
-        />
+        <div className="profile_quests--filters__top">
+          <Input
+            value={filter.name}
+            iconBefore="SEARCH"
+            placeholder="Поиск по названию"
+            onChange={e => setFilter({ ...filter, name: e.target.value })}
+          />
+          <Dropdown
+            placeholder="Группа"
+            items={groups.map(group => ({
+              id: group.id,
+              text: group.name,
+            }))}
+            onChangeDropdown={selected =>
+              setFilter(
+                !isArray(selected)
+                  ? { ...filter, group: selected?.id }
+                  : filter,
+              )
+            }
+          />
+          <Dropdown
+            placeholder="Кафедра"
+            items={departments.map(department => ({
+              id: department.id,
+              text: department.name,
+            }))}
+            onChangeDropdown={selected =>
+              setFilter(
+                !isArray(selected)
+                  ? { ...filter, department: selected?.id }
+                  : filter,
+              )
+            }
+          />
+          <Dropdown
+            placeholder="Сложность"
+            items={difficulties.map(difficult => ({
+              id: difficult.id,
+              text: difficult.name,
+            }))}
+            onChangeDropdown={selected =>
+              setFilter(
+                !isArray(selected)
+                  ? { ...filter, difficult: selected?.id }
+                  : filter,
+              )
+            }
+          />
+
+          {user?.isEmployee && (
+            <>
+              <Button
+                onClick={() => navigate('/quest/create')}
+                text="Создать квест"
+                colorType="primary"
+              />
+            </>
+          )}
+        </div>
         <Dropdown
           isMultiple
           placeholder="Теги"
@@ -101,44 +143,6 @@ export const QuestTabFilterBar = forwardRef(
             )
           }
         />
-        <Dropdown
-          placeholder="Кафедра"
-          items={departments.map(department => ({
-            id: department.id,
-            text: department.name,
-          }))}
-          onChangeDropdown={selected =>
-            setFilter(
-              !isArray(selected)
-                ? { ...filter, department: selected?.id }
-                : filter,
-            )
-          }
-        />
-        <Dropdown
-          placeholder="Сложность"
-          items={difficulties.map(difficult => ({
-            id: difficult.id,
-            text: difficult.name,
-          }))}
-          onChangeDropdown={selected =>
-            setFilter(
-              !isArray(selected)
-                ? { ...filter, difficult: selected?.id }
-                : filter,
-            )
-          }
-        />
-
-        {user?.isEmployee && (
-          <>
-            <Button
-              onClick={() => navigate('/quest/create')}
-              text="Создать квест"
-              colorType="primary"
-            />
-          </>
-        )}
       </div>
     )
   },

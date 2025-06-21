@@ -1,3 +1,4 @@
+import { isArray } from 'lodash'
 import { Quest } from '../../../../models/quest'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
@@ -14,7 +15,7 @@ import {
 export const quests = {
   getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
     let queryString = Object.entries(params)
-      .filter(([_, value]) => value)
+      .filter(([_, value]) => (isArray(value) ? value.length : value))
       .map(([key, value]) => `${key}=${value}`)
       .join('&')
 
