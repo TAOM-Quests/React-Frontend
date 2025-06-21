@@ -23,6 +23,7 @@ import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
+import { WordleWordsEditor } from './pages/Games/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -87,10 +88,10 @@ root.render(
 
               <Route path="games/:id" element={<Games />} />
               <Route path="games/wordle/:id" element={<Wordle />} />
-              {/* <Route
-                path="games/wordle/edit/:id"
+              <Route
+                path="games/wordle/:id/edit"
                 element={<WordleWordsEditor />}
-              /> */}
+              />
             </Routes>
           </ScrollToTop>
           <Footer />
