@@ -15,7 +15,7 @@ export const QuestStatistic = (analyticData: QuestAnalyticElementProps) => {
         <QuestStatisticFeedbackPercent {...analyticData} />
         <QuestStatisticAverageCorrectAnswerCount {...analyticData} />
         <QuestStatisticCorrectAnswerPercent {...analyticData} />
-        {analyticData.quest.time && (
+        {analyticData.quest?.time && (
           <QuestStatisticAverageTime {...analyticData} />
         )}
       </div>
