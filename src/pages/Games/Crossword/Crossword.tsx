@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   CrosswordDirection,
   CrosswordPlaceWord,
@@ -301,8 +301,12 @@ export const Crossword = () => {
       const newStatuses: Record<string, boolean> = {}
       checkerAnswers.forEach(w => {
         for (let i = 0; i < w.length; i++) {
-          const key = `${w.x},${w.y}`
-          newStatuses[key] = !!w.isCorrect
+          const x = w.direction === 'horizontal' ? w.x + i : w.x
+          const y = w.direction === 'vertical' ? w.y + i : w.y
+          const key = `${x},${y}`
+          if (!newStatuses[key]) {
+            newStatuses[key] = !!w.isCorrect
+          }
         }
       })
       setStatuses(newStatuses)
@@ -319,19 +323,7 @@ export const Crossword = () => {
     for (let x = minX; x <= maxX; x++) {
       const cellKey = `${x},${y}`
       if (cells[cellKey]) {
-        // Найти все слова, которые проходят через эту ячейку
-        const cellWords = words.filter(w => {
-          for (let i = 0; i < w.length; i++) {
-            const cx = w.direction === 'horizontal' ? w.x + i : w.x
-            const cy = w.direction === 'vertical' ? w.y + i : w.y
-            if (cx === x && cy === y) return true
-          }
-          return false
-        })
-        // Для простоты берём первое подходящее слово
-        const mainWord = cellWords[0]
-        const inputKey = `${mainWord.x},${mainWord.y}`
-        const status = statuses[inputKey]
+        const status = statuses[cellKey]
         const startNumber = startNumbers[cellKey]
 
         row.push(
