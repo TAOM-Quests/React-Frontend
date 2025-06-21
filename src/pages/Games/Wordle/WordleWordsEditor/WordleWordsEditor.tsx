@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams } from 'react-router'
 import { CustomAlert } from '../../../../components/CustomAlert/CustomAlert'
 import {
@@ -14,6 +14,7 @@ export const WordleWordsEditor = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [cursorPos, setCursorPos] = useState<{ [id: number]: number }>({})
 
   const { id: departmentId } = useParams<{ id: string }>()
   const [words, setWords] = useState<WordleWord[]>([])
@@ -24,17 +25,33 @@ export const WordleWordsEditor = () => {
       key: 'word',
       title: 'Слово',
       cellRender: (row, onChange, isDisabled) => {
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          let value = e.target.value.toUpperCase()
-          value = value.replace(/[^А-Я]/g, '')
-          if (value.length > 5) {
-            value = value.slice(0, 5)
+        const inputRef = useRef<HTMLInputElement>(null)
+
+        useEffect(() => {
+          if (inputRef.current && cursorPos[row.id] !== undefined) {
+            inputRef.current.setSelectionRange(
+              cursorPos[row.id],
+              cursorPos[row.id],
+            )
           }
+        }, [row.word, cursorPos, row.id])
+
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const input = e.target
+          let value = input.value.toUpperCase().replace(/[^А-Я]/g, '')
+          if (value.length > 5) value = value.slice(0, 5)
+
+          setCursorPos(pos => ({
+            ...pos,
+            [row.id]: input.selectionStart ?? value.length,
+          }))
+
           onChange(value)
         }
 
         return (
           <Input
+            ref={inputRef}
             value={row.word}
             onChange={handleChange}
             disabled={isDisabled}
