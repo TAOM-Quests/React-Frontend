@@ -17,7 +17,7 @@ export interface QuestsTabFilter {
   name?: string
   limit?: number
   group?: number
-  tags?: number[]
+  tag?: number[]
   difficult?: number
   completeBy?: number
   executor?: number[]
@@ -95,8 +95,8 @@ export const QuestTabFilterBar = forwardRef(
           }))}
           onChangeDropdown={selected =>
             setFilter(
-              isArray(selected)
-                ? { ...filter, tags: selected.map(tag => tag.id) }
+              isArray(selected) || selected === null
+                ? { ...filter, tag: selected?.map(tag => tag.id) ?? [] }
                 : filter,
             )
           }

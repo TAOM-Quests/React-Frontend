@@ -9,7 +9,7 @@ export interface QuestsGetDto {
   offset?: number
   completeBy?: number
   isCompleted?: boolean
-  tags?: number | number[]
+  tag?: number | number[]
   group?: number | number[]
   executor?: number | number[]
   difficult?: number | number[]
