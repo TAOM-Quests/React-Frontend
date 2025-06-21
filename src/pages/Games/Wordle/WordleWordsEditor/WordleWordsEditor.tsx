@@ -20,6 +20,27 @@ export const WordleWordsEditor = () => {
   const [words, setWords] = useState<WordleWord[]>([])
   const [selectedIds, setSelectedIds] = useState<number[]>([])
 
+  const normalizedWords = words.map(w =>
+    typeof w.word === 'string' ? w.word.trim().toUpperCase() : '',
+  )
+
+  const wordCounts = normalizedWords.reduce<Record<string, number>>(
+    (acc, word) => {
+      if (word) acc[word] = (acc[word] || 0) + 1
+      return acc
+    },
+    {},
+  )
+
+  const errors = normalizedWords.map(word => {
+    if (word.length !== 5) return 'Слово должно содержать ровно 5 букв'
+    if (wordCounts[word] > 1) return 'Слово дублируется'
+    return null
+  })
+
+  // Если есть хотя бы одна ошибка — блокируем кнопку
+  const hasValidationErrors = errors.some(Boolean)
+
   const columns: TableColumn<WordleWord>[] = [
     {
       key: 'word',
@@ -49,12 +70,16 @@ export const WordleWordsEditor = () => {
           onChange(value)
         }
 
+        const rowIndex = words.findIndex(w => w.id === row.id)
+        const errorText = errors[rowIndex] || ''
+
         return (
           <Input
             ref={inputRef}
             value={row.word}
             onChange={handleChange}
             disabled={isDisabled}
+            errorText={errorText}
           />
         )
       },
@@ -163,6 +188,7 @@ export const WordleWordsEditor = () => {
             isAllowMultiSelect
             isAllowAddRow
             isAllowDelete
+            hasValidationErrors={hasValidationErrors}
             onCellChange={(rowId, key, value) => {
               setWords(prevWords =>
                 prevWords.map(w =>
