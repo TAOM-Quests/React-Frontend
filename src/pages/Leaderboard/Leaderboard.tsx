@@ -9,13 +9,25 @@ import { isArray } from 'lodash'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
 import './Leaderboard.scss'
+import { serverFiles } from '../../services/api/commonModule/serverFiles/serverFiles'
+import { ServerFile } from '../../models/serverFile'
 
 import { UserAvatarInfo } from '../../components/User/UserAvatarInfo/UserAvatarInfo'
 
 const POSITIONS_ON_SCREEN = 10
+const FIRST_PLACE_MEDAL_IMAGE_ID = 20
+const SECOND_PLACE_MEDAL_IMAGE_ID = 21
+const THIRD_PLACE_MEDAL_IMAGE_ID = 22
+
+const MEDALS_IMAGES_IDS = [
+  FIRST_PLACE_MEDAL_IMAGE_ID,
+  SECOND_PLACE_MEDAL_IMAGE_ID,
+  THIRD_PLACE_MEDAL_IMAGE_ID,
+]
 
 export const Leaderboard = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [medalsImages, setMedalsImages] = useState<ServerFile[]>([])
 
   const [departments, setDepartments] = useState<Department[]>([])
   const [positions, setPositions] = useState<UserLeaderboardPosition[]>([])
@@ -35,6 +47,7 @@ export const Leaderboard = () => {
     setIsLoading(true)
     try {
       fetchDepartments()
+      fetchMedalsImages()
       setEventsListObserver()
     } catch (e) {
       console.log(`[Leaderboard] ${e}`)
@@ -73,6 +86,11 @@ export const Leaderboard = () => {
     }
     setIsLoading(false)
   }, [currentDepartment])
+
+  const fetchMedalsImages = async () => {
+    const images = MEDALS_IMAGES_IDS.map(id => serverFiles.getFile(id))
+    setMedalsImages(await Promise.all(images))
+  }
 
   const fetchDepartments = async () => {
     setDepartments(await commonEntities.getDepartments())
@@ -143,7 +161,11 @@ export const Leaderboard = () => {
                 className={`leaderboard__rank--${pos.rank} leaderboard__item `}
               >
                 {pos.rank === 1 || pos.rank === 2 || pos.rank === 3 ? (
-                  <img src={''} alt="medal" className="leaderboard__medal" />
+                  <img
+                    src={medalsImages[pos.rank - 1].url}
+                    alt="medal"
+                    className="leaderboard__medal"
+                  />
                 ) : (
                   <p className="body_l_sb leaderboard__rank--number">
                     {pos.rank}
