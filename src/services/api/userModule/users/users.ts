@@ -1,5 +1,6 @@
 import { Employee, User } from '../../../../models/user'
 import { UserAuth } from '../../../../models/userAuth'
+import { UserLeaderboardPosition } from '../../../../models/userLeaderbordPositioin'
 import { UserNotificationsSettingsItem } from '../../../../models/userNotificationsSettings'
 import { UserPosition } from '../../../../models/userPoistion'
 import { UserProfile, UserProfileUpdated } from '../../../../models/userProfile'
@@ -13,6 +14,7 @@ import {
   SendEmailConfirmCodeDto,
   UserEnterDto,
   UsersGetDto,
+  UserExperienceGetQuery,
 } from './usersDto'
 
 export const users = {
@@ -74,4 +76,16 @@ export const users = {
       'users/change-password',
       params,
     ),
+
+  getExperience: (
+    params: UserExperienceGetQuery,
+  ): Promise<UserLeaderboardPosition[]> => {
+    const queryString = Object.entries(params)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&')
+
+    return userModule<UserLeaderboardPosition[], null>(
+      `experience${queryString ? `?${queryString}` : ''}`,
+    )
+  },
 }

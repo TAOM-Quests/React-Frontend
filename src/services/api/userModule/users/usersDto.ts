@@ -48,6 +48,13 @@ export interface UpdateUserNotificationsSettingsItemDto {
   telegram?: boolean
 }
 
+export interface UserExperienceGetQuery {
+  userId?: number
+  departmentId?: number
+  offset?: number
+  limit?: number
+}
+
 interface UserEnter {
   email: string
   password: string

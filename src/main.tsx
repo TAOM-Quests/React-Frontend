@@ -23,6 +23,7 @@ import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
+import { Leaderboard } from './pages/Leaderboard/Leaderboard.tsx'
 import { Crossword } from './pages/Games/Crossword/Crossword.tsx'
 
 moment.updateLocale('ru', {
@@ -74,6 +75,7 @@ root.render(
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="email/confirm" element={<EmailConfirm />} />
+              <Route path="leaders" element={<Leaderboard />} />
 
               <Route path="event/:id" element={<Event />} />
               <Route path="event/:id/statistic" element={<EventAnalytic />} />
