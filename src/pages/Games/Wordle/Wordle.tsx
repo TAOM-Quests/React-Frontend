@@ -66,7 +66,7 @@ export const Wordle = () => {
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
-  const { id: departmentId } = useParams<{ id: string }>()
+  const { departmentId } = useParams()
 
   const handleLetterInput = useCallback(
     (letter: string) => {

@@ -5,7 +5,6 @@ export interface FeedbackForm {
   name: string
   entityId: number
   description: string
-  entityName: FeedbackEntity
   questions: FeedbackQuestion[]
   entityName: FeedbackFormEntities
 }
