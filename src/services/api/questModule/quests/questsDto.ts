@@ -13,12 +13,16 @@ export interface QuestsGetDto {
 
 export interface QuestsCompleteGetDto {
   id?: number[] // id квестов
+  name?: string
   limit?: number
   offset?: number
-  tags?: number[]
   completeBy?: number
-  executor?: number[]
-  department?: number[]
+  isCompleted?: boolean
+  tag?: number | number[]
+  group?: number | number[]
+  executor?: number | number[]
+  difficult?: number | number[]
+  department?: number | number[]
 }
 
 export interface SaveQuestDto {

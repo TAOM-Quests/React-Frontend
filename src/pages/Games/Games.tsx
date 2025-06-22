@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import { serverFiles } from '../../services/api/commonModule/serverFiles/serverFiles'
 import { CardGame } from '../../components/Cards/CardGame/CardGame'
 
-const WORDLE_IMAGE_ID = 18
-const CROSSWORD_IMAGE_ID = 19
+const WORDLE_IMAGE_ID = 19
+const CROSSWORD_IMAGE_ID = 18
 
 const gamesExample = [
   {
@@ -22,10 +22,8 @@ const gamesExample = [
 ]
 
 export const Games = () => {
+  const { id: departmentId } = useParams()
   const [images, setImages] = useState<ServerFile[]>([])
-
-  const { id } = useParams<{ id: string }>()
-  const departmentId = Number(id)
 
   useEffect(() => {
     const fetchImages = async () => {

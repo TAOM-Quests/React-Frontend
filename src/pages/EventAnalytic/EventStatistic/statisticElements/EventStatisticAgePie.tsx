@@ -1,5 +1,4 @@
 import { DefaultRawDatum, ResponsivePie } from '@nivo/pie'
-import { uniq } from 'lodash'
 import { useState, useEffect } from 'react'
 import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
 import moment from 'moment'
