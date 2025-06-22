@@ -10,6 +10,8 @@ import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
 import './Leaderboard.scss'
 
+import { UserAvatarInfo } from '../../components/User/UserAvatarInfo/UserAvatarInfo'
+
 const POSITIONS_ON_SCREEN = 10
 
 export const Leaderboard = () => {
@@ -143,10 +145,16 @@ export const Leaderboard = () => {
                 {pos.rank === 1 || pos.rank === 2 || pos.rank === 3 ? (
                   <img src={''} alt="medal" className="leaderboard__medal" />
                 ) : (
-                  <p className="body_l_sb">{pos.rank}</p>
+                  <p className="body_l_sb leaderboard__rank--number">
+                    {pos.rank}
+                  </p>
                 )}
+                <UserAvatarInfo
+                  text={pos.user.name}
+                  avatarSrc={pos.user.image?.url}
+                  className="leaderboard__avatar"
+                />
 
-                <p className="body_xl_m">{pos.user.name}</p>
                 <p className="body_l_sb">{pos.experience}</p>
               </div>
             ))}
@@ -158,8 +166,15 @@ export const Leaderboard = () => {
                 <div
                   className={`leaderboard__rank--${userPosition.rank} leaderboard__item `}
                 >
-                  <p className="body_l_sb">{userPosition.rank}</p>
-                  <p className="body_xl_m">{userPosition.user.name}</p>
+                  <p className="body_l_sb leaderboard__rank--number">
+                    {userPosition.rank}
+                  </p>
+
+                  <UserAvatarInfo
+                    text={userPosition.user.name}
+                    avatarSrc={userPosition.user.image?.url}
+                    className="leaderboard__avatar"
+                  />
                   <p className="body_l_sb">{userPosition.experience}</p>
                 </div>
               )}
