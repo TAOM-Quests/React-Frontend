@@ -8,9 +8,14 @@ import './Group.scss'
 export interface QuestHomeGroupProps {
   group: QuestGroup
   quests: QuestMinimize[]
+  groupIndex: number
 }
 
-export const QuestHomeGroup = ({ group, quests }: QuestHomeGroupProps) => {
+export const QuestHomeGroup = ({
+  group,
+  quests,
+  groupIndex,
+}: QuestHomeGroupProps) => {
   function splitToChunks<T>(arr: T[], chunkSize: number): (T | null)[][] {
     const result: (T | null)[][] = []
     for (let i = 0; i < arr.length; i += chunkSize) {
@@ -43,12 +48,11 @@ export const QuestHomeGroup = ({ group, quests }: QuestHomeGroupProps) => {
     //   </div>
     // </div>
     <div className="group">
-      <div className="group__header">
-        <h1>{group.name}</h1>
-      </div>
+      <h4 className="heading_4 group__title">{group.name}</h4>
+
       {questChunks.map((chunk, chunkIdx) => (
         <div
-          className={`group__questGrid groupTest-${chunkIdx % 2 === 0 ? 'right' : 'left'}`}
+          className={`group__questGrid groupTest-${groupIndex % 2 === 0 ? 'right' : 'left'}`}
           key={chunkIdx}
         >
           <div className="titleGroupTests" />

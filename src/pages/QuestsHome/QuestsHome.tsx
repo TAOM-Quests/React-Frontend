@@ -112,14 +112,17 @@ export const QuestsHome = () => {
             </div>
           </div>
 
-          {groups.map(group => (
-            <QuestHomeGroup
-              key={group.id}
-              group={group}
-              quests={quests.filter(quest => quest.group?.id === group.id)}
-            />
-          ))}
-          <div ref={groupsListEndRef} />
+          <div className="quests-home__groups">
+            {groups.map((group, groupIndex) => (
+              <QuestHomeGroup
+                key={group.id}
+                group={group}
+                quests={quests.filter(quest => quest.group?.id === group.id)}
+                groupIndex={groupIndex}
+              />
+            ))}
+            <div ref={groupsListEndRef} />
+          </div>
         </div>
       ) : (
         <Loading />

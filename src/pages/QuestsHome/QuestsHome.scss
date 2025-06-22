@@ -44,10 +44,13 @@
       padding: 60px;
       max-width: 830px;
       text-align: center;
-
-      // p {
-      //   text-align: center;
-      // }
     }
+  }
+
+  &__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    padding: 80px 5vw;
   }
 }
