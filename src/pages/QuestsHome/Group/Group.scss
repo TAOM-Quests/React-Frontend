@@ -9,8 +9,8 @@
 
   &__questGrid {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(13, 1fr);
     gap: 20px;
     min-height: 700px;
     width: 100%;
@@ -38,7 +38,7 @@
 
 // Индивидуальные позиции и формы карточек
 .groupTest-right .index-0-of-test-in-group {
-  grid-area: 1 / 3 / 5 / 6;
+  grid-area: 1/5/5/8;
   position: relative;
   // left: 2.4rem;
   .back-gray {
@@ -48,43 +48,43 @@
 }
 .groupTest-right .index-1-of-test-in-group {
   // grid-area: 1/5/4/6;
-  grid-area: 1/6/5/9;
+  grid-area: 1/8/5/12;
   .back-gray {
     background: #223344;
   }
 }
 .groupTest-right .index-2-of-test-in-group {
-  grid-area: 1 / 9 / 6 / 11;
+  grid-area: 1/12/7/14;
   .back-gray {
     background: #1a2b3c;
   }
 }
 .groupTest-right .index-3-of-test-in-group {
-  grid-area: 5 / 5 / 7 / 9;
+  grid-area: 5/6/8/12;
   .back-gray {
     background: #b8a080;
   }
 }
 .groupTest-right .index-4-of-test-in-group {
-  grid-area: 7 / 4 / 9 / 7;
+  grid-area: 8/4/11/9;
   .back-gray {
     background: #a0b880;
   }
 }
 .groupTest-right .index-5-of-test-in-group {
-  grid-area: 7 / 7/ 11/ 9;
+  grid-area: 8/9/14/12;
   .back-gray {
     background: #80b8b8;
   }
 }
 .groupTest-right .index-6-of-test-in-group {
-  grid-area: 6 / 9 / 11 / 11;
+  grid-area: 7/12/14/14;
   .back-gray {
     background: #b880a0;
   }
 }
 .groupTest-right .index-7-of-test-in-group {
-  grid-area: 9 / 7 / 11 / 2;
+  grid-area: 11/9/14/1;
   .back-gray {
     background: #e0e0e0;
   }
@@ -92,7 +92,7 @@
 
 // Для четных/нечетных групп можно сделать зеркальное отображение
 .groupTest-left .index-0-of-test-in-group {
-  grid-area: 1 / 1 / 6 / 3;
+  grid-area: 1 / 1 / 7 / 3;
   left: 0;
   .back-gray {
     background: #8090b8;
@@ -100,43 +100,43 @@
   }
 }
 .groupTest-left .index-1-of-test-in-group {
-  grid-area: 5 / 6 / 1 / 3;
+  grid-area: 5 / 7 / 1 / 3;
   .back-gray {
     background: #223344;
   }
 }
 .groupTest-left .index-2-of-test-in-group {
-  grid-area: 5 / 9 / 1 / 6;
+  grid-area: 5 / 10 / 1 / 7;
   .back-gray {
     background: #1a2b3c;
   }
 }
 .groupTest-left .index-3-of-test-in-group {
-  grid-area: 6 / 3 / 11 / 1;
+  grid-area: 7/3/14/1;
   .back-gray {
     background: #b8a080;
   }
 }
 .groupTest-left .index-4-of-test-in-group {
-  grid-area: 5 / 7 / 7 / 3;
+  grid-area: 5/9/8/3;
   .back-gray {
     background: #a0b880;
   }
 }
 .groupTest-left .index-5-of-test-in-group {
-  grid-area: 11 / 5 / 7 / 3;
+  grid-area: 14/6/8/3;
   .back-gray {
     background: #80b8b8;
   }
 }
 .groupTest-left .index-6-of-test-in-group {
-  grid-area: 7 / 8 / 9 / 5;
+  grid-area: 8/11/11/6;
   .back-gray {
     background: #b880a0;
   }
 }
 .groupTest-left .index-7-of-test-in-group {
-  grid-area: 9 / 10 / 11 / 5;
+  grid-area: 14/14/11/6;
   .back-gray {
     background: #e0e0e0;
   }
@@ -173,7 +173,7 @@
     display: flex;
     flex-direction: row;
     gap: 5px;
-    padding: 20px;
+    padding: 20px 20px 0 20px;
   }
 
   &--name-wrapper {

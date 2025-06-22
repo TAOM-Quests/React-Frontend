@@ -3,6 +3,7 @@ import { Icon } from '../../../components/UI/Icon/Icon'
 import { Tag } from '../../../components/UI/Tag/Tag'
 import { QuestGroup } from '../../../models/questGroup'
 import { QuestMinimize } from '../../../models/questMinimize'
+import { getTwoShortestTags } from '../../../utils/getTwoShortestTags'
 import './Group.scss'
 
 export interface QuestHomeGroupProps {
@@ -56,8 +57,12 @@ export const QuestHomeGroup = ({
           key={chunkIdx}
         >
           <div className="titleGroupTests" />
-          {chunk.map((quest, index) =>
-            quest ? (
+          {chunk.map((quest, index) => {
+            const shortestTags = quest?.tags
+              ? getTwoShortestTags(quest.tags.map(tag => tag.name))
+              : []
+
+            return quest ? (
               <div
                 className={`group__questItem index-${index}-of-test-in-group`}
                 style={{
@@ -68,17 +73,34 @@ export const QuestHomeGroup = ({
               >
                 <div className="group__questItem--overlay">
                   <div className="group__questItem--tags">
-                    {quest.tags?.map(tag => (
-                      <span className="group__questItem--tag" key={tag.id}>
-                        {tag.name}
-
-                        <Tag text={tag.name} type="secondary" size="small" />
-                      </span>
-                    ))}
-
-                    <Tag text={'Тест'} type="secondary" size="small" />
-                    <Tag text={'Тест'} type="secondary" size="small" />
-                    <Tag text={'Тест'} type="secondary" size="small" />
+                    {quest.difficult ? (
+                      <>
+                        <Tag
+                          text={quest.difficult.name}
+                          type="subdued"
+                          size="small"
+                        />
+                        {shortestTags.length > 0 && (
+                          <Tag
+                            key={0}
+                            text={shortestTags[0]}
+                            type="secondary"
+                            size="small"
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {shortestTags.map((tag, index) => (
+                          <Tag
+                            key={index}
+                            text={tag}
+                            type="secondary"
+                            size="small"
+                          />
+                        ))}
+                      </>
+                    )}
                   </div>
 
                   <div className="group__questItem--name-wrapper">
@@ -98,8 +120,8 @@ export const QuestHomeGroup = ({
                 className={`group__questItem group__questItem--empty index-${index}-of-test-in-group`}
                 key={`empty-${index}`}
               />
-            ),
-          )}
+            )
+          })}
         </div>
       ))}
     </div>
