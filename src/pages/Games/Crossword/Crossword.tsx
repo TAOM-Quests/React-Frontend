@@ -31,7 +31,7 @@ interface SaveCrossword {
 const LOCAL_STORAGE_KEY = 'crossword_user_answers'
 
 export const Crossword = () => {
-  const { departmentId } = useParams()
+  const { id: departmentId } = useParams()
   const user = useAppSelector(selectAuth)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
