@@ -6,6 +6,8 @@ import { quests as questsApi } from '../../services/api/questModule/quests/quest
 import { Loading } from '../../components/Loading/Loading'
 import { QuestHomeGroup } from './Group/Group'
 import './QuestsHome.scss'
+import { Department } from '../../models/department'
+import { commonEntities } from '../../services/api/commonModule/commonEntities/commonEntities'
 
 const GROUPS_COUNT_ON_SCREEN = 2
 const QUESTS_COUNT_IN_GROUP = 7
@@ -15,6 +17,7 @@ export const QuestsHome = () => {
 
   const [groups, setGroups] = useState<QuestGroup[]>([])
   const [quests, setQuests] = useState<QuestMinimize[]>([])
+  const [department, setDepartment] = useState<Department | null>(null)
 
   const [isEndOGroupsList, setIsEndOfGroupsList] = useState(false)
   const [isAllGroupsLoaded, setIsAllGroupsLoaded] = useState(false)
@@ -34,9 +37,10 @@ export const QuestsHome = () => {
 
   useEffect(() => {
     setIsLoading(true)
+    tryCallback(fetchDepartment)
     tryCallback(setEventsListObserver)
     setIsLoading(false)
-  }, [])
+  }, [departmentId])
 
   useEffect(() => {
     setIsLoading(true)
@@ -65,6 +69,16 @@ export const QuestsHome = () => {
     }
 
     return () => observer.disconnect()
+  }
+
+  const fetchDepartment = async () => {
+    if (!departmentId) throw Error('No department id')
+
+    const departments = await commonEntities.getDepartments()
+
+    setDepartment(
+      departments.find(department => department.id === +departmentId) ?? null,
+    )
   }
 
   const fetchQuests = async (offset?: number) => {
@@ -100,15 +114,19 @@ export const QuestsHome = () => {
       {!isLoading ? (
         <div className="quests-home">
           <div className="quests-home__banner">
-            <img src={''} alt="Banner" className="quests-home__banner--image" />
+            <img
+              src={department?.image.url}
+              alt="Banner"
+              className="quests-home__banner--image"
+            />
             <div className="quests-home__banner--overlay" />
 
             <div className="quests-home__banner--content">
               <h1 className="heading_1 quests-home__banner--title">
-                {'Кафедра'}
+                {department?.name}
               </h1>
 
-              <p className="body_xl_m">{'Описание'}</p>
+              <p className="body_xl_m">{department?.description}</p>
             </div>
           </div>
 
