@@ -1,0 +1,49 @@
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 80px 15vw;
+  align-items: center;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 600px;
+    width: 60vw;
+  }
+
+  &__rank--1 {
+    background-color: var(--bg_c_accent) !important;
+    color: var(--text_c_secondary) !important;
+  }
+  &__rank--2 {
+    background-color: rgba(var(--text_color_accent), 0.7) !important;
+    color: var(--text_c_secondary) !important;
+  }
+  &__rank--3 {
+    background-color: rgba(var(--text_color_accent), 0.3) !important;
+    color: var(--text_c_secondary) !important;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg_c_secondary);
+    border: var(--border_primary) var(--border_c_secondary);
+    border-radius: 8px;
+    padding: 20px;
+    gap: 10px;
+    color: var(--text_c_primary);
+  }
+  &__medal {
+    width: 64px;
+    height: 64px;
+    max-width: 64px;
+    max-height: 64px;
+    min-width: 64px;
+    min-height: 64px;
+  }
+}

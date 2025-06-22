@@ -8,6 +8,7 @@ import { Dropdown } from '../../components/UI/Dropdown/Dropdown'
 import { isArray } from 'lodash'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../redux/auth/authSlice'
+import './Leaderboard.scss'
 
 const POSITIONS_ON_SCREEN = 10
 
@@ -116,44 +117,55 @@ export const Leaderboard = () => {
   return (
     <>
       {!isLoading ? (
-        <div>
-          <h1>Таблица лидеров</h1>
-          <Dropdown
-            items={departments.map(dep => ({ id: dep.id, text: dep.name }))}
-            selectedItems={
-              currentDepartment
-                ? [{ id: currentDepartment.id, text: currentDepartment.name }]
-                : []
-            }
-            onChangeDropdown={selected =>
-              !isArray(selected) && selected
-                ? setCurrentDepartment(
-                    departments.find(dep => dep.id === selected.id) ?? null,
-                  )
-                : setCurrentDepartment(null)
-            }
-          />
+        <div className="leaderboard">
+          <h1 className="heading_4 leaderboard__title">Таблица лидеров</h1>
+          <div className="leaderboard__list">
+            <Dropdown
+              items={departments.map(dep => ({ id: dep.id, text: dep.name }))}
+              selectedItems={
+                currentDepartment
+                  ? [{ id: currentDepartment.id, text: currentDepartment.name }]
+                  : []
+              }
+              onChangeDropdown={selected =>
+                !isArray(selected) && selected
+                  ? setCurrentDepartment(
+                      departments.find(dep => dep.id === selected.id) ?? null,
+                    )
+                  : setCurrentDepartment(null)
+              }
+            />
 
-          {positions.map(pos => (
-            <div>
-              {pos.rank}
-              {pos.user.name}
-              {pos.experience}
-            </div>
-          ))}
+            {positions.map(pos => (
+              <div
+                className={`leaderboard__rank--${pos.rank} leaderboard__item `}
+              >
+                {pos.rank === 1 || pos.rank === 2 || pos.rank === 3 ? (
+                  <img src={''} alt="medal" className="leaderboard__medal" />
+                ) : (
+                  <p className="body_l_sb">{pos.rank}</p>
+                )}
 
-          {userPosition &&
-            !positions
-              .map(pos => pos.user.id)
-              .includes(userPosition.user.id) && (
-              <div>
-                {userPosition.rank}
-                {userPosition.user.name}
-                {userPosition.experience}
+                <p className="body_xl_m">{pos.user.name}</p>
+                <p className="body_l_sb">{pos.experience}</p>
               </div>
-            )}
+            ))}
 
-          <div ref={positionsListEndRef} />
+            {userPosition &&
+              !positions
+                .map(pos => pos.user.id)
+                .includes(userPosition.user.id) && (
+                <div
+                  className={`leaderboard__rank--${userPosition.rank} leaderboard__item `}
+                >
+                  <p className="body_l_sb">{userPosition.rank}</p>
+                  <p className="body_xl_m">{userPosition.user.name}</p>
+                  <p className="body_l_sb">{userPosition.experience}</p>
+                </div>
+              )}
+
+            <div ref={positionsListEndRef} />
+          </div>
         </div>
       ) : (
         <Loading />
