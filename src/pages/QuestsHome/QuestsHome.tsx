@@ -5,8 +5,9 @@ import { QuestMinimize } from '../../models/questMinimize'
 import { quests as questsApi } from '../../services/api/questModule/quests/quests'
 import { Loading } from '../../components/Loading/Loading'
 import { QuestHomeGroup } from './Group/Group'
+import './QuestsHome.scss'
 
-const GROUPS_COUNT_ON_SCREEN = 5
+const GROUPS_COUNT_ON_SCREEN = 2
 const QUESTS_COUNT_IN_GROUP = 7
 
 export const QuestsHome = () => {
@@ -98,12 +99,18 @@ export const QuestsHome = () => {
     <>
       {!isLoading ? (
         <div className="quests-home">
-          <section className="quests-home__banner">
-            <div className="quests-home__overlay">
-              <h2>Название Кафедры</h2>
-              <p>Описание кафедры</p>
+          <div className="quests-home__banner">
+            <img src={''} alt="Banner" className="quests-home__banner--image" />
+            <div className="quests-home__banner--overlay" />
+
+            <div className="quests-home__banner--content">
+              <h1 className="heading_1 quests-home__banner--title">
+                {'Кафедра'}
+              </h1>
+
+              <p className="body_xl_m">{'Описание'}</p>
             </div>
-          </section>
+          </div>
 
           {groups.map(group => (
             <QuestHomeGroup
