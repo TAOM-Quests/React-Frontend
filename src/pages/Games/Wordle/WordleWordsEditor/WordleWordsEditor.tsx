@@ -33,12 +33,13 @@ export const WordleWordsEditor = () => {
   )
 
   const errors = normalizedWords.map(word => {
+    if (!/^[А-ЯЁ]+$/.test(word))
+      return 'Можно использовать только русские буквы'
     if (word.length !== 5) return 'Слово должно содержать ровно 5 букв'
     if (wordCounts[word] > 1) return 'Слово дублируется'
     return null
   })
 
-  // Если есть хотя бы одна ошибка — блокируем кнопку
   const hasValidationErrors = errors.some(Boolean)
 
   const columns: TableColumn<WordleWord>[] = [
@@ -46,38 +47,14 @@ export const WordleWordsEditor = () => {
       key: 'word',
       title: 'Слово',
       cellRender: (row, onChange, isDisabled) => {
-        const inputRef = useRef<HTMLInputElement>(null)
-
-        useEffect(() => {
-          if (inputRef.current && cursorPos[row.id] !== undefined) {
-            inputRef.current.setSelectionRange(
-              cursorPos[row.id],
-              cursorPos[row.id],
-            )
-          }
-        }, [row.word, cursorPos, row.id])
-
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          const input = e.target
-          let value = input.value.toUpperCase().replace(/[^А-Я]/g, '')
-          if (value.length > 5) value = value.slice(0, 5)
-
-          setCursorPos(pos => ({
-            ...pos,
-            [row.id]: input.selectionStart ?? value.length,
-          }))
-
-          onChange(value)
-        }
-
         const rowIndex = words.findIndex(w => w.id === row.id)
         const errorText = errors[rowIndex] || ''
 
         return (
           <Input
-            ref={inputRef}
             value={row.word}
-            onChange={handleChange}
+            // onChange={handleChange}
+            onChange={e => onChange(e.target.value)}
             disabled={isDisabled}
             errorText={errorText}
           />
@@ -104,6 +81,12 @@ export const WordleWordsEditor = () => {
       const isDuplicate = words.some(w => w.word.toUpperCase() === wordToAdd)
       if (isDuplicate) {
         setModalMessage('Такое слово уже существует')
+        setIsModalOpen(true)
+        return
+      }
+
+      if (!/^[А-ЯЁ]+$/.test(wordToAdd)) {
+        setModalMessage('Можно использовать только русские буквы')
         setIsModalOpen(true)
         return
       }
@@ -144,13 +127,10 @@ export const WordleWordsEditor = () => {
     if (!departmentId || selectedIds.length === 0) return
 
     try {
-      // Параллельно удаляем все выбранные слова на сервере
       await Promise.all(selectedIds.map(id => wordle.deleteWord(id)))
 
-      // Обновляем локальный стейт, удаляя удалённые слова
       setWords(prev => prev.filter(word => !selectedIds.includes(word.id)))
 
-      // Очищаем выбранные ID
       setSelectedIds([])
     } catch (e) {
       console.error('[Wordle] Ошибка при удалении слов:', e)
