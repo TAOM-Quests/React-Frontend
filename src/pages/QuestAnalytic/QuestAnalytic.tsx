@@ -24,8 +24,8 @@ export const QuestAnalytic = () => {
   const [quest, setQuest] = useState<Quest | null>(null)
   const [participants, setParticipants] = useState<UserProfile[]>([])
   const [questAnswers, setQuestAnswers] = useState<QuestComplete[]>([])
-  const [feedbackForm, setFeedbackForm] = useState<FeedbackForm | null>(null)
-  const [feedbackAnswers, setFeedbackAnswers] = useState<FeedbackAnswer[]>([])
+  const [feedbackForm] = useState<FeedbackForm | null>(null)
+  const [feedbackAnswers] = useState<FeedbackAnswer[]>([])
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)

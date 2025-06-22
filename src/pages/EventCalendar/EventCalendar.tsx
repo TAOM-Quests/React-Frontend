@@ -32,7 +32,7 @@ export const EventCalendar = () => {
         const events = await eventsApi.getManyByParams({
           dateStart: selectedPeriod.startOf('month').toDate(),
           dateEnd: selectedPeriod.endOf('month').toDate(),
-          status: STATUS_ID_ACCEPTED,
+          status: [STATUS_ID_ACCEPTED],
           ...filter,
         })
 
