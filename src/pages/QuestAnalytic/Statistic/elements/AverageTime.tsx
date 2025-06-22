@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
 import { QuestAnalyticElementProps } from '../../questAnalyticElementProps'
 
@@ -13,12 +14,12 @@ export const QuestStatisticAverageTime = ({
   const averageTimeInSeconds = questAnswersCount
     ? timeSumInSeconds / questAnswersCount
     : 0
-  const average = `${Math.floor(averageTimeInSeconds / 60)}:${averageTimeInSeconds % 60}`
+  const average = moment(averageTimeInSeconds * 1000).format('mm:ss')
 
   return (
     <ContainerBox>
       <p className="body_m_r statistic__cards--title">
-        Среднее количество правильных ответов
+        Среднее время прохождения
       </p>
       <p className="heading_4">{average}</p>
     </ContainerBox>
