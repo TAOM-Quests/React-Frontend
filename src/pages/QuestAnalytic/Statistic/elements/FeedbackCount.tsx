@@ -1,9 +1,9 @@
 import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
-import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
+import { QuestAnalyticElementProps } from '../../questAnalyticElementProps'
 
-export const EventStatisticFeedbackCount = ({
+export const QuestStatisticFeedbackCount = ({
   feedbackAnswers,
-}: EventAnalyticElementProps) => {
+}: QuestAnalyticElementProps) => {
   return (
     <ContainerBox>
       <p className="body_m_r statistic__cards--title">

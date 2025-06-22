@@ -1,11 +1,13 @@
 import { isArray } from 'lodash'
-import { Quest } from '../../../../models/quest'
+import { Quest, QuestComplete } from '../../../../models/quest'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
 import { QuestMinimize } from '../../../../models/questMinimize'
+import { UserProfile } from '../../../../models/userProfile'
 import { questModule } from '../questModule'
 import {
   QuestGroupsGetDto,
+  QuestsCompleteGetDto,
   QuestsGetDto,
   QuestTagsGetDto,
   SaveQuestCompleteDto,
@@ -24,11 +26,26 @@ export const quests = {
     )
   },
 
+  getManyCompleteByParams: (
+    params: QuestsCompleteGetDto,
+  ): Promise<QuestComplete[]> => {
+    let queryString =
+      'isCompleted=true&' +
+      Object.entries(params)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
+
+    return questModule<QuestComplete[], null>(`quests?${queryString}`)
+  },
+
   getById: (id: number): Promise<Quest> =>
     questModule<Quest, null>(`quests/${id}`),
 
   getCompletedById: (completeId: number): Promise<Quest> =>
     questModule<Quest, null>(`quests/complete/${completeId}`),
+
+  getParticipants: (questId: number): Promise<UserProfile[]> =>
+    questModule<UserProfile[], null>(`quests/${questId}/participants`),
 
   create: (params: SaveQuestDto): Promise<Quest> =>
     questModule<Quest, SaveQuestDto>('quests', params),

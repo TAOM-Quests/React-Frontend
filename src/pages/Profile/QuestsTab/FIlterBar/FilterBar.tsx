@@ -16,12 +16,12 @@ import { Button } from '../../../../components/UI/Button/Button'
 export interface QuestsTabFilter {
   name?: string
   limit?: number
-  group?: number
   tag?: number[]
-  difficult?: number
+  group?: number[]
   completeBy?: number
   executor?: number[]
-  department?: number
+  difficult?: number[]
+  department?: number[]
   isCompleted?: boolean
 }
 
@@ -83,8 +83,8 @@ export const QuestTabFilterBar = forwardRef(
             }))}
             onChangeDropdown={selected =>
               setFilter(
-                !isArray(selected)
-                  ? { ...filter, group: selected?.id }
+                !isArray(selected) && selected
+                  ? { ...filter, group: [selected?.id] }
                   : filter,
               )
             }
@@ -97,8 +97,8 @@ export const QuestTabFilterBar = forwardRef(
             }))}
             onChangeDropdown={selected =>
               setFilter(
-                !isArray(selected)
-                  ? { ...filter, department: selected?.id }
+                !isArray(selected) && selected
+                  ? { ...filter, department: [selected?.id] }
                   : filter,
               )
             }
@@ -111,8 +111,8 @@ export const QuestTabFilterBar = forwardRef(
             }))}
             onChangeDropdown={selected =>
               setFilter(
-                !isArray(selected)
-                  ? { ...filter, difficult: selected?.id }
+                !isArray(selected) && selected
+                  ? { ...filter, difficult: [selected?.id] }
                   : filter,
               )
             }
