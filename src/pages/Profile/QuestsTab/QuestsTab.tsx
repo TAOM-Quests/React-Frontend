@@ -83,10 +83,17 @@ export default function QuestsTab({ user }: QuestsTabProps) {
   }
 
   const fetchQuests = async (offset?: number) => {
-    const fetchedQuests = await quests.getManyByParams({
-      offset: offset ?? userQuests.length,
-      ...filter,
-    })
+    const fetchedQuests: QuestMinimize[] = user.isEmployee
+      ? await quests.getManyByParams({
+          executor: [user.id],
+          offset: offset ?? userQuests?.length,
+          ...filter,
+        })
+      : ((await quests.getManyCompleteByParams({
+          completeBy: user.id,
+          offset: offset ?? userQuests?.length,
+          ...filter,
+        })) as QuestMinimize[])
 
     if (fetchedQuests.length < QUESTS_COUNT_ON_SCREEN) {
       setIsAllQuestsLoaded(true)

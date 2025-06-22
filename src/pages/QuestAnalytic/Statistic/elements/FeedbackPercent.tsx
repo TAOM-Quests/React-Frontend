@@ -1,10 +1,10 @@
 import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
-import { EventAnalyticElementProps } from '../../eventAnalyticElementProps'
+import { QuestAnalyticElementProps } from '../../questAnalyticElementProps'
 
-export const EventStatisticFeedbackPercent = ({
+export const QuestStatisticFeedbackPercent = ({
   participants,
   feedbackAnswers,
-}: EventAnalyticElementProps) => {
+}: QuestAnalyticElementProps) => {
   const value =
     feedbackAnswers.length > 0 && participants.length > 0
       ? (feedbackAnswers.length / participants.length) * 100

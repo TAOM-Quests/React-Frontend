@@ -26,6 +26,7 @@ export const Quest = () => {
   const [quest, setQuest] = useState<QuestInterface | null>(null)
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
   const [timer, setTimer] = useState<number | null>(null)
+  const [completeTime, setCompleteTime] = useState<string | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
     number | null
   >(null)
@@ -46,6 +47,10 @@ export const Quest = () => {
           : await quests.getById(+questId!)
         setQuest(fetchedQuest)
 
+        if (completedId && fetchedQuest.time) {
+          setCompleteTime(fetchedQuest.time)
+        }
+
         setIsLoading(false)
       } catch (e) {
         console.error(`[Quest] ${e}`)
@@ -56,7 +61,15 @@ export const Quest = () => {
   }, [questId, completedId])
 
   useEffect(() => {
-    if (isResultView && !completedId) saveComplete()
+    if (isResultView && !completedId) {
+      if (quest?.time) {
+        setCompleteTime(
+          moment(quest.time, 'mm:ss').subtract(timer).format('mm:ss'),
+        )
+      }
+
+      saveComplete()
+    }
   }, [isResultView])
 
   const setNextQuestion = (userAnswer: any, isCorrectAnswer: boolean) => {
@@ -117,12 +130,16 @@ export const Quest = () => {
           answer: {
             ...question.answer,
             userAnswer: userAnswers?.[index]?.answer ?? null,
+            isCorrectAnswer: userAnswers[index].isCorrectAnswer,
           },
         })),
       }
 
       if (quest.name) saveQuestComplete.name = quest.name
-      if (quest.time) saveQuestComplete.time = moment(timer).format('mm:ss')
+      if (quest.time)
+        saveQuestComplete.time = moment(quest.time, 'mm:ss')
+          .subtract(timer)
+          .format('mm:ss')
       if (quest.tags) saveQuestComplete.tags = quest.tags.map(tag => tag.name)
       if (quest.image) saveQuestComplete.imageId = quest.image.id
       if (quest.difficult) saveQuestComplete.difficult = quest.difficult.name
@@ -181,7 +198,7 @@ export const Quest = () => {
           )}
           {isResultView && (
             <QuestResultView
-              time={quest.time}
+              time={completeTime ?? undefined}
               tags={quest.tags?.map(tag => tag.name) ?? []}
               difficulty={quest.difficult?.name}
               results={quest.results ?? []}
