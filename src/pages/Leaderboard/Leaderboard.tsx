@@ -195,7 +195,7 @@ export const Leaderboard = () => {
   return (
     <>
       {!isLoading ? (
-        <div className="leaderboard">
+        <div className=" leaderboard">
           <h1 className="heading_4 leaderboard__title">Таблица лидеров</h1>
           <div className="leaderboard__list" ref={leaderboardListRef}>
             <Dropdown

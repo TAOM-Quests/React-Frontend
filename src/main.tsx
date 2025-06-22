@@ -22,8 +22,10 @@ import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
 import { QuestsHome } from './pages/QuestsHome/QuestsHome.tsx'
+import { QuestAnalytic } from './pages/QuestAnalytic/QuestAnalytic.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
+import { WordleWordsEditor } from './pages/Games/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
 import { Leaderboard } from './pages/Leaderboard/Leaderboard.tsx'
 import { Crossword } from './pages/Games/Crossword/Crossword.tsx'
 
@@ -89,13 +91,14 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
+              <Route path="quest/:id/statistic" element={<QuestAnalytic />} />
 
               <Route path="games/:id" element={<Games />} />
               <Route path="games/wordle/:id" element={<Wordle />} />
-              {/* <Route
-                path="games/wordle/edit/:id"
+              <Route
+                path="games/wordle/:id/edit"
                 element={<WordleWordsEditor />}
-              /> */}
+              />
               <Route path="games/crossword/:id" element={<Crossword />} />
             </Routes>
           </ScrollToTop>

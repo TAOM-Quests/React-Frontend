@@ -1,6 +1,7 @@
 import { WordleAttempt } from '../../../../models/wordleAttempt'
+import { WordleWord } from '../../../../models/wordleWord'
 import { gamesModule } from '../gamesModule'
-import { WordleAddAttemptDto } from './wordleDto'
+import { WordleAddAttemptDto, WordleCreateWordDto } from './wordleDto'
 
 const WORDLE_API_URL = 'wordle/'
 
@@ -14,4 +15,24 @@ export const wordle = {
       `${WORDLE_API_URL}attempts/${userId}?departmentId=${departmentId}`,
       { attempt },
     ),
+
+  getWords: (departmentId: number) =>
+    gamesModule<WordleWord[], void>(`${WORDLE_API_URL}words/${departmentId}`),
+
+  createWord: (word: string, departmentId: number) =>
+    gamesModule<WordleWord, WordleCreateWordDto>(
+      `${WORDLE_API_URL}words?departmentId=${departmentId}`,
+      { word },
+    ),
+
+  updateWord: (id: number, word: string) =>
+    gamesModule<WordleWord, WordleCreateWordDto>(
+      `${WORDLE_API_URL}words/${id}`,
+      { word },
+    ),
+
+  deleteWord: (id: number): Promise<void> =>
+    gamesModule<void, null>(`${WORDLE_API_URL}words/${id}`, null, {
+      method: 'DELETE',
+    }),
 }

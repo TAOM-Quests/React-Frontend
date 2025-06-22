@@ -5,6 +5,7 @@ import { QuestQuestion } from './questQuestion'
 import { QuestResult } from './questResult'
 import { QuestTag } from './questTag'
 import { ServerFile } from './serverFile'
+import { User } from './user'
 
 export interface Quest {
   id: number
@@ -18,4 +19,9 @@ export interface Quest {
   results?: QuestResult[]
   difficult: QuestDifficult
   questions?: QuestQuestion[]
+}
+
+export interface QuestComplete extends Quest {
+  user: User
+  date: Date
 }

@@ -4,6 +4,15 @@ import { QuestResult } from '../../../../models/questResult'
 import { QuestTag } from '../../../../models/questTag'
 
 export interface QuestsGetDto {
+  limit?: number
+  offset?: number
+  tags?: number[]
+  executor?: number[]
+  department?: number[]
+}
+
+export interface QuestsCompleteGetDto {
+  id?: number[] // id квестов
   name?: string
   limit?: number
   offset?: number
