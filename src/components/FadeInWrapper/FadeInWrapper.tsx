@@ -6,7 +6,7 @@ interface FadeInWrapperProps {
   style?: CSSProperties
   className?: string
   threshold?: number // сколько % элемента должно быть видно, чтобы сработать
-  rootMargin?: string // отступы для области видимости
+  rootMargin?: string
 }
 
 export const FadeInWrapper = ({

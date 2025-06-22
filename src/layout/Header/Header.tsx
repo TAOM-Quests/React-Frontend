@@ -4,18 +4,24 @@ import { logout, selectAuth } from '../../redux/auth/authSlice'
 import { HeaderMenu } from './HeaderMenu/HeaderMenu'
 import { Avatar } from '../../components/UI/Avatar/Avatar'
 import { useNavigate } from 'react-router'
-import { useAppSelector } from '../../hooks/redux/reduxHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux/reduxHooks'
 import { useState } from 'react'
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const user = useAppSelector(selectAuth)
 
   const handleNavigate = (path: string) => {
     setIsMobileMenuOpen(false)
     navigate(path)
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/login')
   }
 
   return (
@@ -50,7 +56,11 @@ export const Header = () => {
         <div className="header__user" onClick={() => navigate('/profile')}>
           <span className="body_l_sb user-name-header">{user.name}</span>
           <Avatar src={user.image?.url} />
-          <Icon icon="LOGOUT" colorIcon="primary" onClick={() => logout()} />
+          <Icon
+            icon="LOGOUT"
+            colorIcon="primary"
+            onClick={() => handleLogout()}
+          />
         </div>
       ) : (
         <Icon

@@ -8,6 +8,8 @@ import Input from '../../../../components/UI/Input/Input'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import { Button } from '../../../../components/UI/Button/Button'
 import './QuestCreateQuestionMultiple.scss'
+import { ServerFile } from '../../../../models/serverFile'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
 
 export interface QuestCreateQuestionMultipleProps {
   questions: QuestQuestion[]
@@ -88,6 +90,16 @@ export const QuestCreateQuestionMultiple = ({
     })
   }
 
+  const setImage = (index: number, image: ServerFile | null) => {
+    const questionAnswer = clone(multipleQuestion.answer)
+    questionAnswer.optionsImages[index] = image
+
+    updateQuestion({
+      ...multipleQuestion,
+      answer: questionAnswer,
+    })
+  }
+
   return (
     <div className="multiple-questions">
       <div className="multiple-questions__options">
@@ -95,6 +107,18 @@ export const QuestCreateQuestionMultiple = ({
         <div className="multiple-questions__options-list">
           {multipleQuestion.answer.options.map((option, optionIndex) => (
             <div key={optionIndex} className="multiple-question-option">
+              <ImageContainer
+                key={`question-multiple-option-${optionIndex}`}
+                className="multiple-question-option__image"
+                selectedImages={
+                  multipleQuestion.answer.optionsImages[optionIndex]
+                    ? [multipleQuestion.answer.optionsImages[optionIndex]]
+                    : []
+                }
+                onSelectImages={([image]) =>
+                  setImage(optionIndex, image ?? null)
+                }
+              />
               <Input
                 value={option}
                 placeholder="Введите вариант ответа"
@@ -110,6 +134,10 @@ export const QuestCreateQuestionMultiple = ({
                   checked={multipleQuestion.answer.correctAnswer.includes(
                     optionIndex,
                   )}
+                  disabled={
+                    multipleQuestion.answer.correctAnswer.length === 1 &&
+                    multipleQuestion.answer.correctAnswer.includes(optionIndex)
+                  }
                   onChange={() => updateCorrectAnswer(optionIndex)}
                 />
               </div>

@@ -14,27 +14,6 @@
   .selected-item {
     border-radius: 6px;
   }
-
-  .dropdown-menu {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 6px;
-    border: var(--border_primary) var(--border_c_primary);
-    border-radius: 8px;
-    background-color: var(--bg_c_secondary);
-    box-shadow: var(--drop_shadow);
-    padding: 4px;
-    z-index: 1;
-    top: 100%;
-    left: 0;
-    margin-top: 4px;
-
-    .dropdown-checkbox {
-      padding: 6px 8px;
-    }
-  }
 }
 
 .input-showAddButton {
@@ -45,5 +24,24 @@
 
   .inputWrapper {
     width: 100%;
+  }
+}
+
+.dropdown-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: var(--border_primary) var(--border_c_primary);
+  border-radius: 8px;
+  background-color: var(--bg_c_secondary);
+  box-shadow: var(--drop_shadow);
+  padding: 4px;
+  left: -13px !important;
+  margin-top: 4px !important;
+  width: fit-content;
+
+  .dropdown-checkbox {
+    padding: 6px 8px;
   }
 }

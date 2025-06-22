@@ -13,19 +13,22 @@ import { selectAuth } from '../../redux/auth/authSlice'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { getTwoShortestTags } from '../../utils/getTwoShortestTags'
 import { Tag } from '../UI/Tag/Tag'
+import { EventStatus } from '../../models/eventStatus'
 
 const STATUS_ID_ON_INSPECTION = 3
+const STATUS_ID_DONE = 5
+const STATUS_ID_ARCHIVE = 6
 
 export interface EventMinimizeProps {
   id: number
   name: string
   type: string
-  status: string
+  tags: string[]
   address: string
   platform: string
   imageUrl: string
   date: Date | null
-  tags: string[]
+  status: EventStatus
   departmentName: string
   onDelete?: () => void
   isEmployeeView?: boolean
@@ -66,6 +69,20 @@ export const EventMinimize = ({
     },
     {
       id: 2,
+      text: 'Посмотреть статистику',
+      onSelect: () => {
+        navigate(`/event/${id}/statistic`)
+      },
+    },
+    {
+      id: 3,
+      text: 'Перейти',
+      onSelect: () => {
+        navigate(`/event/${id}`)
+      },
+    },
+    {
+      id: 4,
       text: 'Удалить',
       onSelect: async () => {
         await events.delete(id)
@@ -75,15 +92,15 @@ export const EventMinimize = ({
   ]
 
   const statusColor: { [key: string]: TypeBadge } = {
-    Черновик: 'neutral',
-    Утверждено: 'success',
-    'На доработке': 'critical',
-    'На утверждении': 'caution',
-    'Ожидает нормального названия статуса': 'info',
-    Архив: 'neutral',
+    1: 'neutral',
+    2: 'success',
+    3: 'critical',
+    4: 'caution',
+    5: 'info',
+    6: 'neutral',
   }
 
-  const getStatusColor = (status: string): TypeBadge => {
+  const getStatusColor = (status: number): TypeBadge => {
     return statusColor[status] ?? 'neutral'
   }
 
@@ -105,10 +122,22 @@ export const EventMinimize = ({
     navigate(`/event/${id}/edit`)
   }
 
+  const clickHandler = () => {
+    if (user?.isEmployee) {
+      if ([STATUS_ID_DONE, STATUS_ID_ARCHIVE].includes(status.id)) {
+        navigate(`/event/${id}/statistic`)
+      } else {
+        navigate(`/event/${id}/edit`)
+      }
+    } else {
+      navigate(`/event/${id}`)
+    }
+  }
+
   return (
     <ContainerBox
       style={{ backgroundImage: `url(${imageUrl})` }}
-      onClick={() => navigate(`/event/${id}`)}
+      onClick={clickHandler}
       className="eventMinimize"
     >
       <div className="eventMinimize__image-wrapper">
@@ -128,7 +157,7 @@ export const EventMinimize = ({
         <div className="eventMinimize__header--right">
           {isEmployeeView && (
             <>
-              <Badge type={getStatusColor(status)} text={status} />
+              <Badge type={getStatusColor(status.id)} text={status.name} />
               <div className="eventMinimize__menu">
                 <ContextMenu
                   isVisible={openMenuId === id}
@@ -172,12 +201,6 @@ export const EventMinimize = ({
             <p className="body_l_m text_ellipsis">{type}</p>
           </div>
         )}{' '}
-        {isEmployeeView && (
-          <div className="eventMinimize__participantsCount">
-            <Icon icon="USER" colorIcon="soft-blue" />
-            <p className="body_l_m">{participantsCount || 0}</p>
-          </div>
-        )}
         <div className="eventMinimize__departmentName">
           <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
           <p className="body_l_m text_ellipsis">{departmentName}</p>

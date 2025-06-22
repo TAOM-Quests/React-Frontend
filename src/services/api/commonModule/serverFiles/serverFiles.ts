@@ -1,9 +1,10 @@
 import { ServerFile } from '../../../../models/serverFile'
 import { commonModule } from '../commonModule'
+import { CreateExcelDto } from './dto/createExcelDto'
 
 export const serverFiles = {
-  getFile: async (fileName: string): Promise<ServerFile> =>
-    await commonModule<ServerFile>(`file/stats?fileName=${fileName}`),
+  getFile: async (id: number): Promise<ServerFile> =>
+    await commonModule<ServerFile>(`file/${id}/stats`),
 
   uploadFile: async (file: File): Promise<ServerFile> => {
     const formData = new FormData()
@@ -15,4 +16,7 @@ export const serverFiles = {
       body: formData,
     })
   },
+
+  createExcel: async <T>(excel: CreateExcelDto<T>): Promise<ServerFile> =>
+    await commonModule<ServerFile, CreateExcelDto<T>>(`file/excel`, excel),
 }

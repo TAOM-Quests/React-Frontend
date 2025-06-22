@@ -5,13 +5,15 @@ export interface UserAuth {
   name: string
   email: string
   token: string
-  isAdmin?: boolean
   image?: ServerFile
+  isAdmin?: boolean
   isEmployee?: boolean
+  isInspector?: boolean
+  isGameMaster?: boolean
 }
 
 export interface EmployeeAuth extends UserAuth {
-  roleId: number
   position: string
+  rolesIds: number[]
   departmentId: number
 }

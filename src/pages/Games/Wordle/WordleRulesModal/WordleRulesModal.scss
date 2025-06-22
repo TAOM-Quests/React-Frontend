@@ -1,0 +1,67 @@
+.rules-wordle-modal {
+  .modal--container {
+    max-width: 500px !important;
+  }
+}
+
+.rules-wordle {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  &-cell {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    background: var(--bg_c_secondary);
+    border: var(--border_checkbox) var(--border_c_accent);
+    border-radius: 6px;
+    text-align: center;
+    vertical-align: middle;
+    transition: box-shadow 0.2s;
+
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text_c_primary);
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    &--correct {
+      background: var(--bg_c_accent);
+      color: var(--text_c_secondary);
+      border-color: var(--border_c_accent);
+    }
+
+    &--wrong {
+      background: #bdbdbd;
+      color: var(--text_c_secondary);
+      border-color: #bdbdbd;
+    }
+
+    &--almost {
+      background: #6bdaf6;
+      color: var(--text_c_secondary);
+      border-color: #6bdaf6;
+    }
+  }
+}

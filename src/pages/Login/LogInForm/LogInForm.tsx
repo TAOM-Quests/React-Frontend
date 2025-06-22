@@ -6,6 +6,8 @@ import { setUser } from '../../../redux/auth/authSlice'
 import Input from '../../../components/UI/Input/Input'
 import { Button } from '../../../components/UI/Button/Button'
 import './LogInForm.scss'
+import { validateEmail } from '../../../validation/validateEmail'
+import { validatePassword } from '../../../validation/validatePassword'
 
 export default function LogInForm() {
   const navigate = useNavigate()
@@ -13,15 +15,21 @@ export default function LogInForm() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [errorsMessage, setErrorsMessage] = useState<{
-    email?: string
-    password?: string
-  }>({})
   const [showPassword, setShowPassword] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [authError, setAuthError] = useState('')
+
+  const emailValidator = validateEmail(email)
+  const passwordValidator = validatePassword(password)
 
   const tryAuthUser = async (event: React.FormEvent) => {
     event.preventDefault()
-    setErrorsMessage({})
+    setIsSubmitted(true)
+    setAuthError('')
+
+    if (!emailValidator.isValid || !passwordValidator.isValid) {
+      return
+    }
 
     try {
       const foundUser = await users.auth({ email, password })
@@ -30,16 +38,7 @@ export default function LogInForm() {
       navigate('/')
     } catch (e) {
       if (e instanceof Error) {
-        const message = e.message.toLowerCase()
-        if (message.includes('email')) {
-          setErrorsMessage({ email: e.message })
-        } else if (message.includes('password')) {
-          setErrorsMessage({ password: e.message })
-        } else {
-          setErrorsMessage({ email: e.message, password: e.message })
-        }
-      } else {
-        setErrorsMessage({ email: String(e), password: String(e) })
+        setAuthError('Неверная почта или пароль')
       }
     }
   }
@@ -60,7 +59,7 @@ export default function LogInForm() {
         className="email-input"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        errorText={errorsMessage.email}
+        errorText={isSubmitted ? emailValidator.error || authError : ''}
       />
       <Input
         type={showPassword ? 'text' : 'password'}
@@ -71,7 +70,7 @@ export default function LogInForm() {
         onClickIconAfter={toggleShowPassword}
         value={password}
         onChange={e => setPassword(e.target.value)}
-        errorText={errorsMessage.password}
+        errorText={isSubmitted ? passwordValidator.error : ''}
       />
       <Button type="submit" text="Войти" />
     </form>

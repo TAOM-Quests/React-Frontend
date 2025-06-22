@@ -1,7 +1,9 @@
 .questCreateMainData {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
+  &--blocks {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
 
   @media (max-width: 1392px) {
     flex-direction: column;

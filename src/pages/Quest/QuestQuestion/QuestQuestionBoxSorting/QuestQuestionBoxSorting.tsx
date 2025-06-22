@@ -4,7 +4,6 @@ import {
   QuestQuestionBoxSorting as QuestQuestionBoxSortingInterface,
 } from '../../../../models/questQuestion'
 import { DragDropProvider, useDraggable, useDroppable } from '@dnd-kit/react'
-import { isEqual } from 'lodash'
 import './QuestQuestionBoxSorting.scss'
 import classNames from 'classnames'
 import { getOptionColorAnswerBoxSorting } from '../questQuestionUtils'
@@ -40,7 +39,11 @@ export const QuestQuestionBoxSorting = forwardRef(
       ref,
       () => ({
         userAnswer,
-        isCorrectAnswer: isEqual(userAnswer, question.answer.correctAnswer),
+        isCorrectAnswer: userAnswer.every((box, boxIndex) =>
+          box.options.every(option =>
+            question.answer.correctAnswer[boxIndex].options.includes(option),
+          ),
+        ),
       }),
       [userAnswer],
     )
@@ -130,6 +133,14 @@ export const QuestQuestionBoxSorting = forwardRef(
                         )}
                       >
                         {question.answer.options[option]}
+                        {question.answer.optionsImages[option] && (
+                          <div className="quest-question-box-sorting__box--container">
+                            <img
+                              alt={question.answer.options[option]}
+                              src={question.answer.optionsImages[option].url}
+                            />
+                          </div>
+                        )}
                       </Draggable>
                     )
                   })}
@@ -155,6 +166,14 @@ export const QuestQuestionBoxSorting = forwardRef(
                     })}
                   >
                     {option}
+                    {question.answer.optionsImages[optionIndex] && (
+                      <div className="quest-question-box-sorting__box--container">
+                        <img
+                          alt={question.answer.options[optionIndex]}
+                          src={question.answer.optionsImages[optionIndex].url}
+                        />
+                      </div>
+                    )}
                   </Draggable>
                 )
               }
@@ -185,7 +204,7 @@ export function Draggable({ id, children, className, ...props }: any) {
 
   return (
     <div className={classNames(className, 'body_m_m')} ref={ref} {...props}>
-      <p>{children}</p>
+      <p className="quest-question-box-sorting__option">{children}</p>
     </div>
   )
 }
