@@ -2,7 +2,6 @@ import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
 import { QuestAnalyticElementProps } from '../../questAnalyticElementProps'
 
 export const QuestStatisticAverageTime = ({
-  participants,
   questAnswers,
 }: QuestAnalyticElementProps) => {
   const timeSumInSeconds = questAnswers.reduce((acc, quest) => {
@@ -10,9 +9,9 @@ export const QuestStatisticAverageTime = ({
     const secondsCount = quest.time?.split(':').pop() ?? 0
     return acc + +minutesCount * 60 + +secondsCount
   }, 0)
-  const participantsCount = participants.length
-  const averageTimeInSeconds = participantsCount
-    ? timeSumInSeconds / participantsCount
+  const questAnswersCount = questAnswers.length
+  const averageTimeInSeconds = questAnswersCount
+    ? timeSumInSeconds / questAnswersCount
     : 0
   const average = `${Math.floor(averageTimeInSeconds / 60)}:${averageTimeInSeconds % 60}`
 
