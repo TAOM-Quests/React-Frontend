@@ -5,6 +5,10 @@
   padding: 80px 15vw;
   align-items: center;
 
+  @media (min-width: 800px) {
+    min-height: 870px;
+  }
+
   &__list {
     display: flex;
     flex-direction: column;
