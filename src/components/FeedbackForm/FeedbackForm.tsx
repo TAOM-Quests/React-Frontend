@@ -10,7 +10,7 @@ import {
   FeedbackQuestionList,
   FeedbackQuestionListRef,
 } from './FeedbackQuestionList/FeedbackQuestionList'
-import { FeedbackEntity, FeedbackForm } from '../../models/feedbackForm'
+import { FeedbackFormEntities, FeedbackForm } from '../../models/feedbackForm'
 import { FeedbackQuestion } from '../../models/feedbackQuestion'
 import { Loading } from '../Loading/Loading'
 import { feedback } from '../../services/api/commonModule/commonEntities/feedback/feedback'
@@ -31,7 +31,7 @@ export interface FeedbackFormRef {
 
 interface FeedbackFormEditorProps {
   entityId: number | null
-  entityName: FeedbackEntity
+  entityName: FeedbackFormEntities
   baseQuestions?: FeedbackQuestion[]
   onFormSaved?: (form: FeedbackForm) => void
   onAnswerSaved?: (answer: FeedbackAnswer) => void

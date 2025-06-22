@@ -98,7 +98,7 @@ export const UpcomingEvents = () => {
                   <EventMinimizeComponent
                     id={event.id}
                     date={event.date ?? null}
-                    status={event.status.name}
+                    status={event.status}
                     name={event.name ?? ''}
                     tags={event.tags?.map(tag => tag.name) ?? []}
                     type={event.type?.name ?? ''}
