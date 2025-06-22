@@ -108,6 +108,12 @@ export const WordleWordsEditor = () => {
         return
       }
 
+      if (wordToAdd.length !== 5) {
+        setModalMessage('Слово должно содержать ровно 5 букв')
+        setIsModalOpen(true)
+        return
+      }
+
       try {
         const addedWord = await wordle.createWord(wordToAdd, +departmentId)
         setWords(prev => [...prev, addedWord])
