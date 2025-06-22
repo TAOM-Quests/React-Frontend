@@ -22,12 +22,20 @@ const menuItems: MenuItem[] = [
       {
         id: 11,
         label: 'Кафедра прикладной информатики и высшей математики',
-        path: '/quest/1',
+        path: '/quest/department/1',
       },
-      { id: 12, label: 'Кафедра связей с общественностью', path: '/quest/2' },
-      { id: 13, label: 'Кафедра экономики и финансов', path: '/quest/3' },
-      { id: 14, label: 'Кафедра управления', path: '/quest/4' },
-      { id: 15, label: 'Кафедра дизайна', path: '/quest/5' },
+      {
+        id: 12,
+        label: 'Кафедра связей с общественностью',
+        path: '/quest/department/2',
+      },
+      {
+        id: 13,
+        label: 'Кафедра экономики и финансов',
+        path: '/quest/department/3',
+      },
+      { id: 14, label: 'Кафедра управления', path: '/quest/department/4' },
+      { id: 15, label: 'Кафедра дизайна', path: '/quest/department/5' },
     ],
   },
   {

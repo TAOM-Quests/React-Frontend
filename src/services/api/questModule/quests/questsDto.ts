@@ -54,6 +54,8 @@ export interface SaveQuestCompleteDto {
 }
 
 export interface QuestGroupsGetDto {
+  limit?: number
+  offset?: number
   departmentId?: number
 }
 

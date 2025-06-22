@@ -21,6 +21,7 @@ import { NotificationToaster } from './layout/NotificationToaster/NotificationTo
 import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
+import { QuestsHome } from './pages/QuestsHome/QuestsHome.tsx'
 import { QuestAnalytic } from './pages/QuestAnalytic/QuestAnalytic.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
@@ -85,6 +86,7 @@ root.render(
               <Route path="event/:id/edit" element={<EventCreate />} />
               <Route path="event/calendar" element={<EventCalendar />} />
 
+              <Route path="quest/department/:id" element={<QuestsHome />} />
               <Route path="quest/:id" element={<Quest />} />
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
