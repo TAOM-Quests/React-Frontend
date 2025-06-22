@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router'
 import { Icon } from '../../../components/UI/Icon/Icon'
 import { Tag } from '../../../components/UI/Tag/Tag'
 import { QuestGroup } from '../../../models/questGroup'
@@ -16,6 +17,8 @@ export const QuestHomeGroup = ({
   quests,
   groupIndex,
 }: QuestHomeGroupProps) => {
+  const navigate = useNavigate()
+
   function splitToChunks<T>(arr: T[], chunkSize: number): (T | null)[][] {
     const result: (T | null)[][] = []
     for (let i = 0; i < arr.length; i += chunkSize) {
@@ -55,6 +58,7 @@ export const QuestHomeGroup = ({
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
+                onClick={() => navigate(`/quest/${quest.id}`)}
               >
                 <div className="group__questItem--overlay">
                   <div className="group__questItem--tags">
