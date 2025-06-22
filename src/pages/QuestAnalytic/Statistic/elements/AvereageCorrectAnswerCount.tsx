@@ -2,7 +2,6 @@ import { ContainerBox } from '../../../../components/ContainerBox/ContainerBox'
 import { QuestAnalyticElementProps } from '../../questAnalyticElementProps'
 
 export const QuestStatisticAverageCorrectAnswerCount = ({
-  participants,
   questAnswers,
 }: QuestAnalyticElementProps) => {
   const correctAnswersCount = questAnswers.reduce(
@@ -13,9 +12,9 @@ export const QuestStatisticAverageCorrectAnswerCount = ({
         .filter(answer => answer.isCorrectAnswer).length ?? 0),
     0,
   )
-  const participantsCount = participants.length
-  const average = participantsCount
-    ? correctAnswersCount / participantsCount
+  const questAnswersCount = questAnswers.length
+  const average = questAnswersCount
+    ? correctAnswersCount / questAnswersCount
     : 0
 
   return (

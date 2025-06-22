@@ -24,7 +24,7 @@ export const QuestStatisticCorrectAnswerPercent = ({
       <p className="body_m_r statistic__cards--title">
         Процент правильных ответов
       </p>
-      <p className="heading_4">{percent.toFixed(3).replace(/\.?0+$/, '')}</p>
+      <p className="heading_4">{percent.toFixed(3).replace(/\.?0+$/, '')}%</p>
     </ContainerBox>
   )
 }
