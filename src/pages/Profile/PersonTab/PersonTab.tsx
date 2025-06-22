@@ -19,7 +19,7 @@ export default function PersonTab({ profile, updatePerson }: PersonTabProps) {
         isEmployee={isEmployee}
         updateProfile={updatePerson}
       />
-      {isEmployee && <EmployeeInfo {...profile} />}
+      {isEmployee && <EmployeeInfo {...(profile as UserProfileEmployee)} />}
       {!isEmployee && <AchievementsList achievements={profile.achievements} />}
     </div>
   )

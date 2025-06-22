@@ -22,14 +22,8 @@ const gamesExample = [
 ]
 
 export const Games = () => {
-<<<<<<< HEAD
-  const { departmentId } = useParams()
-=======
+  const { id: departmentId } = useParams()
   const [images, setImages] = useState<ServerFile[]>([])
-
-  const { id } = useParams<{ id: string }>()
-  const departmentId = Number(id)
->>>>>>> origin/main
 
   useEffect(() => {
     const fetchImages = async () => {

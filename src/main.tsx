@@ -92,6 +92,7 @@ root.render(
                 path="games/wordle/edit/:id"
                 element={<WordleWordsEditor />}
               /> */}
+              <Route path="games/crossword/:id" element={<Crossword />} />
             </Routes>
           </ScrollToTop>
           <Footer />
