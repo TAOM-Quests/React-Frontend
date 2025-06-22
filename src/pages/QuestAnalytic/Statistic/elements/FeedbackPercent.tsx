@@ -16,9 +16,7 @@ export const QuestStatisticFeedbackPercent = ({
 
   return (
     <ContainerBox>
-      <p className="body_m_r event-statistic__cards--title">
-        Процент обратной связи
-      </p>
+      <p className="body_m_r statistic__cards--title">Процент обратной связи</p>
       <p className="heading_4">{formatted}%</p>
     </ContainerBox>
   )

@@ -8,14 +8,14 @@ import { EventStatisticFeedbackPercent } from './statisticElements/EventStatisti
 
 export const EventStatistic = (analyticData: EventAnalyticElementProps) => {
   return (
-    <div className="container_min_width event-statistic">
-      <div className="event-statistic__cards">
+    <div className="container_min_width statistic">
+      <div className="statistic__cards">
         <EventStatisticParticipantCount {...analyticData} />
         <EventStatisticFeedbackCount {...analyticData} />
         <EventStatisticFeedbackPercent {...analyticData} />
       </div>
 
-      <div className="event-statistic__charts ">
+      <div className="statistic__charts ">
         <EventStatisticSexPie {...analyticData} />
         <EventStatisticAgePie {...analyticData} />
       </div>

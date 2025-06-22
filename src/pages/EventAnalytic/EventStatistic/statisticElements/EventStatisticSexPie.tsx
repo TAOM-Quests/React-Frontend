@@ -32,12 +32,12 @@ export const EventStatisticSexPie = ({
   }, [participants])
 
   return (
-    <ContainerBox className="event-statistic--Pie">
-      <h6 className="heading_6 event-statistic--Pie__title">
+    <ContainerBox className="statistic--Pie">
+      <h6 className="heading_6 statistic--Pie__title">
         Распределение участников по половому признаку
       </h6>
       {data.length === 0 ? (
-        <p className="body_l_r event-statistic--Pie__no-data">Нет данных</p>
+        <p className="body_l_r statistic--Pie__no-data">Нет данных</p>
       ) : (
         <ResponsivePie
           data={data}
@@ -70,7 +70,7 @@ export const EventStatisticSexPie = ({
           tooltip={({ datum }) => {
             const percent = ((datum.value / total) * 100).toFixed(1)
             return (
-              <div className="event-statistic--Pie__tooltip">
+              <div className="statistic--Pie__tooltip">
                 <strong>{datum.id}</strong>
                 <br />
                 Количество: {datum.value}

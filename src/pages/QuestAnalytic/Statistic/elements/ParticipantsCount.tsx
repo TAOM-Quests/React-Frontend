@@ -7,10 +7,10 @@ export const QuestStatisticParticipantCount = ({
 }: QuestAnalyticElementProps) => {
   return (
     <ContainerBox>
-      <p className="body_m_r event-statistic__cards--title">
+      <p className="body_m_r statistic__cards--title">
         Количество зарегистрированных участников
       </p>
-      <div className="event-statistic__participant-count">
+      <div className="statistic__participant-count">
         <p className="heading_4">{participants.length}</p>
         <Icon icon="USER" />
       </div>

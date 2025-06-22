@@ -5,10 +5,11 @@ import { QuestStatisticCorrectAnswerPercent } from './elements/CorrectAnswerPerc
 import { QuestStatisticFeedbackCount } from './elements/FeedbackCount'
 import { QuestStatisticFeedbackPercent } from './elements/FeedbackPercent'
 import { QuestStatisticParticipantCount } from './elements/ParticipantsCount'
+import './Statistic.scss'
 
 export const QuestStatistic = (analyticData: QuestAnalyticElementProps) => {
   return (
-    <div className="container_min_width event-statistic">
+    <div className="container_min_width quest-statistic">
       <div className="quest-statistic__cards">
         <QuestStatisticParticipantCount {...analyticData} />
         <QuestStatisticFeedbackCount {...analyticData} />

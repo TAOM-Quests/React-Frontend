@@ -18,7 +18,7 @@ export const QuestStatisticAverageTime = ({
 
   return (
     <ContainerBox>
-      <p className="body_m_r event-statistic__cards--title">
+      <p className="body_m_r statistic__cards--title">
         Среднее количество правильных ответов
       </p>
       <p className="heading_4">{average}</p>

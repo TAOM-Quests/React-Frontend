@@ -21,7 +21,7 @@ export const QuestStatisticCorrectAnswerPercent = ({
 
   return (
     <ContainerBox>
-      <p className="body_m_r event-statistic__cards--title">
+      <p className="body_m_r statistic__cards--title">
         Процент правильных ответов
       </p>
       <p className="heading_4">{percent.toFixed(3).replace(/\.?0+$/, '')}</p>
