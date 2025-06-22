@@ -39,16 +39,10 @@ export const QuestsHome = () => {
     setIsLoading(true)
     tryCallback(fetchDepartment)
     tryCallback(setEventsListObserver)
+    setIsAllGroupsLoaded(false)
+    tryCallback(() => fetchQuests(true))
     setIsLoading(false)
   }, [departmentId])
-
-  useEffect(() => {
-    setIsLoading(true)
-    setQuests([])
-    setIsAllGroupsLoaded(false)
-    tryCallback(() => fetchQuests(0))
-    setIsLoading(false)
-  }, [])
 
   const tryCallback = (callback: () => void) => {
     try {
@@ -81,14 +75,14 @@ export const QuestsHome = () => {
     )
   }
 
-  const fetchQuests = async (offset?: number) => {
+  const fetchQuests = async (isClear?: boolean) => {
     if (!departmentId) throw Error('No department id')
 
     const newQuests: QuestMinimize[] = []
 
     const fetchedGroups = await questsApi.getGroups({
       departmentId: +departmentId,
-      offset: offset ?? groups.length,
+      offset: isClear ? 0 : groups.length,
       limit: GROUPS_COUNT_ON_SCREEN,
     })
 
@@ -105,8 +99,12 @@ export const QuestsHome = () => {
       setIsAllGroupsLoaded(true)
     }
 
-    setGroups(prevGroups => [...prevGroups, ...fetchedGroups])
-    setQuests(prevQuests => [...prevQuests, ...newQuests])
+    setGroups(prevGroups =>
+      isClear ? fetchedGroups : [...prevGroups, ...fetchedGroups],
+    )
+    setQuests(prevQuests =>
+      isClear ? newQuests : [...prevQuests, ...newQuests],
+    )
   }
 
   return (
