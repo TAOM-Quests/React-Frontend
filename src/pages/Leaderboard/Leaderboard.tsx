@@ -162,7 +162,7 @@ export const Leaderboard = () => {
               >
                 {pos.rank === 1 || pos.rank === 2 || pos.rank === 3 ? (
                   <img
-                    src={medalsImages[pos.rank - 1].url}
+                    src={medalsImages[pos.rank - 1]?.url}
                     alt="medal"
                     className="leaderboard__medal"
                   />
