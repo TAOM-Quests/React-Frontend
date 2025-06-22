@@ -24,6 +24,7 @@ import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
 import { Leaderboard } from './pages/Leaderboard/Leaderboard.tsx'
+import { Crossword } from './pages/Games/Crossword/Crossword.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -70,9 +71,9 @@ root.render(
           <ScrollToTop>
             <NotificationToaster />
             <Routes>
-              <Route path="" element={<Home />} />
-              <Route path="login" element={<Login />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="email/confirm" element={<EmailConfirm />} />
               <Route path="leaders" element={<Leaderboard />} />
 
@@ -93,6 +94,7 @@ root.render(
                 path="games/wordle/edit/:id"
                 element={<WordleWordsEditor />}
               /> */}
+              <Route path="games/crossword/:id" element={<Crossword />} />
             </Routes>
           </ScrollToTop>
           <Footer />

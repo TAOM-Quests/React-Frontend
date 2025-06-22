@@ -201,12 +201,6 @@ export const EventMinimize = ({
             <p className="body_l_m text_ellipsis">{type}</p>
           </div>
         )}{' '}
-        {isEmployeeView && (
-          <div className="eventMinimize__participantsCount">
-            <Icon icon="USER" colorIcon="soft-blue" />
-            <p className="body_l_m">{participantsCount || 0}</p>
-          </div>
-        )}
         <div className="eventMinimize__departmentName">
           <Icon colorIcon="soft-blue" icon="GRADUATION_CAP" />
           <p className="body_l_m text_ellipsis">{departmentName}</p>
