@@ -138,6 +138,7 @@ export const Leaderboard = () => {
     setIsLoading(true)
     try {
       fetchPositions(true)
+      setUserPosition(null)
     } catch (e) {
       console.log(`[Leaderboard] ${e}`)
     }
