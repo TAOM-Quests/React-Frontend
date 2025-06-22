@@ -5,8 +5,9 @@ import { QuestMinimize } from '../../models/questMinimize'
 import { quests as questsApi } from '../../services/api/questModule/quests/quests'
 import { Loading } from '../../components/Loading/Loading'
 import { QuestHomeGroup } from './Group/Group'
+import './QuestsHome.scss'
 
-const GROUPS_COUNT_ON_SCREEN = 5
+const GROUPS_COUNT_ON_SCREEN = 2
 const QUESTS_COUNT_IN_GROUP = 7
 
 export const QuestsHome = () => {
@@ -98,21 +99,30 @@ export const QuestsHome = () => {
     <>
       {!isLoading ? (
         <div className="quests-home">
-          <section className="quests-home__banner">
-            <div className="quests-home__overlay">
-              <h2>Название Кафедры</h2>
-              <p>Описание кафедры</p>
-            </div>
-          </section>
+          <div className="quests-home__banner">
+            <img src={''} alt="Banner" className="quests-home__banner--image" />
+            <div className="quests-home__banner--overlay" />
 
-          {groups.map(group => (
-            <QuestHomeGroup
-              key={group.id}
-              group={group}
-              quests={quests.filter(quest => quest.group?.id === group.id)}
-            />
-          ))}
-          <div ref={groupsListEndRef} />
+            <div className="quests-home__banner--content">
+              <h1 className="heading_1 quests-home__banner--title">
+                {'Кафедра'}
+              </h1>
+
+              <p className="body_xl_m">{'Описание'}</p>
+            </div>
+          </div>
+
+          <div className="quests-home__groups">
+            {groups.map((group, groupIndex) => (
+              <QuestHomeGroup
+                key={group.id}
+                group={group}
+                quests={quests.filter(quest => quest.group?.id === group.id)}
+                groupIndex={groupIndex}
+              />
+            ))}
+            <div ref={groupsListEndRef} />
+          </div>
         </div>
       ) : (
         <Loading />
