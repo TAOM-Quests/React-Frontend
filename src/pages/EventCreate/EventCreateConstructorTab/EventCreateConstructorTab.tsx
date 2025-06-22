@@ -45,7 +45,6 @@ const additionalInfoItems: string[] = [
 ]
 const ADDITIONAL_INFO_SEPARATOR = '<!-- Additional info -->'
 const STATUS_ID_ON_INSPECTION = 3
-const ROLE_ID_INSPECTOR = 2
 
 export interface EventCreateConstructorRef {
   saveEvent: () => Promise<void>
@@ -252,6 +251,12 @@ export const EventCreateConstructorTab = forwardRef(
           if (!window.location.pathname.includes(`${savedEvent.id}`)) {
             navigate(`/event/${savedEvent.id}/edit`)
           }
+
+          await fetchEventData(
+            +savedEvent.id,
+            ADDITIONAL_INFO_SEPARATOR,
+            setEventState,
+          )
         }
       } catch (e) {
         console.log(`[EventCreate] ${e}`)
@@ -264,8 +269,7 @@ export const EventCreateConstructorTab = forwardRef(
         {!isLoading ? (
           <>
             {(comments.length > 0 ||
-              (user.roleId === ROLE_ID_INSPECTOR &&
-                status?.id === STATUS_ID_ON_INSPECTION)) && (
+              (user.isInspector && status?.id === STATUS_ID_ON_INSPECTION)) && (
               <EventsCreateInspectorComments
                 comments={comments}
                 setComments={setComments}

@@ -7,6 +7,8 @@ import { Button } from '../../../../components/UI/Button/Button'
 import { Icon } from '../../../../components/UI/Icon/Icon'
 import Input from '../../../../components/UI/Input/Input'
 import './QuestCreateQuestionBoxSorting.scss'
+import { ServerFile } from '../../../../models/serverFile'
+import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageContainer'
 
 export interface QuestCreateQuestionBoxSortingProps {
   questions: QuestQuestion[]
@@ -47,6 +49,10 @@ export const QuestCreateQuestionBoxSorting = ({
     questionAnswer.correctAnswer = questionAnswer.correctAnswer.filter(
       (_, index) => index !== boxIndex,
     )
+    questionAnswer.options = questionAnswer.options.filter(
+      (_, index) =>
+        !questionAnswer.correctAnswer[boxIndex].options.includes(index),
+    )
 
     updateQuestion({
       ...boxSortingQuestion,
@@ -79,12 +85,15 @@ export const QuestCreateQuestionBoxSorting = ({
   const removeOption = (boxIndex: number, optionIndex: number) => {
     const questionAnswer = clone(boxSortingQuestion.answer)
     const box = questionAnswer.correctAnswer[boxIndex]
-    questionAnswer.options = questionAnswer.options.filter(
-      (_, index) => index !== optionIndex,
-    )
-    questionAnswer.correctAnswer[boxIndex].options = box.options.filter(
-      (_, index) => index !== optionIndex,
-    )
+    const globalOptionIndex = box.options[optionIndex]
+
+    questionAnswer.options.splice(globalOptionIndex, 1)
+    box.options.splice(optionIndex, 1)
+    questionAnswer.correctAnswer.forEach(box => {
+      box.options = box.options.map(index =>
+        index > globalOptionIndex ? index - 1 : index,
+      )
+    })
 
     updateQuestion({
       ...boxSortingQuestion,
@@ -95,6 +104,16 @@ export const QuestCreateQuestionBoxSorting = ({
   const updateOption = (optionName: string, optionIndex: number) => {
     const questionAnswer = clone(boxSortingQuestion.answer)
     questionAnswer.options[optionIndex] = optionName
+
+    updateQuestion({
+      ...boxSortingQuestion,
+      answer: questionAnswer,
+    })
+  }
+
+  const setImage = (index: number, image: ServerFile | null) => {
+    const questionAnswer = clone(boxSortingQuestion.answer)
+    questionAnswer.optionsImages[index] = image
 
     updateQuestion({
       ...boxSortingQuestion,
@@ -124,6 +143,22 @@ export const QuestCreateQuestionBoxSorting = ({
                 {boxSortingQuestion.answer.correctAnswer[boxIndex].options.map(
                   optionIndex => (
                     <div className="boxSorting-questions__item">
+                      <ImageContainer
+                        key={`question-box-sorting-option-${optionIndex}`}
+                        className="boxSorting-questions__item__image"
+                        selectedImages={
+                          boxSortingQuestion.answer.optionsImages[optionIndex]
+                            ? [
+                                boxSortingQuestion.answer.optionsImages[
+                                  optionIndex
+                                ],
+                              ]
+                            : []
+                        }
+                        onSelectImages={([image]) =>
+                          setImage(optionIndex, image ?? null)
+                        }
+                      />
                       <Input
                         value={boxSortingQuestion.answer.options[optionIndex]}
                         placeholder="Введите вариант ответа"
@@ -134,6 +169,10 @@ export const QuestCreateQuestionBoxSorting = ({
                       <Icon
                         icon="CROSS"
                         onClick={() => removeOption(boxIndex, optionIndex)}
+                        disabled={
+                          boxSortingQuestion.answer.correctAnswer[boxIndex]
+                            .options.length === 1
+                        }
                       />
                     </div>
                   ),

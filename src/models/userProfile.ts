@@ -3,6 +3,7 @@ import { QuestMinimize } from './questMinimize'
 import { ServerFile } from './serverFile'
 import { UserAchievement } from './userAchievement'
 import { UserLevel } from './userLevel'
+import { UserNotificationsSettingsItem } from './userNotificationsSettings'
 import { UserPosition } from './userPoistion'
 import { UserRole } from './userRole'
 
@@ -17,8 +18,9 @@ export interface UserProfile {
   patronymic: string
   phoneNumber: string
   birthDate: Date | null
-  completedQuests: QuestMinimize[]
   achievements: UserAchievement[]
+  completedQuests: QuestMinimize[]
+  notificationsSettings: UserNotificationsSettingsItem[]
   role?: UserRole
   department?: Department
   position?: UserPosition

@@ -1,8 +1,10 @@
+import { ServerFile } from './serverFile'
+
 export interface QuestQuestion {
   text: string
   type: QuestionType
+  images: ServerFile[]
   id?: number
-  imageId?: number
   questId?: number
 
   //Используется только для пройденных квестов
@@ -16,6 +18,7 @@ export interface QuestQuestionSingle extends QuestQuestion {
   answer: {
     options: string[]
     correctAnswer: number
+    optionsImages: (ServerFile | null)[]
   }
 }
 
@@ -24,6 +27,7 @@ export interface QuestQuestionMultiple extends QuestQuestion {
   answer: {
     options: string[]
     correctAnswer: number[]
+    optionsImages: (ServerFile | null)[]
   }
 }
 
@@ -32,6 +36,7 @@ export interface QuestQuestionConnection extends QuestQuestion {
   answer: {
     options: string[]
     correctAnswer: string[]
+    optionsImages: (ServerFile | null)[]
   }
 }
 
@@ -39,6 +44,7 @@ export interface QuestQuestionBoxSorting extends QuestQuestion {
   type: 'boxSorting'
   answer: {
     options: string[]
+    optionsImages: (ServerFile | null)[]
     correctAnswer: QuestQuestionBoxSortingAnswer[]
   }
 }

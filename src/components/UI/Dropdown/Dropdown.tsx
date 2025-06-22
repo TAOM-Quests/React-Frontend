@@ -88,7 +88,7 @@ export const Dropdown = ({
     }
 
     if (onChangeDropdown) {
-      onChangeDropdown([...selectedItems, newItem])
+      onChangeDropdown(isMultiple ? [...selectedItems, newItem] : newItem)
     }
 
     setSelectedItems(prev => [...prev, newItem])

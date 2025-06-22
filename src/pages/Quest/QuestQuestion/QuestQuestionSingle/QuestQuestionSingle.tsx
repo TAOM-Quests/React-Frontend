@@ -41,6 +41,7 @@ export const QuestQuestionSingle = forwardRef(
           <QuestQuestionButton
             key={optionIndex}
             text={option}
+            image={question.answer.optionsImages[optionIndex]}
             disabled={isCheckMode}
             size="extraLarge"
             colorType={getOptionColorType(

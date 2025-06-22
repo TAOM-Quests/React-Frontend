@@ -21,9 +21,9 @@ import { ImageContainer } from '../../../../components/UI/ImageContainer/ImageCo
 import { ContextMenu } from '../../../../components/ContextMenu/ContextMenu'
 import { OptionProps } from '../../../../components/UI/Option/Option'
 import { NotificationsModal } from './NotificationsModal/NotificationsModal'
-import { NotificationSettings } from './NotificationsModal/notificationSettingsConfig'
 import { ChangePasswordModal } from './ChangePasswordModal/ChangePasswordModal'
 import { Level } from '../../Level/Level'
+import { UserNotificationsSettingsItem } from '../../../../models/userNotificationsSettings'
 import { useAppSelector } from '../../../../hooks/redux/reduxHooks'
 import { selectAuth } from '../../../../redux/auth/authSlice'
 import { Modal } from '../../../../components/UI/Modal/Modal'
@@ -54,16 +54,15 @@ export default function PersonInfo({
   const [isChangeEmailModalOpen, setIsChangeEmailModalOpen] = useState(false)
 
   const [isNotificationsModalOpen, setNotificationsModalOpen] = useState(false)
-  const [notificationSettings, setNotificationSettings] =
-    useState<NotificationSettings>({})
+  const [notificationSettings, setNotificationSettings] = useState<
+    UserNotificationsSettingsItem[]
+  >(profile.notificationsSettings)
 
   const [isChangePasswordModalOpen, setChangePasswordModalOpen] =
     useState(false)
 
   const navigate = useNavigate()
   const user = useAppSelector(selectAuth)
-
-  const role = isEmployee ? 'teacher' : 'applicant'
 
   const lastNameValidator = validateName(lastName, false)
   const firstNameValidator = validateName(firstName, false)
@@ -128,10 +127,6 @@ export default function PersonInfo({
     },
   ]
 
-  const handleSaveNotificationSettings = (settings: NotificationSettings) => {
-    setNotificationSettings(settings)
-  }
-
   const handleDateSelect = (date: Date | null) => {
     setBirthDate(date)
   }
@@ -177,11 +172,6 @@ export default function PersonInfo({
 
   const toggleMenu = () => {
     setOpenMenu(!openMenu)
-  }
-
-  const handlePasswordChangeSuccess = () => {
-    alert('Пароль успешно изменён')
-    // Можно добавить дополнительную логику, например, разлогинить пользователя
   }
 
   return (
@@ -331,10 +321,23 @@ export default function PersonInfo({
       {isNotificationsModalOpen && (
         <NotificationsModal
           isOpen={isNotificationsModalOpen}
-          onClose={() => setNotificationsModalOpen(false)}
-          role={role}
-          initialSettings={notificationSettings}
-          onSave={handleSaveNotificationSettings}
+          notificationsSettings={notificationSettings}
+          onClose={async settings => {
+            setNotificationsModalOpen(false)
+
+            for (const setting of settings) {
+              await users.updateNotificationsSettings({
+                userId: profile.id,
+                typeId: setting.typeId,
+                email: setting.email,
+                telegram: setting.telegram,
+              })
+            }
+
+            const { notificationsSettings: updatedNotificationSettings } =
+              await users.getProfile({ id: profile.id })
+            setNotificationSettings(updatedNotificationSettings)
+          }}
         />
       )}
 
@@ -342,7 +345,6 @@ export default function PersonInfo({
         <ChangePasswordModal
           isOpen={isChangePasswordModalOpen}
           onClose={() => setChangePasswordModalOpen(false)}
-          onSuccess={handlePasswordChangeSuccess}
         />
       )}
     </div>
