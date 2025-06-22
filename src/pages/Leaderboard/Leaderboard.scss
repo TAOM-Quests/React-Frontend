@@ -1,0 +1,124 @@
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 80px 15vw;
+  align-items: center;
+
+  @media (min-width: 800px) {
+    min-height: 870px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 600px;
+    width: 60vw;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__rank {
+    &--number {
+      width: 40px;
+      height: 40px;
+      max-width: 40px;
+      max-height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &--1 {
+      background-color: var(--bg_c_accent) !important;
+      color: var(--text_c_secondary) !important;
+      .leaderboard__avatar {
+        .option-avatar__text {
+          color: var(--text_c_secondary) !important;
+        }
+      }
+    }
+    &--2 {
+      background-color: rgba(var(--text_color_accent), 0.7) !important;
+      color: var(--text_c_secondary) !important;
+      .leaderboard__avatar {
+        .option-avatar__text {
+          color: var(--text_c_secondary) !important;
+        }
+      }
+    }
+    &--3 {
+      background-color: rgba(var(--text_color_accent), 0.45) !important;
+      color: var(--text_c_secondary) !important;
+
+      .leaderboard__avatar {
+        .option-avatar__text {
+          color: var(--text_c_secondary) !important;
+        }
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg_c_secondary);
+    border: var(--border_primary) var(--border_c_secondary);
+    border-radius: 8px;
+    padding: 20px;
+    gap: 10px;
+    color: var(--text_c_primary);
+
+    &--user {
+      background-color: rgba(193, 243, 255) !important;
+    }
+
+    &--bottom {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 100;
+      background: #fff;
+      border-top: 1px solid #eee;
+      max-width: 600px;
+      width: 60vw;
+      margin: 0 auto;
+    }
+
+    &--top {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      max-width: 600px;
+      width: 60vw;
+      margin: 0 auto;
+    }
+
+    .leaderboard__avatar {
+      .option-avatar__text {
+        color: var(--text_c_primary);
+        font-size: 19px;
+        font-weight: 500;
+      }
+    }
+  }
+  &__medal {
+    max-width: 40px;
+    max-height: 40px;
+  }
+}

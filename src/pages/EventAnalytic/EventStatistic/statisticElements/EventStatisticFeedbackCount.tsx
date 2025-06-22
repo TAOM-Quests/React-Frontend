@@ -6,7 +6,7 @@ export const EventStatisticFeedbackCount = ({
 }: EventAnalyticElementProps) => {
   return (
     <ContainerBox>
-      <p className="body_m_r event-statistic__cards--title">
+      <p className="body_m_r statistic__cards--title">
         Количество обратных связей
       </p>
       <p className="heading_4">{feedbackAnswers.length}</p>

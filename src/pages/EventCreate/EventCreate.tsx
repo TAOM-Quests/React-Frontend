@@ -111,9 +111,10 @@ export const EventCreate = () => {
 
       if (
         statusId === STATUS_ID_WAIT_INSPECTION ||
+        statusId === STATUS_ID_REWORK ||
         statusId === STATUS_ID_ACCEPTED
       ) {
-        navigate(-1)
+        navigate(`/profile?tab=1`)
       }
     } catch (e) {
       console.log(`[EventCreate] ${e}`)

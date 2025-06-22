@@ -21,9 +21,12 @@ import { NotificationToaster } from './layout/NotificationToaster/NotificationTo
 import { EmailConfirm } from './pages/Login/EmailConfirm/EmailConfirm.tsx'
 import { EventCreate } from './pages/EventCreate/EventCreate.tsx'
 import { EventAnalytic } from './pages/EventAnalytic/EventAnalytic.tsx'
+import { QuestAnalytic } from './pages/QuestAnalytic/QuestAnalytic.tsx'
 import { Games } from './pages/Games/Games.tsx'
 import { Wordle } from './pages/Games/Wordle/Wordle.tsx'
 import { WordleWordsEditor } from './pages/Games/Wordle/WordleWordsEditor/WordleWordsEditor.tsx'
+import { Leaderboard } from './pages/Leaderboard/Leaderboard.tsx'
+import { Crossword } from './pages/Games/Crossword/Crossword.tsx'
 
 moment.updateLocale('ru', {
   months: [
@@ -70,10 +73,11 @@ root.render(
           <ScrollToTop>
             <NotificationToaster />
             <Routes>
-              <Route path="" element={<Home />} />
-              <Route path="login" element={<Login />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="email/confirm" element={<EmailConfirm />} />
+              <Route path="leaders" element={<Leaderboard />} />
 
               <Route path="event/:id" element={<Event />} />
               <Route path="event/:id/statistic" element={<EventAnalytic />} />
@@ -85,6 +89,7 @@ root.render(
               <Route path="quest/complete/:completeId" element={<Quest />} />
               <Route path="quest/create" element={<QuestCreate />} />
               <Route path="quest/:id/edit" element={<QuestCreate />} />
+              <Route path="quest/:id/statistic" element={<QuestAnalytic />} />
 
               <Route path="games/:id" element={<Games />} />
               <Route path="games/wordle/:id" element={<Wordle />} />
@@ -92,6 +97,7 @@ root.render(
                 path="games/wordle/:id/edit"
                 element={<WordleWordsEditor />}
               />
+              <Route path="games/crossword/:id" element={<Crossword />} />
             </Routes>
           </ScrollToTop>
           <Footer />

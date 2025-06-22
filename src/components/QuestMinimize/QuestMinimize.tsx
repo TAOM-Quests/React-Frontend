@@ -48,6 +48,13 @@ export default function QuestMinimize({
     },
     {
       id: 2,
+      text: 'Посмотреть статистику',
+      onSelect: () => {
+        navigate(`/quest/${id}/statistic`)
+      },
+    },
+    {
+      id: 3,
       text: 'Удалить',
       onSelect: async () => {
         await quests.delete(id)

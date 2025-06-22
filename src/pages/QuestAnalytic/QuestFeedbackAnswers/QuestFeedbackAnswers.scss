@@ -1,0 +1,11 @@
+.quest-FeedbackAnswers {
+  .table-edit__filters-empty {
+    display: none;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

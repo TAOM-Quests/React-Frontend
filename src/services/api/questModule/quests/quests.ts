@@ -1,10 +1,13 @@
-import { Quest } from '../../../../models/quest'
+import { isArray } from 'lodash'
+import { Quest, QuestComplete } from '../../../../models/quest'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
 import { QuestMinimize } from '../../../../models/questMinimize'
+import { UserProfile } from '../../../../models/userProfile'
 import { questModule } from '../questModule'
 import {
   QuestGroupsGetDto,
+  QuestsCompleteGetDto,
   QuestsGetDto,
   QuestTagsGetDto,
   SaveQuestCompleteDto,
@@ -14,6 +17,7 @@ import {
 export const quests = {
   getManyByParams: (params: QuestsGetDto): Promise<QuestMinimize[]> => {
     let queryString = Object.entries(params)
+      .filter(([_, value]) => (isArray(value) ? value.length : value))
       .map(([key, value]) => `${key}=${value}`)
       .join('&')
 
@@ -22,11 +26,26 @@ export const quests = {
     )
   },
 
+  getManyCompleteByParams: (
+    params: QuestsCompleteGetDto,
+  ): Promise<QuestComplete[]> => {
+    let queryString =
+      'isCompleted=true&' +
+      Object.entries(params)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
+
+    return questModule<QuestComplete[], null>(`quests?${queryString}`)
+  },
+
   getById: (id: number): Promise<Quest> =>
     questModule<Quest, null>(`quests/${id}`),
 
   getCompletedById: (completeId: number): Promise<Quest> =>
     questModule<Quest, null>(`quests/complete/${completeId}`),
+
+  getParticipants: (questId: number): Promise<UserProfile[]> =>
+    questModule<UserProfile[], null>(`quests/${questId}/participants`),
 
   create: (params: SaveQuestDto): Promise<Quest> =>
     questModule<Quest, SaveQuestDto>('quests', params),
@@ -59,13 +78,13 @@ export const quests = {
   getDifficulties: (): Promise<QuestDifficult[]> =>
     questModule<QuestDifficult[], null>('difficulties'),
 
-  getGroups: (query: QuestGroupsGetDto): Promise<QuestGroup[]> =>
+  getGroups: (query?: QuestGroupsGetDto): Promise<QuestGroup[]> =>
     questModule<QuestGroup[], null>(
-      `groups${query.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
+      `groups${query?.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
     ),
 
-  getTags: (query: QuestTagsGetDto): Promise<QuestGroup[]> =>
+  getTags: (query?: QuestTagsGetDto): Promise<QuestGroup[]> =>
     questModule<QuestGroup[], null>(
-      `tags${query.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
+      `tags${query?.departmentId ? `?departmentId=${query.departmentId}` : ''}`,
     ),
 }

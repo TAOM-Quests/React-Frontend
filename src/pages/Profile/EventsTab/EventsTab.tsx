@@ -22,12 +22,13 @@ import { isArray } from 'lodash'
 const TABS = ['Мероприятия', 'Проверка мероприятий']
 const EVENTS_COUNT_ON_SCREEN = 12
 const STATUS_ID_WAIT_INSPECTION = 2
+const STATUS_ID_ON_INSPECTION = 3
 
 interface EventsFilter {
   name?: string
   type?: number
-  status?: number
   executor?: number
+  status?: number[]
   participant?: number
 }
 
@@ -60,7 +61,6 @@ export default function EventsTab({ user }: EventsTabProps) {
   }, [])
 
   useEffect(() => {
-    console.log('Is end of events list:', isEndOfEventsList)
     if (
       isEndOfEventsList &&
       !isAllEventsLoaded &&
@@ -126,7 +126,7 @@ export default function EventsTab({ user }: EventsTabProps) {
     } else if (option === 'Проверка мероприятий') {
       setFilter(({ executor, ...prev }) => ({
         ...prev,
-        status: STATUS_ID_WAIT_INSPECTION,
+        status: [STATUS_ID_WAIT_INSPECTION, STATUS_ID_ON_INSPECTION],
       }))
     }
   }
@@ -179,8 +179,8 @@ export default function EventsTab({ user }: EventsTabProps) {
                     placeholder="Статус"
                     onChangeDropdown={selected =>
                       setFilter(state =>
-                        !isArray(selected)
-                          ? { ...state, status: selected?.id }
+                        !isArray(selected) && selected
+                          ? { ...state, status: [selected?.id] }
                           : state,
                       )
                     }

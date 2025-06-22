@@ -1,0 +1,68 @@
+.quest-statistic {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__charts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    @media (max-width: 1630px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    &--title {
+      color: var(--text_c_subdued);
+    }
+
+    @media (max-width: 1350px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 900px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .container-box {
+      justify-content: space-between;
+    }
+  }
+
+  &__participant-count {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &--Pie {
+    height: 450px;
+    &__title {
+      text-align: center;
+      color: var(--text_c_primary);
+    }
+
+    &__tooltip {
+      padding: 12px;
+      min-width: 200px;
+      color: var(--text_c_secondary);
+      background: var(--bg_c_primary);
+      border-radius: 8px;
+    }
+
+    &__no-data {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
