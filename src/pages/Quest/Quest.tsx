@@ -12,6 +12,7 @@ import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import './Quest.scss'
 import { Tag } from '../../components/UI/Tag/Tag'
 import { Loading } from '../../components/Loading/Loading'
+import moment from 'moment'
 interface UserAnswer {
   answer: any
   isCorrectAnswer: boolean
@@ -23,10 +24,11 @@ export const Quest = () => {
   const [isResultView, setIsResultView] = useState<boolean>(false)
 
   const [quest, setQuest] = useState<QuestInterface | null>(null)
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
+  const [timer, setTimer] = useState<number | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
     number | null
   >(null)
-  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([])
 
   const questId = useParams().id
   const completedId = useParams().completeId
@@ -68,6 +70,31 @@ export const Quest = () => {
     }
   }
 
+  const startQuest = () => {
+    if (!quest) throw new Error('Quest not found')
+
+    if (quest.time) {
+      const [minutes, seconds] = quest.time.split(':').map(Number)
+      setTimer(moment.duration({ minutes, seconds }).asMilliseconds())
+
+      const interval = setInterval(() => {
+        setTimer(prevTimer => {
+          const newTimer = (prevTimer ?? 0) - 1000
+          if (newTimer <= 0) {
+            clearInterval(interval)
+            setCurrentQuestionIndex(null)
+            setIsResultView(true)
+            return 0
+          }
+          return newTimer
+        })
+      }, 1000)
+    }
+
+    setIsStartView(false)
+    quest.questions?.length ? setCurrentQuestionIndex(0) : setIsResultView(true)
+  }
+
   const saveComplete = async () => {
     try {
       if (!quest) throw new Error('Nothing to save')
@@ -89,14 +116,14 @@ export const Quest = () => {
           ...question,
           answer: {
             ...question.answer,
-            userAnswer: userAnswers[index].answer,
+            userAnswer: userAnswers?.[index]?.answer ?? null,
             isCorrectAnswer: userAnswers[index].isCorrectAnswer,
           },
         })),
       }
 
       if (quest.name) saveQuestComplete.name = quest.name
-      if (quest.time) saveQuestComplete.time = quest.time
+      if (quest.time) saveQuestComplete.time = moment(timer).format('mm:ss')
       if (quest.tags) saveQuestComplete.tags = quest.tags.map(tag => tag.name)
       if (quest.image) saveQuestComplete.imageId = quest.image.id
       if (quest.difficult) saveQuestComplete.difficult = quest.difficult.name
@@ -127,19 +154,18 @@ export const Quest = () => {
               tags={quest.tags?.map(tag => tag.name) ?? []}
               questionCount={quest.questions?.length ?? 0}
               onClickRestartButton={() => navigate(`/quest/${quest.id}`)}
-              onClickStartButton={() => {
-                setIsStartView(false)
-                quest.questions?.length
-                  ? setCurrentQuestionIndex(0)
-                  : setIsResultView(true)
-              }}
+              onClickStartButton={startQuest}
             />
           )}
           {currentQuestionIndex !== null && (
             <ContainerBox className="quest__container-questions">
               <div className="quest__tags">
-                {quest.time && (
-                  <Tag text={quest.time} type="subdued" size="small" />
+                {timer && (
+                  <Tag
+                    text={`${moment(timer).format('mm:ss')}`}
+                    type="subdued"
+                    size="small"
+                  />
                 )}
                 <Tag
                   size="small"

@@ -76,4 +76,25 @@
     opacity: var(--disabled_opacity);
     cursor: not-allowed;
   }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__image {
+    width: 100px;
+    height: 100px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: var(--drop_shadow);
+      border: var(--border_primary) var(--border_c_primary);
+    }
+  }
 }

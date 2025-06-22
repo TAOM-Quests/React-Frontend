@@ -24,7 +24,6 @@ const STATUS_ID_WAIT_INSPECTION = 2
 const STATUS_ID_ON_INSPECTION = 3
 const STATUS_ID_REWORK = 4
 const STATUS_ID_ACCEPTED = 5
-const ROLE_ID_INSPECTOR = 2
 
 export const EventCreate = () => {
   const [isSaveValid, setIsSaveValid] = useState(true)
@@ -149,7 +148,7 @@ export const EventCreate = () => {
             />
           )}
           {eventId &&
-            user.roleId === ROLE_ID_INSPECTOR &&
+            user.isInspector &&
             status?.id === STATUS_ID_ON_INSPECTION && (
               <>
                 <Button

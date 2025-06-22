@@ -3,6 +3,11 @@ import { Modal } from '../../../../../components/UI/Modal/Modal'
 import { Input } from '../../../../../components/UI/Input/Input'
 import { users } from '../../../../../services/api/userModule/users/users'
 import './ChangePasswordModal.scss'
+import { useAppSelector } from '../../../../../hooks/redux/reduxHooks'
+import { selectAuth } from '../../../../../redux/auth/authSlice'
+import { useNavigate } from 'react-router'
+import { validatePassword } from '../../../../../validation/validatePassword'
+import { validateRepeatPassword } from '../../../../../validation/validateRepeatPassword'
 
 interface ChangePasswordModalProps {
   isOpen: boolean
@@ -26,6 +31,19 @@ export const ChangePasswordModal = ({
     confirmPassword: '',
   })
 
+  const navigate = useNavigate()
+  const user = useAppSelector(selectAuth)
+  const passwordValidator = validatePassword(newPassword)
+  const repeatPasswordValidator = validateRepeatPassword(
+    newPassword,
+    confirmPassword,
+  )
+
+  if (!user) {
+    navigate('/login')
+    return
+  }
+
   useEffect(() => {
     if (!isOpen) {
       setOldPassword('')
@@ -39,7 +57,7 @@ export const ChangePasswordModal = ({
     }
   }, [isOpen])
 
-  const validate = () => {
+  const validate = async () => {
     const newErrors = {
       oldPassword: '',
       newPassword: '',
@@ -50,16 +68,25 @@ export const ChangePasswordModal = ({
     if (!oldPassword) {
       newErrors.oldPassword = 'Введите текущий пароль'
       valid = false
+    } else {
+      try {
+        await users.auth({ email: user.email, password: oldPassword })
+      } catch (e) {
+        newErrors.oldPassword = 'Неверный текущий пароль'
+        valid = false
+      }
     }
+
     if (!newPassword) {
       newErrors.newPassword = 'Введите новый пароль'
       valid = false
-    } else if (newPassword.length < 6) {
-      newErrors.newPassword = 'Пароль должен быть не менее 6 символов'
+    } else if (!passwordValidator.isValid) {
+      newErrors.newPassword = passwordValidator.error ?? ''
       valid = false
     }
-    if (confirmPassword !== newPassword) {
-      newErrors.confirmPassword = 'Пароли не совпадают'
+
+    if (!repeatPasswordValidator.isValid) {
+      newErrors.confirmPassword = repeatPasswordValidator.error ?? ''
       valid = false
     }
 
@@ -68,18 +95,21 @@ export const ChangePasswordModal = ({
   }
 
   const handleSubmit = async () => {
-    if (!validate()) return
+    const isValid = await validate()
+    if (!isValid) return
 
     try {
-      await users.changePassword({
-        oldPassword,
-        newPassword,
+      if (!user) throw Error('User not found')
+
+      await users.updateProfile({
+        id: user.id,
+        password: newPassword,
       })
 
       onSuccess?.()
       onClose()
     } catch (e) {
-      console.error(e)
+      console.log(`[ChangePasswordModal] ${e}`)
     }
   }
 
