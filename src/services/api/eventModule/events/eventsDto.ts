@@ -9,9 +9,9 @@ export interface EventsGetDto {
   limit?: number
   dateEnd?: Date
   offset?: number
-  status?: number
   dateStart?: Date
   executor?: number
+  status?: number[]
   department?: number
   participant?: number
 }
