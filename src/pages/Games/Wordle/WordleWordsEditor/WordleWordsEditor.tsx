@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router'
 import { CustomAlert } from '../../../../components/CustomAlert/CustomAlert'
 import {
@@ -14,7 +14,6 @@ export const WordleWordsEditor = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [modalMessage, setModalMessage] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [cursorPos, setCursorPos] = useState<{ [id: number]: number }>({})
 
   const { id: departmentId } = useParams<{ id: string }>()
   const [words, setWords] = useState<WordleWord[]>([])
