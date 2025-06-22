@@ -137,7 +137,7 @@ export const Leaderboard = () => {
   useEffect(() => {
     setIsLoading(true)
     try {
-      fetchPositions(0)
+      fetchPositions(true)
     } catch (e) {
       console.log(`[Leaderboard] ${e}`)
     }
@@ -153,13 +153,13 @@ export const Leaderboard = () => {
     setDepartments(await commonEntities.getDepartments())
   }
 
-  const fetchPositions = async (offset?: number) => {
+  const fetchPositions = async (isClear?: boolean) => {
     if (!currentDepartment) throw Error('Department not found')
 
     const newPositions = await users.getExperience({
       departmentId: currentDepartment.id,
       limit: POSITIONS_ON_SCREEN,
-      offset: offset ?? positions.length,
+      offset: isClear ? 0 : positions.length,
     })
 
     if (newPositions.length < POSITIONS_ON_SCREEN) {
@@ -175,7 +175,7 @@ export const Leaderboard = () => {
       setUserPosition(foundUserPosition)
     }
 
-    setPositions(prev => [...prev, ...newPositions])
+    setPositions(prev => (isClear ? newPositions : [...prev, ...newPositions]))
   }
 
   const setEventsListObserver = () => {
