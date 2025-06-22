@@ -1,4 +1,3 @@
-import { ContainerBox } from '../../../components/ContainerBox/ContainerBox'
 import { Icon } from '../../../components/UI/Icon/Icon'
 import { Tag } from '../../../components/UI/Tag/Tag'
 import { QuestGroup } from '../../../models/questGroup'
@@ -26,7 +25,7 @@ export const QuestHomeGroup = ({
       }
       result.push(chunk)
     }
-    // Если квестов вообще нет, всё равно возвращаем одну пустую группу
+
     if (result.length === 0) result.push(Array(chunkSize).fill(null))
     return result
   }
@@ -34,20 +33,6 @@ export const QuestHomeGroup = ({
   const questChunks = splitToChunks(quests, 8)
 
   return (
-    // <div className="group">
-    //   <div className="group__header">
-    //     <h1>{group.name}</h1>
-    //     {/* <p>{group.description}</p> */}
-    //   </div>
-
-    //   <div className="group__questGrid">
-    //     {questChunks.map((quest, index) => (
-    //       <div className="group__questItem" key={index}>
-    //         {quest.name}
-    //       </div>
-    //     ))}
-    //   </div>
-    // </div>
     <div className="group">
       <h4 className="heading_4 group__title">{group.name}</h4>
 

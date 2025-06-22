@@ -40,109 +40,87 @@
 .groupTest-right .index-0-of-test-in-group {
   grid-area: 1/5/5/8;
   position: relative;
-  // left: 2.4rem;
-  .back-gray {
-    background: #8090b8;
-    clip-path: polygon(0px 0px, 0px 100%, 40% 100%, 100% 0px);
-  }
+
+  background: #8090b8;
 }
 .groupTest-right .index-1-of-test-in-group {
-  // grid-area: 1/5/4/6;
   grid-area: 1/8/5/12;
-  .back-gray {
-    background: #223344;
-  }
+
+  background: #223344;
 }
 .groupTest-right .index-2-of-test-in-group {
   grid-area: 1/12/7/14;
-  .back-gray {
-    background: #1a2b3c;
-  }
+
+  background: #1a2b3c;
 }
 .groupTest-right .index-3-of-test-in-group {
   grid-area: 5/6/8/12;
-  .back-gray {
-    background: #b8a080;
-  }
+
+  background: #b8a080;
 }
 .groupTest-right .index-4-of-test-in-group {
   grid-area: 8/4/11/9;
-  .back-gray {
-    background: #a0b880;
-  }
+
+  background: #a0b880;
 }
 .groupTest-right .index-5-of-test-in-group {
   grid-area: 8/9/14/12;
-  .back-gray {
-    background: #80b8b8;
-  }
+
+  background: #80b8b8;
 }
 .groupTest-right .index-6-of-test-in-group {
   grid-area: 7/12/14/14;
-  .back-gray {
-    background: #b880a0;
-  }
+
+  background: #b880a0;
 }
 .groupTest-right .index-7-of-test-in-group {
   grid-area: 11/9/14/1;
-  .back-gray {
-    background: #e0e0e0;
-  }
+
+  background: #e0e0e0;
 }
 
 // Для четных/нечетных групп можно сделать зеркальное отображение
 .groupTest-left .index-0-of-test-in-group {
   grid-area: 1 / 1 / 7 / 3;
   left: 0;
-  .back-gray {
-    background: #8090b8;
-    clip-path: polygon(100% 0px, 100% 100%, 60% 100%, 0px 0px);
-  }
+
+  background: #8090b8;
 }
 .groupTest-left .index-1-of-test-in-group {
   grid-area: 5 / 7 / 1 / 3;
-  .back-gray {
-    background: #223344;
-  }
+
+  background: #223344;
 }
 .groupTest-left .index-2-of-test-in-group {
   grid-area: 5 / 10 / 1 / 7;
-  .back-gray {
-    background: #1a2b3c;
-  }
+
+  background: #1a2b3c;
 }
 .groupTest-left .index-3-of-test-in-group {
   grid-area: 7/3/14/1;
-  .back-gray {
-    background: #b8a080;
-  }
+
+  background: #b8a080;
 }
 .groupTest-left .index-4-of-test-in-group {
   grid-area: 5/9/8/3;
-  .back-gray {
-    background: #a0b880;
-  }
+  background: #a0b880;
 }
 .groupTest-left .index-5-of-test-in-group {
   grid-area: 14/6/8/3;
-  .back-gray {
-    background: #80b8b8;
-  }
+
+  background: #80b8b8;
 }
 .groupTest-left .index-6-of-test-in-group {
   grid-area: 8/11/11/6;
-  .back-gray {
-    background: #b880a0;
-  }
+
+  background: #b880a0;
 }
 .groupTest-left .index-7-of-test-in-group {
   grid-area: 14/14/11/6;
-  .back-gray {
-    background: #e0e0e0;
-  }
+
+  background: #e0e0e0;
 }
 
-// Общие стили для карточек
 .group__questItem {
   border-radius: 12px;
   overflow: hidden;
@@ -222,7 +200,7 @@
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   }
   &--empty {
-    background: #3a3a4d !important;
+    background: #3a3a4d;
     cursor: default;
   }
   .back-gray {
@@ -236,7 +214,6 @@
   }
 }
 
-// Внутри карточки (пример)
 .test-img-wrapper {
   width: 100%;
   height: 60%;
