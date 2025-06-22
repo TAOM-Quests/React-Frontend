@@ -182,7 +182,7 @@ export const Quest = () => {
           )}
           {isResultView && (
             <QuestResultView
-              time={quest.time}
+              time={moment(timer).format('mm:ss')}
               tags={quest.tags?.map(tag => tag.name) ?? []}
               difficulty={quest.difficult?.name}
               results={quest.results ?? []}
