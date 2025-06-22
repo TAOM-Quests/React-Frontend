@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router'
 import { useAppSelector } from '../../hooks/redux/reduxHooks'
 import { FeedbackAnswer } from '../../models/feedbackAnswer'
 import { FeedbackForm } from '../../models/feedbackForm'
-import { Quest } from '../../models/quest'
+import { Quest, QuestComplete } from '../../models/quest'
 import { UserProfile } from '../../models/userProfile'
 import { selectAuth } from '../../redux/auth/authSlice'
 import { quests } from '../../services/api/questModule/quests/quests'
@@ -22,8 +22,8 @@ export const QuestAnalytic = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const [quest, setQuest] = useState<Quest | null>(null)
-  const [questAnswers, setQuestAnswers] = useState<Quest[]>([])
   const [participants, setParticipants] = useState<UserProfile[]>([])
+  const [questAnswers, setQuestAnswers] = useState<QuestComplete[]>([])
   const [feedbackForm, setFeedbackForm] = useState<FeedbackForm | null>(null)
   const [feedbackAnswers, setFeedbackAnswers] = useState<FeedbackAnswer[]>([])
 

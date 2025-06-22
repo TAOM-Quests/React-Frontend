@@ -1,4 +1,4 @@
-import { Quest } from '../../../../models/quest'
+import { Quest, QuestComplete } from '../../../../models/quest'
 import { QuestDifficult } from '../../../../models/questDifficult'
 import { QuestGroup } from '../../../../models/questGroup'
 import { QuestMinimize } from '../../../../models/questMinimize'
@@ -24,14 +24,16 @@ export const quests = {
     )
   },
 
-  getManyCompleteByParams: (params: QuestsCompleteGetDto): Promise<Quest[]> => {
+  getManyCompleteByParams: (
+    params: QuestsCompleteGetDto,
+  ): Promise<QuestComplete[]> => {
     let queryString =
       'isCompleted=true&' +
       Object.entries(params)
         .map(([key, value]) => `${key}=${value}`)
         .join('&')
 
-    return questModule<Quest[], null>(`quests?${queryString}`)
+    return questModule<QuestComplete[], null>(`quests?${queryString}`)
   },
 
   getById: (id: number): Promise<Quest> =>

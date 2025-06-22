@@ -11,6 +11,7 @@ import { QuestAnalyticAnswerMultiple } from './Mutiple/Multiple'
 import { QuestAnalyticAnswerConnection } from './Connection/Connection'
 import { QuestAnalyticAnswerBoxSorting } from './BoxSorting/BoxSorting'
 import { Button } from '../../../components/UI/Button/Button'
+import { QuestAnswersTotal } from './Total/QuestAnswersTotal'
 
 export const QuestAnalyticAnswers = ({
   quest,
@@ -20,6 +21,11 @@ export const QuestAnalyticAnswers = ({
 
   return (
     <div>
+      <Button
+        key={'total'}
+        text={`Общие результаты`}
+        onClick={() => setQuestionIndex(null)}
+      />
       {quest.questions?.map((_, index) => (
         <Button
           key={index}
@@ -28,7 +34,9 @@ export const QuestAnalyticAnswers = ({
         />
       ))}
 
-      {questionIndex === null && <></>}
+      {questionIndex === null && (
+        <QuestAnswersTotal questAnswers={questAnswers} />
+      )}
 
       {questionIndex !== null && (
         <>
