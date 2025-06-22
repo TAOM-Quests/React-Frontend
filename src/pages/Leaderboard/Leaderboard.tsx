@@ -14,7 +14,7 @@ import { ServerFile } from '../../models/serverFile'
 
 import { UserAvatarInfo } from '../../components/User/UserAvatarInfo/UserAvatarInfo'
 
-const POSITIONS_ON_SCREEN = 10
+const POSITIONS_ON_SCREEN = 12
 const FIRST_PLACE_MEDAL_IMAGE_ID = 20
 const SECOND_PLACE_MEDAL_IMAGE_ID = 21
 const THIRD_PLACE_MEDAL_IMAGE_ID = 22
@@ -40,8 +40,65 @@ export const Leaderboard = () => {
   const [isAllPositionsLoaded, setIsAllPositionsLoaded] = useState(false)
   const [isEndOfPositionsList, setIsEndOfPositionsList] = useState(false)
 
+  const [isUserRowVisible, setIsUserRowVisible] = useState(false)
+  const [isUserRowAboveViewport, setIsUserRowAboveViewport] = useState(false)
+  const [isListVisible, setIsListVisible] = useState(true)
+
   const user = useAppSelector(selectAuth)
+  const userRowRef = useRef<HTMLDivElement>(null)
+  const leaderboardListRef = useRef<HTMLDivElement>(null)
   const positionsListEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!leaderboardListRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsListVisible(entry.isIntersecting),
+      { threshold: 0.1 },
+    )
+    observer.observe(leaderboardListRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!userRowRef.current) return
+
+    const visibleObserver = new IntersectionObserver(
+      ([entry]) => setIsUserRowVisible(entry.isIntersecting),
+      { threshold: 0.1 },
+    )
+    visibleObserver.observe(userRowRef.current)
+
+    const aboveObserver = new IntersectionObserver(
+      ([entry]) =>
+        setIsUserRowAboveViewport(
+          entry.boundingClientRect.top < 0 && !entry.isIntersecting,
+        ),
+      { threshold: [0, 1] },
+    )
+    aboveObserver.observe(userRowRef.current)
+
+    return () => {
+      visibleObserver.disconnect()
+      aboveObserver.disconnect()
+    }
+  }, [positions, userPosition])
+
+  const renderUserRow = (
+    position: UserLeaderboardPosition,
+    positionClassName = '',
+  ) => (
+    <div
+      className={`leaderboard__rank--${position.rank} leaderboard__item leaderboard__item--user leaderboard__item--${positionClassName}`}
+    >
+      <p className="body_l_sb leaderboard__rank--number">{position.rank}</p>
+      <UserAvatarInfo
+        text={position.user.name}
+        avatarSrc={position.user.image?.url}
+        className="leaderboard__avatar"
+      />
+      <p className="body_l_sb">{position.experience}</p>
+    </div>
+  )
 
   useEffect(() => {
     setIsLoading(true)
@@ -124,7 +181,7 @@ export const Leaderboard = () => {
   const setEventsListObserver = () => {
     const observer = new IntersectionObserver(
       ([entry]) => setIsEndOfPositionsList(entry.isIntersecting),
-      { threshold: 1 },
+      { threshold: 0.1 },
     )
 
     if (positionsListEndRef.current) {
@@ -139,7 +196,7 @@ export const Leaderboard = () => {
       {!isLoading ? (
         <div className="leaderboard">
           <h1 className="heading_4 leaderboard__title">Таблица лидеров</h1>
-          <div className="leaderboard__list">
+          <div className="leaderboard__list" ref={leaderboardListRef}>
             <Dropdown
               items={departments.map(dep => ({ id: dep.id, text: dep.name }))}
               selectedItems={
@@ -156,52 +213,49 @@ export const Leaderboard = () => {
               }
             />
 
-            {positions.map(pos => (
-              <div
-                className={`leaderboard__rank--${pos.rank} leaderboard__item `}
-              >
-                {pos.rank === 1 || pos.rank === 2 || pos.rank === 3 ? (
-                  <img
-                    src={medalsImages[pos.rank - 1]?.url}
-                    alt="medal"
-                    className="leaderboard__medal"
-                  />
-                ) : (
-                  <p className="body_l_sb leaderboard__rank--number">
-                    {pos.rank}
-                  </p>
-                )}
-                <UserAvatarInfo
-                  text={pos.user.name}
-                  avatarSrc={pos.user.image?.url}
-                  className="leaderboard__avatar"
-                />
-
-                <p className="body_l_sb">{pos.experience}</p>
-              </div>
-            ))}
-
             {userPosition &&
-              !positions
-                .map(pos => pos.user.id)
-                .includes(userPosition.user.id) && (
-                <div
-                  className={`leaderboard__rank--${userPosition.rank} leaderboard__item `}
-                >
-                  <p className="body_l_sb leaderboard__rank--number">
-                    {userPosition.rank}
-                  </p>
+              isListVisible &&
+              !isUserRowVisible &&
+              !isUserRowAboveViewport &&
+              renderUserRow(userPosition, 'bottom')}
+            {userPosition &&
+              isListVisible &&
+              isUserRowAboveViewport &&
+              renderUserRow(userPosition, 'top')}
 
-                  <UserAvatarInfo
-                    text={userPosition.user.name}
-                    avatarSrc={userPosition.user.image?.url}
-                    className="leaderboard__avatar"
-                  />
-                  <p className="body_l_sb">{userPosition.experience}</p>
-                </div>
-              )}
+            <div className="leaderboard__items">
+              {positions.map(pos => {
+                const isCurrentUser =
+                  userPosition && pos.user.id === userPosition.user.id
+                return (
+                  <div
+                    key={pos.user.id}
+                    ref={isCurrentUser ? userRowRef : undefined}
+                    className={`leaderboard__rank--${pos.rank} leaderboard__item leaderboard__item ${isCurrentUser ? ' leaderboard__item--user' : ''}`}
+                  >
+                    {pos.rank === 1 || pos.rank === 2 || pos.rank === 3 ? (
+                      <img
+                        src={medalsImages[pos.rank - 1]?.url}
+                        alt="medal"
+                        className="leaderboard__medal"
+                      />
+                    ) : (
+                      <p className="body_l_sb leaderboard__rank--number">
+                        {pos.rank}
+                      </p>
+                    )}
+                    <UserAvatarInfo
+                      text={pos.user.name}
+                      avatarSrc={pos.user.image?.url}
+                      className="leaderboard__avatar"
+                    />
 
-            <div ref={positionsListEndRef} />
+                    <p className="body_l_sb">{pos.experience}</p>
+                  </div>
+                )
+              })}
+            </div>
+            <div ref={positionsListEndRef} className="anchor" />
           </div>
         </div>
       ) : (
